@@ -18,8 +18,7 @@ module.exports = function(grunt) {
     // // console.log(AWS);
 
     // var ec2 = new AWS.EC2({
-    //     accessKeyId: "AKIAIS4FUFGM2FFEVKBQ",
-    //     secretAccessKey: "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",
+    //     AUTHPARAM
     //     region: "us-west-2"
     // });
     // // console.log(ec2);
