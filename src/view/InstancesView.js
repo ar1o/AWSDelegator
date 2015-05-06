@@ -12,13 +12,20 @@ var InstancesView = Backbone.View.extend({
        
        // console.log(AWS);
        // var ec2 = new AWS.EC2();
-        this.model.change('video_id', this.video_id_changed.bind(this));
-        
+       console.log("test1");
+       aws_result().done(function(result) {
+    console.log(result);
+    for (var r in result.Reservations) {
+        for (var i in result.Reservations[r].Instances) {
+            var instance = result.Reservations[r].Instances[i];
+            var state = instance.State.Name;
+            console.log(instance.InstanceId + " (" + state + ") " + instance.PublicDnsName);            
+        }
+    }
+    }).fail(function() {
+    console.log('nope');
+    });
 		this.render();
-
-         $.getJSON( "js/EC2Test.js", function( json ) {
-            console.log( "JSON Data: " + json );
-        });   
 	},
 
     video_id_changed: function(model, value) {
