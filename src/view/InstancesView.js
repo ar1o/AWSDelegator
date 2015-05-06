@@ -16,6 +16,9 @@ var InstancesView = Backbone.View.extend({
         
 		this.render();
 
+         $.getJSON( "js/EC2Test.js", function( json ) {
+            console.log( "JSON Data: " + json );
+        });   
 	},
 
     video_id_changed: function(model, value) {

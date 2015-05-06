@@ -7,47 +7,6 @@ module.exports = function(grunt) {
 
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-smushit');
-    // grunt.loadNpmTasks('grunt-browserify');
-
-
-
-    // var express = require('express');
-    // var app = express();
-
-    // var AWS = require('aws-sdk');
-    // // console.log(AWS);
-
-    // var ec2 = new AWS.EC2({
-    //     accessKeyId: "AKIAIS4FUFGM2FFEVKBQ",
-    //     secretAccessKey: "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",
-    //     region: "us-west-2"
-    // });
-    // // console.log(ec2);
-
-    // var request = ec2.describeInstances({}, function(err, data) {
-    //     if (err) {
-    //         //console.log(err);
-    //         return;
-    //     } else {
-    //         //console.log(data);
-    //     }
-
-    //     // for (var r in data.Reservations) {
-    //     //     for (var i in data.Reservations[r].Instances) {
-    //     //         var instance = data.Reservations[r].Instances[i];
-    //     //         var state = instance.State.Name;
-    //     //         console.log(instance.InstanceId + " (" + state + ") " + instance.PublicDnsName);            
-    //     //     }
-    //     // }
-    // });
-
-    // // register a callback to report on the data
-    // request.on('success', function(resp) {
-    //   console.log(resp.data); // log the successful data response
-    // });
-
-    // send the request
-    //request.send();
     
     // Project configuration.
     grunt.initConfig({
@@ -72,10 +31,12 @@ module.exports = function(grunt) {
             }
         },
         express: {
-            livereload: {
+            dev: {
             options: {
                 script: 'src/js/EC2.js',
-                keepalive:true
+                delay: 1000,
+                background: false
+
               }
             }
         },
@@ -199,6 +160,4 @@ module.exports = function(grunt) {
         shell.rm('-f', 'optimized/manifest.json');
         destroyUseless('optimized');
     });
-
-    grunt.registerTask('serve', ['build', 'express:prod', 'open', 'keepalive']);
 };
