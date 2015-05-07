@@ -8,6 +8,9 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-smushit');
     
+    var shell = require('shelljs');
+    
+
     // Project configuration.
     grunt.initConfig({
 
@@ -73,7 +76,6 @@ module.exports = function(grunt) {
             }
         },
     });
-    grunt.registerTask('server', ['livereload-start', 'express', 'regarde']);
     grunt.registerTask('handlebars', 'Compiling templates', function() {
         shell.exec('handlebars src/templates/ -f src/compiledTemplates.js');
     });

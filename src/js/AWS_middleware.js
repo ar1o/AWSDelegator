@@ -13,8 +13,6 @@ app.get('/test', function(req, res) {
     
      // console.log(AWS);
 var ec2 = new AWS.EC2({
-    accessKeyId: "AKIAJEVXZ7QKYRNDNGGA",
-    secretAccessKey: "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",
     region: "us-west-2"
 });
 
