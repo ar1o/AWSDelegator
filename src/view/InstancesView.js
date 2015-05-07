@@ -1,3 +1,5 @@
+// Here is where the EC2 Instances are renders the instanceCollection JSON object
+// by the handlebars template called InstancesView.handlebars
 var InstancesView = Backbone.View.extend({
 
     className: 'InstancesView',
@@ -7,23 +9,26 @@ var InstancesView = Backbone.View.extend({
         if(!this.model) {
             this.model = new InstancesModel();
         }
-       // this.ec2 = new EC2Model();
-       // console.log("ec2");
-       
-       // console.log(AWS);
-       // var ec2 = new AWS.EC2();
-        this.model.change('video_id', this.video_id_changed.bind(this));
-        
-		this.render();
+  
+        this.model.addEC2Instance();
 
+        this.bindings();
+        this.render();
 	},
+    //Check for when the data is read and renders the page
+    bindings: function() {
+        this.model.change('dataReady', function(model, val) {
+        this.render();
+    }.bind(this));
 
-    video_id_changed: function(model, value) {
-        //this.player.model.video_id = value;
     },
 
 	render: function() {		
-        //this.$el.html(this.player.el);
+        var html = Handlebars.templates.InstancesView({
+            instances: instanceCollection.toJSON()
+
+        });
+        this.$el.html(html);
 	}
 
 

@@ -19,3 +19,6 @@ body .clear {
   height: 100%;
   width: 100%;
 }
+.InstancesView {
+  background: gray;
+}

@@ -7,6 +7,8 @@ module.exports = function(grunt) {
 
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-smushit');
+<<<<<<< HEAD
+=======
     // grunt.loadNpmTasks('grunt-browserify');
 
 
@@ -47,7 +49,11 @@ module.exports = function(grunt) {
 
     // send the request
     //request.send();
+>>>>>>> f419b242acbdc8940d62edad86f398ed64131d39
     
+    var shell = require('shelljs');
+    
+
     // Project configuration.
     grunt.initConfig({
 
@@ -71,10 +77,12 @@ module.exports = function(grunt) {
             }
         },
         express: {
-            livereload: {
+            dev: {
             options: {
-                script: 'src/js/EC2.js',
-                keepalive:true
+                script: 'src/js/AWS_middleware.js',
+                delay: 1000,
+                background: false
+
               }
             }
         },
@@ -111,7 +119,6 @@ module.exports = function(grunt) {
             }
         },
     });
-    grunt.registerTask('server', ['livereload-start', 'express', 'regarde']);
     grunt.registerTask('handlebars', 'Compiling templates', function() {
         shell.exec('handlebars src/templates/ -f src/compiledTemplates.js');
     });
@@ -198,6 +205,4 @@ module.exports = function(grunt) {
         shell.rm('-f', 'optimized/manifest.json');
         destroyUseless('optimized');
     });
-
-    grunt.registerTask('serve', ['build', 'express:prod', 'open', 'keepalive']);
 };

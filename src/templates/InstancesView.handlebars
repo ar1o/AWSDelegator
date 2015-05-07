@@ -1,0 +1,44 @@
+<style>
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+    background-color: #CCCCA3;
+}
+th, td {
+    padding: 5px;
+    text-align: center;
+}
+
+</style>
+
+<div class="list_of_instances">
+<center>
+<table border="1" style="width:80%">
+	<tr>
+		<th>Instance ID</td>
+		<th>State</td>
+		<th>Image</td>
+		<th>Key Name</td>
+		<th>Type</td>
+		<th>Launched</td>
+		<th>Zone</td>
+		<th>Lifetime</td>
+	</tr>
+	{{#each instances}}
+	<tr><center>
+		<div class="instance">
+		<td>{{this.instance}}</td>
+		<td>{{this.state}}</td>
+		<td>{{this.imageId}}</td>
+		<td>{{this.keyName}}</td>
+		<td>{{this.instanceType}}</td>
+		<td>{{this.launchTime}}</td> 
+		<td>{{this.zone}}</td>
+		<td>{{this.duration}} sec</td>
+	</center></tr>
+	{{/each}}
+</table>
+</center>
+</div>
+
+
