@@ -19,6 +19,15 @@ body .clear {
   height: 100%;
   width: 100%;
 }
-.InstancesView {
-  background: gray;
+.InstancesView table,
+.InstancesView th,
+.InstancesView td {
+  border: 1px solid black;
+  border-collapse: collapse;
+  background-color: #CCCCA3;
+}
+.InstancesView th,
+.InstancesView td {
+  padding: 5px;
+  text-align: center;
 }

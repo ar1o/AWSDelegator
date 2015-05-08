@@ -84,7 +84,6 @@ var InstanceModel = Backbone.Model.extend({
 		runningTime: null,
 		zone: null
 
-
     }
 
 });
