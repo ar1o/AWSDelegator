@@ -29,13 +29,33 @@ var InstancesModel = Backbone.Model.extend({
 	        for (var r in result.Reservations) {
 	            for (var i in result.Reservations[r].Instances) {
 	                var rInstance = result.Reservations[r].Instances[i];
+	                var rImage= rInstance.ImageId;
 	                var rState = rInstance.State.Name;
+	                var rKeyName = rInstance.KeyName;
+	                var rInstanceType = rInstance.InstanceType;
+	                var rLaunchTime = rInstance.LaunchTime;
+	                //LOGIC FOR PARSING AND COMPUTING RUNNING TIME
+	                var d = new Date();
+	                var rUnixLaunch = Date.parse(rLaunchTime);
+	               	var rUnixNow = d.getTime();
+	               	var rDuration = (rUnixNow - rUnixLaunch)/1000;
 	                
-	                console.log(rInstance.InstanceId + " (" + rState + ") " + rInstance.PublicDnsName);
+	                var rZone = rInstance.Placement.AvailabilityZone;
+
+	                
+	                console.log(rInstance.InstanceId + " (" + rState + ") " + " (" + rImage + ") " +
+	                " (" + rInstance.PublicDnsName + ") " + "(" + rKeyName +
+	                ") " + "(" + rInstanceType + ") " + "(" + rUnixLaunch + ") " + "(" + rDuration + ") " + "(" + rZone + ") ");
 	                
 	                var data = new InstanceModel({ 
-						instance: rInstance.InstanceId, 
-						state: rState
+						instance: rInstance.InstanceId,
+						imageId: rImage, 
+						state: rState,
+						keyName: rKeyName,
+						instanceType: rInstanceType,
+						launchTime: rLaunchTime,
+						duration: rDuration,
+						zone: rZone
 					});
 
 	                instanceCollection.add(data);    
@@ -55,8 +75,21 @@ var InstancesModel = Backbone.Model.extend({
 var InstanceModel = Backbone.Model.extend({
 	defaults: {
 		instance: null,
+<<<<<<< HEAD
 		state: null,
 		dns: null
+=======
+		imageId: null,
+		state: null,
+		dns: null,
+		keyName: null,
+		instanceType: null,
+		launchTime: null,
+		runningTime: null,
+		zone: null
+
+
+>>>>>>> pr/1
     }
 
 });

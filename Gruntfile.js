@@ -7,6 +7,52 @@ module.exports = function(grunt) {
 
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-smushit');
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+=======
+    // grunt.loadNpmTasks('grunt-browserify');
+
+
+
+    // var express = require('express');
+    // var app = express();
+
+    // var AWS = require('aws-sdk');
+    // // console.log(AWS);
+
+    // var ec2 = new AWS.EC2({
+    //     AUTHPARAM
+    //     region: "us-west-2"
+    // });
+    // // console.log(ec2);
+
+    // var request = ec2.describeInstances({}, function(err, data) {
+    //     if (err) {
+    //         //console.log(err);
+    //         return;
+    //     } else {
+    //         //console.log(data);
+    //     }
+
+    //     // for (var r in data.Reservations) {
+    //     //     for (var i in data.Reservations[r].Instances) {
+    //     //         var instance = data.Reservations[r].Instances[i];
+    //     //         var state = instance.State.Name;
+    //     //         console.log(instance.InstanceId + " (" + state + ") " + instance.PublicDnsName);            
+    //     //     }
+    //     // }
+    // });
+
+    // // register a callback to report on the data
+    // request.on('success', function(resp) {
+    //   console.log(resp.data); // log the successful data response
+    // });
+
+    // send the request
+    //request.send();
+>>>>>>> f419b242acbdc8940d62edad86f398ed64131d39
+>>>>>>> pr/1
     
     var shell = require('shelljs');
     
