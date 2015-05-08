@@ -75,10 +75,6 @@ var InstancesModel = Backbone.Model.extend({
 var InstanceModel = Backbone.Model.extend({
 	defaults: {
 		instance: null,
-<<<<<<< HEAD
-		state: null,
-		dns: null
-=======
 		imageId: null,
 		state: null,
 		dns: null,
@@ -88,8 +84,6 @@ var InstanceModel = Backbone.Model.extend({
 		runningTime: null,
 		zone: null
 
-
->>>>>>> pr/1
     }
 
 });
