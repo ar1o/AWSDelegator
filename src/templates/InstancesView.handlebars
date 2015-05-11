@@ -1,7 +1,13 @@
-<div class="list_of_instances">
-<center>
-<table>
-	<tr>
+  <body>
+
+    <div class="intro grey darken-2 z-depth-1">
+        <h1 class="grey-text text-lighten-5">Dalhousie SIM</h1>
+        <h5>EC2 Instance Information</h5>
+      </div>
+      </body>
+<div class="list_of_instances z-depth-1">
+<table class="table bordered striped ">
+	<tr class="grey darken-1 align=center z-depth-2">
 		<th>Instance ID</td>
 		<th>State</td>
 		<th>Image</td>
@@ -11,9 +17,10 @@
 		<th>Zone</td>
 		<th>Lifetime</td>
 	</tr>
+	<tbody>
 	{{#each instances}}
-	<tr><center>
-		<div class="instance">
+	
+	<tr class="instance align=center">
 		<td>{{this.instance}}</td>
 		<td>{{this.state}}</td>
 		<td>{{this.imageId}}</td>
@@ -21,10 +28,13 @@
 		<td>{{this.instanceType}}</td>
 		<td>{{this.launchTime}}</td> 
 		<td>{{this.zone}}</td>
+		<!--//Need a conditional in the (.js?) to set duration to 0 when state=="stopped"-->
 		<td>{{this.duration}} sec</td>
-	</center></tr>
+	</tr>
 	{{/each}}
+	</tbody>
 </table>
-</center>
+
 </div>
+</body>
 

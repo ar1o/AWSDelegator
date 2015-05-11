@@ -34,19 +34,23 @@ var InstancesModel = Backbone.Model.extend({
 	                var rKeyName = rInstance.KeyName;
 	                var rInstanceType = rInstance.InstanceType;
 	                var rLaunchTime = rInstance.LaunchTime;
+	                if (rState=="stopped"||rState=="stopping") {
+	                	rDuration=0;
+	                }
+	                else{
 	                //LOGIC FOR PARSING AND COMPUTING RUNNING TIME
 	                var d = new Date();
 	                var rUnixLaunch = Date.parse(rLaunchTime);
 	               	var rUnixNow = d.getTime();
 	               	var rDuration = (rUnixNow - rUnixLaunch)/1000;
-	                
+	                }
 	                var rZone = rInstance.Placement.AvailabilityZone;
 
 	                
-	                console.log(rInstance.InstanceId + " (" + rState + ") " + " (" + rImage + ") " +
+	               /*console.log(rInstance.InstanceId + " (" + rState + ") " + " (" + rImage + ") " +
 	                " (" + rInstance.PublicDnsName + ") " + "(" + rKeyName +
 	                ") " + "(" + rInstanceType + ") " + "(" + rUnixLaunch + ") " + "(" + rDuration + ") " + "(" + rZone + ") ");
-	                
+	                */
 	                var data = new InstanceModel({ 
 						instance: rInstance.InstanceId,
 						imageId: rImage, 
