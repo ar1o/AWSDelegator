@@ -1957,10 +1957,11 @@ optgroup {
  * Remove most spacing between table cells.
  */
 table {
-  width: =90%;
+  width: =70%;
   border-collapse: collapse;
   border-spacing: 0;
-  border-left }
+  border-left: 6%;
+  border-right: 6%; }
 
 td {
   vertical-align: center;
