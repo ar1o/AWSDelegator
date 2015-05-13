@@ -3,8 +3,34 @@
   height: 100%;
   width: 100%;
 }
-.InstancesView html,
-.InstancesView body {
+.InstancesView table,
+.InstancesView th,
+.InstancesView td {
+  border: 1px solid black;
+  border-collapse: collapse;
+  background-color: #CCCCA3;
+}
+.InstancesView th,
+.InstancesView td {
+  padding: 5px;
+  text-align: center;
+}
+.instances {
+  padding: 10px;
+}
+.cpu {
+  padding: 10px;
+  float: left;
+}
+.networkin {
+  padding: 10px;
+  float: left;
+}
+.networkout {
+  padding: 10px;
+}
+html,
+body {
   height: 100%;
   margin: 0;
   background-color: #E5E5E5;
@@ -825,18 +851,4 @@ input[type="search"] {
   -moz-box-sizing: content-box;
   box-sizing: content-box;
   -webkit-appearance: textfield;
-}
-.instances {
-  padding: 10px;
-}
-.cpu {
-  padding: 10px;
-  float: left;
-}
-.networkin {
-  padding: 10px;
-  float: left;
-}
-.networkout {
-  padding: 10px;
 }

@@ -47,7 +47,6 @@ var InstancesModel = Backbone.Model.extend({
 	addEC2Instance: function() {
 		var self = this;
 
-<<<<<<< HEAD
 		this.aws_result().done(function(result) {
 			// console.log(result);
 			instanceCollection.reset();
@@ -81,41 +80,6 @@ var InstancesModel = Backbone.Model.extend({
 					self.getOutNetworkMetrics(rInstance.InstanceId, rState);
 
 					var data = new InstanceModel({
-=======
-		aws_result().done(function(result) {
-	        console.log(result);
-	        for (var r in result.Reservations) {
-	            for (var i in result.Reservations[r].Instances) {
-	                var rInstance = result.Reservations[r].Instances[i];
-	                var rImage= rInstance.ImageId;
-	                var rState = rInstance.State.Name;
-	                var rKeyName = rInstance.KeyName;
-	                var rInstanceType = rInstance.InstanceType;
-	                var rLaunchTime = rInstance.LaunchTime;
-	                if (rState=="stopped"||rState=="stopping") {
-	                	rDuration=0;
-	                }
-	                else{
-	                //LOGIC FOR PARSING AND COMPUTING RUNNING TIME
-	                var d = new Date();
-	                var rUnixLaunch = Date.parse(rLaunchTime);
-	               	var rUnixNow = d.getTime();
-	               	var rDuration = (rUnixNow - rUnixLaunch)/1000;
-	                }
-	                var rZone = rInstance.Placement.AvailabilityZone;
-
-	                //Email logic
-	                for(var i in rInstance.Tags){
-	                	if(rInstance.Tags[i].Key=="email"){
-	                		rEmail = rInstance.Tags[i].Value;
-	                		break;
-	                	}
-	                	else
-	                		rEmail = "mikesmit.com@gmail.com";
-	                }
-	                
-	                var data = new InstanceModel({ 
->>>>>>> pr/2
 						instance: rInstance.InstanceId,
 						imageId: rImage,
 						state: rState,
@@ -302,8 +266,6 @@ var InstanceModel = Backbone.Model.extend({
 		email: "mikesmit.com@gmail.com"
 
 	}
-
-<<<<<<< HEAD
 });
 // A metrics model template
 var MetricModel = Backbone.Model.extend({
@@ -322,6 +284,4 @@ var EC2InstancesCollection = Backbone.Collection.extend({
 });
 // Create the collection
 var instanceCollection = new EC2InstancesCollection();
-=======
-});
->>>>>>> pr/2
+
