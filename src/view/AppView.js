@@ -6,6 +6,8 @@ var AppView = Backbone.View.extend({
 
         this.router = new AppRouter({ defaultView: 'InstancesView' });
         
+        this.cpuActivity = new CPUActivityView();
+
 		this.render();
 
 		this.setListeners();
@@ -43,7 +45,7 @@ var AppView = Backbone.View.extend({
 		this.$el.html(Handlebars.templates.AppView());
 
 		this.setView(this.router.get('view'));
-
+        this.$el.append(this.cpuActivity.el);
 	},
 
 	setView: function(view) {

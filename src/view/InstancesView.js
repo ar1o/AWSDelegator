@@ -12,7 +12,6 @@ var InstancesView = Backbone.View.extend({
             this.model = new InstancesModel();
         }
 
-<<<<<<< HEAD
         var self = this;
         self.interval = setInterval(function() {
             self.model.addEC2Instance();
@@ -41,43 +40,14 @@ var InstancesView = Backbone.View.extend({
 
             });
             // console.log(cpuMetricCollection.pluck('instance'));
-        }.bind(this));
 
 
-        this.model.change('cpuMetrics', function(model, val) {
-            this.render();
-
-
-            $(function() {
-                // call the tablesorter plugin
-                $.tablesorter.defaults.widgets = ['zebra'];
-                $("table").tablesorter({
-                    theme: 'blue',
-                    
-                    // header layout template; {icon} needed for some themes
-                    headerTemplate: '{content}{icon}',
-                    // initialize zebra striping and column styling of the table
-                });
-
-            });
-
-        }.bind(this));
-
-        this.model.change('networkInMetrics', function(model, val) {
-            this.render();
-        }.bind(this));
-
-        this.model.change('networkOutMetrics', function(model, val) {
-            this.render();
         }.bind(this));
     },
 
     render: function() {
         var html = Handlebars.templates.InstancesView({
-            instances: instanceCollection.toJSON(),
-            cpuMetrics: cpuMetricCollection.toJSON(),
-            networkIn: networkInMetricCollection.toJSON(),
-            networkOut: networkOutMetricCollection.toJSON()
+            instances: instanceCollection.toJSON()
         });
         this.$el.html(html);
     }

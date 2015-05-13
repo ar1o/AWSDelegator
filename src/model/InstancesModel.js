@@ -88,7 +88,7 @@ var InstancesModel = Backbone.Model.extend({
 						launchTime: rLaunchTime,
 						duration: rDuration,
 						zone: rZone,
-						email: rEmail
+						// email: rEmail
 					});
 
 					instanceCollection.add(data);
