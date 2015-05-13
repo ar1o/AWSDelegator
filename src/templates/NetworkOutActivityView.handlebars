@@ -1,0 +1,26 @@
+
+<div id="NetOut">
+	<table class="tablesorter" cellspacing="1" bordered="1">
+		<thead>
+			<tr class="tablesorter-headerRow" role="row">
+				<th class="tablesorter-header" data-column="0" unselectable="on">
+					<div class="tablesorter-header-inner">Instance ID</div>
+				</th>
+				<th class="tablesorter-header" data-column="1">
+					<div class="tablesorter-header-inner">Net Out</div>
+				</th>
+
+			</tr>
+		</thead>
+		<tbody id="NetOutData">
+		{{#each networkOutMetrics}}
+			<tr class="tablesorter-body">
+				<td>{{this.instance}}</td>
+				<td>{{this.networkOut}}</td>
+
+			</tr>
+		{{/each}}
+		</tbody>	
+	</table>
+
+</div> 
