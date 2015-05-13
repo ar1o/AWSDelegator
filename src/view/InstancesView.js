@@ -1,5 +1,7 @@
 // Here is where the EC2 Instances are renders the instanceCollection JSON object
 // by the handlebars template called InstancesView.handlebars
+
+
 var InstancesView = Backbone.View.extend({
 
     className: 'InstancesView',
@@ -10,6 +12,7 @@ var InstancesView = Backbone.View.extend({
             this.model = new InstancesModel();
         }
 
+<<<<<<< HEAD
         var self = this;
         self.interval = setInterval(function() {
             self.model.addEC2Instance();
@@ -21,16 +24,39 @@ var InstancesView = Backbone.View.extend({
 
     },
 
+=======
+        this.model.addEC2Instance();
+
+        this.bindings();
+        this.render();
+    },
+>>>>>>> pr/2
     //Check for when the data is read and renders the page
     bindings: function() {
         this.model.change('dataReady', function(model, val) {
             this.render();
+<<<<<<< HEAD
             // console.log(cpuMetricCollection.pluck('instance'));
         }.bind(this));
 
 
         this.model.change('cpuMetrics', function(model, val) {
             this.render();
+=======
+
+            $(function() {
+                // call the tablesorter plugin
+                $.tablesorter.defaults.widgets = ['zebra'];
+                $("table").tablesorter({
+                    theme: 'blue',
+                    
+                    // header layout template; {icon} needed for some themes
+                    headerTemplate: '{content}{icon}',
+                    // initialize zebra striping and column styling of the table
+                });
+
+            });
+>>>>>>> pr/2
         }.bind(this));
 
         this.model.change('networkInMetrics', function(model, val) {
@@ -51,6 +77,10 @@ var InstancesView = Backbone.View.extend({
         });
         this.$el.html(html);
     }
+<<<<<<< HEAD
+=======
+
+>>>>>>> pr/2
 
 
 });

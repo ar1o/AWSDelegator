@@ -31,6 +31,9 @@ tramp
 # cask packages
 .cask/
 
+# directory files
+*.directory
+
 .DS_Store
 node_modules/
 optimized/
