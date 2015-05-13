@@ -46,11 +46,16 @@ var InstancesModel = Backbone.Model.extend({
 	                }
 	                var rZone = rInstance.Placement.AvailabilityZone;
 
+	                //Email logic
+	                for(var i in rInstance.Tags){
+	                	if(rInstance.Tags[i].Key=="email"){
+	                		rEmail = rInstance.Tags[i].Value;
+	                		break;
+	                	}
+	                	else
+	                		rEmail = "mikesmit.com@gmail.com";
+	                }
 	                
-	               /*console.log(rInstance.InstanceId + " (" + rState + ") " + " (" + rImage + ") " +
-	                " (" + rInstance.PublicDnsName + ") " + "(" + rKeyName +
-	                ") " + "(" + rInstanceType + ") " + "(" + rUnixLaunch + ") " + "(" + rDuration + ") " + "(" + rZone + ") ");
-	                */
 	                var data = new InstanceModel({ 
 						instance: rInstance.InstanceId,
 						imageId: rImage, 
@@ -59,7 +64,8 @@ var InstancesModel = Backbone.Model.extend({
 						instanceType: rInstanceType,
 						launchTime: rLaunchTime,
 						duration: rDuration,
-						zone: rZone
+						zone: rZone,
+						email: rEmail
 					});
 
 	                instanceCollection.add(data);    
@@ -86,14 +92,9 @@ var InstanceModel = Backbone.Model.extend({
 		instanceType: null,
 		launchTime: null,
 		runningTime: null,
-		zone: null
+		zone: null,
+		email: "mikesmit.com@gmail.com"
 
     }
 
 });
-
-
-
-
-
-

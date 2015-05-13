@@ -35,7 +35,7 @@ var ec2 = new AWS.EC2({
 });
 
 
-
+var params = null;
 
 app.get('/test2', function(req, res) {
 

@@ -1,40 +1,51 @@
-  <body>
-
-    <div class="intro grey darken-2 z-depth-1">
-        <h1 class="grey-text text-lighten-5">Dalhousie SIM</h1>
-        <h5>EC2 Instance Information</h5>
-      </div>
-      </body>
-<div class="list_of_instances z-depth-1">
-<table class="table bordered striped ">
-	<tr class="grey darken-1 align=center z-depth-2">
-		<th>Instance ID</td>
-		<th>State</td>
-		<th>Image</td>
-		<th>Key Name</td>
-		<th>Type</td>
-		<th>Launched</td>
-		<th>Zone</td>
-		<th>Lifetime</td>
-	</tr>
-	<tbody>
-	{{#each instances}}
-	
-	<tr class="instance align=center">
-		<td>{{this.instance}}</td>
-		<td>{{this.state}}</td>
-		<td>{{this.imageId}}</td>
-		<td>{{this.keyName}}</td>
-		<td>{{this.instanceType}}</td>
-		<td>{{this.launchTime}}</td> 
-		<td>{{this.zone}}</td>
-		<!--//Need a conditional in the (.js?) to set duration to 0 when state=="stopped"-->
-		<td>{{this.duration}} sec</td>
-	</tr>
-	{{/each}}
-	</tbody>
-</table>
-
+<div id="EC2">
+	<table class="tablesorter" cellspacing="1" bordered="1">
+		<thead>
+			<tr class="tablesorter-headerRow" role="row">
+				<th class="tablesorter-header" data-column="0" unselectable="on">
+					<div class="tablesorter-header-inner">Instance ID</div>
+				</th>
+				<th class="tablesorter-header" data-column="1">
+					<div class="tablesorter-header-inner">State</div>
+				</th>
+				<th class="tablesorter-header" data-column="2">
+					<div class="tablesorter-header-inner">Image</div>
+				</th>
+				<th class="tablesorter-header" data-column="3">
+					<div class="tablesorter-header-inner">Key Name</div>
+				</th>
+				<th class="tablesorter-header" data-column="4">
+					<div class="tablesorter-header-inner">Type</div>
+				</th>
+				<!--Failing to sort-->
+				<th class="tablesorter-header" data-column="5">
+					<div class="tablesorter-header-inner">Launched</div>
+				</th>
+				<th class="tablesorter-header" data-column="6">
+					<div class="tablesorter-header-inner">Zone</div>
+				</th>
+				<th class="tablesorter-header" data-column="7">
+					<div class="tablesorter-header-inner">Lifetime</div>
+				</th>
+				<th class="tablesorter-header" data-column="8">
+					<div class="tablesorter-header-inner">E-Mail</div>
+				</th>
+			</tr>
+		</thead>
+		<tbody id="instanceData">
+		{{#each instances}}
+			<tr class="tablesorter-body">
+				<td>{{this.instance}}</td>
+				<td>{{this.state}}</td>
+				<td>{{this.imageId}}</td>
+				<td>{{this.keyName}}</td>
+				<td>{{this.instanceType}}</td>
+				<td>{{this.launchTime}}</td> 
+				<td>{{this.zone}}</td>
+				<td>{{this.duration}} sec</td>
+				<td>{{this.email}}</td>
+			</tr>
+		{{/each}}
+		</tbody>	
+	</table>
 </div>
-</body>
-

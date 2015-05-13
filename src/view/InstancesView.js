@@ -1,5 +1,7 @@
 // Here is where the EC2 Instances are renders the instanceCollection JSON object
 // by the handlebars template called InstancesView.handlebars
+
+
 var InstancesView = Backbone.View.extend({
 
     className: 'InstancesView',
@@ -19,6 +21,17 @@ var InstancesView = Backbone.View.extend({
     bindings: function() {
         this.model.change('dataReady', function(model, val) {
         this.render();
+
+        $(function() {
+            // call the tablesorter plugin
+            $("table").tablesorter({
+            theme : 'default',
+            // header layout template; {icon} needed for some themes
+            headerTemplate : '{content}{icon}',
+            // initialize zebra striping and column styling of the table
+      });
+
+});
     }.bind(this));
 
     },
@@ -30,6 +43,8 @@ var InstancesView = Backbone.View.extend({
         });
         this.$el.html(html);
 	}
+    
+
 
 
 });

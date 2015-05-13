@@ -56,6 +56,6 @@ var AppView = Backbone.View.extend({
 		this.model.set('currentView', viewInstance);
 		this.$el.find('.content-view').html(viewInstance.el);
 	}
-
+    
 
 });
