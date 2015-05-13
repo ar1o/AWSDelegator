@@ -135,7 +135,7 @@ var InstancesModel = Backbone.Model.extend({
 						cpu: data.Datapoints[0].Average
 					});
 					cpuMetricCollection.add(fData);
-				self.set('cpuMetrics', Date.now());
+					self.set('cpuMetrics', Date.now());
 
 				}
 
