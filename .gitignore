@@ -31,7 +31,7 @@ tramp
 # cask packages
 .cask/
 
-.directory/
+*.directory
 
 .DS_Store
 node_modules/
