@@ -1,9 +1,9 @@
-var AppModel = Backbone.Model.extend({ 
+var AppModel = Backbone.Model.extend({
 
 	defaults: {
 		loggedIn: true,
-        navBarVisible: true,
-        currentView: undefined
+		navBarVisible: true,
+		currentView: undefined
 	}
 
 });

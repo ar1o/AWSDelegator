@@ -1,5 +1,5 @@
 <div class="list_of_instances">
-<center>
+<div class="instances">
 <table>
 	<tr>
 		<th>Instance ID</td>
@@ -12,8 +12,7 @@
 		<th>Lifetime</td>
 	</tr>
 	{{#each instances}}
-	<tr><center>
-		<div class="instance">
+	<tr>
 		<td>{{this.instance}}</td>
 		<td>{{this.state}}</td>
 		<td>{{this.imageId}}</td>
@@ -22,9 +21,57 @@
 		<td>{{this.launchTime}}</td> 
 		<td>{{this.zone}}</td>
 		<td>{{this.duration}} sec</td>
-	</center></tr>
+	</tr>
 	{{/each}}
 </table>
-</center>
+</div>
+
+<div class='cpu'>
+<table>
+	<tr>
+		<th>Instance ID</td>
+		<th>CPU Usage (%)</td>
+	</tr>
+	{{#each cpuMetrics}}
+	<tr>
+		<td>{{this.instance}}</td>
+		<td>{{this.cpu}}</td>
+	</tr>
+	{{/each}}
+</table>
+</div>
+
+<div class='networkin'>
+<table>
+	<tr>
+		<th>Instance ID</td>
+		<th>NetworkIn Usage (Bytes)</td>
+	</tr>
+	{{#each networkIn}}
+	<tr>
+		<td>{{this.instance}}</td>
+		<td>{{this.networkIn}}</td>
+	</tr>
+	{{/each}}
+</table>
+</div>
+
+
+
+<div class='networkout'>
+<table>
+	<tr>
+		<th>Instance ID</td>
+		<th>NetworkOut Usage (Bytes)</td>
+	</tr>
+	{{#each networkOut}}
+	<tr>
+		<td>{{this.instance}}</td>
+		<td>{{this.networkOut}}</td>
+	</tr>
+	{{/each}}
+</table>
+</div>
+
 </div>
 

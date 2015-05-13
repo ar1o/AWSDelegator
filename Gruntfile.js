@@ -36,7 +36,7 @@ module.exports = function(grunt) {
         express: {
             dev: {
             options: {
-                script: 'src/js/AWS_middleware.js',
+                script: 'src/server/server.js',
                 delay: 1000,
                 background: false
 

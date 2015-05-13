@@ -27,8 +27,6 @@
   },
   "dependencies": {
     "express": "~4.12.3",
-    "aws-sdk": "~2.1.26",
-    "browserify": "~10.1.0"
-
+    "aws-sdk": "~2.1.26"
   }
 }
