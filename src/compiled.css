@@ -1,4 +1,3 @@
-@import "style.css";
 .content-view {
   height: 100%;
   width: 100%;
@@ -19,4 +18,45 @@
 #NetIn {
   float: left;
   padding: 10px;
+}
+/* tables */
+.tablesorter {
+  font-family: arial;
+  background-color: #CDCDCD;
+  margin: 10px 0pt 10px;
+  font-size: 8pt;
+  width: 100%;
+  text-align: center;
+}
+.tablesorter thead tr th,
+table.tablesorter tfoot tr th {
+  background-color: #e6EEEE;
+  border: 1px solid #FFF;
+  font-size: 8pt;
+  padding: 4px;
+}
+.tablesorter thead tr .header {
+  background-image: url(bg.gif);
+  background-repeat: no-repeat;
+  background-position: center right;
+  cursor: pointer;
+}
+.tablesorter tbody td {
+  color: #3D3D3D;
+  padding: 4px;
+  background-color: #FFF;
+  vertical-align: top;
+}
+.tablesorter tbody tr.odd td {
+  background-color: #F0F0F6;
+}
+.tablesorter thead tr .headerSortUp {
+  background-image: url(asc.gif);
+}
+.tablesorter thead tr .headerSortDown {
+  background-image: url(desc.gif);
+}
+.tablesorter thead tr .headerSortDown,
+table.tablesorter thead tr .headerSortUp {
+  background-color: #8dbdd8;
 }
