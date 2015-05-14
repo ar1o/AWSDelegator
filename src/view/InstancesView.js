@@ -43,9 +43,9 @@ var InstancesView = Backbone.View.extend({
 
             });
             // console.log(cpuMetricCollection.pluck('instance'));
-            this.cpuActivity.model.getCPUMetrics();
-            this.networkInActivity.model.getNetworkInMetrics();
-            this.networkOutActivity.model.getNetworkOutMetrics();
+            // this.cpuActivity.model.getCPUMetrics();
+            // this.networkInActivity.model.getNetworkInMetrics();
+            // this.networkOutActivity.model.getNetworkOutMetrics();
 
           
 
