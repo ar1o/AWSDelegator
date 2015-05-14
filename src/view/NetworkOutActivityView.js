@@ -4,9 +4,9 @@ var NetworkOutActivityView = Backbone.View.extend({
     className: 'NetworkOutActivityView',
 
     initialize: function(options) {
-
+        
         if (!this.model) {
-            this.model = new InstancesModel();
+            this.model = new NetworkOutActivityModel();
         }
 
         this.bindings();
