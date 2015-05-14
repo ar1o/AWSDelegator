@@ -9,7 +9,7 @@ var CPUActivityView = Backbone.View.extend({
     initialize: function(options) {
 
         if (!this.model) {
-            this.model = new InstancesModel();
+            this.model = new CPUActivityModel();
         }
 
         this.bindings();

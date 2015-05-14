@@ -6,7 +6,7 @@ var NetworkInActivityView = Backbone.View.extend({
     initialize: function(options) {
 
         if (!this.model) {
-            this.model = new InstancesModel();
+            this.model = new NetworkInActivityModel();
         }
 
         this.bindings();

@@ -16,7 +16,9 @@ var InstancesView = Backbone.View.extend({
         self.interval = setInterval(function() {
             self.model.addEC2Instance();
         }, 1000 * 60 * 60);
-        // }, 5000);
+        this.cpuActivity = new CPUActivityView();
+        this.networkInActivity = new NetworkInActivityView();
+        this.networkOutActivity = new NetworkOutActivityView();
 
         this.bindings();
         this.render();
@@ -26,13 +28,13 @@ var InstancesView = Backbone.View.extend({
     //Check for when the data is read and renders the page
     bindings: function() {
         this.model.change('dataReady', function(model, val) {
-            this.render();
+
             $(function() {
                 // call the tablesorter plugin
                 $.tablesorter.defaults.widgets = ['zebra'];
                 $("table").tablesorter({
                     theme: 'blue',
-                    
+
                     // header layout template; {icon} needed for some themes
                     headerTemplate: '{content}{icon}',
                     // initialize zebra striping and column styling of the table
@@ -40,6 +42,11 @@ var InstancesView = Backbone.View.extend({
 
             });
             // console.log(cpuMetricCollection.pluck('instance'));
+            this.cpuActivity.model.getCPUMetrics();
+            this.networkInActivity.model.getNetworkInMetrics();
+            this.networkOutActivity.model.getNetworkOutMetrics();
+
+            this.render();
 
 
         }.bind(this));
@@ -50,6 +57,9 @@ var InstancesView = Backbone.View.extend({
             instances: instanceCollection.toJSON()
         });
         this.$el.html(html);
+        this.$el.append(this.cpuActivity.el);
+        this.$el.append(this.networkInActivity.el);
+        this.$el.append(this.networkOutActivity.el);
     }
 
 

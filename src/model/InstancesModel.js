@@ -16,16 +16,11 @@ var networkOutMetricCollection = new MetricsCollection();
 // The instances model where we manipulate the data from AWS
 var InstancesModel = Backbone.Model.extend({
 	initialize: function() {
-		// console.log("Init instances model");
-
 		var data = {};
 		var result;
 
 		this.addEC2Instance();
 		this.change('dataReady');
-		this.change('cpuMetrics');
-		this.change('networkInMetrics');
-		this.change('networkOutMetrics');
 	},
 
 	aws_result: function() {
@@ -36,8 +31,6 @@ var InstancesModel = Backbone.Model.extend({
 			contentType: 'application/json',
 			url: 'http://localhost:3000/api/instances',
 			success: function(data) {
-				// console.log('success');
-				// console.log(data);
 				result = data;
 			}
 		});
@@ -50,9 +43,9 @@ var InstancesModel = Backbone.Model.extend({
 		this.aws_result().done(function(result) {
 			// console.log(result);
 			instanceCollection.reset();
-			cpuMetricCollection.reset();
-			networkInMetricCollection.reset();
-			networkOutMetricCollection.reset();
+			// cpuMetricCollection.reset();
+			// networkInMetricCollection.reset();
+			// networkOutMetricCollection.reset();
 			for (var r in result.Reservations) {
 				for (var i in result.Reservations[r].Instances) {
 					var rInstance = result.Reservations[r].Instances[i];
@@ -74,11 +67,6 @@ var InstancesModel = Backbone.Model.extend({
 					// 	" (" + rInstance.PublicDnsName + ") " + "(" + rKeyName +
 					// 	") " + "(" + rInstanceType + ") " + "(" + rUnixLaunch + ") " + "(" + rDuration + ") " + "(" + rZone + ") ");
 
-
-					self.getCPUMetrics(rInstance.InstanceId, rState);
-					self.getInNetworkMetrics(rInstance.InstanceId, rState);
-					self.getOutNetworkMetrics(rInstance.InstanceId, rState);
-
 					var data = new InstanceModel({
 						instance: rInstance.InstanceId,
 						imageId: rImage,
@@ -94,158 +82,14 @@ var InstancesModel = Backbone.Model.extend({
 					instanceCollection.add(data);
 
 				}
-			}
 
+			}
 			self.set('dataReady', Date.now());
-			console.log('Instances Data Ready');
+			// console.log('Instances Data Ready');
 
 		}).fail(function() {
 			console.log('FAILED');
 		});
-	},
-	//GET average CPU usage for 1 hour
-	getCPUMetrics: function(val, rstate) {
-		var self = this;
-		var fData;
-
-		if (rstate == "running") {
-
-
-			var d = new Date();
-			var rUnixNow = d.getTime();
-			var rEndTime = parseInt(rUnixNow / 1000);
-			var rStartTime = rEndTime - 3600
-
-			var params = {
-				endTime: 1431440584,
-				startTime: (1431440584),
-				value: 'i-312254c7',
-				metric: 'CPUUtilization'
-			};
-			//params.value = instanceCollection.models[i].attributes.instance;
-			params.value = val;
-			params.endTime = parseInt(rEndTime - 3000);
-			params.startTime = parseInt(rStartTime);
-
-			$.get('http://localhost:3000/api/cpu', params, function(data) {
-				if (data.Datapoints[0].Average) {
-					// console.log(params.value, data.Datapoints[0].Average);
-					// console.log(params.value, data);
-					fData = new MetricModel({
-						instance: params.value,
-						cpu: data.Datapoints[0].Average
-					});
-					cpuMetricCollection.add(fData);
-					self.set('cpuMetrics', Date.now());
-
-				}
-
-			});
-
-
-		} else {
-			// console.log("instance not running", val);
-			fData = new MetricModel({
-				instance: val,
-				cpu: 0
-			});
-			cpuMetricCollection.add(fData);
-			self.set('cpuMetrics', Date.now());
-
-		}
-
-
-	},
-
-	getInNetworkMetrics: function(val, rstate) {
-		var fData;
-		var self = this;
-		if (rstate == "running") {
-			var d = new Date();
-			var rUnixNow = d.getTime();
-			var rEndTime = parseInt(rUnixNow / 1000);
-			var rStartTime = rEndTime - 3600
-
-			var params = {
-				endTime: 1431440584,
-				startTime: (1431440584),
-				value: 'i-312254c7',
-				metric: 'NetworkIn'
-			};
-			//params.value = instanceCollection.models[i].attributes.instance;
-			params.value = val;
-			params.endTime = parseInt(rEndTime - 3000);
-			params.startTime = parseInt(rStartTime);
-
-			$.get('http://localhost:3000/api/network/in', params, function(data) {
-				if (data.Datapoints[0].Average) {
-					// console.log(params.value, data.Datapoints[0].Average);
-					// console.log(params.value, data);
-					fData = new MetricModel({
-						instance: params.value,
-						networkIn: data.Datapoints[0].Average
-					});
-					networkInMetricCollection.add(fData);
-					self.set('networkInMetrics', Date.now());
-
-
-				}
-
-			});
-		} else {
-			// console.log("instance not running", val);
-			fData = new MetricModel({
-				instance: val,
-				networkIn: 0
-			});
-			networkInMetricCollection.add(fData);
-			self.set('networkInMetrics', Date.now());
-
-		}
-	},
-	getOutNetworkMetrics: function(val, rstate) {
-		var fData;
-		var self = this;
-		if (rstate == "running") {
-			var d = new Date();
-			var rUnixNow = d.getTime();
-			var rEndTime = parseInt(rUnixNow / 1000);
-			var rStartTime = rEndTime - 3600
-
-			var params = {
-				endTime: 1431440584,
-				startTime: (1431440584),
-				value: 'i-312254c7',
-				metric: 'NetworkOut'
-			};
-			//params.value = instanceCollection.models[i].attributes.instance;
-			params.value = val;
-			params.endTime = parseInt(rEndTime - 3000);
-			params.startTime = parseInt(rStartTime);
-
-			$.get('http://localhost:3000/api/network/out', params, function(data) {
-				if (data.Datapoints[0].Average) {
-					// console.log(params.value, data.Datapoints[0].Average);
-					// console.log(params.value, data);
-					fData = new MetricModel({
-						instance: params.value,
-						networkOut: data.Datapoints[0].Average
-					});
-					networkOutMetricCollection.add(fData);
-					self.set('networkOutMetrics', Date.now());
-				}
-
-			});
-		} else {
-			// console.log("instance not running", val);
-			fData = new MetricModel({
-				instance: val,
-				networkOut: 0
-			});
-			networkOutMetricCollection.add(fData);
-			self.set('networkOutMetrics', Date.now());
-
-		}
 	}
 
 });
