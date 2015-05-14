@@ -8,6 +8,10 @@ var AppView = Backbone.View.extend({
         
         this.cpuActivity = new CPUActivityView();
 
+        this.networkOutActivity = new NetworkOutActivityView();
+
+        this.networkInActivity = new NetworkInActivityView();
+
 		this.render();
 
 		this.setListeners();
@@ -46,6 +50,10 @@ var AppView = Backbone.View.extend({
 
 		this.setView(this.router.get('view'));
         this.$el.append(this.cpuActivity.el);
+
+        this.$el.append(this.networkInActivity.el);
+
+        this.$el.append(this.networkOutActivity.el);
 	},
 
 	setView: function(view) {
