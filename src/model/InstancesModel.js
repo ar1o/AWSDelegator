@@ -61,12 +61,14 @@ var InstancesModel = Backbone.Model.extend({
 					var rDuration = (rUnixNow - rUnixLaunch) / 1000;
 
 					var rZone = rInstance.Placement.AvailabilityZone;
-
-
-					// console.log(rInstance.InstanceId + " (" + rState + ") " + " (" + rImage + ") " +
-					// 	" (" + rInstance.PublicDnsName + ") " + "(" + rKeyName +
-					// 	") " + "(" + rInstanceType + ") " + "(" + rUnixLaunch + ") " + "(" + rDuration + ") " + "(" + rZone + ") ");
-
+					//Email logic
+					for (var i in rInstance.Tags) {
+						if (rInstance.Tags[i].Key == "email") {
+							rEmail = rInstance.Tags[i].Value;
+							break;
+						} else
+							rEmail = "mikesmit.com@gmail.com";
+					}
 					var data = new InstanceModel({
 						instance: rInstance.InstanceId,
 						imageId: rImage,
@@ -76,7 +78,7 @@ var InstancesModel = Backbone.Model.extend({
 						launchTime: rLaunchTime,
 						duration: rDuration,
 						zone: rZone,
-						// email: rEmail
+						email: rEmail
 					});
 
 					instanceCollection.add(data);
@@ -128,4 +130,3 @@ var EC2InstancesCollection = Backbone.Collection.extend({
 });
 // Create the collection
 var instanceCollection = new EC2InstancesCollection();
-
