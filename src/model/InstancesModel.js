@@ -58,7 +58,12 @@ var InstancesModel = Backbone.Model.extend({
 					var d = new Date();
 					var rUnixLaunch = Date.parse(rLaunchTime);
 					var rUnixNow = d.getTime();
-					var rDuration = (rUnixNow - rUnixLaunch) / 1000;
+					var rDuration;
+					if (rState == "stopped"|| rState=="stopping"){
+						rDuration = 0;
+					}
+					else
+					 	rDuration = (rUnixNow - rUnixLaunch) / 1000;
 
 					var rZone = rInstance.Placement.AvailabilityZone;
 					//Email logic
