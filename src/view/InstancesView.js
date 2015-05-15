@@ -28,7 +28,7 @@ var InstancesView = Backbone.View.extend({
     //Check for when the data is read and renders the page
     bindings: function() {
         this.model.change('dataReady', function(model, val) {
-         this.render();
+            this.render();
 
             $(function() {
                 // call the tablesorter plugin
@@ -42,12 +42,12 @@ var InstancesView = Backbone.View.extend({
                 });
 
             });
-            console.log(cpuMetricCollection.pluck('instance'));
             this.cpuActivity.model.getCPUMetrics();
+            console.log(cpuMetricCollection.pluck('instance'));
+
             this.networkInActivity.model.getNetworkInMetrics();
             this.networkOutActivity.model.getNetworkOutMetrics();
 
-          
 
 
         }.bind(this));
