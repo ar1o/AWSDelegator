@@ -133,15 +133,15 @@ Test out these custom less files live
   color: #000000;
 }
 .oddRows {
-  background-color: #d6d9db;
+  background-color: #fafafa;
 }
 /* hovered rows */
 .oddHovered {
-  background-color: #6389b6;
+  background-color: #adadae;
   color: #000000;
 }
 .evenHovered {
-  background-color: #86a4c6;
+  background-color: #c7c6c7;
   color: #000000;
 }
 /* Columns widget */
@@ -193,7 +193,7 @@ Test out these custom less files live
 .tablesorter-metro thead td {
   font: 14px 'Segoe UI Semilight', 'Open Sans', Verdana, Arial, Helvetica, sans-serif;
   font-weight: bold;
-  background-color: #0c54a6;
+  background-color: #5f3cb9;
   color: #eeeeee;
   color: #ffffff;
   border-collapse: collapse;
@@ -202,7 +202,7 @@ Test out these custom less files live
 .tablesorter-metro .dark-row th,
 .tablesorter-metro .dark-row td,
 .tablesorter-metro caption.dark-row {
-  background-color: #093c77;
+  background-color: #4b2f92;
 }
 .tablesorter-metro tbody td,
 .tablesorter-metro tfoot th,
@@ -251,7 +251,7 @@ Test out these custom less files live
   vertical-align: top;
 }
 .tablesorter-metro tbody tr.odd > td {
-  background-color: #d6d9db;
+  background-color: #fafafa;
 }
 .tablesorter-metro tbody tr.even > td {
   background-color: #ffffff;
@@ -265,14 +265,14 @@ Test out these custom less files live
 .tablesorter-metro tbody > tr.even:hover > td,
 .tablesorter-metro tbody > tr.even:hover + tr.tablesorter-childRow > td,
 .tablesorter-metro tbody > tr.even:hover + tr.tablesorter-childRow + tr.tablesorter-childRow > td {
-  background-color: #86a4c6;
+  background-color: #c7c6c7;
   color: #000000;
 }
 .tablesorter-metro tbody > tr.odd.hover > td,
 .tablesorter-metro tbody > tr.odd:hover > td,
 .tablesorter-metro tbody > tr.odd:hover + tr.tablesorter-childRow > td,
 .tablesorter-metro tbody > tr.odd:hover + tr.tablesorter-childRow + tr.tablesorter-childRow > td {
-  background-color: #6389b6;
+  background-color: #adadae;
   color: #000000;
 }
 .tablesorter-metro .tablesorter-processing {
@@ -281,34 +281,34 @@ Test out these custom less files live
   background-repeat: no-repeat;
 }
 .tablesorter-metro div.tablesorter-pager button {
-  background-color: #0f65c7;
+  background-color: #7352c7;
   color: #eeeeee;
-  border: #1278ed 1px solid;
+  border: #8c71d1 1px solid;
   cursor: pointer;
 }
 .tablesorter-metro div.tablesorter-pager button:hover {
-  background-color: #1278ed;
+  background-color: #8c71d1;
 }
 .tablesorter-metro tr.odd td.primary {
-  background-color: #88a9f6;
+  background-color: #dfd1f0;
 }
 .tablesorter-metro td.primary,
 .tablesorter-metro tr.even td.primary {
-  background-color: #aec5f9;
+  background-color: #f4f0fa;
 }
 .tablesorter-metro tr.odd td.secondary {
-  background-color: #aec5f9;
+  background-color: #f4f0fa;
 }
 .tablesorter-metro td.secondary,
 .tablesorter-metro tr.even td.secondary {
-  background-color: #d4e0fc;
+  background-color: #ffffff;
 }
 .tablesorter-metro tr.odd td.tertiary {
-  background-color: #d4e0fc;
+  background-color: #ffffff;
 }
 .tablesorter-metro td.tertiary,
 .tablesorter-metro tr.even td.tertiary {
-  background-color: #fafcff;
+  background-color: #ffffff;
 }
 .tablesorter-metro caption {
   background-color: #ffffff;
