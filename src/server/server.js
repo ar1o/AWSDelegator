@@ -1,20 +1,16 @@
-//Express middlewares which process the incoming requests before handling them down to the routes
-
-// AWS Stuff
-var AWS = require('aws-sdk');
-var credentials = new AWS.SharedIniFileCredentials({
-    profile: 'default'
-});
+var adm = require('adm-zip'); //compression library library
+var http = require('http'); 
+var Converter = require('csvtojson').core.Converter; //csv -> json library
+var fs = require('fs'); //file reader-writer library
+var AWS = require('aws-sdk'); //AWS SDK
+var credentials = new AWS.SharedIniFileCredentials({profile: 'default'});
 AWS.config.credentials = credentials;
 AWS.config.region = 'us-west-2';
-
-// Express Stuff
-var express = require('express'),
-    app = express();
+var express = require('express'); //ExpressJS library
+var app = express();
 port = process.env.PORT || 3000;
 
-// CORS 
-app.use(require('./CORS'));
+app.use(require('./CORS')); //CORS Module
 
 var params = {
     EndTime: 1431440584,
@@ -104,7 +100,7 @@ app.get('/api/network/out', function(req, res) {
 });
 
 
-// route handler for GET /
+// EC2 Instances
 app.get('/api/instances', function(req, res) {
 
     var ec2 = new AWS.EC2({
@@ -123,6 +119,66 @@ app.get('/api/instances', function(req, res) {
     });
 
 });
+
+// S3 Bucket for billing data
+app.get('/api/buckets', function(req, res) {
+    var params = {
+        Bucket: 'ario'
+
+    };
+    var okey;
+    var s3 = new AWS.S3();
+    s3.listObjects(params, function(err, data) {
+        // if (err) console.log(err, err.stack); // an error occurred
+        // else console.log(data); // successful response
+
+        okey = data.Contents[2].Key;
+        console.log(okey);
+
+        var params_ = {
+            Bucket: 'ario',
+            Key: okey
+        };
+        var file = fs.createWriteStream('test.zip');
+        s3.getObject(params_).createReadStream().pipe(file);
+        res.send(okey);
+
+        file.on('close', function() {
+            console.log("test");
+            var unzip = new adm('test.zip');
+            try {
+                unzip.extractAllTo("data", true);
+            } catch (e) {
+                console.log(e);
+            }
+        });
+
+
+
+    });
+});
+
+// Billing data in JSON - data must exist!
+app.get('/api/billing', function(req, res) {
+    var csvFile = "data/092841396837-aws-billing-detailed-line-items-with-resources-and-tags-2015-05.csv"
+    var filestream = fs.createReadStream(csvFile);
+
+    var param_c = {};
+    var csvConverter = new Converter(param_c);
+    var end_obj;
+    csvConverter.on("end_parsed", function(jsonObj) {
+        // console.log(jsonObj);
+        res.send(jsonObj);
+    });
+
+    filestream.pipe(csvConverter);
+    filestream.on('close', function() {
+        console.log("end");
+
+
+    });
+});
+
 
 
 app.listen(port);

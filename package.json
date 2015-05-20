@@ -27,6 +27,8 @@
   },
   "dependencies": {
     "express": "~4.12.3",
-    "aws-sdk": "~2.1.26"
+    "aws-sdk": "~2.1.26",
+    "csvtojson": "~0.3.21",
+    "adm-zip": "~0.4.7"
   }
 }
