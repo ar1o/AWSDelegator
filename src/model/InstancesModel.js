@@ -23,7 +23,6 @@ var InstancesModel = Backbone.Model.extend({
 		this.addEC2Instance();
 		this.change('dataReady');
 	},
-
 	aws_result: function() {
 		var self = this;
 		return $.ajax({

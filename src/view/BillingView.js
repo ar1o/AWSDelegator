@@ -10,7 +10,7 @@ var BillingView = Backbone.View.extend({
     initialize: function(options) {
 
         if (!this.model) {
-            this.model = new BillingModel();
+            this.model = new BillingsModel();
         }
 
         this.bindings();
@@ -21,7 +21,7 @@ var BillingView = Backbone.View.extend({
     //Check for when the data is read and renders the page
     bindings: function() {
 
-        this.model.change('billingMetrics', function(model, val) {
+        this.model.change('billingReady', function(model, val) {
             this.render();
 
             $(function() {
@@ -42,7 +42,7 @@ var BillingView = Backbone.View.extend({
 
     render: function() {
         var html = Handlebars.templates.BillingView({
-            billingMetrics: billingCollection.toJSON()
+            billing: billingCollection.toJSON()
         });
         this.$el.html(html);
     }

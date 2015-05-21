@@ -7,17 +7,19 @@ templates['BillingView'] = template({"1":function(depth0,helpers,partials,data) 
     var alias1=this.lambda, alias2=this.escapeExpression;
 
   return "			<tr class=\"tablesorter-body\">\n				<td>"
-    + alias2(alias1((depth0 != null ? depth0.UsageStartDate : depth0), depth0))
+    + alias2(alias1((depth0 != null ? depth0.name : depth0), depth0))
     + "</td>\n				<td>"
-    + alias2(alias1((depth0 != null ? depth0.Cost : depth0), depth0))
+    + alias2(alias1((depth0 != null ? depth0.startTime : depth0), depth0))
     + "</td>\n				<td>"
-    + alias2(alias1((depth0 != null ? depth0.ResourceId : depth0), depth0))
-    + "</td>\n			</tr>\n";
+    + alias2(alias1((depth0 != null ? depth0.cost : depth0), depth0))
+    + "</td>\n				<td>"
+    + alias2(alias1((depth0 != null ? depth0.id : depth0), depth0))
+    + "</td>\n				\n			</tr>\n";
 },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var stack1;
 
-  return "\n<div id=\"Billing\">\n	<table class=\"tablesorter-metro\" cellspacing=\"1\">\n		<thead>\n			<tr class=\"dark-row\" role=\"row\">\n\n				<th class=\"tablesorter-header\" data-column=\"0\" unselectable=\"on\">\n					<div class=\"tablesorter-header-inner\">Usage start Time</div>\n				</th>\n\n				<th class=\"tablesorter-header\" data-column=\"1\" unselectable=\"on\">\n					<div class=\"tablesorter-header-inner\">Cost</div>\n				</th>\n				<th class=\"tablesorter-header\" data-column=\"2\" unselectable=\"on\">\n					<div class=\"tablesorter-header-inner\">Resource ID</div>\n				</th>\n			</tr>\n		</thead>\n		<tbody id=\"BillingData\">\n"
-    + ((stack1 = helpers.each.call(depth0,(depth0 != null ? depth0.billingMetrics : depth0),{"name":"each","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
+  return "\n<div id=\"Billing\">\n	<table class=\"tablesorter-metro\" cellspacing=\"1\">\n		<thead>\n			<tr class=\"dark-row\" role=\"row\">\n\n				<th class=\"tablesorter-header\" data-column=\"0\" unselectable=\"on\">\n					<div class=\"tablesorter-header-inner\">Usage start Time</div>\n				</th>\n\n				<th class=\"tablesorter-header\" data-column=\"1\" unselectable=\"on\">\n					<div class=\"tablesorter-header-inner\">Cost</div>\n				</th>\n				<th class=\"tablesorter-header\" data-column=\"2\" unselectable=\"on\">\n					<div class=\"tablesorter-header-inner\">Resource ID</div>\n				</th>\n				<th class=\"tablesorter-header\" data-column=\"2\" unselectable=\"on\">\n					<div class=\"tablesorter-header-inner\">Name</div>\n				</th>\n			</tr>\n		</thead>\n		<tbody id=\"billingData\">\n"
+    + ((stack1 = helpers.each.call(depth0,(depth0 != null ? depth0.billing : depth0),{"name":"each","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
     + "		</tbody>	\n	</table>\n\n</div> \n";
 },"useData":true});
 templates['CPUActivityView'] = template({"1":function(depth0,helpers,partials,data) {
