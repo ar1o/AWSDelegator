@@ -1,4 +1,6 @@
 var csv = require("fast-csv");
+
+
 var adm = require('adm-zip'); //compression library library
 var http = require('http');
 var Converter = require('csvtojson').core.Converter; //csv -> json library
@@ -164,7 +166,30 @@ app.get('/api/buckets', function(req, res) {
 // Billing data in JSON - data must exist!
 app.get('/api/billing', function(req, res) {
     var csvFile = "data/092841396837-aws-billing-detailed-line-items-with-resources-and-tags-2015-05.csv"
-        //transform to a new .csv file
+        // var csvConverter = new Converter({
+        //     constructResult: false
+        // });
+        // var readStream = fs.createReadStream(csvFile);
+        // var writeStream = fs.createWriteStream("outputData.json", {
+        //     flags: 'w'
+        // });
+
+    // readStream.pipe(csvConverter).pipe(writeStream);
+
+    // writeStream.on('close', function() {
+    //     console.log("end");
+    //     res.sendFile("/Users/ario/Desktop/AWSDelegator/outputData.json");
+    // });
+    // var stream = fs.createReadStream(csvFile);
+
+    //    csv
+    // .fromStream(stream)
+    // .on("data", function(data){
+    //     console.log(data);
+    // })
+    // .on("end", function(){
+    //     console.log("done");
+    // });
     var stream = fs.createWriteStream("out.csv", {
         encoding: "utf8"
     })
@@ -187,14 +212,11 @@ app.get('/api/billing', function(req, res) {
         .pipe(formatStream)
         .pipe(stream);
 
-    //convert to .json
     stream.on("finish", function() {
         console.log("DONE!");
         var csvConverter = new Converter({
-            constructResult: false,
-            toArrayString: true
+            constructResult: false
         });
-        // var readStream = fs.createReadStream("out.csv");
         var readStream = fs.createReadStream("out.csv");
         var writeStream = fs.createWriteStream("outputData.json", {
             flags: 'w'
@@ -209,37 +231,12 @@ app.get('/api/billing', function(req, res) {
         });
         var stream = fs.createReadStream(csvFile);
 
-    });
+        // res.send("DONE!");
+
+
+    })
 
 });
-
-//create the hashmap
-var billing = {};
-app.get('/api/test', function(req, res) {
-    fs.readFile('/Users/ario/Desktop/AWSDelegator/outputData.json', 'utf8', function(err, data) {
-        // var t = data[0];
-        var t = JSON.parse(data);
-        console.log(t[0].name);
-
-        //add keys to the hashmap
-        for (var i in t) {
-            billing[t[i].id] = {
-                id: t[i].d,
-                name: t[i].name,
-                cost: t[i].cost,
-                startTime: t[i].startTime
-            };
-        }
-
-        for(var x in billing) {
-            var value = billing[x];
-            console.log(x);
-        }
-        res.send(data);
-    });
-
-});
-
 
 
 app.listen(port);
