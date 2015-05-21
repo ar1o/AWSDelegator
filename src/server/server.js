@@ -226,7 +226,7 @@ app.get('/api/billing', function(req, res) {
 
         writeStream.on('close', function() {
             console.log("end");
-            res.sendFile("/Users/ario/Desktop/AWSDelegator/outputData.json");
+            res.sendFile("/home/ksimon/git/AWSDelegator/outputData.json");
 
         });
         var stream = fs.createReadStream(csvFile);

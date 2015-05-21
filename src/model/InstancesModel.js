@@ -8,6 +8,7 @@ var MetricsCollection = Backbone.Collection.extend({
 		});
 	}
 });
+
 // Create the collection
 var cpuMetricCollection = new MetricsCollection();
 var networkInMetricCollection = new MetricsCollection();
@@ -59,11 +60,10 @@ var InstancesModel = Backbone.Model.extend({
 					var rUnixLaunch = Date.parse(rLaunchTime);
 					var rUnixNow = d.getTime();
 					var rDuration;
-					if (rState == "stopped"|| rState=="stopping"){
+					if (rState == "stopped" || rState == "stopping") {
 						rDuration = 0;
-					}
-					else
-					 	rDuration = (rUnixNow - rUnixLaunch) / 1000;
+					} else
+						rDuration = (rUnixNow - rUnixLaunch) / 1000;
 
 					var rZone = rInstance.Placement.AvailabilityZone;
 					//Email logic

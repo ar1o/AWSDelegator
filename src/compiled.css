@@ -19,6 +19,10 @@
   float: left;
   padding: 10px;
 }
+#Billing {
+  width: 300px;
+  padding: 10px;
+}
 /* tables */
 .tablesorter {
   font-family: Roboto;

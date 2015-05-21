@@ -19,6 +19,7 @@ var InstancesView = Backbone.View.extend({
         this.cpuActivity = new CPUActivityView();
         this.networkInActivity = new NetworkInActivityView();
         this.networkOutActivity = new NetworkOutActivityView();
+        this.billingActivity = new BillingView();
 
         this.bindings();
         this.render();
@@ -48,6 +49,7 @@ var InstancesView = Backbone.View.extend({
             this.networkInActivity.model.getNetworkInMetrics();
             this.networkOutActivity.model.getNetworkOutMetrics();
 
+            this.billingActivity.model.getBilling();
 
 
         }.bind(this));
@@ -61,6 +63,7 @@ var InstancesView = Backbone.View.extend({
         this.$el.append(this.cpuActivity.el);
         this.$el.append(this.networkInActivity.el);
         this.$el.append(this.networkOutActivity.el);
+        this.$el.append(this.billingActivity.el);
     }
 
 

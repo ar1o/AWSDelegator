@@ -1,7 +1,5 @@
 var CPUActivityModel = Backbone.Model.extend({
 	initialize: function() {
-		// console.log("Init CPUActivityMoel model");
-		// this.getCPUMetrics();
 		this.change('cpuMetrics');
 
 
