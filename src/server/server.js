@@ -1,9 +1,14 @@
+var csv = require("fast-csv");
+
+
 var adm = require('adm-zip'); //compression library library
-var http = require('http'); 
+var http = require('http');
 var Converter = require('csvtojson').core.Converter; //csv -> json library
 var fs = require('fs'); //file reader-writer library
 var AWS = require('aws-sdk'); //AWS SDK
-var credentials = new AWS.SharedIniFileCredentials({profile: 'default'});
+var credentials = new AWS.SharedIniFileCredentials({
+    profile: 'default'
+});
 AWS.config.credentials = credentials;
 AWS.config.region = 'us-west-2';
 var express = require('express'); //ExpressJS library
@@ -161,24 +166,77 @@ app.get('/api/buckets', function(req, res) {
 // Billing data in JSON - data must exist!
 app.get('/api/billing', function(req, res) {
     var csvFile = "data/092841396837-aws-billing-detailed-line-items-with-resources-and-tags-2015-05.csv"
-    var filestream = fs.createReadStream(csvFile);
+        // var csvConverter = new Converter({
+        //     constructResult: false
+        // });
+        // var readStream = fs.createReadStream(csvFile);
+        // var writeStream = fs.createWriteStream("outputData.json", {
+        //     flags: 'w'
+        // });
 
-    var param_c = {};
-    var csvConverter = new Converter(param_c);
-    var end_obj;
-    csvConverter.on("end_parsed", function(jsonObj) {
-        // console.log(jsonObj);
-        res.send(jsonObj);
-    });
+    // readStream.pipe(csvConverter).pipe(writeStream);
 
-    filestream.pipe(csvConverter);
-    filestream.on('close', function() {
-        console.log("end");
+    // writeStream.on('close', function() {
+    //     console.log("end");
+    //     res.sendFile("/Users/ario/Desktop/AWSDelegator/outputData.json");
+    // });
+    // var stream = fs.createReadStream(csvFile);
+
+    //    csv
+    // .fromStream(stream)
+    // .on("data", function(data){
+    //     console.log(data);
+    // })
+    // .on("end", function(){
+    //     console.log("done");
+    // });
+    var stream = fs.createWriteStream("out.csv", {
+        encoding: "utf8"
+    })
+    var formatStream = csv
+        .createWriteStream({
+            headers: true
+        })
+        .transform(function(obj) {
+            return {
+                name: obj.ProductName,
+                cost: obj.Cost,
+                id: obj.ResourceId,
+                startTime: obj.UsageStartDate
+            };
+        });
+    csv
+        .fromPath(csvFile, {
+            headers: true
+        })
+        .pipe(formatStream)
+        .pipe(stream);
+
+    stream.on("finish", function() {
+        console.log("DONE!");
+        var csvConverter = new Converter({
+            constructResult: false
+        });
+        var readStream = fs.createReadStream("out.csv");
+        var writeStream = fs.createWriteStream("outputData.json", {
+            flags: 'w'
+        });
+
+        readStream.pipe(csvConverter).pipe(writeStream);
+
+        writeStream.on('close', function() {
+            console.log("end");
+            res.sendFile("/Users/ario/Desktop/AWSDelegator/outputData.json");
+
+        });
+        var stream = fs.createReadStream(csvFile);
+
+        // res.send("DONE!");
 
 
-    });
+    })
+
 });
-
 
 
 app.listen(port);
