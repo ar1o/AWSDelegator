@@ -43,3 +43,7 @@ outputData.json
 .DS_Store
 node_modules/
 optimized/
+
+.zip
+
+.csv
