@@ -32,17 +32,16 @@ var InstancesView = Backbone.View.extend({
             this.render();
 
             $(function() {
-                // call the tablesorter plugin
+                // call the tablesorter plugin 
                 $.tablesorter.defaults.widgets = ['zebra'];
-                $("table").tablesorter({
-                    theme: 'blue',
+                $("#InstanceTable").tablesorter({
 
                     // header layout template; {icon} needed for some themes
                     headerTemplate: '{content}{icon}',
                     // initialize zebra striping and column styling of the table
                 });
-
             });
+
             this.cpuActivity.model.getCPUMetrics();
             // console.log(cpuMetricCollection.pluck('instance'));
 

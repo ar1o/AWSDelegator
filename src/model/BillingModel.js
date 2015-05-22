@@ -14,7 +14,7 @@ var BillingsModel = Backbone.Model.extend({
 		var data = {};
 		var result;
 		// this.addBilling();
-		this.change('billingReady');
+		this.change('dataReady');
 
 
 	},
@@ -35,9 +35,8 @@ var BillingsModel = Backbone.Model.extend({
 
 	getBilling: function() {
 		var self = this;
-
+		var count = 0;
 		this.billing_result().done(function(result) {
-			console.log(result);
 			billingCollection.reset();
 
 			for (var i in result) {
@@ -45,16 +44,19 @@ var BillingsModel = Backbone.Model.extend({
 				var rID = result[i].id;
 				var rCost = result[i].cost;
 				var rSTime = result[i].startTime;
+				var rCount = count++;
 
 				var data = new BillingModel({
 						name: rName,
 						id: rID,
 						cost: rCost,
-						startTime:rSTime
+						startTime:rSTime,
+						count: rCount
+
 					});
 				billingCollection.add(data);
 				}
-		 self.set('billingReady', Date.now());
+		 self.set('dataReady', Date.now());
 
 		}).fail(function() {
 			console.log('FAILED');
@@ -68,7 +70,8 @@ var BillingModel = Backbone.Model.extend({
 		id: null,
 		cost: null,
 		startTime: null,
-		name: null
+		name: null,
+		count: 0
 
 	}
 });

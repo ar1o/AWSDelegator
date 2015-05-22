@@ -7,18 +7,20 @@ templates['BillingView'] = template({"1":function(depth0,helpers,partials,data) 
     var alias1=this.lambda, alias2=this.escapeExpression;
 
   return "			<tr class=\"tablesorter-body\">\n				<td>"
-    + alias2(alias1((depth0 != null ? depth0.name : depth0), depth0))
+    + alias2(alias1((depth0 != null ? depth0.id : depth0), depth0))
     + "</td>\n				<td>"
     + alias2(alias1((depth0 != null ? depth0.startTime : depth0), depth0))
     + "</td>\n				<td>"
     + alias2(alias1((depth0 != null ? depth0.cost : depth0), depth0))
     + "</td>\n				<td>"
-    + alias2(alias1((depth0 != null ? depth0.id : depth0), depth0))
+    + alias2(alias1((depth0 != null ? depth0.name : depth0), depth0))
+    + "</td>\n				<td>"
+    + alias2(alias1((depth0 != null ? depth0.count : depth0), depth0))
     + "</td>\n				\n			</tr>\n";
 },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var stack1;
 
-  return "\n<div id=\"Billing\">\n	<table class=\"tablesorter-metro\" cellspacing=\"1\">\n		<thead>\n			<tr class=\"dark-row\" role=\"row\">\n\n				<th class=\"tablesorter-header\" data-column=\"0\" unselectable=\"on\">\n					<div class=\"tablesorter-header-inner\">Usage start Time</div>\n				</th>\n\n				<th class=\"tablesorter-header\" data-column=\"1\" unselectable=\"on\">\n					<div class=\"tablesorter-header-inner\">Cost</div>\n				</th>\n				<th class=\"tablesorter-header\" data-column=\"2\" unselectable=\"on\">\n					<div class=\"tablesorter-header-inner\">Resource ID</div>\n				</th>\n				<th class=\"tablesorter-header\" data-column=\"2\" unselectable=\"on\">\n					<div class=\"tablesorter-header-inner\">Name</div>\n				</th>\n			</tr>\n		</thead>\n		<tbody id=\"billingData\">\n"
+  return "\n<div id=\"Billing\">\n	<table id=\"BillingTable\" class=\"tablesorter-metro\" cellspacing=\"1\">\n		<thead>\n			<tr class=\"dark-row\" role=\"row\">\n\n				<th class=\"tablesorter-header\" data-column=\"2\" unselectable=\"on\">\n					<div class=\"tablesorter-header-inner\">Resource ID</div>\n				</th>\n				<th class=\"tablesorter-header\" data-column=\"0\" unselectable=\"on\">\n					<div class=\"tablesorter-header-inner\">Usage start Time</div>\n				</th>\n				<th class=\"tablesorter-header\" data-column=\"1\" unselectable=\"on\">\n					<div class=\"tablesorter-header-inner\">Cost</div>\n				</th>\n				<th class=\"tablesorter-header\" data-column=\"2\" unselectable=\"on\">\n					<div class=\"tablesorter-header-inner\">Name</div>\n				</th>\n				<th class=\"tablesorter-header\" data-column=\"2\" unselectable=\"on\">\n					<div class=\"tablesorter-header-inner\">Number</div>\n				</th>\n			</tr>\n		</thead>\n		<tbody id=\"billingData\">\n"
     + ((stack1 = helpers.each.call(depth0,(depth0 != null ? depth0.billing : depth0),{"name":"each","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
     + "		</tbody>	\n	</table>\n\n</div> \n";
 },"useData":true});
@@ -33,7 +35,7 @@ templates['CPUActivityView'] = template({"1":function(depth0,helpers,partials,da
 },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var stack1;
 
-  return "\n<div class=\"CPU\">\n	<table class=\"tablesorter-metro\" cellspacing=\"1\">\n		<thead>\n			<tr class=\"dark-row\" role=\"row\">\n				<th class=\"tablesorter-header\" data-column=\"0\">\n					<div class=\"tablesorter-header-inner\">Instance ID</div>\n				</th>\n				<th class=\"tablesorter-header\" data-column=\"1\">\n					<div class=\"tablesorter-header-inner\">CPU Usage</div>\n				</th>\n\n			</tr>\n		</thead>\n		<tbody id=\"cpuData\">\n"
+  return "\n<div class=\"CPU\">\n	<table id=\"CPUTable\" class=\"tablesorter-metro\" cellspacing=\"1\">\n		<thead>\n			<tr class=\"dark-row\" role=\"row\">\n				<th class=\"tablesorter-header\" data-column=\"0\">\n					<div class=\"tablesorter-header-inner\">Instance ID</div>\n				</th>\n				<th class=\"tablesorter-header\" data-column=\"1\">\n					<div class=\"tablesorter-header-inner\">CPU Usage</div>\n				</th>\n\n			</tr>\n		</thead>\n		<tbody id=\"cpuData\">\n"
     + ((stack1 = helpers.each.call(depth0,(depth0 != null ? depth0.cpuMetrics : depth0),{"name":"each","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
     + "		</tbody>	\n	</table>\n\n</div>";
 },"useData":true});
@@ -62,7 +64,7 @@ templates['InstancesView'] = template({"1":function(depth0,helpers,partials,data
 },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var stack1;
 
-  return "\n<div id=\"EC2\">\n	<table class=\"tablesorter-metro\" cellspacing=\"1\">\n		<thead>\n			<tr class=\"dark-row\" role=\"row\">\n				<th class=\"tablesorter-header\" data-column=\"0\" unselectable=\"on\">\n					<div class=\"tablesorter-header-inner\">Instance ID</div>\n				</th>\n				<th class=\"tablesorter-header\" data-column=\"1\">\n					<div class=\"tablesorter-header-inner\">State</div>\n				</th>\n				<th class=\"tablesorter-header\" data-column=\"2\">\n					<div class=\"tablesorter-header-inner\">Image</div>\n				</th>\n				<th class=\"tablesorter-header\" data-column=\"3\">\n					<div class=\"tablesorter-header-inner\">Key Name</div>\n				</th>\n				<th class=\"tablesorter-header\" data-column=\"4\">\n					<div class=\"tablesorter-header-inner\">Type</div>\n				</th>\n				<!--Failing to sort-->\n				<th class=\"tablesorter-header\" data-column=\"5\">\n					<div class=\"tablesorter-header-inner\">Launched</div>\n				</th>\n				<th class=\"tablesorter-header\" data-column=\"6\">\n					<div class=\"tablesorter-header-inner\">Zone</div>\n				</th>\n				<th class=\"tablesorter-header\" data-column=\"7\">\n					<div class=\"tablesorter-header-inner\">Lifetime</div>\n				</th>\n				<th class=\"tablesorter-header\" data-column=\"8\">\n					<div class=\"tablesorter-header-inner\">E-Mail</div>\n				</th>\n			</tr>\n		</thead>\n		<tbody id=\"instanceData\">\n"
+  return "\n<div id=\"EC2\">\n	<table id=\"InstanceTable\" class=\"tablesorter-metro\" cellspacing=\"1\">\n		<thead>\n			<tr class=\"dark-row\">\n				<th class=\"tablesorter-header\" data-column=\"0\">\n					Instance ID\n				</th>\n				<th class=\"tablesorter-header\" data-column=\"1\">\n					State\n				</th>\n				<th class=\"tablesorter-header\" data-column=\"2\">\n					Image\n				</th>\n				<th class=\"tablesorter-header\" data-column=\"3\">\n					Key Name\n				</th>\n				<th class=\"tablesorter-header\" data-column=\"4\">\n					Type\n				</th>\n				<!--Failing to sort-->\n				<th class=\"tablesorter-header\" data-column=\"5\">\n					Launched\n				</th>\n				<th class=\"tablesorter-header\" data-column=\"6\">\n					Zone\n				</th>\n				<th class=\"tablesorter-header\" data-column=\"7\">\n					Lifetime\n				</th>\n				<th class=\"tablesorter-header\" data-column=\"8\">\n					E-Mail\n				</th>\n			</tr>\n		</thead>\n		<tbody id=\"instanceData\">\n"
     + ((stack1 = helpers.each.call(depth0,(depth0 != null ? depth0.instances : depth0),{"name":"each","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
     + "		</tbody>	\n	</table>\n\n</div>\n";
 },"useData":true});
@@ -77,7 +79,7 @@ templates['NetworkInActivityView'] = template({"1":function(depth0,helpers,parti
 },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var stack1;
 
-  return "\n<div id=\"NetIn\">\n	<table class=\"tablesorter-metro\" cellspacing=\"1\">\n		<thead>\n			<tr class=\"dark-row\" role=\"row\">\n				<th class=\"tablesorter-header\">\n					<div class=\"tablesorter-header-inner\">Instance ID</div>\n				</th>\n				<th class=\"tablesorter-header\" data-column=\"1\">\n					<div class=\"tablesorter-header-inner\">Net In Usage</div>\n				</th>\n			</tr>\n		</thead>\n		<tbody id=\"NetInData\">\n"
+  return "\n<div id=\"NetIn\">\n	<table id=\"NetInTable\" class=\"tablesorter-metro\" cellspacing=\"1\">\n		<thead>\n			<tr class=\"dark-row\" role=\"row\">\n				<th class=\"tablesorter-header\" data-column=\"0\">\n					<div class=\"tablesorter-header-inner\">Instance ID</div>\n				</th>\n				<th class=\"tablesorter-header\" data-column=\"1\">\n					<div class=\"tablesorter-header-inner\">Net In Usage</div>\n				</th>\n			</tr>\n		</thead>\n		<tbody id=\"NetInData\">\n"
     + ((stack1 = helpers.each.call(depth0,(depth0 != null ? depth0.networkInMetrics : depth0),{"name":"each","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
     + "		</tbody>	\n	</table>\n\n</div> \n";
 },"useData":true});
@@ -92,7 +94,7 @@ templates['NetworkOutActivityView'] = template({"1":function(depth0,helpers,part
 },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var stack1;
 
-  return "\n<div id=\"NetOut\">\n	<table class=\"tablesorter-metro\" cellspacing=\"1\">\n		<thead>\n			<tr class=\"dark-row\" role=\"row\">\n				<th class=\"tablesorter-header\" data-column=\"0\" unselectable=\"on\">\n					<div class=\"tablesorter-header-inner\">Instance ID</div>\n				</th>\n				<th class=\"tablesorter-header\" data-column=\"1\">\n					<div class=\"tablesorter-header-inner\">Net Out</div>\n				</th>\n\n			</tr>\n		</thead>\n		<tbody id=\"NetOutData\">\n"
+  return "\n<div id=\"NetOut\">\n	<table id=\"NetOutTable\" class=\"tablesorter-metro\" cellspacing=\"1\">\n		<thead>\n			<tr class=\"dark-row\">\n				<th class=\"tablesorter-header\" data-column=\"0\">\n					<div class=\"tablesorter-header-inner\">Instance ID</div>\n				</th>\n				<th class=\"tablesorter-header\" data-column=\"1\">\n					<div class=\"tablesorter-header-inner\">Net Out</div>\n				</th>\n\n			</tr>\n		</thead>\n		<tbody id=\"NetOutData\">\n"
     + ((stack1 = helpers.each.call(depth0,(depth0 != null ? depth0.networkOutMetrics : depth0),{"name":"each","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
     + "		</tbody>	\n	</table>\n\n</div> \n";
 },"useData":true});

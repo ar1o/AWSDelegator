@@ -1,6 +1,6 @@
 var CPUActivityModel = Backbone.Model.extend({
 	initialize: function() {
-		this.change('cpuMetrics');
+		this.change('dataReady');
 
 
 	},
@@ -46,7 +46,7 @@ var CPUActivityModel = Backbone.Model.extend({
 							cpuMetricCollection.add(fData);
 
 						}
-						self.set('cpuMetrics', Date.now());
+						self.set('dataReady', Date.now());
 
 					});
 
@@ -59,7 +59,7 @@ var CPUActivityModel = Backbone.Model.extend({
 					cpu: 0
 				});
 				cpuMetricCollection.add(fData);
-				self.set('cpuMetrics', Date.now());
+				self.set('dataReady', Date.now());
 
 			}
 

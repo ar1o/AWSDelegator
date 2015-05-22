@@ -44,6 +44,6 @@ outputData.json
 node_modules/
 optimized/
 
-.zip
+*.zip
 
-.csv
+*.csv

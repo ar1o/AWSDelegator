@@ -1,10 +1,9 @@
 
 <div id="Billing">
-	<table class="tablesorter-metro" cellspacing="1">
+	<table id="BillingTable" class="tablesorter-metro" cellspacing="1">
 		<thead>
 			<tr class="dark-row" role="row">
 
-				
 				<th class="tablesorter-header" data-column="2" unselectable="on">
 					<div class="tablesorter-header-inner">Resource ID</div>
 				</th>
@@ -23,15 +22,13 @@
 			</tr>
 		</thead>
 		<tbody id="billingData">
-			var count=0;
 		{{#each billing}}
 			<tr class="tablesorter-body">
-				
+				<td>{{this.id}}</td>
 				<td>{{this.startTime}}</td>
 				<td>{{this.cost}}</td>
-				<td>{{this.id}}</td>
 				<td>{{this.name}}</td>
-				<td>{{count++}}</td>
+				<td>{{this.count}}</td>
 				
 			</tr>
 		{{/each}}
