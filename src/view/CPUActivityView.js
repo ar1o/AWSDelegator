@@ -25,6 +25,8 @@ var CPUActivityView = Backbone.View.extend({
             
             $(function() {
                 // call the tablesorter plugin 
+
+                $.tablesorter.defaults.sortList = [[0,0]];
                 $.tablesorter.defaults.widgets = ['zebra'];
                 $("#CPUTable").tablesorter({
 
