@@ -26,6 +26,7 @@ var BillingView = Backbone.View.extend({
 
             $(function() {
                 // call the tablesorter plugin 
+                $.tablesorter.defaults.sortList = [[4,0]];
                 $.tablesorter.defaults.widgets = ['zebra'];
                 $("#BillingTable").tablesorter({
 

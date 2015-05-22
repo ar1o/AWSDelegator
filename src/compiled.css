@@ -61,8 +61,15 @@ table.tablesorter thead tr .headerSortUp {
   padding: 10px;
 }
 #Billing {
-  width: 300px;
+  float: left;
   padding: 10px;
+}
+th,
+td {
+  overflow: hidden;
+}
+#time {
+  width: 150px;
 }
 body {
   font-family: 'Roboto', sans-serif;
