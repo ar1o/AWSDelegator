@@ -1,8 +1,8 @@
 var NetworkInActivityModel = Backbone.Model.extend({
 	initialize: function() {
 		// console.log("Init NetworkInActivityModel");
-		// this.getInNetworkMetrics();
-		this.change('networkInMetrics');
+		//this.getInNetworkMetrics();
+		this.change('dataReady');
 
 
 	},
@@ -46,7 +46,7 @@ var NetworkInActivityModel = Backbone.Model.extend({
 							networkInMetricCollection.add(fData);
 
 						}
-						self.set('networkInMetrics', Date.now());
+						self.set('dataReady', Date.now());
 
 					});
 
@@ -59,7 +59,7 @@ var NetworkInActivityModel = Backbone.Model.extend({
 					networkIn: 0
 				});
 				networkInMetricCollection.add(fData);
-				self.set('networkInMetrics', Date.now());
+				self.set('dataReady', Date.now());
 
 			}
 

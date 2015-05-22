@@ -1,15 +1,16 @@
-// Here is where the EC2 Instances are renders the instanceCollection JSON object
-// by the handlebars template called InstancesView.handlebars
 
 
-var CPUActivityView = Backbone.View.extend({
 
-    className: 'CPUActivityView',
+
+
+var BillingView = Backbone.View.extend({
+
+    className: 'BillingView',
 
     initialize: function(options) {
 
         if (!this.model) {
-            this.model = new CPUActivityModel();
+            this.model = new BillingsModel();
         }
 
         this.bindings();
@@ -22,11 +23,11 @@ var CPUActivityView = Backbone.View.extend({
 
         this.model.change('dataReady', function(model, val) {
             this.render();
-            
+
             $(function() {
                 // call the tablesorter plugin 
                 $.tablesorter.defaults.widgets = ['zebra'];
-                $("#CPUTable").tablesorter({
+                $("#BillingTable").tablesorter({
 
                     // header layout template; {icon} needed for some themes
                     headerTemplate: '{content}{icon}',
@@ -39,11 +40,11 @@ var CPUActivityView = Backbone.View.extend({
     },
 
     render: function() {
-        var html = Handlebars.templates.CPUActivityView({
-            cpuMetrics: cpuMetricCollection.toJSON()
+        var html = Handlebars.templates.BillingView({
+            billing: billingCollection.toJSON()
         });
         this.$el.html(html);
     }
 
 
-});
+}); 

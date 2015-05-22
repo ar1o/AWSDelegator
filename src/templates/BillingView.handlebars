@@ -1,0 +1,38 @@
+
+<div id="Billing">
+	<table id="BillingTable" class="tablesorter-metro" cellspacing="1">
+		<thead>
+			<tr class="dark-row" role="row">
+
+				<th class="tablesorter-header" data-column="2" unselectable="on">
+					<div class="tablesorter-header-inner">Resource ID</div>
+				</th>
+				<th class="tablesorter-header" data-column="0" unselectable="on">
+					<div class="tablesorter-header-inner">Usage start Time</div>
+				</th>
+				<th class="tablesorter-header" data-column="1" unselectable="on">
+					<div class="tablesorter-header-inner">Cost</div>
+				</th>
+				<th class="tablesorter-header" data-column="2" unselectable="on">
+					<div class="tablesorter-header-inner">Name</div>
+				</th>
+				<th class="tablesorter-header" data-column="2" unselectable="on">
+					<div class="tablesorter-header-inner">Number</div>
+				</th>
+			</tr>
+		</thead>
+		<tbody id="billingData">
+		{{#each billing}}
+			<tr class="tablesorter-body">
+				<td>{{this.id}}</td>
+				<td>{{this.startTime}}</td>
+				<td>{{this.cost}}</td>
+				<td>{{this.name}}</td>
+				<td>{{this.count}}</td>
+				
+			</tr>
+		{{/each}}
+		</tbody>	
+	</table>
+
+</div> 

@@ -2,7 +2,7 @@ var NetworkOutActivityModel = Backbone.Model.extend({
 	initialize: function() {
 		// console.log("Init NetworkOutActivityModel");
 		this.getNetworkOutMetrics();
-		this.change('networkOutMetrics');
+		this.change('dataReady');
 
 
 	},
@@ -46,7 +46,7 @@ var NetworkOutActivityModel = Backbone.Model.extend({
 							networkOutMetricCollection.add(fData);
 
 						}
-						self.set('networkOutMetrics', Date.now());
+						self.set('dataReady', Date.now());
 
 					});
 
@@ -59,7 +59,7 @@ var NetworkOutActivityModel = Backbone.Model.extend({
 					networkOut: 0
 				});
 				networkOutMetricCollection.add(fData);
-				self.set('networkOutMetrics', Date.now());
+				self.set('dataReady', Date.now());
 
 			}
 

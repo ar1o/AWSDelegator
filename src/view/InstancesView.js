@@ -19,6 +19,7 @@ var InstancesView = Backbone.View.extend({
         this.cpuActivity = new CPUActivityView();
         this.networkInActivity = new NetworkInActivityView();
         this.networkOutActivity = new NetworkOutActivityView();
+        this.billingActivity = new BillingView();
 
         this.bindings();
         this.render();
@@ -28,26 +29,26 @@ var InstancesView = Backbone.View.extend({
     //Check for when the data is read and renders the page
     bindings: function() {
         this.model.change('dataReady', function(model, val) {
-         this.render();
+            this.render();
 
             $(function() {
-                // call the tablesorter plugin
+                // call the tablesorter plugin 
                 $.tablesorter.defaults.widgets = ['zebra'];
-                $("table").tablesorter({
-                    theme: 'blue',
+                $("#InstanceTable").tablesorter({
 
                     // header layout template; {icon} needed for some themes
                     headerTemplate: '{content}{icon}',
                     // initialize zebra striping and column styling of the table
                 });
-
             });
-            console.log(cpuMetricCollection.pluck('instance'));
+
             this.cpuActivity.model.getCPUMetrics();
+            // console.log(cpuMetricCollection.pluck('instance'));
+
             this.networkInActivity.model.getNetworkInMetrics();
             this.networkOutActivity.model.getNetworkOutMetrics();
 
-          
+            this.billingActivity.model.getBilling();
 
 
         }.bind(this));
@@ -61,6 +62,7 @@ var InstancesView = Backbone.View.extend({
         this.$el.append(this.cpuActivity.el);
         this.$el.append(this.networkInActivity.el);
         this.$el.append(this.networkOutActivity.el);
+        this.$el.append(this.billingActivity.el);
     }
 
 
