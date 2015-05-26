@@ -1,7 +1,7 @@
 AWSDelegator
 =============
 
- ## Code Layout
+## Code Layout
  
      css/        contains styling data
      js/         helper javascript files and boot.js which is what runs at startup
@@ -12,7 +12,7 @@ AWSDelegator
      view/       contains backbone views
      
 
- ## Getting Started
+## Getting Started
  
  The first time you dev run these:
     
