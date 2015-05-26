@@ -37,3 +37,9 @@ tramp
 .DS_Store
 node_modules/
 optimized/
+
+*.csv
+*.zip
+*.json
+*.csv
+
