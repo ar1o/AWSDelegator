@@ -1,7 +1,6 @@
 var csv = require("fast-csv");
 var adm = require('adm-zip'); //compression library library
 var http = require('http');
-var Converter = require('csvtojson').core.Converter; //csv -> json library
 var fs = require('fs'); //file reader-writer library
 var AWS = require('aws-sdk'); //AWS SDK
 var credentials = new AWS.SharedIniFileCredentials({
