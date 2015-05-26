@@ -20,14 +20,15 @@ var CPUActivityView = Backbone.View.extend({
     //Check for when the data is read and renders the page
     bindings: function() {
 
-        this.model.change('cpuMetrics', function(model, val) {
+        this.model.change('dataReady', function(model, val) {
             this.render();
-
+            
             $(function() {
-                // call the tablesorter plugin
+                // call the tablesorter plugin 
+
+                $.tablesorter.defaults.sortList = [[0,0]];
                 $.tablesorter.defaults.widgets = ['zebra'];
-                $("table").tablesorter({
-                    theme: 'blue',
+                $("#CPUTable").tablesorter({
 
                     // header layout template; {icon} needed for some themes
                     headerTemplate: '{content}{icon}',

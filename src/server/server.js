@@ -198,8 +198,6 @@ app.get('/api/buckets', function(req, res) {
             }
         });
 
-
-
     });
 });
 
@@ -239,6 +237,12 @@ app.get('/api/billing', function(req, res) {
 
 });
 
+<<<<<<< HEAD
+=======
+        writeStream.on('close', function() {
+            console.log("end");
+            res.sendFile("/home/ksimon/git/AWSDelegator/outputData.json");
+>>>>>>> origin/master
 
 // Start mongoose and mongo
 mongoose.connect('mongodb://localhost:27017/testdb2', function (error) {
@@ -247,6 +251,7 @@ mongoose.connect('mongodb://localhost:27017/testdb2', function (error) {
     }
 });
 
+<<<<<<< HEAD
 var db = mongoose.connection;
 
 db.on("open", function(){
@@ -260,6 +265,9 @@ db.on("open", function(){
   var Billings = mongoose.model('Billings', billingSchema, 'billing');
  
 
+=======
+    });
+>>>>>>> origin/master
 });
 
 

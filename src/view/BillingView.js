@@ -1,12 +1,16 @@
 
-var NetworkInActivityView = Backbone.View.extend({
 
-    className: 'NetworkInActivityView',
+
+
+
+var BillingView = Backbone.View.extend({
+
+    className: 'BillingView',
 
     initialize: function(options) {
 
         if (!this.model) {
-            this.model = new NetworkInActivityModel();
+            this.model = new BillingsModel();
         }
 
         this.bindings();
@@ -21,10 +25,10 @@ var NetworkInActivityView = Backbone.View.extend({
             this.render();
 
             $(function() {
-                // call the tablesorter 
-                $.tablesorter.defaults.sortList = [[0,0]];
+                // call the tablesorter plugin 
+                $.tablesorter.defaults.sortList = [[4,0]];
                 $.tablesorter.defaults.widgets = ['zebra'];
-                $("#NetInTable").tablesorter({
+                $("#BillingTable").tablesorter({
 
                     // header layout template; {icon} needed for some themes
                     headerTemplate: '{content}{icon}',
@@ -37,11 +41,11 @@ var NetworkInActivityView = Backbone.View.extend({
     },
 
     render: function() {
-        var html = Handlebars.templates.NetworkInActivityView({
-            networkInMetrics: networkInMetricCollection.toJSON()
+        var html = Handlebars.templates.BillingView({
+            billing: billingCollection.toJSON()
         });
         this.$el.html(html);
     }
 
 
-});
+}); 

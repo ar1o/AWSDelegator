@@ -8,6 +8,7 @@ var MetricsCollection = Backbone.Collection.extend({
 		});
 	}
 });
+
 // Create the collection
 var cpuMetricCollection = new MetricsCollection();
 var networkInMetricCollection = new MetricsCollection();
@@ -22,7 +23,6 @@ var InstancesModel = Backbone.Model.extend({
 		this.addEC2Instance();
 		this.change('dataReady');
 	},
-
 	aws_result: function() {
 		var self = this;
 		return $.ajax({
@@ -59,13 +59,12 @@ var InstancesModel = Backbone.Model.extend({
 					var rUnixLaunch = Date.parse(rLaunchTime);
 					var rUnixNow = d.getTime();
 					var rDuration;
-					if (rState == "stopped"|| rState=="stopping"){
+					if (rState == "stopped" || rState == "stopping") {
 						rDuration = 0;
-					}
-					else
-					 	rDuration = (rUnixNow - rUnixLaunch) / 1000;
-
+					} else
+						rDuration = (rUnixNow - rUnixLaunch) / 1000;
 					var rZone = rInstance.Placement.AvailabilityZone;
+
 					//Email logic
 					for (var i in rInstance.Tags) {
 						if (rInstance.Tags[i].Key == "email") {
@@ -74,6 +73,9 @@ var InstancesModel = Backbone.Model.extend({
 						} else
 							rEmail = "mikesmit.com@gmail.com";
 					}
+
+					//Volume ID logic
+					var rVolId = rInstance.BlockDeviceMappings[0].Ebs.VolumeId;
 					var data = new InstanceModel({
 						instance: rInstance.InstanceId,
 						imageId: rImage,
@@ -83,7 +85,8 @@ var InstancesModel = Backbone.Model.extend({
 						launchTime: rLaunchTime,
 						duration: rDuration,
 						zone: rZone,
-						email: rEmail
+						email: rEmail,
+						volumeid: rVolId
 					});
 
 					instanceCollection.add(data);
@@ -114,7 +117,8 @@ var InstanceModel = Backbone.Model.extend({
 		launchTime: null,
 		runningTime: null,
 		zone: null,
-		email: "mikesmit.com@gmail.com"
+		email: "mikesmit.com@gmail.com",
+		volumeid: null
 
 	}
 });

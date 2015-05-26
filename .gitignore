@@ -34,12 +34,24 @@ tramp
 # directory files
 *.directory
 
+#outputData.json files
+outputData.json
+
+#data Folder
+/data/*
+
 .DS_Store
 node_modules/
 optimized/
 
+<<<<<<< HEAD
 *.csv
 *.zip
 *.json
 *.csv
 
+=======
+*.zip
+
+*.csv
+>>>>>>> origin/master
