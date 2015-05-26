@@ -44,14 +44,9 @@ outputData.json
 node_modules/
 optimized/
 
-<<<<<<< HEAD
+
 *.csv
 *.zip
 *.json
-*.csv
 
-=======
-*.zip
 
-*.csv
->>>>>>> origin/master
