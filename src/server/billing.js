@@ -1,61 +1,64 @@
-/*
-	
-*/
-var csv = require("fast-csv");
-var Converter = require('csvtojson').core.Converter; 
-var fs = require('fs'); 
+// Mongoose import
+var mongoose = require('mongoose');
+// Mongo import
+var mongo = require('mongodb');
 
-exports.getBilling = function (req, res) {
-    //GRAB ACCOUNT NUBER AND APPEND 
-    //Take month/year into account
-    //fix 
-    var csvFile = "data/092841396837-aws-billing-detailed-line-items-with-resources-and-tags-2015-05.csv"
-        //transform to a new .csv file
-    var stream = fs.createWriteStream("out.csv", {
-        encoding: "utf8"
-    })
-    var formatStream = csv
-        .createWriteStream({
-            headers: true
-        })
-        .transform(function(obj) {
-            return {
-                name: obj.ProductName,
-                cost: obj.Cost,
-                id: obj.ResourceId,
-                startTime: obj.UsageStartDate
-            };
-        });
-    csv
-        .fromPath(csvFile, {
-            headers: true
-        })
-        .pipe(formatStream)
-        .pipe(stream);
+//need to pass db from server to these functions???
 
-    //convert to .json
-    stream.on("finish", function() {
-        console.log("DONE!");
-        var csvConverter = new Converter({
-            constructResult: false,
-            toArrayString: true
-        });
-        // var readStream = fs.createReadStream("out.csv");
-        var readStream = fs.createReadStream("out.csv");
-        var writeStream = fs.createWriteStream("outputData.json", {
-            flags: 'w'
-        });
+//Parameterize time for function
+exports.getBillingByHour = function (time, req, res) {
 
-        readStream.pipe(csvConverter).pipe(writeStream);
+    // var product = req.query.productName;
+    // var time = req.query.startTime;
+    mongoose.model('Billings').aggregate([{
+        $match: {
+            cost: {
+                $gte: 0
+            },
+            // productName: {
+            //     $eq: "Amazon Elastic Compute Cloud"
+            // },
+            startTime: {
+                $eq: "2015-06-19 19:00:00"
+            }
+        }
+    }, {
+        $group: {
+            _id: "$productName",
+            total: {
+                $sum: "$cost"
+            }
+        }
+    }]).exec(function(e, d) {
+        console.log(d);
+        // res.send(d);
+    });
+};
 
-        writeStream.on('close', function() {
-            console.log("end");
-            // res.sendFile("/home/ksimon/git/AWSDelegator/outputData.json");
-
-        });
-        var stream = fs.createReadStream(csvFile);
-
+//parameterize to query for a specific month??
+exports.getBillingMonthToDate = function(req, res) {
+    mongoose.model('Billings').aggregate([{
+        $match: {
+            cost: {
+                $gte: 0
+            }
+        }
+    }, {
+        $group: {
+            _id: "$productName",
+            total: {
+                $sum: "$cost"
+            }
+        }
+    }]).exec(function(e, d) {
+        console.log(d)
+        // res.send(d);
     });
 
 
 };
+
+module.exports = {
+    getBillingByHour : getBillingByHour,
+    getBillingMonthToDate : getBillingMonthToDate
+}

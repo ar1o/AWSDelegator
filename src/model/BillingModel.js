@@ -54,9 +54,9 @@ var BillingsModel = Backbone.Model.extend({
 					count: rCount
 
 				});
-				console.log(data);
 				billingCollection.add(data);
 			}
+			
 			self.set('dataReady', Date.now());
 
 		}).fail(function() {

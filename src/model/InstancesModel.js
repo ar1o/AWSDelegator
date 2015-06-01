@@ -28,7 +28,7 @@ var InstancesModel = Backbone.Model.extend({
 		return $.ajax({
 			type: 'GET',
 			data: self.data,
-			contentType: 'application/json',
+			contentType: 'plain/text',
 			url: 'http://localhost:3000/api/instances',
 			success: function(data) {
 				result = data;
@@ -49,6 +49,7 @@ var InstancesModel = Backbone.Model.extend({
 			for (var r in result.Reservations) {
 				for (var i in result.Reservations[r].Instances) {
 					var rInstance = result.Reservations[r].Instances[i];
+					console.log(rInstances);
 					var rImage = rInstance.ImageId;
 					var rState = rInstance.State.Name;
 					var rKeyName = rInstance.KeyName;
@@ -73,6 +74,7 @@ var InstancesModel = Backbone.Model.extend({
 						} else
 							rEmail = "mikesmit.com@gmail.com";
 					}
+					var accountNumber = rInstance.OwnerID()
 
 					//Volume ID logic
 					var rVolId = rInstance.BlockDeviceMappings[0].Ebs.VolumeId;
@@ -137,5 +139,6 @@ var EC2InstancesCollection = Backbone.Collection.extend({
 
 	}
 });
+
 // Create the collection
 var instanceCollection = new EC2InstancesCollection();
