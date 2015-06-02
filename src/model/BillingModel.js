@@ -23,7 +23,7 @@ var BillingsModel = Backbone.Model.extend({
 		return $.ajax({
 			type: 'GET',
 			data: self.data,
-			contentType: 'application/json',
+			contentType: 'text/plain',
 			url: 'http://localhost:3000/api/billing',
 			success: function(data) {
 				result = data;
@@ -47,16 +47,17 @@ var BillingsModel = Backbone.Model.extend({
 				var rCount = count++;
 
 				var data = new BillingModel({
-						name: rName,
-						id: rID,
-						cost: rCost,
-						startTime:rSTime,
-						count: rCount
+					name: rName,
+					id: rID,
+					cost: rCost,
+					startTime: rSTime,
+					count: rCount
 
-					});
+				});
 				billingCollection.add(data);
-				}
-		 self.set('dataReady', Date.now());
+			}
+			
+			self.set('dataReady', Date.now());
 
 		}).fail(function() {
 			console.log('FAILED');

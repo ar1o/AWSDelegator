@@ -8,7 +8,6 @@ var MetricsCollection = Backbone.Collection.extend({
 		});
 	}
 });
-
 // Create the collection
 var cpuMetricCollection = new MetricsCollection();
 var networkInMetricCollection = new MetricsCollection();
@@ -28,7 +27,7 @@ var InstancesModel = Backbone.Model.extend({
 		return $.ajax({
 			type: 'GET',
 			data: self.data,
-			contentType: 'application/json',
+			contentType: 'plain/text',
 			url: 'http://localhost:3000/api/instances',
 			success: function(data) {
 				result = data;
@@ -73,6 +72,7 @@ var InstancesModel = Backbone.Model.extend({
 						} else
 							rEmail = "mikesmit.com@gmail.com";
 					}
+					// var accountNumber = rInstance.OwnerID()
 
 					//Volume ID logic
 					var rVolId = rInstance.BlockDeviceMappings[0].Ebs.VolumeId;
@@ -137,5 +137,6 @@ var EC2InstancesCollection = Backbone.Collection.extend({
 
 	}
 });
+
 // Create the collection
 var instanceCollection = new EC2InstancesCollection();
