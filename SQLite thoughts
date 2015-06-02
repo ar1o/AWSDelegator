@@ -1,9 +1,1 @@
-﻿ SQLite supports strict comma delimited csv imports. This means we will have to modify our csv file before importing to the database. 
-	Can Either remove all commas, or easier perhaps, cut the column, as all “,”
-are contained within the itemDiscription column.
 
---Email columns are non-uniform. Correct this tomorrow.
-
--Select a primary key? Resourceid alone doesn't do it. Nor with date added too...
-	resourceID, date, and usageType does work though... and operation...
-		Even with 4 key values, there are 4 exceptions on this import...
