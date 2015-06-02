@@ -5,7 +5,7 @@ var csv = require("fast-csv");
 var Converter = require('csvtojson').core.Converter; 
 var fs = require('fs'); 
 
-exports.parseBillingCSV= function (req, res) {
+exports.parseBillingCSV = function (req, res) {
     //GRAB ACCOUNT NUBER AND APPEND 
     //Take month/year into account
     var accountNum = '092841396837'; // export the AWS from 

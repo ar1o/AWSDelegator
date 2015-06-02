@@ -8,7 +8,6 @@ var MetricsCollection = Backbone.Collection.extend({
 		});
 	}
 });
-
 // Create the collection
 var cpuMetricCollection = new MetricsCollection();
 var networkInMetricCollection = new MetricsCollection();
@@ -49,7 +48,6 @@ var InstancesModel = Backbone.Model.extend({
 			for (var r in result.Reservations) {
 				for (var i in result.Reservations[r].Instances) {
 					var rInstance = result.Reservations[r].Instances[i];
-					console.log(rInstances);
 					var rImage = rInstance.ImageId;
 					var rState = rInstance.State.Name;
 					var rKeyName = rInstance.KeyName;
@@ -74,7 +72,7 @@ var InstancesModel = Backbone.Model.extend({
 						} else
 							rEmail = "mikesmit.com@gmail.com";
 					}
-					var accountNumber = rInstance.OwnerID()
+					// var accountNumber = rInstance.OwnerID()
 
 					//Volume ID logic
 					var rVolId = rInstance.BlockDeviceMappings[0].Ebs.VolumeId;

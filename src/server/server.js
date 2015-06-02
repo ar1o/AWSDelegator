@@ -3,7 +3,7 @@ var adm = require('adm-zip'); //compression library library
 var http = require('http');
 var Converter = require('csvtojson').core.Converter; //csv -> json library
 var fs = require('fs'); //file reader-writer library
-var AWS = require('aws-sdk'); //AWS SDK
+AWS = require('aws-sdk'); //AWS SDK
 var credentials = new AWS.SharedIniFileCredentials({
     profile: 'default'
 });
@@ -12,16 +12,13 @@ AWS.config.region = 'us-west-2';
 // Express import
 var express = require('express'); //ExpressJS library
 // Mongoose import
-var mongoose = require('mongoose');
+mongoose = require('mongoose');
 // Mongo import
-var mongo = require('mongodb');
+mongo = require('mongodb');
 
-var app = express();
-
-var router = express.Router();
+var app = new express();
 
 app.use(require('./CORS'));
-
 
 port = process.env.PORT || 3000;
 
@@ -45,13 +42,23 @@ db.on("open", function() {
 var s3 = (require('./s3Watch')); //S3 bucket connection
 s3.s3Connect();
 
+app.use('/api/instances', require('./instanceRoute'));
+app.use('/api/cpu', require('./cpuRoute')).cpu; 
 
-app.use('/api/instances', require('./instanceRoute')).instances;
-// app.use('/api/network/', require('./networkRoute')).network;
-app.use('/api/cpu', require('./cpuRoute')).cpu;
-// app.use('api/billing', require('./billingRoute')).billing;
+app.use('/api/network', require('./networkRoute').networkIn);
+app.use('/api/network', require('./networkRoute').networkOut);
 
+app.use('api/billing', require('./billingRoute').billingByHour);
+app.use('api/billing', require('./billingRoute').billingMonthToDate);
 
+//ERROR HANDLER
+function errorHandler(err, req, res, next) {
+    console.error(err.message);
+    console.error(err.stack);
+    res.status(500);
+    res.render('error_template', { error: err });
+}
+module.exports = errorHandler;
 
 app.listen(port);
 console.log('server started on port %s', port);
