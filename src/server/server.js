@@ -49,9 +49,6 @@ app.use('/api/network', require('./networkRoute').networkOut);
 app.use('api/billing', require('./billingRoute').billingByHour);
 app.use('api/billing', require('./billingRoute').billingMonthToDate);
 
-});
-
-
 
 
 function errorHandler(err, req, res, next) {
