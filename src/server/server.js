@@ -1,7 +1,6 @@
 var csv = require("fast-csv");
 var adm = require('adm-zip'); //compression library library
 var http = require('http');
-var Converter = require('csvtojson').core.Converter; //csv -> json library
 var fs = require('fs'); //file reader-writer library
 AWS = require('aws-sdk'); //AWS SDK
 var credentials = new AWS.SharedIniFileCredentials({
@@ -16,12 +15,11 @@ mongoose = require('mongoose');
 // Mongo import
 mongo = require('mongodb');
 
-var app = new express();
 
-app.use(require('./CORS'));
-
+var app = express();
 port = process.env.PORT || 3000;
 
+app.use(require('./CORS')); //CORS Module
 
 // Start mongoose and mongo
 mongoose.connect('mongodb://localhost:27017/testdb2', function(error) {
@@ -51,7 +49,11 @@ app.use('/api/network', require('./networkRoute').networkOut);
 app.use('api/billing', require('./billingRoute').billingByHour);
 app.use('api/billing', require('./billingRoute').billingMonthToDate);
 
-//ERROR HANDLER
+});
+
+
+
+
 function errorHandler(err, req, res, next) {
     console.error(err.message);
     console.error(err.stack);
@@ -62,3 +64,4 @@ module.exports = errorHandler;
 
 app.listen(port);
 console.log('server started on port %s', port);
+

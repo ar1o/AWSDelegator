@@ -28,10 +28,10 @@
   "dependencies": {
     "express": "~4.12.3",
     "aws-sdk": "~2.1.26",
-    "csvtojson": "~0.3.21",
     "adm-zip": "~0.4.7",
     "fast-csv": "~0.6.0",
-    "mongoose": "~4.0.3",
-    "mongodb": "~2.0.33"
+
+    "mongodb": "~2.0.33",
+    "mongoose": "~4.0.3"
   }
 }
