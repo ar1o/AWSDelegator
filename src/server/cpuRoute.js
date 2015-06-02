@@ -23,16 +23,12 @@ var params = {
 
 //Will this require instance metrics as well to compute 
 module.exports = function(req, res){
-	var instanceCollection
-	for ( var i in instances){
-		instanceCollection = instances.Reservations[r].Instances[i];
-		console.log(instanceCollection);
-	}
-    console.log("req: " + req.query.value);
     var val = req.query.value;
     var rEndTime = parseInt(req.query.endTime);
     var rStartTime = parseInt(req.query.startTime);
     var rMetricName = req.query.metric;
+
+    console.log(val);
 
     params.Dimensions[0].Value = val;
     params.EndTime = rEndTime;
@@ -42,7 +38,7 @@ module.exports = function(req, res){
 
     var cloudwatch = new AWS.CloudWatch();
     cloudwatch.getMetricStatistics(params, function(err, data) {
-    	// console.log(data)
+    	console.log(data)
         res.send(data);
     });
 };
