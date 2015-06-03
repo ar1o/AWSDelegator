@@ -1,18 +1,17 @@
 /*
 	s3connect gets large csv.zip file and extracts it in /data/
 */
+var fs=require("fs");
 var compress = require('adm-zip');
-var fileS = require('fs'); //file reader-writer library
 var AWS = require('aws-sdk'); //AWS SDK
 var credentials = new AWS.SharedIniFileCredentials({
     profile: 'default'
 });
 AWS.config.credentials = credentials;
 AWS.config.region = 'us-west-2';
-var billing = (require('./billingParse')); //S3 bucket connection
-// Express import
+var parser = require('./billingParse');
 var app = require('express')();
-
+var adm = require('adm-zip'); //compression library library
 var okey;
 var params = {
     //fix the bucket name to be flexible.
@@ -22,10 +21,7 @@ var params = {
 var s3 = new AWS.S3();
 exports.s3Connect = function(req, res) {
 
-
     s3.listObjects(params, function(err, data) {
-
-
         //THIS NEEDS TO BE UPDATED BASED UPON CURRENT DATE AND OWNERID.
         okey = data.Contents[1].Key;
         console.log("okey: "+okey);
@@ -36,31 +32,39 @@ exports.s3Connect = function(req, res) {
         };
 
         console.log("starting download of test.zip");
-        var file = fileS.createWriteStream('test.zip');
+        var file = fs.createWriteStream('test.zip');
         s3.getObject(params_).createReadStream().pipe(file);
         // res.send("File retrieved: " + okey);
 
         file.on('close', function() {
             console.log("Billing data retrieved from S3 Bucket and unzipped");
-            var unzip = new compress('test.zip');
+            var unzip = new adm('test.zip');
             try {
-                // console.log("EXTRACTING");
-                // unzip.extractAllTo("data", true);
+                unzip.extractAllTo("data", true);
             } catch (e) {
                 console.log(e);
             }
-            //call to billing.js
-        });
-
-            try {
-                console.log("calling parseBillingCSV");
-                // billing.parseBillingCSV();
-            } catch (e) {
-                console.log(e);
-        }
-    });
+            fs.readdir(process.cwd()+'/data/', function (err, files) {
+                if (err) {
+                    console.log(err);
+                    return;
+                }
+                if(files[0]==='latestBills'){
+                    fs.rename(process.cwd()+'/data/'+files[1], process.cwd()+'/data/latestBills.csv', function(err) {
+                        if ( err ) console.log('ERROR: ' + err);
+                        console.log(files[0]+" renamed to latestBills.csv");
+                    });
+                }else{
+                    fs.rename(process.cwd()+'/data/'+files[0], process.cwd()+'/data/latestBills.csv', function(err) {
+                        if ( err ) console.log('ERROR: ' + err);
+                        console.log(files[0]+" renamed to latestBills.csv");
+                    });
+                }
+            });
+            parser.parseBillingCSV();
+        });            
+    });	
     s3.s3Watch();
-
 };
 that = this;
 s3.s3Watch = function() {

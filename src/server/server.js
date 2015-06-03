@@ -1,5 +1,5 @@
 var csv = require("fast-csv");
-var adm = require('adm-zip'); //compression library library
+adm = require('adm-zip'); //compression library library
 var http = require('http');
 var fs = require('fs'); //file reader-writer library
 AWS = require('aws-sdk'); //AWS SDK
@@ -22,7 +22,7 @@ port = process.env.PORT || 3000;
 app.use(require('./CORS')); //CORS Module
 
 // Start mongoose and mongo
-mongoose.connect('mongodb://localhost:27017/testdb2', function(error) {
+mongoose.connect('mongodb://localhost:27017/awsdb', function(error) {
     if (error) {
         console.log(error);
     }
@@ -36,6 +36,10 @@ db.on("open", function() {
     });
     var Billings = mongoose.model('Billings', billingSchema, 'billing');
 });
+
+if (!fs.existsSync(process.cwd()+'/data')){
+        fs.mkdirSync(dir);
+}
 
 var s3 = (require('./s3Watch')); //S3 bucket connection
 s3.s3Connect();
@@ -61,4 +65,3 @@ module.exports = errorHandler;
 
 app.listen(port);
 console.log('server started on port %s', port);
-
