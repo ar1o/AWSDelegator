@@ -209,7 +209,7 @@ exports.instanceCostHourly = function(req, res) {
             }
         }, {
             $group: {
-                _id: "$volumeId",
+                _id: "$user:Volume Id",
                 ResourceId: {
                     $addToSet: "$ResourceId"
                 },
@@ -244,7 +244,8 @@ exports.instanceCostHourly = function(req, res) {
 };
 
 exports.instanceCostHourlyByDate = function(req, res) {
-   // var startDuration = req.param.sta
+    var startDuration = "2015-05-25 00:00:00";
+    var endDuration = "2015-05-25 23:00:00"
     var instances = {};
     var count = 0;
     // Select objects from collection
@@ -256,7 +257,8 @@ exports.instanceCostHourlyByDate = function(req, res) {
             ResourceId: {
                 $regex: '^(i-)'
             },
-            $and: [{UsageStartDate: {gte: "2015-05-20 00:00:00"}}, {UsageStartDate: {lte: "2015-05-20 23:00:00"}}]
+            // UsageStartDate: {$gt: "2015-05-20 00:00:00"}
+            $and: [{UsageStartDate: {$gte: startDuration}}, {UsageStartDate: {$lte: endDuration}}]
         }
     }, {
         $group: {
@@ -264,14 +266,19 @@ exports.instanceCostHourlyByDate = function(req, res) {
             "user:Volume Id": {
                 $addToSet: "$user:Volume Id"
             },
+            "UsageStartDate": {
+                $addToSet: "$UsageStartDate"
+            },
             total: {
                 $sum: "$Cost"
             }
         }
     }]).exec(function(e, d) {
         console.log("\nINSTANCE COST");
-        //loop over these objects, create an array of your foreign keys and a hashmap of our objects stored by ID
-        //(so that later we can do yourHashmap[some_id] to get your object from collection)
+    
+        console.log(d);
+        // loop over these objects, create an array of your foreign keys and a hashmap of our objects stored by ID
+        // (so that later we can do yourHashmap[some_id] to get your object from collection)
         for (var r in d) {
             if (d[r]['user:Volume Id'][0] == '') {
                 d[r]['user:Volume Id'][0] = "null"
@@ -301,12 +308,12 @@ exports.instanceCostHourlyByDate = function(req, res) {
                 "user:Volume Id": {
                     $regex: '^(vol-)'
                 },
-                $and: [{UsageStartDate: {gte: "2015-05-20 00:00:00"}}, {UsageStartDate: {lte: "2015-05-20 23:00:00"}}]
+                $and: [{UsageStartDate: {gte: startDuration}}, {UsageStartDate: {lte: endDuration}}]
 
             }
         }, {
             $group: {
-                _id: "$volumeId",
+                _id: "$user:Volume Id",
                 ResourceId: {
                     $addToSet: "$ResourceId"
                 },
