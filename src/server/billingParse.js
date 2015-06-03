@@ -44,8 +44,7 @@ exports.parseBillingCSV = function () {
                         loop1:
                         for(var i=1;i<lines.length;++i){
                             bill=lines[i].split(",");                                    
-                            if(bill[index[properties.indexOf('UsageQuantity')]]!=""){         
-                                //console.log(bill);                         
+                            if(bill[index[properties.indexOf('UsageQuantity')]]!=""){                                         
                                 if(bill[index[properties.indexOf('UsageStartDate')]].replace(/"/g,"") > latest.time){
                                     var tuple = {};
                                     tuple[properties[0]]=bill[index[0]].replace(/"/g,"");
@@ -56,9 +55,7 @@ exports.parseBillingCSV = function () {
                                         }else{  
                                             var flag=0;                                          
                                             for(var k=0;k<numeric.length;++k){
-                                                console.log(j,numeric_index[k]);
                                                 if(j===numeric_index[k]){
-                                                    console.log("-->"+j,numeric_index[k]);
                                                     tuple[properties[j]]=parseFloat(bill[index[j]].replace(/"/g,""));  
                                                     flag=1;
                                                 }
