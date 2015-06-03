@@ -38,7 +38,7 @@ db.on("open", function() {
 });
 
 if (!fs.existsSync(process.cwd()+'/data')){
-        fs.mkdirSync(dir);
+        fs.mkdirSync(process.cwd()+'/data');
 }
 
 var s3 = (require('./s3Watch')); //S3 bucket connection
