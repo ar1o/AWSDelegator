@@ -36,14 +36,16 @@ exports.parseBillingCSV = function () {
                         var index = [];
                         for(var i=0;i<header.length;++i)header[i] = header[i].replace(/"/g,"");                                                                            
                         for(var i=0;i<properties.length;++i)index.push(header.indexOf(properties[i]));
-                        for(var i=0;i<numeric.length;++i)numeric_index.push(properties.indexOf(numeric[i]));                        
+                        for(var i=0;i<numeric.length;++i)numeric_index.push(properties.indexOf(numeric[i]));
+                        console.log(numeric_index);
                         /*
                         *   i=0 is header
                         */
                         loop1:
                         for(var i=1;i<lines.length;++i){
                             bill=lines[i].split(",");                                    
-                            if(bill[index[properties.indexOf('UsageQuantity')]]!=""){                                                             
+                            if(bill[index[properties.indexOf('UsageQuantity')]]!=""){         
+                                //console.log(bill);                         
                                 if(bill[index[properties.indexOf('UsageStartDate')]].replace(/"/g,"") > latest.time){
                                     var tuple = {};
                                     tuple[properties[0]]=bill[index[0]].replace(/"/g,"");
@@ -54,8 +56,10 @@ exports.parseBillingCSV = function () {
                                         }else{  
                                             var flag=0;                                          
                                             for(var k=0;k<numeric.length;++k){
-                                                if(j==numeric_index[k]){
-                                                    tuple[properties[j]]=parseFloat(bill[index[j]]);  
+                                                console.log(j,numeric_index[k]);
+                                                if(j===numeric_index[k]){
+                                                    console.log("-->"+j,numeric_index[k]);
+                                                    tuple[properties[j]]=parseFloat(bill[index[j]].replace(/"/g,""));  
                                                     flag=1;
                                                 }
                                             }
