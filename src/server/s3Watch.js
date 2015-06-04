@@ -8,14 +8,14 @@ var credentials = new AWS.SharedIniFileCredentials({
     profile: 'default'
 });
 AWS.config.credentials = credentials;
-AWS.config.region = 'us-west-2';
+AWS.config.region = 'us-east-1';
 var parser = require('./billingParse');
 var app = require('express')();
 var adm = require('adm-zip'); //compression library library
 var okey;
 var params = {
     //fix the bucket name to be flexible.
-    Bucket: 'ario'
+    Bucket: 'csvcontainer'
 
 };
 var s3 = new AWS.S3();
@@ -23,11 +23,12 @@ exports.s3Connect = function(req, res) {
 
     s3.listObjects(params, function(err, data) {
         //THIS NEEDS TO BE UPDATED BASED UPON CURRENT DATE AND OWNERID.
+        // console.log(data);
         okey = data.Contents[1].Key;
         console.log("okey: "+okey);
 
         var params_ = {
-            Bucket: 'ario',
+            Bucket: 'csvcontainer',
             Key: okey
         };
 

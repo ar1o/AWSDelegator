@@ -39,7 +39,7 @@ exports.byHour = function(req, res) {
                 $eq: "Amazon Elastic Compute Cloud"
             },
             UsageStartDate: {
-                $eq: "2015-05-19 19:00:00"
+                $eq: "2015-06-01 19:00:00"
             }
         }
     }, {
@@ -50,7 +50,7 @@ exports.byHour = function(req, res) {
             }
         }
     }]).exec(function(e, d) {
-        console.log(d);
+        // console.log(d);
         res.send(d);
     });
 };
@@ -80,7 +80,7 @@ exports.instanceCost = function(req, res) {
             }
         }
     }]).exec(function(e, d) {
-        console.log("\nINSTANCE COST");
+        // console.log("\nINSTANCE COST");
         //loop over these objects, create an array of your foreign keys and a hashmap of our objects stored by ID
         //(so that later we can do yourHashmap[some_id] to get your object from collection)
         for (var r in d) {
@@ -100,8 +100,8 @@ exports.instanceCost = function(req, res) {
             }
             count++;
 
-            console.log("instanceLENGTH: " + Object.keys(instances).length);
-            console.log(d[r]._id + "\t" + d[r]['user:Volume Id'][0] + "\t" + d[r].total);
+            // console.log("instanceLENGTH: " + Object.keys(instances).length);
+            // console.log(d[r]._id + "\t" + d[r]['user:Volume Id'][0] + "\t" + d[r].total);
         }
 
         mongoose.model('Billings').aggregate({
@@ -124,25 +124,26 @@ exports.instanceCost = function(req, res) {
                 }
             }
         }).exec(function(e, d) {
-            console.log(d);
-            console.log("instanceLENGTH: " + Object.keys(instances).length);
-            console.log("\nVOLUME COST")
+            // console.log(d);
+            // console.log("instanceLENGTH: " + Object.keys(instances).length);
+            // console.log("\nVOLUME COST")
                 //loop over collection B and use the foreign key on collection to access our objects from
                 //collection using the hashmap we built
             for (var r in d) {
-                console.log(d[r].resourceId + "\t" + d[r]._id + "\t" + d[r].total);
+                // console.log(d[r].resourceId + "\t" + d[r]._id + "\t" + d[r].total);
                 //now we have the matching collection A and collection B objects and we can do whatever
                 //you want with them.
                 if (d[r]._id in instances) {
                     instances[d[r]._id].cost += d[r].total;
                 }
             }
-            var total_cost = 0;
-            console.log("\nTOTAL COST")
-            for (var x in instances) {
-                total_cost += instances[x].cost;
-                console.log(instances[x].resourceId + "\t" + instances[x].cost + "\t" + instances[x].volumeId + "\t" + total_cost + "\t" + count);
-            }
+            // var total_cost = 0;
+            // console.log("\nTOTAL COST")
+            // for (var x in instances) {
+            //     total_cost += instances[x].cost;
+            //     // console.log(instances[x].resourceId + "\t" + instances[x].cost + "\t" + instances[x].volumeId + "\t" + total_cost + "\t" + count);
+            // }
+            console.log(instances);
             res.send(instances);
         });
 
@@ -194,8 +195,8 @@ exports.instanceCostHourly = function(req, res) {
             }
             count++;
 
-            console.log("instanceLENGTH: " + Object.keys(instances).length);
-            console.log(d[r]._id + "\t" + d[r]['user:Volume Id'][0] + "\t" + d[r].total);
+            // console.log("instanceLENGTH: " + Object.keys(instances).length);
+            // console.log(d[r]._id + "\t" + d[r]['user:Volume Id'][0] + "\t" + d[r].total);
         }
 
         mongoose.model('Billings').aggregate({
@@ -218,25 +219,26 @@ exports.instanceCostHourly = function(req, res) {
                 }
             }
         }).exec(function(e, d) {
-            console.log(d);
-            console.log("instanceLENGTH: " + Object.keys(instances).length);
-            console.log("\nVOLUME COST")
+            // console.log(d);
+            // console.log("instanceLENGTH: " + Object.keys(instances).length);
+            // console.log("\nVOLUME COST")
                 //loop over collection B and use the foreign key on collection to access our objects from
                 //collection using the hashmap we built
             for (var r in d) {
-                console.log(d[r].resourceId + "\t" + d[r]._id + "\t" + d[r].total);
+                // console.log(d[r].resourceId + "\t" + d[r]._id + "\t" + d[r].total);
                 //now we have the matching collection A and collection B objects and we can do whatever
                 //you want with them.
                 if (d[r]._id in instances) {
                     instances[d[r]._id].cost += d[r].total;
                 }
             }
-            var total_cost = 0;
-            console.log("\nTOTAL COST")
-            for (var x in instances) {
-                total_cost += instances[x].cost;
-                console.log(instances[x].resourceId + "\t" + instances[x].cost + "\t" + instances[x].volumeId + "\t" + total_cost + "\t" + count);
-            }
+            // var total_cost = 0;
+            // console.log("\nTOTAL COST")
+            // for (var x in instances) {
+                // total_cost += instances[x].cost;
+                // console.log(instances[x].resourceId + "\t" + instances[x].cost + "\t" + instances[x].volumeId + "\t" + total_cost + "\t" + count);
+            // }
+            console.log(instances);
             res.send(instances);
         });
 
@@ -257,7 +259,6 @@ exports.instanceCostHourlyByDate = function(req, res) {
             ResourceId: {
                 $regex: '^(i-)'
             },
-            // UsageStartDate: {$gt: "2015-05-20 00:00:00"}
             $and: [{UsageStartDate: {$gte: startDuration}}, {UsageStartDate: {$lte: endDuration}}]
         }
     }, {
@@ -274,7 +275,7 @@ exports.instanceCostHourlyByDate = function(req, res) {
             }
         }
     }]).exec(function(e, d) {
-        console.log("\nINSTANCE COST");
+        // console.log("\nINSTANCE COST");
     
         console.log(d);
         // loop over these objects, create an array of your foreign keys and a hashmap of our objects stored by ID
@@ -296,8 +297,8 @@ exports.instanceCostHourlyByDate = function(req, res) {
             }
             count++;
 
-            console.log("instanceLENGTH: " + Object.keys(instances).length);
-            console.log(d[r]._id + "\t" + d[r]['user:Volume Id'][0] + "\t" + d[r].total);
+            // console.log("instanceLENGTH: " + Object.keys(instances).length);
+            // console.log(d[r]._id + "\t" + d[r]['user:Volume Id'][0] + "\t" + d[r].total);
         }
 
         mongoose.model('Billings').aggregate({
@@ -322,25 +323,26 @@ exports.instanceCostHourlyByDate = function(req, res) {
                 }
             }
         }).exec(function(e, d) {
-            console.log(d);
-            console.log("instanceLENGTH: " + Object.keys(instances).length);
-            console.log("\nVOLUME COST")
+            // console.log(d);
+            // console.log("instanceLENGTH: " + Object.keys(instances).length);
+            // console.log("\nVOLUME COST")
                 //loop over collection B and use the foreign key on collection to access our objects from
                 //collection using the hashmap we built
             for (var r in d) {
-                console.log(d[r].resourceId + "\t" + d[r]._id + "\t" + d[r].total);
+                // console.log(d[r].resourceId + "\t" + d[r]._id + "\t" + d[r].total);
                 //now we have the matching collection A and collection B objects and we can do whatever
                 //you want with them.
                 if (d[r]._id in instances) {
                     instances[d[r]._id].cost += d[r].total;
                 }
             }
-            var total_cost = 0;
-            console.log("\nTOTAL COST")
-            for (var x in instances) {
-                total_cost += instances[x].cost;
-                console.log(instances[x].resourceId + "\t" + instances[x].cost + "\t" + instances[x].volumeId + "\t" + total_cost + "\t" + count);
-            }
+            // var total_cost = 0;
+            // console.log("\nTOTAL COST")
+            // for (var x in instances) {
+                // total_cost += instances[x].cost;
+                // console.log(instances[x].resourceId + "\t" + instances[x].cost + "\t" + instances[x].volumeId + "\t" + total_cost + "\t" + count);
+            // }
+            console.log(instances);
             res.send(instances);
         });
 

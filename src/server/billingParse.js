@@ -37,7 +37,6 @@ exports.parseBillingCSV = function () {
                         for(var i=0;i<header.length;++i)header[i] = header[i].replace(/"/g,"");                                                                            
                         for(var i=0;i<properties.length;++i)index.push(header.indexOf(properties[i]));
                         for(var i=0;i<numeric.length;++i)numeric_index.push(properties.indexOf(numeric[i]));
-                        console.log(numeric_index);
                         /*
                         *   i=0 is header
                         */
