@@ -59,10 +59,11 @@ exports.parseBillingCSV = function () {
                                         }                                    
                                     }
                                     db.collection(currentCollection).insert(tuple);                                
-                                    db.collection('latest').update({_id:latest._id},{time:bill[index[properties.indexOf('UsageStartDate')]].replace(/"/g,"")});
+                                    db.collection('latest').update({_id:latest._id},{time:bill[index[properties.indexOf('UsageStartDate')]].replace(/"/g,"")});                                    
                                 }
                             }                            
                         }
+                        console.log("database: "+currentCollection+" is up-to-date");
                     });
                 });
             }); 

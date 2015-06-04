@@ -49,7 +49,6 @@ exports.s3Connect = function(req, res) {
                 }
                 fs.readdir(process.cwd()+'/data/',function (err,files){
                     if(err) throw err;
-                    console.log("in readdir "+files);
                     currentCollection = 'bills-'+files[0].substring(files[0].length-11,files[0].length-4);
                     currentCollection = currentCollection.replace(/-/g,"");
                     console.log("Updated currentCollection to "+currentCollection);
