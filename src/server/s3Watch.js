@@ -22,7 +22,7 @@ var s3 = new AWS.S3();
 exports.s3Connect = function(req, res) {
     s3.listObjects(params, function(err, data) {
         //THIS NEEDS TO BE UPDATED BASED UPON CURRENT DATE AND OWNERID.
-        okey = data.Contents[1].Key;
+        okey = data.Contents[2].Key;
         console.log("okey: "+okey);
 
         var params_ = {

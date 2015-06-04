@@ -80,7 +80,6 @@ exports.instanceCost = function(req, res) {
             }
         }
     }]).exec(function(e, d) {
-        // console.log("\nINSTANCE COST");
         //loop over these objects, create an array of your foreign keys and a hashmap of our objects stored by ID
         //(so that later we can do yourHashmap[some_id] to get your object from collection)
         for (var r in d) {
@@ -99,9 +98,6 @@ exports.instanceCost = function(req, res) {
                 };
             }
             count++;
-
-            // console.log("instanceLENGTH: " + Object.keys(instances).length);
-            // console.log(d[r]._id + "\t" + d[r]['user:Volume Id'][0] + "\t" + d[r].total);
         }
 
         mongoose.model('Billings').aggregate({
@@ -124,25 +120,15 @@ exports.instanceCost = function(req, res) {
                 }
             }
         }).exec(function(e, d) {
-            // console.log(d);
-            // console.log("instanceLENGTH: " + Object.keys(instances).length);
-            // console.log("\nVOLUME COST")
-                //loop over collection B and use the foreign key on collection to access our objects from
-                //collection using the hashmap we built
+            //loop over collection B and use the foreign key on collection to access our objects from
+            //collection using the hashmap we built
             for (var r in d) {
-                // console.log(d[r].resourceId + "\t" + d[r]._id + "\t" + d[r].total);
                 //now we have the matching collection A and collection B objects and we can do whatever
                 //you want with them.
                 if (d[r]._id in instances) {
                     instances[d[r]._id].cost += d[r].total;
                 }
             }
-            // var total_cost = 0;
-            // console.log("\nTOTAL COST")
-            // for (var x in instances) {
-            //     total_cost += instances[x].cost;
-            //     // console.log(instances[x].resourceId + "\t" + instances[x].cost + "\t" + instances[x].volumeId + "\t" + total_cost + "\t" + count);
-            // }
             console.log(instances);
             res.send(instances);
         });
@@ -194,7 +180,6 @@ exports.instanceCostHourly = function(req, res) {
                 };
             }
             count++;
-
             // console.log("instanceLENGTH: " + Object.keys(instances).length);
             // console.log(d[r]._id + "\t" + d[r]['user:Volume Id'][0] + "\t" + d[r].total);
         }
@@ -220,12 +205,9 @@ exports.instanceCostHourly = function(req, res) {
             }
         }).exec(function(e, d) {
             // console.log(d);
-            // console.log("instanceLENGTH: " + Object.keys(instances).length);
-            // console.log("\nVOLUME COST")
-                //loop over collection B and use the foreign key on collection to access our objects from
-                //collection using the hashmap we built
+            //loop over collection B and use the foreign key on collection to access our objects from
+            //collection using the hashmap we built
             for (var r in d) {
-                // console.log(d[r].resourceId + "\t" + d[r]._id + "\t" + d[r].total);
                 //now we have the matching collection A and collection B objects and we can do whatever
                 //you want with them.
                 if (d[r]._id in instances) {
@@ -235,8 +217,8 @@ exports.instanceCostHourly = function(req, res) {
             // var total_cost = 0;
             // console.log("\nTOTAL COST")
             // for (var x in instances) {
-                // total_cost += instances[x].cost;
-                // console.log(instances[x].resourceId + "\t" + instances[x].cost + "\t" + instances[x].volumeId + "\t" + total_cost + "\t" + count);
+            // total_cost += instances[x].cost;
+            // console.log(instances[x].resourceId + "\t" + instances[x].cost + "\t" + instances[x].volumeId + "\t" + total_cost + "\t" + count);
             // }
             console.log(instances);
             res.send(instances);
@@ -259,7 +241,15 @@ exports.instanceCostHourlyByDate = function(req, res) {
             ResourceId: {
                 $regex: '^(i-)'
             },
-            $and: [{UsageStartDate: {$gte: startDuration}}, {UsageStartDate: {$lte: endDuration}}]
+            $and: [{
+                UsageStartDate: {
+                    $gte: startDuration
+                }
+            }, {
+                UsageStartDate: {
+                    $lte: endDuration
+                }
+            }]
         }
     }, {
         $group: {
@@ -276,7 +266,7 @@ exports.instanceCostHourlyByDate = function(req, res) {
         }
     }]).exec(function(e, d) {
         // console.log("\nINSTANCE COST");
-    
+
         console.log(d);
         // loop over these objects, create an array of your foreign keys and a hashmap of our objects stored by ID
         // (so that later we can do yourHashmap[some_id] to get your object from collection)
@@ -309,7 +299,15 @@ exports.instanceCostHourlyByDate = function(req, res) {
                 "user:Volume Id": {
                     $regex: '^(vol-)'
                 },
-                $and: [{UsageStartDate: {gte: startDuration}}, {UsageStartDate: {lte: endDuration}}]
+                $and: [{
+                    UsageStartDate: {
+                        gte: startDuration
+                    }
+                }, {
+                    UsageStartDate: {
+                        lte: endDuration
+                    }
+                }]
 
             }
         }, {
@@ -326,8 +324,8 @@ exports.instanceCostHourlyByDate = function(req, res) {
             // console.log(d);
             // console.log("instanceLENGTH: " + Object.keys(instances).length);
             // console.log("\nVOLUME COST")
-                //loop over collection B and use the foreign key on collection to access our objects from
-                //collection using the hashmap we built
+            //loop over collection B and use the foreign key on collection to access our objects from
+            //collection using the hashmap we built
             for (var r in d) {
                 // console.log(d[r].resourceId + "\t" + d[r]._id + "\t" + d[r].total);
                 //now we have the matching collection A and collection B objects and we can do whatever
@@ -339,8 +337,8 @@ exports.instanceCostHourlyByDate = function(req, res) {
             // var total_cost = 0;
             // console.log("\nTOTAL COST")
             // for (var x in instances) {
-                // total_cost += instances[x].cost;
-                // console.log(instances[x].resourceId + "\t" + instances[x].cost + "\t" + instances[x].volumeId + "\t" + total_cost + "\t" + count);
+            // total_cost += instances[x].cost;
+            // console.log(instances[x].resourceId + "\t" + instances[x].cost + "\t" + instances[x].volumeId + "\t" + total_cost + "\t" + count);
             // }
             console.log(instances);
             res.send(instances);
