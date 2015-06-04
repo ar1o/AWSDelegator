@@ -30,8 +30,9 @@ exports.parseBillingCSV = function () {
                         var lines=text.split("\n");
                         lines.pop();
                         var header = lines[0].split(',');                                                       
-                        var properties = ['ProductName','UsageQuantity','Cost','ResourceId','UsageStartDate','user:Volume Id'];
-                        var numeric = ['UsageQuantity','Cost'];
+                        var properties = ['RateId','ProductName','UsageType','Operation','AvailabilityZone','ItemDescription',
+                            'UsageStartDate','UsageQuantity','Rate','Cost','user:Volume Id','user:Name','user:Email','ResourceId'];
+                        var numeric = ['RateId','UsageQuantity','Rate','Cost'];
                         var numeric_index = [];
                         var index = [];
                         for(var i=0;i<header.length;++i)header[i] = header[i].replace(/"/g,"");                                                                            
@@ -42,22 +43,23 @@ exports.parseBillingCSV = function () {
                             if(bill[index[properties.indexOf('UsageQuantity')]]!=""){                                         
                                 if(bill[index[properties.indexOf('UsageStartDate')]].replace(/"/g,"") > latest.time){
                                     var tuple = {};
-                                    tuple[properties[0]]=bill[index[0]].replace(/"/g,"");
-                                    for(var j=1;j<properties.length;++j){
-                                        if(bill[index[j]]===""){
-                                            tuple[properties[j]]="";
+                                    for(var j=0;j<properties.length;++j){
+                                        if(bill[index[j]]==''){
+                                            tuple[properties[j]]="null";
                                         }else{  
-                                            var flag=0;                                          
+                                            var isNumber=0;                                          
                                             for(var k=0;k<numeric.length;++k){
                                                 if(j===numeric_index[k]){
                                                     tuple[properties[j]]=parseFloat(bill[index[j]].replace(/"/g,""));  
-                                                    flag=1;                                                    
+                                                    isNumber=1;                                                    
                                                 }
                                             }
-                                            if(flag==0)
-                                                tuple[properties[j]]=bill[index[j]].replace(/"/g,"");
+                                            if(isNumber==0){
+                                                if(index[j]!=-1)
+                                                    tuple[properties[j]]=bill[index[j]].replace(/"/g,"");
+                                            }
                                         }                                    
-                                    }
+                                    }                               
                                     db.collection(currentCollection).insert(tuple);                                
                                     db.collection('latest').update({_id:latest._id},{time:bill[index[properties.indexOf('UsageStartDate')]].replace(/"/g,"")});                                    
                                 }
