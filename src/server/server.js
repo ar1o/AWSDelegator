@@ -1,5 +1,6 @@
 var csv = require("fast-csv");
-adm = require('adm-zip'); //compression library library
+var adm = require('adm-zip'); //compression library library
+currentCollection = "bills201505";
 var http = require('http');
 var fs = require('fs'); //file reader-writer library
 AWS = require('aws-sdk'); //AWS SDK
@@ -22,7 +23,6 @@ port = process.env.PORT || 3000;
 app.use(require('./CORS'));
 
 // Start mongoose and mongo
-
 mongoose.connect('mongodb://localhost:27017/awsdb', function(error) {
 
     if (error) {
