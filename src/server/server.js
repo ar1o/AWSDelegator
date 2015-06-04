@@ -1,5 +1,6 @@
 var csv = require("fast-csv");
-adm = require('adm-zip'); //compression library library
+var adm = require('adm-zip'); //compression library library
+currentCollection = "bills-2015-05";
 var http = require('http');
 var fs = require('fs'); //file reader-writer library
 AWS = require('aws-sdk'); //AWS SDK
