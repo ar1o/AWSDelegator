@@ -38,7 +38,7 @@ db.on("open", function() {
         UsageStartDate: String,
         "user:Volume Id": String,
     });
-    var Billings = mongoose.model('Billings', billingSchema, 'bills');
+    var Billings = mongoose.model('Billings', billingSchema, currentCollection);
 });
 
 if (!fs.existsSync(process.cwd()+'/data')){

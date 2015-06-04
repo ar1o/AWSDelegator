@@ -39,7 +39,7 @@ exports.byHour = function(req, res) {
                 $eq: "Amazon Elastic Compute Cloud"
             },
             UsageStartDate: {
-                $eq: "2015-06-01 19:00:00"
+                $eq: "2015-05-01 00:00:00"
             }
         }
     }, {

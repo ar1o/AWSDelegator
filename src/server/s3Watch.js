@@ -22,7 +22,8 @@ var s3 = new AWS.S3();
 exports.s3Connect = function(req, res) {
     s3.listObjects(params, function(err, data) {
         //THIS NEEDS TO BE UPDATED BASED UPON CURRENT DATE AND OWNERID.
-        okey = data.Contents[2].Key;
+        //console.log(data);
+        okey = data.Contents[4].Key;
         console.log("okey: "+okey);
 
         var params_ = {
@@ -50,7 +51,6 @@ exports.s3Connect = function(req, res) {
                 }
                 fs.readdir(process.cwd()+'/data/',function (err,files){
                     if(err) throw err;
-                    console.log("in readdir "+files);
                     currentCollection = 'bills-'+files[0].substring(files[0].length-11,files[0].length-4);
                     currentCollection = currentCollection.replace(/-/g,"");
                     console.log("Updated currentCollection to "+currentCollection);
