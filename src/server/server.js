@@ -37,12 +37,17 @@ db.on("open", function() {
         ResourceId: String,
         UsageStartDate: String,
         "user:Volume Id": String,
+        Rate: String,
+        UsageType: String,
+        ItemDescription: String,
+        UsageQuantity: String
+
     });
     var Billings = mongoose.model('Billings', billingSchema, currentCollection);
 });
 
-if (!fs.existsSync(process.cwd()+'/data')){
-        fs.mkdirSync(process.cwd()+'/data');
+if (!fs.existsSync(process.cwd() + '/data')) {
+    fs.mkdirSync(process.cwd() + '/data');
 }
 
 var s3 = (require('./s3Watch')); //S3 bucket connection
@@ -58,6 +63,14 @@ app.get('/api/billing/monthToDate', require('./billingRoute').monthToDate);
 app.get('/api/billing/byHour', require('./billingRoute').byHour);
 app.get('/api/billing/instanceCost', require('./billingRoute').instanceCost);
 app.get('/api/billing/instanceCostHourly', require('./billingRoute').instanceCostHourlyByDate);
+
+
+app.get('/api/billing/freeTier', require('./FreeTier').freeTier);
+
+
+
+
+
 
 function errorHandler(err, req, res, next) {
     console.error(err.message);
