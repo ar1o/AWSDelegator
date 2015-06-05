@@ -1,4 +1,4 @@
-currentCollection = "bills201505";
+currentCollection = "";
 var http = require('http');
 var fs = require('fs'); //file reader-writer library
 AWS = require('aws-sdk'); //AWS SDK
@@ -19,6 +19,10 @@ port = process.env.PORT || 3000;
 
 //CORS Module
 app.use(require('./CORS'));
+
+//S3 bucket connection
+var s3 = (require('./s3Watch'));
+s3.s3Connect();
 
 // Start mongoose and mongo
 mongoose.connect('mongodb://localhost:27017/awsdb', function(error) {
@@ -50,9 +54,6 @@ if (!fs.existsSync(process.cwd() + '/data')) {
     fs.mkdirSync(process.cwd() + '/data');
 }
 
-var s3 = (require('./s3Watch')); //S3 bucket connection
-s3.s3Connect();
-
 app.get('/api/instances', require('./instanceRoute'));
 app.get('/api/cpu', require('./cpuRoute')).cpu;
 
@@ -64,13 +65,7 @@ app.get('/api/billing/byHour', require('./billingRoute').byHour);
 app.get('/api/billing/instanceCost', require('./billingRoute').instanceCost);
 app.get('/api/billing/instanceCostHourly', require('./billingRoute').instanceCostHourlyByDate);
 
-
 app.get('/api/billing/freeTier', require('./FreeTier').freeTier);
-
-
-
-
-
 
 function errorHandler(err, req, res, next) {
     console.error(err.message);

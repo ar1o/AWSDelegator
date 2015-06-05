@@ -53,7 +53,7 @@ exports.freeTier = function(req, res) {
                     };
                     update = { Rate: 0.02 };
                     options = { multi: true };
-                    // mongoose.model('Billings').update(conditions, update, options, callback);
+                    mongoose.model('Billings').update(conditions, update, options, callback);
 
                     function callback(err, numAffected) {
                         console.log(numAffected)
@@ -68,7 +68,7 @@ exports.freeTier = function(req, res) {
                     };
                     update = { Rate: 0.02 };
                     options = { multi: true };
-                    // mongoose.model('Billings').update(conditions, update, options, callback);
+                    mongoose.model('Billings').update(conditions, update, options, callback);
 
                     function callback(err, numAffected) {
                         console.log(numAffected)
@@ -83,7 +83,7 @@ exports.freeTier = function(req, res) {
                     };
                     update = { Rate: 0.017 };
                     options = { multi: true };
-                    // mongoose.model('Billings').update(conditions, update, options, callback);
+                    mongoose.model('Billings').update(conditions, update, options, callback);
 
                     function callback(err, numAffected) {
                         console.log(numAffected)
@@ -93,7 +93,7 @@ exports.freeTier = function(req, res) {
                 case (/BoxUsage:t2.micro/.test(UsageType)): //BoxUsage is for EC2
                     console.log("matched /BoxUsage:t2.micro/");
                     conditions = {
-                        UsageType: { $regex: /InstanceUsage:db.t2.micro/ },
+                        UsageType: { $regex: /BoxUsage:t2.micro/ },
                         ItemDescription: { $regex: /free tier/ }
                     };
                     options = { multi: true };
@@ -108,7 +108,7 @@ exports.freeTier = function(req, res) {
                         console.log("matched /RHEL/")
                         update = { Rate: 0.017 };
                     }
-                    // mongoose.model('Billings').update(conditions, update, options, callback);
+                    mongoose.model('Billings').update(conditions, update, options, callback);
 
                     function callback(err, numAffected) {
                         console.log(numAffected)
@@ -123,7 +123,7 @@ exports.freeTier = function(req, res) {
                     };
                     update = { Rate: 0.005 };//(UsageQuantity/1000)0.005
                     options = { multi: true };
-                    // mongoose.model('Billings').update(conditions, update, options, callback);
+                    mongoose.model('Billings').update(conditions, update, options, callback);
 
                     function callback(err, numAffected) {
                         console.log(numAffected)
@@ -132,12 +132,12 @@ exports.freeTier = function(req, res) {
                 case (/Requests-Tier2/.test(UsageType)):
                     console.log("matched /Request-Tier2/");
                     conditions = {
-                        UsageType: { $regex: /Requests-Tier1/ },
+                        UsageType: { $regex: /Requests-Tier2/ },
                         ItemDescription: { $regex: /free tier/ }
                     };
                     update = { Rate: 0.004 };//(UsageQuantity/10000)0.004
                     options = { multi: true };
-                    // mongoose.model('Billings').update(conditions, update, options, callback);
+                    mongoose.model('Billings').update(conditions, update, options, callback);
 
                     function callback(err, numAffected) {
                         console.log(numAffected)
@@ -151,7 +151,7 @@ exports.freeTier = function(req, res) {
                     };
                     update = { Rate: 0.1 }; //per GB-month
                     options = { multi: true };
-                    // mongoose.model('Billings').update(conditions, update, options, callback);
+                    mongoose.model('Billings').update(conditions, update, options, callback);
 
                     function callback(err, numAffected) {
                         console.log(numAffected)
@@ -165,7 +165,7 @@ exports.freeTier = function(req, res) {
                     };
                     update = { Rate: 0.03 }; //First 1 TB / month, first 5gb is FREE.
                     options = { multi: true };
-                    // mongoose.model('Billings').update(conditions, update, options, callback);
+                    mongoose.model('Billings').update(conditions, update, options, callback);
 
                     function callback(err, numAffected) {
                         console.log(numAffected)
@@ -179,7 +179,7 @@ exports.freeTier = function(req, res) {
                     };
                     update = { Rate: 0.115 }; 
                     options = { multi: true };
-                    // mongoose.model('Billings').update(conditions, update, options, callback);
+                    mongoose.model('Billings').update(conditions, update, options, callback);
 
                     function callback(err, numAffected) {
                         console.log(numAffected)
@@ -191,6 +191,6 @@ exports.freeTier = function(req, res) {
             }
 
         }
-        res.send("Done");
+        res.send("Done updating free tier rates");
     });
 };
