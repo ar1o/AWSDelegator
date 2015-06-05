@@ -3,7 +3,7 @@ exports.freeTier = function(req, res) {
     mongoose.model('Billings').aggregate({
         $match: {
             ItemDescription: {
-                $regex: /(free tier)/
+                $regex: /free tier/
             }
             // Rate: {
             //     $eq: 0

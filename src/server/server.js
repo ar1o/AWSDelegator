@@ -36,14 +36,15 @@ db.on("open", function() {
     var billingSchema = new mongoose.Schema({
         _id: mongoose.Schema.ObjectId,
         ProductName: String,
-        Cost: String,
+        Cost: Number,
         ResourceId: String,
         UsageStartDate: String,
         "user:Volume Id": String,
-        Rate: String,
+        Rate: Number,
         UsageType: String,
         ItemDescription: String,
-        UsageQuantity: String
+        UsageQuantity: Number,
+        RateId: Number
 
     });
     var latestSchema = new mongoose.Schema({
@@ -76,6 +77,10 @@ app.get('/api/billing/instanceCost', require('./billingRoute').instanceCost);
 app.get('/api/billing/instanceCostHourly', require('./billingRoute').instanceCostHourlyByDate);
 
 app.get('/api/billing/freeTier', require('./FreeTier').freeTier);
+
+app.get('/api/billing/calcFreeTierCost', require('./billingRoute').calcFreeTierCost);
+
+
 
 function errorHandler(err, req, res, next) {
     console.error(err.message);
