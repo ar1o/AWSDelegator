@@ -31,6 +31,7 @@ exports.parseBillingCSV = function() {
                             header[header.length - 1] = header[header.length - 1].replace(/"/g, "");
                             var numericPropertiesIndex = [];
                             var propertiesIndex = [];
+                            var newDocCount = 0;
                             for (var i = 0; i < header.length; ++i) header[i] = header[i];
                             for (var i = 0; i < properties.length; ++i) propertiesIndex.push(header.indexOf(properties[i]));
                             for (var i = 0; i < numericProperties.length; ++i) numericPropertiesIndex.push(properties.indexOf(numericProperties[i]));
@@ -49,6 +50,7 @@ exports.parseBillingCSV = function() {
                                 bill[bill.length - 1] = bill[bill.length - 1].substring(0, bill[bill.length - 1].length - 1);
                                 if (bill[propertiesIndex[properties.indexOf('UsageQuantity')]] != "null") {
                                     if (bill[propertiesIndex[properties.indexOf('UsageStartDate')]] > latest.time) {
+                                        ++newDocCount;
                                         var doc = {};
                                         for (var j = 0; j < properties.length; ++j) {
                                             if (numericPropertiesIndex.indexOf(j) == -1) {
@@ -66,7 +68,7 @@ exports.parseBillingCSV = function() {
                                     }
                                 }
                             }
-                            console.log("database: " + currentCollection + " updated");
+                            console.log("Database update: "+newDocCount+" documents added to "+currentCollection);
                         });
                     });
                 });
