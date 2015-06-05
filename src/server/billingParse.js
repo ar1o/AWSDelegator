@@ -10,7 +10,7 @@ var numericProperties = ['RateId', 'UsageQuantity', 'Rate', 'Cost'];
 /*
 * parses latestBills.csv and updates the 'awsdb' database with new bills.
 */
-exports.parseBillingCSV = function() {
+exports.parseBillingCSV = function(_callback) {
     MongoClient.connect(databaseUrl, function(err, db) {
         if (err) {
             console.log('Unable to connect to the mongoDB server. Error:', err);
@@ -68,6 +68,7 @@ exports.parseBillingCSV = function() {
                                     }
                                 }
                             }
+                            _callback();
                             console.log("Database update: "+newDocCount+" documents added to "+currentCollection);
                         });
                     });

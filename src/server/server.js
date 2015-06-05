@@ -22,7 +22,6 @@ app.use(require('./CORS'));
 
 //S3 bucket connection
 var s3 = (require('./s3Watch'));
-s3.s3Connect();
 
 // Start mongoose and mongo
 mongoose.connect('mongodb://localhost:27017/awsdb', function(error) {
@@ -47,7 +46,18 @@ db.on("open", function() {
         UsageQuantity: String
 
     });
-    var Billings = mongoose.model('Billings', billingSchema, currentCollection);
+    var latestSchema = new mongoose.Schema({
+        _id: mongoose.Schema.ObjectId,
+        time: String
+    });
+
+    s3.s3Connect(function() {
+        var latestTime = mongoose.model('currentCollection', latestSchema, 'latest');
+        mongoose.model('currentCollection').find([{}]).exec(function(e, d) {
+            currentCollection = "bills" + d[0].time.substring(0, 7).replace(/-/, "");
+            var Billings = mongoose.model('Billings', billingSchema, currentCollection);
+        });
+    });
 });
 
 if (!fs.existsSync(process.cwd() + '/data')) {

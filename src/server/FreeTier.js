@@ -20,12 +20,12 @@ exports.freeTier = function(req, res) {
             }
         }
     }).exec(function(e, d) {
-        console.log(d);
+        // console.log(d);
         var conditions;
         var update;
         var options;
         for (var r in d) {
-            console.log(d[r].UsageType[0] + "\t" + d[r].ItemDescription[0]);
+            // console.log(d[r].UsageType[0] + "\t" + d[r].ItemDescription[0]);
 
             var UsageType = d[r].UsageType[0];
             var ItemDescription = d[r].ItemDescription[0];
@@ -100,13 +100,16 @@ exports.freeTier = function(req, res) {
 
                     if (/Windows/.test(ItemDescription)) {
                         console.log("matched /Windows/")
-                        update = { Rate: 0.017 };
+                        update = { Rate: 0.018 };
                     } else if (/SUSE/.test(ItemDescription)) {
                         console.log("matched /SUSE/")
-                        update = { Rate: 0.017 };
+                        update = { Rate: 0.023 };
+                    } else if (/Linux/.test(ItemDescription)) {
+                        console.log("matched /Linux/")
+                        update = { Rate: 0.013 };
                     } else if (/RHEL/.test(ItemDescription)) {
                         console.log("matched /RHEL/")
-                        update = { Rate: 0.017 };
+                        update = { Rate: 0.073 };
                     }
                     mongoose.model('Billings').update(conditions, update, options, callback);
 
