@@ -1,27 +1,31 @@
-currentCollection = "";
 var http = require('http');
-var fs = require('fs'); //file reader-writer library
-AWS = require('aws-sdk'); //AWS SDK
+var fs = require('fs');
+
+// AWS Stuff
+AWS = require('aws-sdk');
 var credentials = new AWS.SharedIniFileCredentials({
     profile: 'default'
 });
 AWS.config.credentials = credentials;
 AWS.config.region = 'us-west-2';
+
 // Express import
 var express = require('express'); //ExpressJS library
-// Mongoose import
-mongoose = require('mongoose');
-// Mongo import
-mongo = require('mongodb');
-
 var app = express();
 port = process.env.PORT || 3000;
+
+// Mongoose import
+mongoose = require('mongoose');
+
+// Mongo import
+mongo = require('mongodb');
 
 //CORS Module
 app.use(require('./CORS'));
 
 //S3 bucket connection
-var s3 = (require('./s3Watch'));
+currentCollection = "";
+var s3 = require('./s3Watch');
 
 // Start mongoose and mongo
 mongoose.connect('mongodb://localhost:27017/awsdb', function(error) {
@@ -64,6 +68,8 @@ db.on("open", function() {
 if (!fs.existsSync(process.cwd() + '/data')) {
     fs.mkdirSync(process.cwd() + '/data');
 }
+
+AWS.config.update({region: 'us-west-2'});
 
 app.get('/api/instances', require('./instanceRoute'));
 app.get('/api/cpu', require('./cpuRoute')).cpu;
