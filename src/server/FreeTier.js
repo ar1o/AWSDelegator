@@ -36,7 +36,8 @@ exports.freeTier = function(req, res) {
                         UsageType: { $regex: /DataTransfer-Out-Bytes/ },
                         ItemDescription: { $regex: /free tier/ }
                     };
-                    update = { Rate: 0.39 };
+                    var value = db.pricing.find({ProductName : "DataTransfer-Out-Bytes"},{_id: 0, prices : 1}).toArray()[0];
+                    update = { Rate: value.prices };
                     options = { multi: true };
                     mongoose.model('Billings').update(conditions, update, options, callback);
 
@@ -51,7 +52,8 @@ exports.freeTier = function(req, res) {
                         UsageType: { $regex: /DataTransfer-Regional-Bytes/ },
                         ItemDescription: { $regex: /free tier/ }
                     };
-                    update = { Rate: 0.02 };
+                    var value = db.pricing.find({ProductName : "DataTransfer-Regional-Bytes"},{_id: 0, prices : 1}).toArray()[0];
+                    update = { Rate: value.prices };
                     options = { multi: true };
                     mongoose.model('Billings').update(conditions, update, options, callback);
 
@@ -59,7 +61,7 @@ exports.freeTier = function(req, res) {
                         console.log(numAffected)
                     };
                     break;
-
+                //Cannot find corresponding JSON value for this type
                 case (/AWS-Out-Bytes/.test(UsageType)):
                     console.log("matched /AWS-Out-Bytes/");
                     conditions = {
@@ -81,7 +83,8 @@ exports.freeTier = function(req, res) {
                         UsageType: { $regex: /InstanceUsage:db.t2.micro/ },
                         ItemDescription: { $regex: /free tier/ }
                     };
-                    update = { Rate: 0.017 };
+                    var value = db.pricing.find({boxType : "db.t2.micro"},{_id: 0, prices : 1}).toArray()[0];
+                    update = { Rate: value.prices };
                     options = { multi: true };
                     mongoose.model('Billings').update(conditions, update, options, callback);
 
@@ -97,19 +100,23 @@ exports.freeTier = function(req, res) {
                         ItemDescription: { $regex: /free tier/ }
                     };
                     options = { multi: true };
-
+                    var value;
                     if (/Windows/.test(ItemDescription)) {
                         console.log("matched /Windows/")
-                        update = { Rate: 0.018 };
+                        value = db.pricing.find({boxType : "t2.micro", OS : "mswin"},{_id: 0, prices : 1}).toArray()[0]
+                        update = { Rate: value.prices };
                     } else if (/SUSE/.test(ItemDescription)) {
                         console.log("matched /SUSE/")
-                        update = { Rate: 0.023 };
+                        value = db.pricing.find({boxType : "t2.micro", OS : "sles"},{_id: 0, prices : 1}).toArray()[0];
+                        update = { Rate: value.prices };
                     } else if (/Linux/.test(ItemDescription)) {
                         console.log("matched /Linux/")
-                        update = { Rate: 0.013 };
+                        value = db.pricing.find({boxType : "t2.micro", OS : "linux"},{_id: 0, prices : 1}).toArray()[0];
+                        update = { Rate: value.prices };
                     } else if (/RHEL/.test(ItemDescription)) {
                         console.log("matched /RHEL/")
-                        update = { Rate: 0.073 };
+                        value = db.pricing.find({boxType : "t2.micro", OS : "rhel"},{_id: 0, prices : 1}).toArray()[0];
+                        update = { Rate: value.prices };
                     }
                     mongoose.model('Billings').update(conditions, update, options, callback);
 
@@ -117,7 +124,7 @@ exports.freeTier = function(req, res) {
                         console.log(numAffected)
                     };
                     break;
-                
+                //Mongo Queries have been completed up to this point. BoxPricingCheck does not have EBS functionality
                 case (/Requests-Tier1/.test(UsageType)): 
                     console.log("matched /Request-Tier1/");
                     conditions = {
