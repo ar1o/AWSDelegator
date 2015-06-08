@@ -8,28 +8,19 @@
 					<div class="tablesorter-header-inner">Resource ID</div>
 				</th>
 				<th class="tablesorter-header" data-column="0" unselectable="on">
-					<div id="time" class="tablesorter-header-inner">Usage start Time</div>
+					<div id="time" class="tablesorter-header-inner">Cost</div>
 				</th>
 				<th class="tablesorter-header" data-column="1" unselectable="on">
-					<div class="tablesorter-header-inner">Cost</div>
-				</th>
-				<th class="tablesorter-header" data-column="2" unselectable="on">
-					<div class="tablesorter-header-inner">Name</div>
-				</th>
-				<th class="tablesorter-header" data-column="2" unselectable="on">
-					<div class="tablesorter-header-inner">Number</div>
+					<div class="tablesorter-header-inner">VolumeId</div>
 				</th>
 			</tr>
 		</thead>
 		<tbody id="billingData">
 		{{#each billing}}
 			<tr class="tablesorter-body">
-				<td>{{this.id}}</td>
-				<td>{{this.startTime}}</td>
+				<td>{{this.resourceId}}</td>
 				<td>{{this.cost}}</td>
-				<td>{{this.name}}</td>
-				<td>{{this.count}}</td>
-				
+				<td>{{this.volumeId}}</td>				
 			</tr>
 		{{/each}}
 		</tbody>	

@@ -3,25 +3,27 @@ var BillingView = Backbone.View.extend({
     className: 'BillingView',
 
     initialize: function(options) {
-
+        console.log("HELLO THIS IS BILLINGVIEW")
         if (!this.model) {
             this.model = new BillingsModel();
         }
-        console.log("hello");
-        // this.bindings();
+        this.bindings();
         // this.render();
 
     },
 
     //Check for when the data is read and renders the page
     bindings: function() {
-
+        console.log("THIS IS INSTANTIATED");
         this.model.change('dataReady', function(model, val) {
-            this.render();
+            console.log("THE DATA IS READY TO BE RENDERED");
+                this.render();
 
             $(function() {
                 // call the tablesorter plugin 
-                $.tablesorter.defaults.sortList = [[4,0]];
+                $.tablesorter.defaults.sortList = [
+                    [4, 0]
+                ];
                 $.tablesorter.defaults.widgets = ['zebra'];
                 $("#BillingTable").tablesorter({
 
@@ -37,7 +39,7 @@ var BillingView = Backbone.View.extend({
 
     render: function() {
         var html = Handlebars.templates.BillingView({
-            billing: billingCollection.toJSON()
+            billing: totalCostInstancesCollection.toJSON()
         });
         this.$el.html(html);
     }
