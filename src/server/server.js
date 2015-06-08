@@ -39,11 +39,16 @@ db.on("open", function() {
         "user:Volume Id": String,
     });
     var Billings = mongoose.model('Billings', billingSchema, currentCollection);
+    
+    var PricingCheck = require('./BoxPricingCheck');
+    PricingCheck.checkPricing();
 });
 
 if (!fs.existsSync(process.cwd()+'/data')){
         fs.mkdirSync(process.cwd()+'/data');
 }
+//Update pricing collection in DB. Should recheck on a monthly basis??
+
 
 var s3 = (require('./s3Watch')); //S3 bucket connection
 s3.s3Connect();
