@@ -26,12 +26,7 @@ var pricingURLS = ["http://a0.awsstatic.com/pricing/1/ec2/linux-od.min.js",
 
 exports.checkPricing = function (){
     var db = mongoose.connection;
-    // db.on("open", function() {
-    //     console.log("mongodb is connected!!");
-    // });
 
-    // db.once('open', function (callback) {
-    
     var boxUsage = mongoose.model('box', boxTypeSchema);
         MongoClient.connect(databaseUrl, function(err, db) {
             if (err) {

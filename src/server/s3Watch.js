@@ -19,7 +19,7 @@ var params = {
 
 };
 var s3 = new AWS.S3();
-exports.s3Connect = function(req, res) {
+exports.s3Connect = function(_callback) {
     s3.listObjects(params, function(err, data) {
         //THIS NEEDS TO BE UPDATED BASED UPON CURRENT DATE AND OWNERID.
         //console.log(data);
@@ -58,7 +58,10 @@ exports.s3Connect = function(req, res) {
                         if (err) console.log('ERROR: ' + err);
                         console.log(files[0] + " renamed to latestBills.csv");
                     });
-                    parser.parseBillingCSV();
+                    parser.parseBillingCSV(function() {
+                        console.log("I'm done parsing CSV file");
+                        _callback();
+                    });
                     s3.s3Watch();
                 });
             });

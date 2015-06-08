@@ -1,4 +1,4 @@
-currentCollection = "bills201505";
+currentCollection = "";
 var http = require('http');
 var fs = require('fs'); //file reader-writer library
 AWS = require('aws-sdk'); //AWS SDK
@@ -20,6 +20,9 @@ port = process.env.PORT || 3000;
 //CORS Module
 app.use(require('./CORS'));
 
+//S3 bucket connection
+var s3 = (require('./s3Watch'));
+
 // Start mongoose and mongo
 mongoose.connect('mongodb://localhost:27017/awsdb', function(error) {
 
@@ -33,25 +36,41 @@ db.on("open", function() {
     var billingSchema = new mongoose.Schema({
         _id: mongoose.Schema.ObjectId,
         ProductName: String,
-        Cost: String,
+        Cost: Number,
         ResourceId: String,
         UsageStartDate: String,
         "user:Volume Id": String,
+        Rate: Number,
+        UsageType: String,
+        ItemDescription: String,
+        UsageQuantity: Number,
+        RateId: Number
+
+    });
+    var latestSchema = new mongoose.Schema({
+        _id: mongoose.Schema.ObjectId,
+        time: String
+    });
+
+    s3.s3Connect(function() {
+        var latestTime = mongoose.model('currentCollection', latestSchema, 'latest');
+        mongoose.model('currentCollection').find([{}]).exec(function(e, d) {
+            currentCollection = "bills" + d[0].time.substring(0, 7).replace(/-/, "");
+            var Billings = mongoose.model('Billings', billingSchema, currentCollection);
+        });
     });
     var Billings = mongoose.model('Billings', billingSchema, currentCollection);
-    
+    //retreive non-free pricing values and store them in awsdb.pricing()
     var PricingCheck = require('./BoxPricingCheck');
     PricingCheck.checkPricing();
+
 });
 
-if (!fs.existsSync(process.cwd()+'/data')){
-        fs.mkdirSync(process.cwd()+'/data');
+if (!fs.existsSync(process.cwd() + '/data')) {
+    fs.mkdirSync(process.cwd() + '/data');
 }
 //Update pricing collection in DB. Should recheck on a monthly basis??
 
-
-var s3 = (require('./s3Watch')); //S3 bucket connection
-s3.s3Connect();
 
 app.get('/api/instances', require('./instanceRoute'));
 app.get('/api/cpu', require('./cpuRoute')).cpu;
@@ -63,6 +82,12 @@ app.get('/api/billing/monthToDate', require('./billingRoute').monthToDate);
 app.get('/api/billing/byHour', require('./billingRoute').byHour);
 app.get('/api/billing/instanceCost', require('./billingRoute').instanceCost);
 app.get('/api/billing/instanceCostHourly', require('./billingRoute').instanceCostHourlyByDate);
+
+app.get('/api/billing/freeTier', require('./FreeTier').freeTier);
+
+app.get('/api/billing/calcFreeTierCost', require('./billingRoute').calcFreeTierCost);
+
+
 
 function errorHandler(err, req, res, next) {
     console.error(err.message);

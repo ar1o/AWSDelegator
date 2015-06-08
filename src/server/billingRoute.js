@@ -1,4 +1,49 @@
 //Query all the product costs month to date
+exports.calcFreeTierCost = function(req, res) {
+    mongoose.model('Billings').aggregate([{
+        $match: {
+            ItemDescription: {
+                $regex: /free tier/
+            }
+        }
+    }, {
+        $project: {
+            _id: 1,
+            Rate: 1,
+            UsageQuantity: 1,
+            ResourceId: 1,
+            Cost: {
+                $multiply: ["$Rate", "$UsageQuantity"]
+            }
+        }
+    }]).exec(function(e, d) {
+        console.log(d)
+        for (var i in d) {
+            // console.log(d[i]._id + "\t" + d[i].Cost + "\t" + d[i].Rate);
+            var conditions = {
+                _id: {
+                    $eq: d[i]._id
+                }
+            };
+            var update = {
+                Cost: d[i].Cost
+            };
+            var options = {
+                multi: true
+            };
+            mongoose.model('Billings').update(conditions, update, options, callback);
+
+            function callback(err, numAffected) {
+                console.log(numAffected)
+            };
+        }
+        res.send(d);
+    });
+};
+
+
+
+//Query all the product costs month to date
 exports.monthToDate = function(req, res) {
     mongoose.model('Billings').aggregate([{
         $match: {
