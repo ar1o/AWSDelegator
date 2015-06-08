@@ -1,8 +1,3 @@
-
-
-
-
-
 var BillingView = Backbone.View.extend({
 
     className: 'BillingView',
@@ -12,9 +7,9 @@ var BillingView = Backbone.View.extend({
         if (!this.model) {
             this.model = new BillingsModel();
         }
-
-        this.bindings();
-        this.render();
+        console.log("hello");
+        // this.bindings();
+        // this.render();
 
     },
 

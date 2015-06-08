@@ -37,7 +37,6 @@ var NetworkInActivityModel = Backbone.Model.extend({
 				(function(val, params) {
 
 					$.get('http://localhost:3000/api/network/in', params, function(data) {
-						// console.log(data);
 						if (data.Datapoints[0].Average) {
 							fData = new MetricModel({
 								instance: val,
@@ -48,6 +47,8 @@ var NetworkInActivityModel = Backbone.Model.extend({
 						}
 						self.set('dataReady', Date.now());
 
+					}).fail(function() {
+						console.log("SOMETHING FAILED");
 					});
 
 				})(val, params);

@@ -35,7 +35,6 @@ var CPUActivityModel = Backbone.Model.extend({
 				(function(val, params) {
 
 					$.get('http://localhost:3000/api/cpu', params, function(data) {
-						// console.log(data);
 						if (data.Datapoints[0].Average) {
 							// console.log(params.value, data.Datapoints[0].Average);
 							// console.log(params.value, data);

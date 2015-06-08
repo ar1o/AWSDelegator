@@ -1,19 +1,21 @@
-var BillingCollection = Backbone.Collection.extend({
+var AWSBillingCollection = Backbone.Collection.extend({
 	model: BillingModel,
 	initialize: function() {
 		// This will be called when an item is added. pushed or unshifted
-		this.on('add', function(model) {
-			// console.log('something got added');
-		});
+		this.on('add', function(model) {});
+
 	}
 });
 
+// Create the collection
+var billingCollection = new AWSBillingCollection();
 
 var BillingsModel = Backbone.Model.extend({
 	initialize: function() {
+		console.log("data");
 		var data = {};
 		var result;
-		// this.addBilling();
+		this.getBilling();
 		this.change('dataReady');
 
 
@@ -24,7 +26,7 @@ var BillingsModel = Backbone.Model.extend({
 			type: 'GET',
 			data: self.data,
 			contentType: 'text/plain',
-			url: 'http://localhost:3000/api/billing',
+			url: 'http://localhost:3000/api/billing/instanceCostHourly',
 			success: function(data) {
 				result = data;
 			}
@@ -37,25 +39,25 @@ var BillingsModel = Backbone.Model.extend({
 		var self = this;
 		var count = 0;
 		this.billing_result().done(function(result) {
-			billingCollection.reset();
+			// billingCollection.reset();
+			console.log(result);
+			// for (var i in result) {
+			// 	var rName = result[i].name;
+			// 	var rID = result[i].id;
+			// 	var rCost = result[i].cost;
+			// 	var rSTime = result[i].startTime;
+			// 	var rCount = count++;
 
-			for (var i in result) {
-				var rName = result[i].name;
-				var rID = result[i].id;
-				var rCost = result[i].cost;
-				var rSTime = result[i].startTime;
-				var rCount = count++;
+			// 	var data = new BillingModel({
+			// 		name: rName,
+			// 		id: rID,
+			// 		cost: rCost,
+			// 		startTime: rSTime,
+			// 		count: rCount
 
-				var data = new BillingModel({
-					name: rName,
-					id: rID,
-					cost: rCost,
-					startTime: rSTime,
-					count: rCount
-
-				});
-				billingCollection.add(data);
-			}
+			// 	});
+			// 	billingCollection.add(data);
+			// }
 			
 			self.set('dataReady', Date.now());
 
@@ -77,13 +79,4 @@ var BillingModel = Backbone.Model.extend({
 	}
 });
 
-var AWSBillingCollection = Backbone.Collection.extend({
-	model: BillingModel,
-	initialize: function() {
-		// This will be called when an item is added. pushed or unshifted
-		this.on('add', function(model) {});
 
-	}
-});
-// Create the collection
-var billingCollection = new AWSBillingCollection();
