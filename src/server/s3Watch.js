@@ -2,23 +2,18 @@
 	s3connect gets large csv.zip file and extracts it in /data/
 */
 var fs = require("fs");
-var compress = require('adm-zip');
-var AWS = require('aws-sdk'); //AWS SDK
-var credentials = new AWS.SharedIniFileCredentials({
-    profile: 'default'
-});
-AWS.config.credentials = credentials;
-AWS.config.region = 'us-east-1';
+var adm = require('adm-zip');
+
 var parser = require('./billingParse');
-var app = require('express')();
-var adm = require('adm-zip'); //compression library library
+
 var okey;
 var params = {
     //fix the bucket name to be flexible.
     Bucket: 'csvcontainer'
-
 };
+AWS.config.update({region: 'us-east-1'});
 var s3 = new AWS.S3();
+// AWS.config.update({region: 'us-east-1'});
 exports.s3Connect = function(_callback) {
     s3.listObjects(params, function(err, data) {
         //THIS NEEDS TO BE UPDATED BASED UPON CURRENT DATE AND OWNERID.
@@ -60,7 +55,7 @@ exports.s3Connect = function(_callback) {
                     });
                     parser.parseBillingCSV(function() {
                         console.log("I'm done parsing CSV file");
-                        _callback();
+                        if (typeof _callback=="function") _callback();
                     });
                     s3.s3Watch();
                 });

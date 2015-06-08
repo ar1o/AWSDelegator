@@ -77,7 +77,6 @@ app.get('/api/billing/instanceCost', require('./billingRoute').instanceCost);
 app.get('/api/billing/instanceCostHourly', require('./billingRoute').instanceCostHourlyByDate);
 
 app.get('/api/billing/freeTier', require('./FreeTier').freeTier);
-
 app.get('/api/billing/calcFreeTierCost', require('./billingRoute').calcFreeTierCost);
 
 
