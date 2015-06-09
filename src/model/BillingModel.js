@@ -1,4 +1,4 @@
-var AWSBillingCollection = Backbone.Collection.extend({
+var InstanceTotalCostCollection = Backbone.Collection.extend({
 	model: BillingModel,
 	initialize: function() {
 		// This will be called when an item is added. pushed or unshifted
@@ -8,13 +8,13 @@ var AWSBillingCollection = Backbone.Collection.extend({
 });
 
 // Create the collection
-var billingCollection = new AWSBillingCollection();
+var totalCostInstancesCollection = new InstanceTotalCostCollection();
 
 var BillingsModel = Backbone.Model.extend({
 	initialize: function() {
-		console.log("data");
+		console.log("HELLO THIS IS BILLINGMODEL");
 		var data = {};
-		var result;
+		// var result;
 		this.getBilling();
 		this.change('dataReady');
 
@@ -26,9 +26,9 @@ var BillingsModel = Backbone.Model.extend({
 			type: 'GET',
 			data: self.data,
 			contentType: 'text/plain',
-			url: 'http://localhost:3000/api/billing/instanceCostHourly',
+			url: 'http://localhost:3000/api/billing/instanceCost',
 			success: function(data) {
-				result = data;
+				// result = data;
 			}
 		});
 	},
@@ -39,28 +39,16 @@ var BillingsModel = Backbone.Model.extend({
 		var self = this;
 		var count = 0;
 		this.billing_result().done(function(result) {
-			// billingCollection.reset();
-			console.log(result);
-			// for (var i in result) {
-			// 	var rName = result[i].name;
-			// 	var rID = result[i].id;
-			// 	var rCost = result[i].cost;
-			// 	var rSTime = result[i].startTime;
-			// 	var rCount = count++;
+			for (var i in result) {
+				var data = new BillingModel({
+					resourceId: result[i].resourceId,
+					cost: result[i].cost,
+					volumeId: result[i].volumeId
+				});
 
-			// 	var data = new BillingModel({
-			// 		name: rName,
-			// 		id: rID,
-			// 		cost: rCost,
-			// 		startTime: rSTime,
-			// 		count: rCount
-
-			// 	});
-			// 	billingCollection.add(data);
-			// }
-			
+				totalCostInstancesCollection.add(data);
+			}
 			self.set('dataReady', Date.now());
-
 		}).fail(function() {
 			console.log('FAILED');
 		});
@@ -70,13 +58,9 @@ var BillingsModel = Backbone.Model.extend({
 // A billings model template
 var BillingModel = Backbone.Model.extend({
 	defaults: {
-		id: null,
+		resourceId: null,
 		cost: null,
-		startTime: null,
-		name: null,
-		count: 0
+		volumeId: null
 
 	}
 });
-
-
