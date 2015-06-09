@@ -30,12 +30,14 @@ exports.freeTier = function(req, res) {
             var UsageType = d[r].UsageType[0];
             var ItemDescription = d[r].ItemDescription[0];
             switch (true) {
+                //value == .09
                 case (/DataTransfer-Out-Bytes/.test(UsageType)):
                     console.log("matched /DataTransfer-Out-Bytes/");
                     conditions = {
                         UsageType: { $regex: /DataTransfer-Out-Bytes/ },
                         ItemDescription: { $regex: /free tier/ }
                     };
+                    //value.prices should == 0.39
                     var value = db.pricing.find({ProductName : "DataTransfer-Out-Bytes"},{_id: 0, prices : 1}).toArray()[0];
                     update = { Rate: value.prices };
                     options = { multi: true };
@@ -45,7 +47,7 @@ exports.freeTier = function(req, res) {
                         console.log(numAffected)
                     };
                     break;
-
+                    //value.prices should == .02
                 case (/DataTransfer-Regional-Bytes/.test(UsageType)):
                     console.log("matched /DataTransfer-Regional-Bytes/");
                     conditions = {
@@ -61,14 +63,16 @@ exports.freeTier = function(req, res) {
                         console.log(numAffected)
                     };
                     break;
-                //Cannot find corresponding JSON value for this type
+                    //value.prices should == 0.02 
+                //http://a0.awsstatic.com/pricing/1/ec2/pricing-data-transfer-with-regions.min.js
                 case (/AWS-Out-Bytes/.test(UsageType)):
                     console.log("matched /AWS-Out-Bytes/");
                     conditions = {
                         UsageType: { $regex: /AWS-Out-Bytes/ },
                         ItemDescription: { $regex: /free tier/ }
                     };
-                    update = { Rate: 0.02 };
+                    value = db.pricing.find({boxType : "crossRegion"},{_id: 0, prices : 1}).toArray()[0];
+                        update = { Rate: value.prices };
                     options = { multi: true };
                     mongoose.model('Billings').update(conditions, update, options, callback);
 
@@ -76,6 +80,7 @@ exports.freeTier = function(req, res) {
                         console.log(numAffected)
                     };
                     break;
+                    //value.prices should == 
 
                 case (/InstanceUsage:db.t2.micro/.test(UsageType)): //InstanceUsage is for RDS
                     console.log("matched /InstanceUsage:db.t2.micro/");
@@ -92,7 +97,7 @@ exports.freeTier = function(req, res) {
                         console.log(numAffected)
                     };
                     break;
-
+                    //value.prices should == 
                 case (/BoxUsage:t2.micro/.test(UsageType)): //BoxUsage is for EC2
                     console.log("matched /BoxUsage:t2.micro/");
                     conditions = {
@@ -125,13 +130,15 @@ exports.freeTier = function(req, res) {
                     };
                     break;
                 //Mongo Queries have been completed up to this point. BoxPricingCheck does not have EBS functionality
+                //value.prices should == .005
                 case (/Requests-Tier1/.test(UsageType)): 
                     console.log("matched /Request-Tier1/");
                     conditions = {
                         UsageType: { $regex: /Requests-Tier1/ },
                         ItemDescription: { $regex: /free tier/ }
                     };
-                    update = { Rate: 0.005 };//(UsageQuantity/1000)0.005
+                    value = db.pricing.find({ProductName : "putcopypost"},{_id: 0, prices : 1}).toArray()[0];
+                    update = { Rate: value.prices };
                     options = { multi: true };
                     mongoose.model('Billings').update(conditions, update, options, callback);
 
@@ -139,13 +146,15 @@ exports.freeTier = function(req, res) {
                         console.log(numAffected)
                     };
                     break;
+                    //value.prices should == 0.004
                 case (/Requests-Tier2/.test(UsageType)):
                     console.log("matched /Request-Tier2/");
                     conditions = {
                         UsageType: { $regex: /Requests-Tier2/ },
                         ItemDescription: { $regex: /free tier/ }
                     };
-                    update = { Rate: 0.004 };//(UsageQuantity/10000)0.004
+                    value = db.pricing.find({ProductName : "getEtc"},{_id: 0, prices : 1}).toArray()[0];
+                    update = { Rate: value.prices };
                     options = { multi: true };
                     mongoose.model('Billings').update(conditions, update, options, callback);
 
@@ -153,13 +162,15 @@ exports.freeTier = function(req, res) {
                         console.log(numAffected)
                     };
                     break;
+                    //value.prices should == .1
                 case (/EBS:VolumeUsage.gp2/.test(UsageType)):
                     console.log("matched /EBS:VolumeUsage.gp2/");
                     conditions = {
                         UsageType: { $regex: /EBS:VolumeUsage.gp2/ },
                         ItemDescription: { $regex: /free tier/ }
                     };
-                    update = { Rate: 0.1 }; //per GB-month
+                    value = db.pricing.find({ProductName : "Amazon EBS General Purpose (SSD) volumes"},{_id: 0, prices : 1}).toArray()[0];
+                        update = { Rate: value.prices };
                     options = { multi: true };
                     mongoose.model('Billings').update(conditions, update, options, callback);
 
@@ -167,13 +178,15 @@ exports.freeTier = function(req, res) {
                         console.log(numAffected)
                     };
                     break;
+                    //value.prices should == 0.03
                 case (/TimedStorage-ByteHrs/.test(UsageType)):
                     console.log("matched /EBS:VolumeUsage.gp2/");
                     conditions = {
                         UsageType: { $regex: /TimedStorage-ByteHrs/ },
                         ItemDescription: { $regex: /free tier/ }
                     };
-                    update = { Rate: 0.03 }; //First 1 TB / month, first 5gb is FREE.
+                    value = db.pricing.find({boxType : "firstTBstorage"},{_id: 0, prices : 1}).toArray()[0];
+                    update = { Rate: value.prices };
                     options = { multi: true };
                     mongoose.model('Billings').update(conditions, update, options, callback);
 
@@ -181,13 +194,16 @@ exports.freeTier = function(req, res) {
                         console.log(numAffected)
                     };
                     break;
+                    //difficulty finding corresponding JSON
+                    ////value.prices should == .115
                 case (/RDS:GP2-Storage/.test(UsageType)):
                     console.log("matched /EBS:VolumeUsage.gp2/");
                     conditions = {
                         UsageType: { $regex: /RDS:GP2-Storage/ },
                         ItemDescription: { $regex: /free tier/ }
                     };
-                    update = { Rate: 0.115 }; 
+                    value = db.pricing.find({ProductName : "db.m1.small"},{_id: 0, prices : 1}).toArray()[0];
+                    update = { Rate: value.prices };
                     options = { multi: true };
                     mongoose.model('Billings').update(conditions, update, options, callback);
 
