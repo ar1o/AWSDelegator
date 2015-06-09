@@ -74,8 +74,11 @@ var InstancesModel = Backbone.Model.extend({
 					}
 					// var accountNumber = rInstance.OwnerID()
 
-					//Volume ID logic
-					var rVolId = rInstance.BlockDeviceMappings[0].Ebs.VolumeId;
+					var volumeIdExists=false;
+					if(rInstance.BlockDeviceMappings.length!=0) volumeIdExists = true;
+					var rVolId = "";
+					if(!volumeIdExists)
+						rVolId=rInstance.BlockDeviceMappings[0].Ebs.VolumeId;
 					var data = new InstanceModel({
 						instance: rInstance.InstanceId,
 						imageId: rImage,
@@ -87,10 +90,9 @@ var InstancesModel = Backbone.Model.extend({
 						zone: rZone,
 						email: rEmail,
 						volumeid: rVolId
-					});
-
-					instanceCollection.add(data);
-
+					});						
+					
+					instanceCollection.add(data);					
 				}
 
 			}
@@ -103,7 +105,6 @@ var InstancesModel = Backbone.Model.extend({
 	}
 
 });
-
 
 // A instance model template
 var InstanceModel = Backbone.Model.extend({

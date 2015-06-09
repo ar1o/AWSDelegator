@@ -10,37 +10,32 @@ module.exports = function(req, res){
             console.log(err);
             return;
         }
-
+        console.log("instanceRoute-->data");        
         for (var r in data.Reservations) {
             for (var i in data.Reservations[r].Instances) {
-                for (var t in data.Reservations[r].Instances[i].Tags) {
-                    // if (data.Reservations[r].Instances[i].Tags[t].Key == "Volume Id") {
-                    // if (data.Reservations[r].Instances[i].Tags[t].Value == "") {
-                    // console.log(data.Reservations[r].Instances[i].Tags[t]);
+                var volumeId_exists = false;                
+                for (var t in data.Reservations[r].Instances[i].Tags) 
+                    if (data.Reservations[r].Instances[i].Tags[t].Key == "Volume Id") volumeId_exists=true;
+                if(!volumeId_exists && data.Reservations[r].Instances[i].State['Name']!='terminated'){                    
                     var rInstance = data.Reservations[r].Instances[i];
+                    console.log(rInstance);
                     var instanceId = rInstance.InstanceId;
                     var volumeId = rInstance.BlockDeviceMappings[0].Ebs.VolumeId;
-                    // console.log(instanceId);
-                    // console.log(volumeId);
-
                     var params_vol = {
-                        Resources: [ /* required */
-                            instanceId,
-                            /* more items */
+                        Resources: [ 
+                            instanceId,                            
                         ],
-                        Tags: [ /* required */ {
+                        Tags: [ 
+                            {
                                 Key: 'Volume Id',
                                 Value: volumeId
-                            },
-                            /* more items */
+                            },                            
                         ]
                     };
                     ec2.createTags(params_vol, function(err) {
                         if (err) console.log(err, err.stack); // an error occurred
                         // else console.log(data); // successful response
                     });
-                    // }
-                    // }
                 }
             }
         }
