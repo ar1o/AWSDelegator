@@ -63,11 +63,18 @@ db.on("open", function() {
             var Billings = mongoose.model('Billings', billingSchema, currentCollection);
         });
     });
+    var Billings = mongoose.model('Billings', billingSchema, currentCollection);
+    //retreive non-free pricing values and store them in awsdb.pricing()
+    var PricingCheck = require('./BoxPricingCheck');
+    PricingCheck.checkPricing();
+
 });
 
 if (!fs.existsSync(process.cwd() + '/data')) {
     fs.mkdirSync(process.cwd() + '/data');
 }
+//Update pricing collection in DB. Should recheck on a monthly basis??
+
 
 AWS.config.update({region: 'us-west-2'});
 
