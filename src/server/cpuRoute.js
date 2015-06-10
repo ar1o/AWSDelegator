@@ -28,8 +28,6 @@ module.exports = function(req, res){
     var rStartTime = parseInt(req.query.startTime);
     var rMetricName = req.query.metric;
 
-    console.log(val);
-
     params.Dimensions[0].Value = val;
     params.EndTime = rEndTime;
     params.StartTime = rStartTime;
@@ -38,7 +36,6 @@ module.exports = function(req, res){
 
     var cloudwatch = new AWS.CloudWatch();
     cloudwatch.getMetricStatistics(params, function(err, data) {
-    	console.log(data)
         res.send(data);
     });
 };

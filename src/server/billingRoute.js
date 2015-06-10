@@ -17,7 +17,6 @@ exports.calcFreeTierCost = function(req, res) {
             }
         }
     }]).exec(function(e, d) {
-        console.log(d)
         for (var i in d) {
             // console.log(d[i]._id + "\t" + d[i].Cost + "\t" + d[i].Rate);
             var conditions = {
@@ -68,7 +67,6 @@ exports.monthToDate = function(req, res) {
             }
         }
     }]).exec(function(e, d) {
-        console.log(d)
         res.send(d);
     });
 };
@@ -173,7 +171,6 @@ exports.instanceCost = function(req, res) {
                     instances[d[r]._id].cost += d[r].total;
                 }
             }
-            console.log(instances);
             res.send(instances);
         });
 

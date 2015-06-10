@@ -55,13 +55,26 @@ db.on("open", function() {
         _id: mongoose.Schema.ObjectId,
         time: String
     });
-
+    var instanceSchema = new mongoose.Schema({        
+        Id: String,
+        State: String,
+        ImageId: String,
+        KeyName: String,
+        Type: String,
+        LaunchTime: String,
+        Zone: String,
+        Lifetime: String,
+        LastActiveTime: String,
+        Email: String,
+        VolumeId: String
+    });
     s3.s3Connect(function() {
         var latestTime = mongoose.model('currentCollection', latestSchema, 'latest');
         mongoose.model('currentCollection').find([{}]).exec(function(e, d) {
             currentCollection = "bills" + d[0].time.substring(0, 7).replace(/-/, "");
             var Billings = mongoose.model('Billings', billingSchema, currentCollection);
-        });
+            var Instances = mongoose.model('Instances', instanceSchema, 'instances');
+        });        
     });
 });
 

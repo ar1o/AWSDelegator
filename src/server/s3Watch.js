@@ -4,7 +4,8 @@
 var fs = require("fs");
 var adm = require('adm-zip');
 
-var parser = require('./billingParse');
+var billingParser = require('./billingParse');
+var instanceParser = require('./instanceParse');
 
 var okey;
 var params = {
@@ -53,10 +54,13 @@ exports.s3Connect = function(_callback) {
                         if (err) console.log('ERROR: ' + err);
                         console.log(files[0] + " renamed to latestBills.csv");
                     });
-                    parser.parseBillingCSV(function() {
-                        console.log("I'm done parsing CSV file");
+                    billingParser.parseBillingCSV(function() {
+                        console.log("Parsing CSV file completed");
+                        instanceParser.parseInstances();
+                        console.log("Instance parsing completed");
                         if (typeof _callback=="function") _callback();
                     });
+                    
                     s3.s3Watch();
                 });
             });
