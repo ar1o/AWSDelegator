@@ -17,7 +17,7 @@ var s3 = new AWS.S3();
 exports.s3Connect = function(_callback) {
     s3.listObjects(params, function(err, data) {
         //THIS NEEDS TO BE UPDATED BASED UPON CURRENT DATE AND OWNERID.
-        //console.log(data);
+        // console.log(data);
         okey = data.Contents[5].Key;
         console.log("okey: " + okey);
 

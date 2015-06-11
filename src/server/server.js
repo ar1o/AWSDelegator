@@ -10,7 +10,7 @@ AWS.config.credentials = credentials;
 AWS.config.region = 'us-west-2';
 
 // Express import
-var express = require('express'); //ExpressJS library
+var express = require('express');
 var app = express();
 port = process.env.PORT || 3000;
 
@@ -81,6 +81,7 @@ app.get('/api/billing/monthToDate', require('./billingRoute').monthToDate);
 app.get('/api/billing/byHour', require('./billingRoute').byHour);
 app.get('/api/billing/instanceCost', require('./billingRoute').instanceCost);
 app.get('/api/billing/instanceCostHourly', require('./billingRoute').instanceCostHourlyByDate);
+app.get('/api/billing/instanceCostAll', require('./billingRoute').instanceCostAll);
 
 app.get('/api/billing/freeTier', require('./FreeTier').freeTier);
 app.get('/api/billing/calcFreeTierCost', require('./billingRoute').calcFreeTierCost);

@@ -42,9 +42,9 @@ var InstancesModel = Backbone.Model.extend({
 		this.aws_result().done(function(result) {
 			// console.log(result);
 			instanceCollection.reset();
-			// cpuMetricCollection.reset();
-			// networkInMetricCollection.reset();
-			// networkOutMetricCollection.reset();
+			cpuMetricCollection.reset();
+			networkInMetricCollection.reset();
+			networkOutMetricCollection.reset();
 			for (var r in result.Reservations) {
 				for (var i in result.Reservations[r].Instances) {
 					var rInstance = result.Reservations[r].Instances[i];

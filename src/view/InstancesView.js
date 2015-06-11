@@ -44,14 +44,16 @@ var InstancesView = Backbone.View.extend({
             });
 
             this.cpuActivity.model.getCPUMetrics();
-            // console.log(cpuMetricCollection.pluck('instance'));
-
             this.networkInActivity.model.getNetworkInMetrics();
             this.networkOutActivity.model.getNetworkOutMetrics();
+            this.billingActivity.model.getBilling('i-192650ef');
+        }.bind(this));
 
-            // this.billingActivity.model.getBilling();
-
-
+        this.$el.on("change", '.instanceDropDown', function(e) {
+            console.log( $('.instanceDropDown').val()); 
+            var selected = $('.instanceDropDown').val();
+            totalCostInstancesCollection.reset();
+            this.billingActivity.model.getBilling($('.instanceDropDown').val()); 
         }.bind(this));
     },
 

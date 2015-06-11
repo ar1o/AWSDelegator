@@ -1,48 +1,94 @@
 var BillingView = Backbone.View.extend({
-
     className: 'BillingView',
 
     initialize: function(options) {
-        console.log("HELLO THIS IS BILLINGVIEW")
+        
         if (!this.model) {
             this.model = new BillingsModel();
         }
-        this.bindings();
-        // this.render();
 
+        this.render();
+        this.bindings();
     },
 
-    //Check for when the data is read and renders the page
+
     bindings: function() {
-        console.log("THIS IS INSTANTIATED");
         this.model.change('dataReady', function(model, val) {
-            console.log("THE DATA IS READY TO BE RENDERED");
-                this.render();
-
+            this.render();
+            var date = new Date(totalCostInstancesCollection.at(0).get('date'));
+            console.log(totalCostInstancesCollection.length);
             $(function() {
-                // call the tablesorter plugin 
-                $.tablesorter.defaults.sortList = [
-                    [4, 0]
-                ];
-                $.tablesorter.defaults.widgets = ['zebra'];
-                $("#BillingTable").tablesorter({
+                $('#container').highcharts({
+                    chart: {
+                        zoomType: 'x'
+                    },
+                    title: {
+                        text: 'EC2 Instance Cost'
+                    },
+                    subtitle: {
+                        text: document.ontouchstart === undefined ?
+                            'Click and drag in the plot area to zoom in' : 'Pinch the chart to zoom in'
+                    },
+                    xAxis: {
+                        type: 'datetime',
+                        minRange: 14 * 24 * 3600000 // fourteen days
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'Cost (USD)'
+                        },
+                        min: 0 // this sets minimum values of y to 0
+                    },
+                    legend: {
+                        enabled: false
+                    },
+                    plotOptions: {
+                        area: {
+                            fillColor: {
+                                linearGradient: {
+                                    x1: 0,
+                                    y1: 0,
+                                    x2: 0,
+                                    y2: 0
+                                },
+                                stops: [
+                                    [0, Highcharts.getOptions().colors[0]],
+                                    [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+                                ]
+                            },
+                            marker: {
+                                radius: 2
+                            },
+                            lineWidth: 1,
+                            states: {
+                                hover: {
+                                    lineWidth: 1
+                                }
+                            },
+                            threshold: null
+                        }
+                    },
+                    series: [{
+                        type: 'area',
+                        name: 'Cost',
+                        pointInterval: 3600 * 1000,
+                        pointStart: Date.UTC(date.getYear(), date.getMonth(), date.getDate()),
+                        data: totalCostInstancesCollection.pluck('cost')
 
-                    // header layout template; {icon} needed for some themes
-                    headerTemplate: '{content}{icon}',
-                    // initialize zebra striping and column styling of the table
+                    }]
                 });
-
             });
         }.bind(this));
-
     },
 
     render: function() {
         var html = Handlebars.templates.BillingView({
-            billing: totalCostInstancesCollection.toJSON()
+            billing: totalCostInstancesCollection.toJSON(),
         });
         this.$el.html(html);
+
+
     }
 
 
-}); 
+});
