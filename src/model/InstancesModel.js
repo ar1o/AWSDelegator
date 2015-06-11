@@ -40,7 +40,7 @@ var InstancesModel = Backbone.Model.extend({
 		var self = this;
 
 		this.aws_result().done(function(result) {
-			console.log(result);
+			// console.log(result);
 			instanceCollection.reset();
 			cpuMetricCollection.reset();
 			networkInMetricCollection.reset();
@@ -62,8 +62,6 @@ var InstancesModel = Backbone.Model.extend({
 				instanceCollection.add(data);								
 			}
 			self.set('dataReady', Date.now());
-			// console.log('Instances Data Ready');
-
 		}).fail(function() {
 			console.log('FAILED');
 		});

@@ -1,6 +1,3 @@
-var MongoClient = require('mongodb').MongoClient;
-var databaseUrl = 'mongodb://localhost:27017/awsdb';
-
 module.exports = function(req,res){
     mongoose.model('Instances').aggregate([{
         $project: {

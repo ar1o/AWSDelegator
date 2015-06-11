@@ -45,15 +45,18 @@ var InstancesView = Backbone.View.extend({
                 });
             });
 
-            this.cpuActivity.model.getCPUMetrics();
-            // console.log(cpuMetricCollection.pluck('instance'));
+            // this.cpuActivity.model.getCPUMetrics();
+            // this.networkInActivity.model.getNetworkInMetrics();
+            // this.networkOutActivity.model.getNetworkOutMetrics();
+            this.metricsActivity.model.getMetrics('i-192650ef');
+            this.billingActivity.model.getBilling('i-192650ef');
+        }.bind(this));
 
-            this.networkInActivity.model.getNetworkInMetrics();
-            this.networkOutActivity.model.getNetworkOutMetrics();
-            this.metricsActivity.model.getEC2Metrics();
-            // this.billingActivity.model.getBilling();
-
-
+        this.$el.on("change", '.instanceDropDown', function(e) {
+            console.log( $('.instanceDropDown').val()); 
+            var selected = $('.instanceDropDown').val();
+            totalCostInstancesCollection.reset();
+            this.billingActivity.model.getBilling($('.instanceDropDown').val()); 
         }.bind(this));
     },
 
@@ -62,9 +65,9 @@ var InstancesView = Backbone.View.extend({
             instances: instanceCollection.toJSON()
         });
         this.$el.html(html);
-        this.$el.append(this.cpuActivity.el);
-        this.$el.append(this.networkInActivity.el);
-        this.$el.append(this.networkOutActivity.el);
+        // this.$el.append(this.cpuActivity.el);
+        // this.$el.append(this.networkInActivity.el);
+        // this.$el.append(this.networkOutActivity.el);
         this.$el.append(this.billingActivity.el);
         this.$el.append(this.metricsActivity.el);
     }

@@ -177,6 +177,123 @@ exports.instanceCost = function(req, res) {
     });
 };
 
+//Given an instances get cost HOURLY
+exports.instanceCostAll = function(req, res) {
+    // var iId = req.query.value;
+    console.log(req.query.instance);
+    // var startDuration = "2015-06-03 00:00:00";
+    // var endDuration = "2015-06-03 23:00:00";
+    var instanceId = req.query.instance;
+    // var instanceId = 'i-192650ef';
+    var instances = {};
+    // var count = 0;
+    // Select objects from collection
+    mongoose.model('Billings').aggregate([{
+            $match: {
+                ResourceId: {
+                    $eq: instanceId
+                }
+            }
+        }, {
+            $project: {
+                _id: 0,
+                ResourceId: 1,
+                "user:Volume Id": 1,
+                Cost: 1,
+                UsageStartDate: 1
+            }
+        }, {
+            $group: {
+                _id: "$UsageStartDate",
+                ResourceId: {
+                    $addToSet: "$ResourceId"
+                },
+                VolumeId: {
+                    $addToSet: "$user:Volume Id"
+                },
+                Total: {
+                    $sum: "$Cost"
+                }
+            }
+        }, {
+             $sort : { _id : 1
+            } 
+        }]).exec(function(e, d) {
+            console.log("test", d);
+        // console.log("\nINSTANCE COST");
+        // console.log(d[0].ResourceId[0]);
+        // console.log(d[0].VolumeId[0]);
+        // console.log(d[0].Total);
+        // console.log(d[0]._id);
+        // loop over these objects, create an array of your foreign keys and a hashmap of our objects stored by ID
+        // (so that later we can do yourHashmap[some_id] to get your object from collection)
+        var volumeId;
+        for (var r in d) {
+
+            instances[d[r]._id] = {
+                    resourceId: d[r].ResourceId[0],
+                    volumeId: d[r].VolumeId[0],
+                    cost: d[r].Total,
+                    date: d[r]._id
+            };
+            if(d[r].VolumeId[0] != null) {
+                volumeId = d[r].VolumeId[0];
+            }
+        }
+
+        mongoose.model('Billings').aggregate({
+           $match: {
+                ResourceId: {
+                    $eq: volumeId
+                }
+            }
+        }, {
+            $project: {
+                _id: 0,
+                ResourceId: 1,
+                Cost: 1,
+                UsageStartDate: 1
+            }
+        }, {
+            $group: {
+                _id: "$UsageStartDate",
+                VolumeId: {
+                    $addToSet: "$ResourceId"
+                },
+                Total: {
+                    $sum: "$Cost"
+                }
+            }
+        }, {
+             $sort : { _id : 1
+            } 
+        }).exec(function(e, d) {
+            // console.log(d);
+            // console.log("instanceLENGTH: " + Object.keys(instances).length);
+            // console.log("\nVOLUME COST")
+            //loop over collection B and use the foreign key on collection to access our objects from
+            //collection using the hashmap we built
+            for (var r in d) {
+                // console.log(d[r].resourceId + "\t" + d[r]._id + "\t" + d[r].total);
+                //now we have the matching collection A and collection B objects and we can do whatever
+                //you want with them.
+                if (d[r]._id in instances) {
+                    instances[d[r]._id].cost += d[r].Total;
+                }
+            }
+            // // var total_cost = 0;
+            // // console.log("\nTOTAL COST")
+            // // for (var x in instances) {
+            // // total_cost += instances[x].cost;
+            // // console.log(instances[x].resourceId + "\t" + instances[x].cost + "\t" + instances[x].volumeId + "\t" + total_cost + "\t" + count);
+            // // }
+            res.send(instances);
+        });
+    // res.send(d);
+    });
+
+};
+
 
 exports.instanceCostHourlyByDate = function(req, res) {
     var startDuration = "2015-06-03 00:00:00";

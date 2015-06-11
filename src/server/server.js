@@ -10,7 +10,7 @@ AWS.config.credentials = credentials;
 AWS.config.region = 'us-west-2';
 
 // Express import
-var express = require('express'); //ExpressJS library
+var express = require('express');
 var app = express();
 port = process.env.PORT || 3000;
 
@@ -74,13 +74,14 @@ db.on("open", function() {
         CPUUtilization: Number,
         Time: String
     });
+
     s3.s3Connect(function() {
         var latestTime = mongoose.model('currentCollection', latestSchema, 'latest');
         mongoose.model('currentCollection').find([{}]).exec(function(e, d) {
-            currentCollection = "bills" + d[0].time.substring(0, 7).replace(/-/, "");            
-        });        
+            currentCollection = "bills" + d[0].time.substring(0, 7).replace(/-/, "");
         var Billings = mongoose.model('Billings', billingSchema, currentCollection);
-    });    
+        });
+    });
     var Instances = mongoose.model('Instances', instanceSchema, 'instances');    
     var Ec2Metrics = mongoose.model('Ec2Metrics', ec2metricsSchema, 'ec2metrics');    
     var PricingCheck = require('./BoxPricingCheck');
@@ -91,14 +92,11 @@ db.on("open", function() {
 if (!fs.existsSync(process.cwd() + '/data')) {
     fs.mkdirSync(process.cwd() + '/data');
 }
-//Update pricing collection in DB. Should recheck on a monthly basis??
-
-
 AWS.config.update({region: 'us-west-2'});
 
 app.get('/api/instances', require('./Route/instanceRoute'));
 
-app.get('api/ec2/metrics'), require('./Route/metricsRoute')
+app.get('/api/metrics', require('./Route/metricsRoute'));
 app.get('/api/cpu', require('./Route/cpuRoute')).cpu;
 app.get('/api/network/in', require('./Route/networkRoute').networkIn);
 app.get('/api/network/out', require('./Route/networkRoute').networkOut);
@@ -107,11 +105,10 @@ app.get('/api/billing/monthToDate', require('./Route/billingRoute').monthToDate)
 app.get('/api/billing/byHour', require('./Route/billingRoute').byHour);
 app.get('/api/billing/instanceCost', require('./Route/billingRoute').instanceCost);
 app.get('/api/billing/instanceCostHourly', require('./Route/billingRoute').instanceCostHourlyByDate);
+app.get('/api/billing/instanceCostAll', require('./Route/billingRoute').instanceCostAll);
 
 app.get('/api/billing/freeTier', require('./Route/freeTierRoute').freeTier);
 app.get('/api/billing/calcFreeTierCost', require('./Route/billingRoute').calcFreeTierCost);
-
-
 
 function errorHandler(err, req, res, next) {
     console.error(err.message);

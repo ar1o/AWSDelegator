@@ -63,10 +63,10 @@ exports.parseMetrics = function(masterCallback, res){
 	    			else masterCallback();	    		
 	    		});
 	    	}
-			if(runningInstances.length!=0) {
+
+	    	if(runningInstances.length!= 0) {
 				arrayIterator(runningInstances);
-			}
-			else {
+			} else {
 				masterCallback();
 			}
 		});
