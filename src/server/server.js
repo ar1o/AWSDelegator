@@ -25,11 +25,10 @@ app.use(require('./CORS'));
 
 //S3 bucket connection
 currentCollection = "";
-var s3 = require('./s3Watch');
+var s3 = require('./Watch/s3Watch');
 
 // Start mongoose and mongo
 mongoose.connect('mongodb://localhost:27017/awsdb', function(error) {
-
     if (error) {
         console.log(error);
     }
@@ -55,16 +54,35 @@ db.on("open", function() {
         _id: mongoose.Schema.ObjectId,
         time: String
     });
-
-    s3.s3Connect(function() {
-        var latestTime = mongoose.model('currentCollection', latestSchema, 'latest');
-        mongoose.model('currentCollection').find([{}]).exec(function(e, d) {
-            currentCollection = "bills" + d[0].time.substring(0, 7).replace(/-/, "");
-            var Billings = mongoose.model('Billings', billingSchema, currentCollection);
-        });
+    var instanceSchema = new mongoose.Schema({        
+        Id: String,
+        State: String,
+        ImageId: String,
+        KeyName: String,
+        Type: String,
+        LaunchTime: String,
+        Zone: String,
+        Lifetime: String,
+        LastActiveTime: String,
+        Email: String,
+        VolumeId: String
     });
+    var ec2metricsSchema = new mongoose.Schema({
+        InstanceId: String,
+        NetworkIn: Number,
+        NetworkOut: Number,
+        CPUUtilization: Number,
+        Time: String
+    });
+    s3.s3Connect(function() {
+        mongoose.model('currentCollection').find([{}]).exec(function(e, d) {
+            currentCollection = "bills" + d[0].time.substring(0, 7).replace(/-/, "");            
+        });        
+    });
+    var latestTime = mongoose.model('currentCollection', latestSchema, 'latest');
     var Billings = mongoose.model('Billings', billingSchema, currentCollection);
-    //retreive non-free pricing values and store them in awsdb.pricing()
+    var Instances = mongoose.model('Instances', instanceSchema, 'instances');    
+    var Ec2Metrics = mongoose.model('Ec2Metrics', ec2metricsSchema, 'ec2metrics');    
     var PricingCheck = require('./BoxPricingCheck');
     PricingCheck.checkPricing();
 
@@ -78,19 +96,20 @@ if (!fs.existsSync(process.cwd() + '/data')) {
 
 AWS.config.update({region: 'us-west-2'});
 
-app.get('/api/instances', require('./instanceRoute'));
-app.get('/api/cpu', require('./cpuRoute')).cpu;
+app.get('/api/instances', require('./Route/instanceRoute'));
 
-app.get('/api/network/in', require('./networkRoute').networkIn);
-app.get('/api/network/out', require('./networkRoute').networkOut);
+app.get('api/ec2/metrics'), require('./Route/metricsRoute')
+app.get('/api/cpu', require('./Route/cpuRoute')).cpu;
+app.get('/api/network/in', require('./Route/networkRoute').networkIn);
+app.get('/api/network/out', require('./Route/networkRoute').networkOut);
 
-app.get('/api/billing/monthToDate', require('./billingRoute').monthToDate);
-app.get('/api/billing/byHour', require('./billingRoute').byHour);
-app.get('/api/billing/instanceCost', require('./billingRoute').instanceCost);
-app.get('/api/billing/instanceCostHourly', require('./billingRoute').instanceCostHourlyByDate);
+app.get('/api/billing/monthToDate', require('./Route/billingRoute').monthToDate);
+app.get('/api/billing/byHour', require('./Route/billingRoute').byHour);
+app.get('/api/billing/instanceCost', require('./Route/billingRoute').instanceCost);
+app.get('/api/billing/instanceCostHourly', require('./Route/billingRoute').instanceCostHourlyByDate);
 
-app.get('/api/billing/freeTier', require('./FreeTier').freeTier);
-app.get('/api/billing/calcFreeTierCost', require('./billingRoute').calcFreeTierCost);
+app.get('/api/billing/freeTier', require('./Route/freeTierRoute').freeTier);
+app.get('/api/billing/calcFreeTierCost', require('./Route/billingRoute').calcFreeTierCost);
 
 
 

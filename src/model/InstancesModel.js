@@ -40,61 +40,26 @@ var InstancesModel = Backbone.Model.extend({
 		var self = this;
 
 		this.aws_result().done(function(result) {
-			// console.log(result);
+			console.log(result);
 			instanceCollection.reset();
-			// cpuMetricCollection.reset();
-			// networkInMetricCollection.reset();
-			// networkOutMetricCollection.reset();
-			for (var r in result.Reservations) {
-				for (var i in result.Reservations[r].Instances) {
-					var rInstance = result.Reservations[r].Instances[i];
-					var rImage = rInstance.ImageId;
-					var rState = rInstance.State.Name;
-					var rKeyName = rInstance.KeyName;
-					var rInstanceType = rInstance.InstanceType;
-					var rLaunchTime = rInstance.LaunchTime;
-					//LOGIC FOR PARSING AND COMPUTING RUNNING TIME
-					var d = new Date();
-					var rUnixLaunch = Date.parse(rLaunchTime);
-					var rUnixNow = d.getTime();
-					var rDuration;
-					if (rState == "stopped" || rState == "stopping") {
-						rDuration = 0;
-					} else
-						rDuration = (rUnixNow - rUnixLaunch) / 1000;
-					var rZone = rInstance.Placement.AvailabilityZone;
-
-					//Email logic
-					for (var i in rInstance.Tags) {
-						if (rInstance.Tags[i].Key == "email") {
-							rEmail = rInstance.Tags[i].Value;
-							break;
-						} else
-							rEmail = "mikesmit.com@gmail.com";
-					}
-					// var accountNumber = rInstance.OwnerID()
-
-					var volumeIdExists=false;
-					if(rInstance.BlockDeviceMappings.length!=0) volumeIdExists = true;
-					var rVolId = "";
-					if(!volumeIdExists)
-						rVolId=rInstance.BlockDeviceMappings[0].Ebs.VolumeId;
-					var data = new InstanceModel({
-						instance: rInstance.InstanceId,
-						imageId: rImage,
-						state: rState,
-						keyName: rKeyName,
-						instanceType: rInstanceType,
-						launchTime: rLaunchTime,
-						duration: rDuration,
-						zone: rZone,
-						email: rEmail,
-						volumeid: rVolId
-					});						
-					
-					instanceCollection.add(data);					
-				}
-
+			cpuMetricCollection.reset();
+			networkInMetricCollection.reset();
+			networkOutMetricCollection.reset();
+			for (var r in result) {			
+				var data = new InstanceModel({
+					instance: result[r].Id,
+					imageId: result[r].ImageId,
+					state: result[r].State,
+					keyName: result[r].KeyName,
+					instanceType: result[r].Type,
+					launchTime: result[r].LaunchTime,
+					duration: result[r].Lifetime,
+					zone: result[r].Zone,
+					email: result[r].Email,
+					volumeid: result[r].VolumeId,
+					lastActiveTime: result[r].LastActiveTime						
+				});											
+				instanceCollection.add(data);								
 			}
 			self.set('dataReady', Date.now());
 			// console.log('Instances Data Ready');
