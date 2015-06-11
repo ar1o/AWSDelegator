@@ -17,7 +17,6 @@ exports.calcFreeTierCost = function(req, res) {
             }
         }
     }]).exec(function(e, d) {
-        console.log(d)
         for (var i in d) {
             // console.log(d[i]._id + "\t" + d[i].Cost + "\t" + d[i].Rate);
             var conditions = {
@@ -68,7 +67,6 @@ exports.monthToDate = function(req, res) {
             }
         }
     }]).exec(function(e, d) {
-        console.log(d)
         res.send(d);
     });
 };
@@ -173,7 +171,6 @@ exports.instanceCost = function(req, res) {
                     instances[d[r]._id].cost += d[r].total;
                 }
             }
-            console.log(instances);
             res.send(instances);
         });
 
@@ -187,6 +184,7 @@ exports.instanceCostAll = function(req, res) {
     // var startDuration = "2015-06-03 00:00:00";
     // var endDuration = "2015-06-03 23:00:00";
     var instanceId = req.query.instance;
+    // var instanceId = 'i-192650ef';
     var instances = {};
     // var count = 0;
     // Select objects from collection
@@ -221,6 +219,7 @@ exports.instanceCostAll = function(req, res) {
              $sort : { _id : 1
             } 
         }]).exec(function(e, d) {
+            console.log("test", d);
         // console.log("\nINSTANCE COST");
         // console.log(d[0].ResourceId[0]);
         // console.log(d[0].VolumeId[0]);

@@ -16,7 +16,7 @@ var BillingView = Backbone.View.extend({
         this.model.change('dataReady', function(model, val) {
             this.render();
             var date = new Date(totalCostInstancesCollection.at(0).get('date'));
-            console.log(totalCostInstancesCollection.length);
+            // console.log("totalCostInstancesCollection.length -->",totalCostInstancesCollection.length);
             $(function() {
                 $('#container').highcharts({
                     chart: {
@@ -49,7 +49,7 @@ var BillingView = Backbone.View.extend({
                                     x1: 0,
                                     y1: 0,
                                     x2: 0,
-                                    y2: 0
+                                    y2: 1
                                 },
                                 stops: [
                                     [0, Highcharts.getOptions().colors[0]],

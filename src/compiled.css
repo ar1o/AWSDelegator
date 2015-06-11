@@ -79,6 +79,10 @@ td {
   margin-right: auto;
   padding-left: 90%;
 }
+.MetricsView {
+  float: left;
+  padding: 10px;
+}
 body {
   font-family: 'Roboto', sans-serif;
 }

@@ -18,6 +18,7 @@ var BillingsModel = Backbone.Model.extend({
 	},
 
 	getBilling: function(instanceid) {
+		totalCostInstancesCollection.reset();
 		var self = this;
 		var count = 0;
 

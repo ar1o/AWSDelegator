@@ -17,22 +17,17 @@ var NetworkInActivityModel = Backbone.Model.extend({
 			var rstate = instanceCollection.at(i).get('state');
 			if (rstate == "running") {
 
-
 				var d = new Date();
 				var rUnixNow = d.getTime();
 				var rEndTime = parseInt(rUnixNow / 1000);
 				var rStartTime = rEndTime - 3600
 
 				var params = {
-					endTime: 1431440584,
-					startTime: (1431440584),
-					value: 'i-312254c7',
+					endTime: parseInt(rEndTime),
+					startTime: parseInt(rStartTime),
+					value: val,
 					metric: 'NetworkIn'
 				};
-				//params.value = instanceCollection.models[i].attributes.instance;
-				params.value = val;
-				params.endTime = parseInt(rEndTime - 3000);
-				params.startTime = parseInt(rStartTime);
 
 				(function(val, params) {
 
@@ -42,8 +37,7 @@ var NetworkInActivityModel = Backbone.Model.extend({
 								instance: val,
 								networkIn: data.Datapoints[0].Average
 							});
-							networkInMetricCollection.add(fData);
-
+							networkInMetricCollection.add(fData);							
 						}
 						self.set('dataReady', Date.now());
 

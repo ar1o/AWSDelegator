@@ -8,10 +8,8 @@ var NetworkInActivityView = Backbone.View.extend({
         if (!this.model) {
             this.model = new NetworkInActivityModel();
         }
-
         this.bindings();
         this.render();
-
     },
 
     //Check for when the data is read and renders the page
