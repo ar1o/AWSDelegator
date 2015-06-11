@@ -1,4 +1,3 @@
-
 var params = {
     EndTime: 1431440584,
     /* required */
@@ -22,20 +21,20 @@ var params = {
 };
 
 exports.networkIn = function(req, res){
-	var val = req.query.value;
-	var rEndTime = parseInt(req.query.endTime);
-	var rStartTime = parseInt(req.query.startTime);
-	var rMetricName = req.query.metric;
+    var val = req.query.value;
+    var rEndTime = parseInt(req.query.endTime);
+    var rStartTime = parseInt(req.query.startTime);
+    var rMetricName = req.query.metric;
 
-	params.Dimensions[0].Value = val;
-	params.EndTime = rEndTime;
-	params.StartTime = rStartTime;
-	params.MetricName = rMetricName;
-	params.Unit = 'Bytes'
-	var cloudwatch = new AWS.CloudWatch();
-	cloudwatch.getMetricStatistics(params, function(err, data) {
-		res.send(data);
-	});
+    params.Dimensions[0].Value = val;
+    params.EndTime = rEndTime;
+    params.StartTime = rStartTime;
+    params.MetricName = rMetricName;
+    params.Unit = 'Bytes'
+    var cloudwatch = new AWS.CloudWatch();
+    cloudwatch.getMetricStatistics(params, function(err, data) {
+        res.send(data);
+    });
 };
 
 exports.networkOut = function(req, res){
@@ -50,7 +49,6 @@ exports.networkOut = function(req, res){
     params.Unit = 'Bytes'
     var cloudwatch = new AWS.CloudWatch();
     cloudwatch.getMetricStatistics(params, function(err, data) {
-		res.send(data);
+        res.send(data);
     });
 };
-

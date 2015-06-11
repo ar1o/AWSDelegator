@@ -37,8 +37,7 @@ var NetworkInActivityModel = Backbone.Model.extend({
 								instance: val,
 								networkIn: data.Datapoints[0].Average
 							});
-							networkInMetricCollection.add(fData);
-
+							networkInMetricCollection.add(fData);							
 						}
 						self.set('dataReady', Date.now());
 
