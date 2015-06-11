@@ -63,7 +63,12 @@ exports.parseMetrics = function(masterCallback, res){
 	    			else masterCallback();	    		
 	    		});
 	    	}
-			arrayIterator(runningInstances);
+			if(runningInstances.length!=0) {
+				arrayIterator(runningInstances);
+			}
+			else {
+				masterCallback();
+			}
 		});
 	});
 }

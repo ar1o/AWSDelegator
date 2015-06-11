@@ -75,12 +75,12 @@ db.on("open", function() {
         Time: String
     });
     s3.s3Connect(function() {
+        var latestTime = mongoose.model('currentCollection', latestSchema, 'latest');
         mongoose.model('currentCollection').find([{}]).exec(function(e, d) {
             currentCollection = "bills" + d[0].time.substring(0, 7).replace(/-/, "");            
         });        
-    });
-    var latestTime = mongoose.model('currentCollection', latestSchema, 'latest');
-    var Billings = mongoose.model('Billings', billingSchema, currentCollection);
+        var Billings = mongoose.model('Billings', billingSchema, currentCollection);
+    });    
     var Instances = mongoose.model('Instances', instanceSchema, 'instances');    
     var Ec2Metrics = mongoose.model('Ec2Metrics', ec2metricsSchema, 'ec2metrics');    
     var PricingCheck = require('./BoxPricingCheck');
