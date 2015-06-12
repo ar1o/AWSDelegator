@@ -44,6 +44,9 @@ table.tablesorter thead tr .headerSortUp {
   height: 100%;
   width: 100%;
 }
+.InstancesView {
+  align-self: center;
+}
 #EC2 {
   width: auto;
   padding: 10px;
@@ -61,7 +64,7 @@ table.tablesorter thead tr .headerSortUp {
   padding: 10px;
 }
 .BillingView {
-  float: left;
+  width: 500px;
   padding: 10px;
 }
 th,
@@ -76,8 +79,15 @@ td {
   margin-right: auto;
 }
 .MetricsView {
-  float: left;
+  postions: absolute;
+  width: 700px;
   padding: 10px;
+}
+#cpuContainer {
+  float: left;
+}
+#networkContainer {
+  float: left;
 }
 th,
 td {
