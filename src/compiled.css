@@ -390,3 +390,9 @@ Test out these custom less files live
 body {
   font-family: 'Roboto', sans-serif;
 }
+.chart {
+  height: 200px;
+}
+.spacer {
+  height: 20px;
+}

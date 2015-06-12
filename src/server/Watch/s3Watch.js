@@ -3,26 +3,23 @@
 */
 var fs = require("fs");
 var adm = require('adm-zip');
-
 var billingParser = require('../Parse/billingParse');
 var instanceParser = require('../Parse/instanceParse');
 var metricsParser = require('../Parse/metricsParse');
-
 var okey;
 var params = {
     //fix the bucket name to be flexible.
     Bucket: 'csvcontainer'
 };
-AWS.config.update({region: 'us-east-1'});
+AWS.config.region = 'us-east-1';
 var s3 = new AWS.S3();
-// AWS.config.update({region: 'us-east-1'});
-exports.s3Connect = function(_callback) {
-    s3.listObjects(params, function(err, data) {
-        //THIS NEEDS TO BE UPDATED BASED UPON CURRENT DATE AND OWNERID.
-        // console.log(data);
-        okey = data.Contents[5].Key;
-        console.log("okey: " + okey);
 
+exports.s3Connect = function(_callback) {
+    s3.listObjects(params, function(err, data) {  
+        if(err) throw err;         
+        //THIS NEEDS TO BE UPDATED BASED UPON CURRENT DATE AND OWNERID.        
+        okey = data.Contents[5].Key;
+        console.log("okey: " + okey);        
         var params_ = {
             Bucket: 'csvcontainer',
             Key: okey
@@ -79,3 +76,7 @@ s3.s3Watch = function() {
     console.log("Watching s3 bucket on timer of 60 minutes");
     setTimeout(that.s3Connect.bind(that), 1000 * 60 * 60);
 };
+exports.updateAWSRegion = function(newRegion){    
+    AWS.config.update({region: newRegion});
+    console.log("new awsRegion "+AWS.config.region);
+}

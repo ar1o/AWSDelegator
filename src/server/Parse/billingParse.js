@@ -54,7 +54,7 @@ exports.parseBillingCSV = function(_callback) {
                                         } else {
                                             doc[properties[j]] = parseFloat(bill[propertiesIndex[j]]);
                                         }
-                                    }
+                                    }                                    
                                     db.collection(currentCollection).insert(doc);
                                     db.collection('latest').update({
                                         _id: latest._id

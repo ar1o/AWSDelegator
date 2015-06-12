@@ -11,7 +11,6 @@ var InstancesView = Backbone.View.extend({
         if (!this.model) {
             this.model = new InstancesModel();
         }
-
         this.model.addEC2Instance();
 
         this.billingActivity = new BillingView();
@@ -59,6 +58,4 @@ var InstancesView = Backbone.View.extend({
         this.$el.append(this.billingActivity.el);
         this.$el.append(this.metricsActivity.el);
     }
-
-
 });

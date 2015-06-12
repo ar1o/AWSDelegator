@@ -1,20 +1,18 @@
 var http = require('http');
 var fs = require('fs');
-
-// AWS Stuff
 AWS = require('aws-sdk');
 var credentials = new AWS.SharedIniFileCredentials({
     profile: 'default'
 });
 AWS.config.credentials = credentials;
-AWS.config.region = 'us-west-2';
+// AWS.config.update({region: 'us-west-2'});
 
 // Express import
 var express = require('express');
 var app = express();
 port = process.env.PORT || 3000;
 
-databaseUrl = 'mongodb://awsdb:dalhousie@ds045622.mongolab.com:45622/awsdelegator';
+databaseUrl = 'INSERT DB HERE';
 // Mongoose import
 mongoose = require('mongoose');
 
@@ -74,27 +72,22 @@ db.on("open", function() {
         NetworkOut: Number,
         CPUUtilization: Number,
         Time: String
-    });
+    });    
 
     s3.s3Connect(function() {
         var latestTime = mongoose.model('currentCollection', latestSchema, 'latest');
         mongoose.model('currentCollection').find([{}]).exec(function(e, d) {
             currentCollection = "bills" + d[0].time.substring(0, 7).replace(/-/, "");
         var Billings = mongoose.model('Billings', billingSchema, currentCollection);
-
         });
     });
     var Instances = mongoose.model('Instances', instanceSchema, 'instances');    
     var Ec2Metrics = mongoose.model('Ec2Metrics', ec2metricsSchema, 'ec2metrics');    
-    // var PricingCheck = require('./BoxPricingCheck');
-    // PricingCheck.checkPricing();
-
 });
 
 if (!fs.existsSync(process.cwd() + '/data')) {
     fs.mkdirSync(process.cwd() + '/data');
 }
-AWS.config.update({region: 'us-west-2'});
 
 app.get('/api/instances', require('./Route/instanceRoute'));
 
