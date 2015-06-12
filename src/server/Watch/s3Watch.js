@@ -28,9 +28,13 @@ exports.s3Connect = function(_callback) {
             if (err) throw err;
             var latestBillsindex = files.indexOf('latestBills.csv');
             if (latestBillsindex != -1) {
-                fs.unlink(process.cwd() + '/data/' + files[latestBillsindex], function(unlink_err) {
-                    if (unlink_err) throw unlink_err;
-                });
+                try{
+                    fs.unlink(process.cwd() + '/data/' + files[latestBillsindex], function(unlink_err) {
+                        if (unlink_err) throw unlink_err;
+                    });
+                }catch(err){
+                    throw err;
+                }                    
             }
             console.log("starting download of datasheet.zip");
             var file = fs.createWriteStream('datasheet.zip');
