@@ -18,9 +18,9 @@ var InstancesView = Backbone.View.extend({
         // self.interval = setInterval(function() {
         //     self.model.addEC2Instance();
         // }, 1000 * 60 * 60);
-        this.cpuActivity = new CPUActivityView();
-        this.networkInActivity = new NetworkInActivityView();
-        this.networkOutActivity = new NetworkOutActivityView();
+        // this.cpuActivity = new CPUActivityView();
+        // this.networkInActivity = new NetworkInActivityView();
+        // this.networkOutActivity = new NetworkOutActivityView();
         this.billingActivity = new BillingView();
         this.metricsActivity = new MetricsView();
         this.bindings();
@@ -48,7 +48,7 @@ var InstancesView = Backbone.View.extend({
             // this.cpuActivity.model.getCPUMetrics();
             // this.networkInActivity.model.getNetworkInMetrics();
             // this.networkOutActivity.model.getNetworkOutMetrics();
-            this.metricsActivity.model.getMetrics('i-192650ef');
+            this.metricsActivity.model.getMetrics('i-580a61a2');
             this.billingActivity.model.getBilling('i-192650ef');
         }.bind(this));
 
@@ -71,6 +71,4 @@ var InstancesView = Backbone.View.extend({
         this.$el.append(this.billingActivity.el);
         this.$el.append(this.metricsActivity.el);
     }
-
-
 });

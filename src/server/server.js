@@ -1,13 +1,11 @@
 var http = require('http');
 var fs = require('fs');
-
-// AWS Stuff
 AWS = require('aws-sdk');
 var credentials = new AWS.SharedIniFileCredentials({
     profile: 'default'
 });
 AWS.config.credentials = credentials;
-AWS.config.region = 'us-west-2';
+// AWS.config.update({region: 'us-west-2'});
 
 // Express import
 var express = require('express');
@@ -73,7 +71,7 @@ db.on("open", function() {
         NetworkOut: Number,
         CPUUtilization: Number,
         Time: String
-    });
+    });    
 
     s3.s3Connect(function() {
         var latestTime = mongoose.model('currentCollection', latestSchema, 'latest');
@@ -86,13 +84,11 @@ db.on("open", function() {
     var Ec2Metrics = mongoose.model('Ec2Metrics', ec2metricsSchema, 'ec2metrics');    
     var PricingCheck = require('./BoxPricingCheck');
     PricingCheck.checkPricing();
-
 });
 
 if (!fs.existsSync(process.cwd() + '/data')) {
     fs.mkdirSync(process.cwd() + '/data');
 }
-AWS.config.update({region: 'us-west-2'});
 
 app.get('/api/instances', require('./Route/instanceRoute'));
 
