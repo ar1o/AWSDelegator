@@ -18,8 +18,6 @@ var InstancesModel = Backbone.Model.extend({
 	initialize: function() {
 		var data = {};
 		var result;
-
-		this.addEC2Instance();
 		this.change('dataReady');
 	},
 	aws_result: function() {
@@ -28,7 +26,7 @@ var InstancesModel = Backbone.Model.extend({
 			type: 'GET',
 			data: self.data,
 			contentType: 'plain/text',
-			url: 'http://localhost:3000/api/instances',
+			url: host + '/api/instances',
 			success: function(data) {
 				result = data;
 			}
@@ -45,7 +43,7 @@ var InstancesModel = Backbone.Model.extend({
 			cpuMetricCollection.reset();
 			networkInMetricCollection.reset();
 			networkOutMetricCollection.reset();
-			for (var r in result) {			
+			for (var r in result) {
 				var data = new InstanceModel({
 					instance: result[r].Id,
 					imageId: result[r].ImageId,
@@ -57,16 +55,15 @@ var InstancesModel = Backbone.Model.extend({
 					zone: result[r].Zone,
 					email: result[r].Email,
 					volumeid: result[r].VolumeId,
-					lastActiveTime: result[r].LastActiveTime						
-				});											
-				instanceCollection.add(data);								
+					lastActiveTime: result[r].LastActiveTime
+				});
+				instanceCollection.add(data);
 			}
 			self.set('dataReady', Date.now());
 		}).fail(function() {
 			console.log('FAILED');
 		});
 	}
-
 });
 
 // A instance model template
@@ -83,13 +80,6 @@ var InstanceModel = Backbone.Model.extend({
 		zone: null,
 		email: "mikesmit.com@gmail.com",
 		volumeid: null
-
-	}
-});
-// A metrics model template
-var MetricModel = Backbone.Model.extend({
-	defaults: {
-		instance: null
 	}
 });
 
@@ -98,7 +88,6 @@ var EC2InstancesCollection = Backbone.Collection.extend({
 	initialize: function() {
 		// This will be called when an item is added. pushed or unshifted
 		this.on('add', function(model) {});
-
 	}
 });
 

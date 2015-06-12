@@ -76,6 +76,6 @@ exports.s3Connect = function(_callback) {
 };
 that = this;
 s3.s3Watch = function() {
-    console.log("Watching s3 bucket on timer of 15 minutes");
-    setTimeout(that.s3Connect.bind(that), 1000 * 60 * 15);
+    console.log("Watching s3 bucket on timer of 60 minutes");
+    setTimeout(that.s3Connect.bind(that), 1000 * 60 * 60);
 };

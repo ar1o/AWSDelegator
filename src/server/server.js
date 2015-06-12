@@ -14,6 +14,7 @@ var express = require('express');
 var app = express();
 port = process.env.PORT || 3000;
 
+databaseUrl = 'mongodb://awsdb:dalhousie@ds045622.mongolab.com:45622/awsdelegator';
 // Mongoose import
 mongoose = require('mongoose');
 
@@ -28,7 +29,7 @@ currentCollection = "";
 var s3 = require('./Watch/s3Watch');
 
 // Start mongoose and mongo
-mongoose.connect('mongodb://localhost:27017/awsdb', function(error) {
+mongoose.connect(databaseUrl, function(error) {
     if (error) {
         console.log(error);
     }
@@ -85,8 +86,8 @@ db.on("open", function() {
     });
     var Instances = mongoose.model('Instances', instanceSchema, 'instances');    
     var Ec2Metrics = mongoose.model('Ec2Metrics', ec2metricsSchema, 'ec2metrics');    
-    var PricingCheck = require('./BoxPricingCheck');
-    PricingCheck.checkPricing();
+    // var PricingCheck = require('./BoxPricingCheck');
+    // PricingCheck.checkPricing();
 
 });
 

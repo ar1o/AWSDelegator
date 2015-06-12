@@ -179,14 +179,9 @@ exports.instanceCost = function(req, res) {
 
 //Given an instances get cost HOURLY
 exports.instanceCostAll = function(req, res) {
-    // var iId = req.query.value;
-    console.log(req.query.instance);
-    // var startDuration = "2015-06-03 00:00:00";
-    // var endDuration = "2015-06-03 23:00:00";
+    // console.log("Cost request",req.query.instance);
     var instanceId = req.query.instance;
-    // var instanceId = 'i-192650ef';
     var instances = {};
-    // var count = 0;
     // Select objects from collection
     mongoose.model('Billings').aggregate([{
             $match: {
@@ -219,7 +214,6 @@ exports.instanceCostAll = function(req, res) {
              $sort : { _id : 1
             } 
         }]).exec(function(e, d) {
-            console.log("test", d);
         // console.log("\nINSTANCE COST");
         // console.log(d[0].ResourceId[0]);
         // console.log(d[0].VolumeId[0]);

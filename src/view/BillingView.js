@@ -15,8 +15,14 @@ var BillingView = Backbone.View.extend({
     bindings: function() {
         this.model.change('dataReady', function(model, val) {
             this.render();
-            var date = new Date(totalCostInstancesCollection.at(0).get('date'));
-            // console.log("totalCostInstancesCollection.length -->",totalCostInstancesCollection.length);
+            var date;
+            try{
+                date = new Date(totalCostInstancesCollection.at(0).get('date'));
+            } catch(e) {
+                date = new Date();
+                console.log("NO DATA FOUND");
+            }
+
             $(function() {
                 $('#container').highcharts({
                     chart: {
@@ -86,8 +92,6 @@ var BillingView = Backbone.View.extend({
             billing: totalCostInstancesCollection.toJSON(),
         });
         this.$el.html(html);
-
-
     }
 
 

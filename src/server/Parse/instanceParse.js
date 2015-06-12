@@ -1,5 +1,4 @@
 var MongoClient = require('mongodb').MongoClient;
-var databaseUrl = 'mongodb://localhost:27017/awsdb';
 
 exports.parseInstances = function(masterCallback, res) {
     var ec2 = new AWS.EC2({

@@ -1,5 +1,4 @@
 var MongoClient = require('mongodb').MongoClient;
-var databaseUrl = 'mongodb://localhost:27017/awsdb';
 var iteratorIndex = 0;
 exports.parseMetrics = function(masterCallback, res){
 	MongoClient.connect(databaseUrl, function(err, db) {

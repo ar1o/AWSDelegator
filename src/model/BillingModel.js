@@ -13,22 +13,19 @@ var totalCostInstancesCollection = new InstanceTotalCostCollection();
 var BillingsModel = Backbone.Model.extend({
 	initialize: function() {
 		this.change('dataReady');
-
-
 	},
 
 	getBilling: function(instanceid) {
 		totalCostInstancesCollection.reset();
 		var self = this;
 		var count = 0;
-
 		var params = {
 			instance: instanceid
 		};
-		(function(params) {
 
-			$.get('http://localhost:3000/api/billing/instanceCostAll', params, function(result) {
-				console.log(result);
+		(function(params) {
+			$.get(host + '/api/billing/instanceCostAll', params, function(result) {
+				console.log("billing",result);
 				for (var i in result) {
 					var data = new BillingModel({
 						resourceId: result[i].resourceId,
@@ -36,14 +33,10 @@ var BillingsModel = Backbone.Model.extend({
 						volumeId: result[i].volumeId,
 						date: result[i].date
 					});
-
 					totalCostInstancesCollection.add(data);
 				}
-
 				self.set('dataReady', Date.now());
-
 			});
-
 		})(params);
 	}
 });
@@ -55,6 +48,5 @@ var BillingModel = Backbone.Model.extend({
 		cost: null,
 		volumeId: null,
 		date: null
-
 	}
 });
