@@ -1,5 +1,4 @@
 var MongoClient = require('mongodb').MongoClient;
-var databaseUrl = 'mongodb://localhost:27017/awsdb';
 var AWS = require('aws-sdk');
 var regionIteratorIndex;
 

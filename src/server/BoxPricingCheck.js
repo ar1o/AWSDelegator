@@ -2,7 +2,7 @@ var request = require("request");
 var fs=require("fs");
 var mongodb = require('mongodb');
 var MongoClient = mongodb.MongoClient;
-var databaseUrl = 'mongodb://localhost:27017/awsdb';
+var databaseUrl = 'mongodb://awsdelegator:dalhousie@ds045622.mongolab.com:45622/awsdelegator';
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 // mongoose.connect(databaseUrl);
@@ -46,9 +46,9 @@ exports.checkPricing = function (){
     var usage = mongoose.model('pricing', boxTypeSchema);
     MongoClient.connect(databaseUrl, function(err, db) {
         if (err) {
-            console.log('Unable to connect to the mongoDB server. Error:', err);
+            console.log('Pricing -- Unable to connect to the mongoDB server. Error:', err);
         } else {
-            console.log('Connection established to ', databaseUrl);
+            console.log('Pricing --- Connection established to ', databaseUrl);
         }
         //Temp fix for duplicate pricing values in pricing collection
         db.collection("pricing").drop();

@@ -1,12 +1,13 @@
-module.exports = function(req,res){
-	var instanceId = 'i-580a61a2';
+module.exports = function(req, res) {
+	// console.log("Metric request", req.query.instance);
+	var instanceId = req.query.instance;
 	mongoose.model('Ec2Metrics').aggregate([{
 		$match: {
-                InstanceId: {
-                    $eq: instanceId
-                }
-            }
-        }, {
+			InstanceId: {
+				$eq: instanceId
+			}
+		}
+	}, {
 		$project: {
 			_id: 0,
 			InstanceId: 1,
@@ -16,7 +17,7 @@ module.exports = function(req,res){
 			Time: 1
 		}
 	}]).exec(function(err, instanceMetrics) {
-		console.log(instanceMetrics);
+		// console.log(instanceMetrics);
 		res.send(instanceMetrics);
 	});
 }

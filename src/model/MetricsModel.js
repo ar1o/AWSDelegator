@@ -8,31 +8,29 @@ var MetricsCollection = Backbone.Collection.extend({
 		});
 	}
 });
+
 // Create the collection
 var metricsCollection = new MetricsCollection();
 
 // The instances model where we manipulate the data from AWS
 var MetricsModel = Backbone.Model.extend({
 	initialize: function() {
-		console.log("INITIALIZING")
-		var data = {};
-		var result;
-		// this.getEC2Metrics();
+		var self = this;
 		this.change('dataReady');
 	},
+
 	getMetrics: function(instanceid) {
-		totalCostInstancesCollection.reset();
+		metricsCollection.reset();
 		var self = this;
 		var count = 0;
-
 		var params = {
 			instance: instanceid
 		};
-		(function(params) {
-			$.get('http://localhost:3000/api/metrics', params, function(result) {
-				console.log(result);
-				for (var i in result) {
 
+		(function(params) {
+			$.get(host+'/api/metrics', params, function(result) {
+				console.log("metrics",result);
+				for (var i in result) {
 					var data = new MetricModel({
 						instance: result[i].InstanceId,
 						networkIn: result[i].NetworkIn,
@@ -46,7 +44,6 @@ var MetricsModel = Backbone.Model.extend({
 			});
 		})(params);
 	}
-
 });
 
 // A metrics model template

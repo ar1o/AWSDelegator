@@ -1,7 +1,6 @@
 var fs = require("fs");
 var mongodb = require('mongodb');
 var MongoClient = mongodb.MongoClient;
-var databaseUrl = 'mongodb://localhost:27017/awsdb';
 var properties = ['RateId', 'ProductName', 'UsageType', 'Operation', 'AvailabilityZone', 'ItemDescription',
     'UsageStartDate', 'UsageQuantity', 'Rate', 'Cost', 'user:Volume Id', 'user:Name', 'user:Email', 'ResourceId'
 ];

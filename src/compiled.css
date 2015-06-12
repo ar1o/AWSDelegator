@@ -69,22 +69,19 @@ td {
   overflow: hidden;
 }
 .options {
-  zposition: absolute;
-  zborder-style: solid;
-  zborder-width: 5px;
   top: 55%;
   left: 0;
   right: 0;
   margin-left: auto;
   margin-right: auto;
-  padding-left: 90%;
 }
 .MetricsView {
   float: left;
   padding: 10px;
 }
-body {
-  font-family: 'Roboto', sans-serif;
+th,
+td {
+  overflow: hidden;
 }
 .ts-align-wrap {
   white-space: nowrap;
@@ -389,4 +386,13 @@ Test out these custom less files live
   text-align: center;
   cursor: pointer;
   background-color: #e6bf99;
+}
+body {
+  font-family: 'Roboto', sans-serif;
+}
+.chart {
+  height: 200px;
+}
+.spacer {
+  height: 20px;
 }
