@@ -12,7 +12,7 @@ var express = require('express');
 var app = express();
 port = process.env.PORT || 3000;
 
-databaseUrl = 'INSERT DB HERE';
+databaseUrl = 'mongodb://localhost:27017/awsdb';
 // Mongoose import
 mongoose = require('mongoose');
 
