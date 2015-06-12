@@ -1,5 +1,5 @@
 module.exports = function(req,res){
-	var instanceId = 'i-e4205612';
+	var instanceId = 'i-580a61a2';
 	mongoose.model('Ec2Metrics').aggregate([{
 		$match: {
                 InstanceId: {
