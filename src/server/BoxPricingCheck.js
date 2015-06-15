@@ -53,7 +53,7 @@ exports.getPricing = function (){
             console.log('Pricing --- Connection established to ', databaseUrl);
         }
         //Temp fix for duplicate pricing values in pricing collection
-        db.collection("pricing").drop();
+        // db.collection("pricing").drop();
         
         // boxPricingLoop    GOOD
         for(var i=0; i< boxPricingURLs.length; i++){
@@ -71,12 +71,10 @@ exports.getPricing = function (){
                 item.InstanceSize = (pricingJSON.config.regions[region].instanceTypes[compType].sizes[size]['size']);
                 item.Price = (pricingJSON.config.regions[region].instanceTypes[compType].sizes[size].valueColumns[0].prices.USD);
                 item._id = mongoose.model("pricing").findOne({InstanceSize : item.InstanceSize, OS : item.OS});
-                if(item._id != undefined){
-                    db.collection("pricing").insert((item.toObject()));
-                }
-                else{
-                    db.collection("pricing").insert(item.toObject(), {upsert : true});    
-                } 
+                //should add an additional check for price
+                db.collection("pricing").insert((item.toObject()));    
+            
+                
                 // console.log(item);
                 
             });
