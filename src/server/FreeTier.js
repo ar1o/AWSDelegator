@@ -1,15 +1,132 @@
 //Query and update FREE TIER billing and update associated cost rates
 
 //*Karl* -- Would it be better to instead do an upsert on each document to a new attribute?
+var request = require("request");
+var fs = require("fs");
+var mongodb = require('mongodb');
+var MongoClient = mongodb.MongoClient;
+var databaseUrl = 'mongodb://localhost:27017/awsdb';
+var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
+//Retrieve the proper pricing values
+var pricingData = require('./BoxPricingCheck');
+pricingData.getPricing();
+
+
+var billingSchema = new mongoose.Schema({
+    _id: mongoose.Schema.ObjectId,
+    ProductName: String,
+    Cost: Number,
+    ResourceId: String,
+    UsageStartDate: String,
+    "user:Volume Id": String,
+    Rate: Number,
+    UsageType: String,
+    ItemDescription: String,
+    UsageQuantity: Number,
+    RateId: Number,
+    NonFreeRate: Number
+
+});
+var nModified = 0;
+var ProductSchema = new Schema({
+    ProductName: {
+        type: String
+    },
+    OS: {
+        type: String,
+        default: null
+    }, // (pricingJSON.config.regions[region].instanceTypes[compType].sizes[size].valueColumns[0]['name']);
+    AvailabilityZone: {
+        type: String,
+        required: true
+    }, // (pricingJSON.config.regions[region]['region']);
+    tierName: {
+        type: String,
+        required: true
+    }, //(pricingJSON.config.regions[region].instanceTypes[compType].sizes[size]['size'])
+    typeName: {
+        type: String
+    },
+    prices: {
+        type: Number,
+        required: true
+    }, //(pricingJSON.config.regions[region].instanceTypes[compType].sizes[size].valueColumns[0].prices.USD);
+    date: {
+        type: Date,
+        default: Date()
+    }, //Date field added for insert reference
+    storageType: {
+        type: String
+    }
+});
+
+var billingModel = mongoose.model('billingModel', billingSchema, 'bills201506');
+var pricingModel = mongoose.model('pricingModel', ProductSchema, 'pricing');
+// console.log(pricingModel.find({}));
+
+var updateBillingValues = function(pricingQuery, billingQuery, callback) {
+    var pricingScope = {_id:0, Price : 1};
+    pricingModel.find(pricingQuery, pricingScope).exec(function(err, price) {
+        
+        if (err) {
+            throw err;
+        } else {
+            billingModel.find(billingQuery).exec(function(e, d) {
+                if (e) {
+                    throw e;
+                } else {
+                    // console.log(pricingQuery);
+                var priceString = price[0].toString();
+                var nonFreeRate = parseFloat(priceString.substring(priceString.indexOf(':')+2,priceString.length-2));
+                console.log(typeof price[0], price[0]);
+                    for (var i in d) {
+
+                        // console.log(d);
+                        var m = new billingModel({
+                            
+                            _id: d[i]._id,
+                            ProductName: d[i].ProductName,
+                            Cost: d[i].Cost,
+                            ResourceId: d[i].ResourceId,
+                            UsageStartDate: d[i].UsageStartDate,
+                            "user:Volume Id": d[i]['user:Volume Id'],
+                            Rate: d[i].Rate,
+                            UsageType: d[i].UsageType,
+                            ItemDescription: d[i].ItemDescription,
+                            UsageQuantity: d[i].UsageQuantity,
+                            RateId: d[i].RateId,
+                            NonFreeRate: nonFreeRate
+                        });
+                        // console.log("Document set " + d[i].ProductName + " updated.");
+                        //Switch over to rate IDs for billing queries at some point.
+                        var upsertData = m.toObject();
+                        billingModel.update({
+                            _id: m.id
+                        }, upsertData, {
+                            upsert: true,
+                            multi: true
+                        }, function(err, op) {
+                            if (err) {
+                                throw err;
+                            } else {
+                                //console.log(op);
+                            }
+                        });
+                    }
+                }
+            });
+        }
+    });
+}
+
 exports.freeTier = function(req, res) {
-    mongoose.model('Billings').aggregate({
+    var db = mongoose.connection;
+    billingModel.aggregate({
         $match: {
             ItemDescription: {
                 $regex: /free tier/
             }
-            // Rate: {
-            //     $eq: 0
-            // }
         }
     }, {
         $group: {
@@ -22,207 +139,259 @@ exports.freeTier = function(req, res) {
             }
         }
     }).exec(function(e, d) {
-        if(e){
+        if (e) {
             console.error(e.message);
             console.error(e.stack);
         }
-        console.log(d);
+        // console.log(d);
         var conditions;
         var update;
         var options;
         for (var r in d) {
-            console.log(d[r].UsageType[0] + "\t" + d[r].ItemDescription[0]);
 
             var UsageType = d[r].UsageType[0];
             var ItemDescription = d[r].ItemDescription[0];
+            // console.log(UsageType + "\t" + ItemDescription);
+
             switch (true) {
-                //value == .09
+                // //value == .09
                 case (/DataTransfer-Out-Bytes/.test(UsageType)):
                     console.log("matched /DataTransfer-Out-Bytes/");
-                    conditions = {
-                        UsageType: { $regex: /DataTransfer-Out-Bytes/ },
-                        ItemDescription: { $regex: /free tier/ }
+                    var pricingQuery = {
+                        TierName: 'upTo10TBout'
                     };
-                    var value = db.pricing.find({ProductName : "Data Transfer", TypeName : " datXferOutInternet"},{_id: 0, price : 1}).toArray()[0];
-                    update = { Rate: value.price };
-                    options = { multi: true };
-                    mongoose.model('Billings').update(conditions, update, options, callback);
+                    var billingQuery = {
+                        UsageType: {
+                            $regex: /DataTransfer-Out-Bytes/
+                        },
+                        ItemDescription: {
+                            $regex: /free tier/
+                        }
+                    };
+                    updateBillingValues(pricingQuery, billingQuery);
 
-                    function callback(err, numAffected) {
-                        console.log(numAffected)
-                    };
                     break;
-                    //value.price should == .02
+
+                    //     //value.price should == .02
                 case (/DataTransfer-Regional-Bytes/.test(UsageType)):
                     console.log("matched /DataTransfer-Regional-Bytes/");
-                    conditions = {
-                        UsageType: { $regex: /DataTransfer-Regional-Bytes/ },
-                        ItemDescription: { $regex: /free tier/ }
-                    };
-                    var value = db.pricing.find({ProductName : "Cross Region Data Transfer Out EC2"},{_id: 0, price : 1}).toArray()[0];
-                    update = { Rate: value.price };
-                    options = { multi: true };
-                    mongoose.model('Billings').update(conditions, update, options, callback);
 
-                    function callback(err, numAffected) {
-                        console.log(numAffected)
+
+                    var pricingQuery = {
+                        TierName: "crossRegion",
+                        TypeName: "dataXferOutEC2"
                     };
+                    var billingQuery = {
+                        UsageType: {
+                            $regex: /DataTransfer-Regional-Bytes/
+                        },
+                        ItemDescription: {
+                            $regex: /free tier/
+                        }
+                    };
+                    updateBillingValues(pricingQuery, billingQuery);
                     break;
-                    //value.price should == 0.02 
-                //http://a0.awsstatic.com/pricing/1/ec2/pricing-data-transfer-with-regions.min.js
+                    //     //value.price should == 0.02 
+                    //     //http://a0.awsstatic.com/pricing/1/ec2/pricing-data-transfer-with-regions.min.js
                 case (/AWS-Out-Bytes/.test(UsageType)):
                     console.log("matched /AWS-Out-Bytes/");
-                    conditions = {
-                        UsageType: { $regex: /AWS-Out-Bytes/ },
-                        ItemDescription: { $regex: /free tier/ }
+                    var pricingQuery = {
+                        TierName: "crossRegion",
+                        TypeName: "dataXferOutEC2"
                     };
-                    //CURRENTLY INCORRECT
-                    value = db.pricing.find({ProductName : "Cross Region Data Transfer Out EC2"},{_id: 0, price : 1}).toArray()[0];
-                        update = { Rate: value.price };
-                    options = { multi: true };
-                    mongoose.model('Billings').update(conditions, update, options, callback);
-
-                    function callback(err, numAffected) {
-                        console.log(numAffected)
+                    var billingQuery = {
+                        UsageType: {
+                            $regex: 'AWS-Out-Bytes'
+                        },
+                        ItemDescription: {
+                            $regex: /free tier/
+                        }
                     };
+                    updateBillingValues(pricingQuery, billingQuery, function(){
+                        console.log("Updated AWS-Out-Bytes values");
+                    });
                     break;
-                    //value.price should == 
+
+                    //value.price should == 0.017
 
                 case (/InstanceUsage:db.t2.micro/.test(UsageType)): //InstanceUsage is for RDS
                     console.log("matched /InstanceUsage:db.t2.micro/");
-                    conditions = {
-                        UsageType: { $regex: /InstanceUsage:db.t2.micro/ },
-                        ItemDescription: { $regex: /free tier/ }
-                    };
-                    var value = db.pricing.find({tierName : "db.t2.micro"},{_id: 0, price : 1}).toArray()[0];
-                    update = { Rate: value.price };
-                    options = { multi: true };
-                    mongoose.model('Billings').update(conditions, update, options, callback);
 
-                    function callback(err, numAffected) {
-                        console.log(numAffected)
+                    var pricingQuery = {
+                        TierName: "db.t2.micro"
                     };
+                    var billingQuery = {
+                        UsageType: {
+                            $regex: /InstanceUsage:db.t2.micro/
+                        },
+                        ItemDescription: {
+                            $regex: /free tier/
+                        }
+                    };
+                    updateBillingValues(pricingQuery, billingQuery);
                     break;
-                    //value.price should == 
-                case (/BoxUsage:t2.micro/.test(UsageType)): //BoxUsage is for EC2
-                    console.log("matched /BoxUsage:t2.micro/");
-                    conditions = {
-                        UsageType: { $regex: /BoxUsage:t2.micro/ },
-                        ItemDescription: { $regex: /free tier/ }
-                    };
-                    options = { multi: true };
-                    var value;
-                    if (/Windows/.test(ItemDescription)) {
-                        console.log("matched /Windows/")
-                        value = db.pricing.find({tierName : "t2.micro", OS : "mswin"},{_id: 0, price : 1}).toArray()[0]
-                        update = { Rate: value.price };
-                    } else if (/SUSE/.test(ItemDescription)) {
-                        console.log("matched /SUSE/")
-                        value = db.pricing.find({tierName : "t2.micro", OS : "sles"},{_id: 0, price : 1}).toArray()[0];
-                        update = { Rate: value.price };
-                    } else if (/Linux/.test(ItemDescription)) {
-                        console.log("matched /Linux/")
-                        value = db.pricing.find({tierName : "t2.micro", OS : "linux"},{_id: 0, price : 1}).toArray()[0];
-                        update = { Rate: value.price };
-                    } else if (/RHEL/.test(ItemDescription)) {
-                        console.log("matched /RHEL/")
-                        value = db.pricing.find({tierName : "t2.micro", OS : "rhel"},{_id: 0, price : 1}).toArray()[0];
-                        update = { Rate: value.price };
-                    }
-                    mongoose.model('Billings').update(conditions, update, options, callback);
 
-                    function callback(err, numAffected) {
-                        console.log(numAffected)
-                    };
-                    break;
-                //Mongo Queries have been completed up to this point. BoxPricingCheck does not have EBS functionality
-                //value.price should == .005
-                case (/Requests-Tier1/.test(UsageType)): 
+                    //     //Mongo Queries have been completed up to this point. BoxPricingCheck does not have EBS functionality
+                    //     //value.price should == .005
+                case (/Requests-Tier1/.test(UsageType)):
                     console.log("matched /Request-Tier1/");
-                    conditions = {
-                        UsageType: { $regex: /Requests-Tier1/ },
-                        ItemDescription: { $regex: /free tier/ }
-                    };
-                    value = db.pricing.find({ProductName : "Requests Tier 1"},{_id: 0, price : 1}).toArray()[0];
-                    update = { Rate: value.price };
-                    options = { multi: true };
-                    mongoose.model('Billings').update(conditions, update, options, callback);
 
-                    function callback(err, numAffected) {
-                        console.log(numAffected)
+                    var pricingQuery = {
+                        TierName: "putcopypost"
                     };
+                    var billingQuery = {
+                        UsageType: {
+                            $regex: /Requests-Tier1/
+                        },
+                        ItemDescription: {
+                            $regex: /free tier/
+                        }
+                    };
+                    updateBillingValues(pricingQuery, billingQuery);
                     break;
-                    //value.price should == 0.004
+
+                    //     //value.price should == 0.004
                 case (/Requests-Tier2/.test(UsageType)):
                     console.log("matched /Request-Tier2/");
-                    conditions = {
-                        UsageType: { $regex: /Requests-Tier2/ },
-                        ItemDescription: { $regex: /free tier/ }
+                    var pricingQuery = {
+                        TierName: "getEtc"
                     };
-                    value = db.pricing.find({ProductName : "Requests Tier 2"},{_id: 0, price : 1}).toArray()[0];
-                    update = { Rate: value.price };
-                    options = { multi: true };
-                    mongoose.model('Billings').update(conditions, update, options, callback);
-
-                    function callback(err, numAffected) {
-                        console.log(numAffected)
+                    var billingQuery = {
+                        UsageType: {
+                            $regex: /Requests-Tier2/
+                        },
+                        ItemDescription: {
+                            $regex: /free tier/
+                        }
                     };
+                    updateBillingValues(pricingQuery, billingQuery);
                     break;
-                    //value.price should == .1
+
+                    //     //value.price should == .1
                 case (/EBS:VolumeUsage.gp2/.test(UsageType)):
                     console.log("matched /EBS:VolumeUsage.gp2/");
-                    conditions = {
-                        UsageType: { $regex: /EBS:VolumeUsage.gp2/ },
-                        ItemDescription: { $regex: /free tier/ }
-                    };
-                    value = db.pricing.find({ProductName : "Amazon EBS General Purpose (SSD) volumes"},{_id: 0, price : 1}).toArray()[0];
-                        update = { Rate: value.price };
-                    options = { multi: true };
-                    mongoose.model('Billings').update(conditions, update, options, callback);
 
-                    function callback(err, numAffected) {
-                        console.log(numAffected)
+                    var pricingQuery = {
+                        TypeName: "Amazon EBS General Purpose (SSD) volumes"
                     };
+                    var billingQuery = {
+                        UsageType: {
+                            $regex: /EBS:VolumeUsage.gp2/
+                        },
+                        ItemDescription: {
+                            $regex: /free tier/
+                        }
+                    };
+                    updateBillingValues(pricingQuery, billingQuery);
                     break;
-                    //value.price should == 0.03
+
+                    //     //value.price should == 0.03
                 case (/TimedStorage-ByteHrs/.test(UsageType)):
                     console.log("matched /EBS:VolumeUsage.gp2/");
-                    conditions = {
-                        UsageType: { $regex: /TimedStorage-ByteHrs/ },
-                        ItemDescription: { $regex: /free tier/ }
-                    };
-                    value = db.pricing.find({boxType : "firstTBstorage"},{_id: 0, price : 1}).toArray()[0];
-                    update = { Rate: value.price };
-                    options = { multi: true };
-                    mongoose.model('Billings').update(conditions, update, options, callback);
 
-                    function callback(err, numAffected) {
-                        console.log(numAffected)
+                    var pricingQuery = {
+                        TierName: "firstTBstorage"
                     };
+                    var billingQuery = {
+                        UsageType: {
+                            $regex: /TimedStorage-ByteHrs/
+                        },
+                        ItemDescription: {
+                            $regex: /free tier/
+                        }
+                    };
+                    updateBillingValues(pricingQuery, billingQuery);
                     break;
-                    //difficulty finding corresponding JSON
-                    ////value.price should == .115
+
+                    //     ////value.price should == .115
                 case (/RDS:GP2-Storage/.test(UsageType)):
                     console.log("matched /EBS:VolumeUsage.gp2/");
-                    conditions = {
-                        UsageType: { $regex: /RDS:GP2-Storage/ },
-                        ItemDescription: { $regex: /free tier/ }
-                    };
-                    value = db.pricing.find({ProductName : "db.m1.small"},{_id: 0, price : 1}).toArray()[0];
-                    update = { Rate: value.price };
-                    options = { multi: true };
-                    mongoose.model('Billings').update(conditions, update, options, callback);
 
-                    function callback(err, numAffected) {
-                        console.log(numAffected)
+                    var pricingQuery = {
+                        TierName: "db.m1.small"
                     };
+                    var billingQuery = {
+                        UsageType: {
+                            $regex: /RDS:GP2-Storage/
+                        },
+                        ItemDescription: {
+                            $regex: /free tier/
+                        }
+                    };
+                    updateBillingValues(pricingQuery, billingQuery);
                     break;
-                default:
-                    console.log("No match");
-                    break;
+
+                case (/BoxUsage:t2.micro/.test(UsageType)): //BoxUsage is for EC2
+                    console.log("matched /BoxUsage:t2.micro/");
+                    if (/Windows/.test(ItemDescription)) {
+                        console.log("matched /Windows/");
+                        var pricingQuery = {
+                            InstanceSize: "t2.micro",
+                            OS: "mswin"
+                        };
+                        var billingQuery = {
+                            UsageType: {
+                                $regex: /t2.micro/
+                            },
+                            ItemDescription: {
+                                $regex: /Windows t2.micro/
+                            }
+                        };
+                        updateBillingValues(pricingQuery, billingQuery);
+
+                    } else if (/SUSE/.test(ItemDescription)) {
+                        console.log("matched /SUSE/")
+                        var pricingQuery = {
+                            InstanceSize: "t2.micro",
+                            OS: "sles"
+                        };
+                        var billingQuery = {
+                            UsageType: {
+                                $regex: /t2.micro/
+                            },
+                            ItemDescription: {
+                                $regex: /per SUSE Linux t2.micro/
+                            }
+                        };
+                        updateBillingValues(pricingQuery, billingQuery);
+
+                    } else if (/Linux/.test(ItemDescription)) {
+                        console.log("matched /Linux/")
+                        var pricingQuery = {
+                            InstanceSize: "t2.micro",
+                            OS: "linux"
+                        };
+                        var billingQuery = {
+                            UsageType: {
+                                $regex: /t2.micro/
+                            },
+                            ItemDescription: {
+                                $regex: /per Linux t2.micro/
+                            }
+                        };
+                        updateBillingValues(pricingQuery, billingQuery);
+                        break;
+                    } else if (/RHEL/.test(ItemDescription)) {
+                        console.log("matched /RHEL/")
+                        var pricingQuery = {
+                            InstanceSize: "t2.micro",
+                            OS: "rhel"
+                        };
+                        var billingQuery = {
+                            UsageType: {
+                                $regex: /t2.micro/
+                            },
+                            ItemDescription: {
+                                $regex: / RHEL t2.micro/
+                            }
+                        };
+                        updateBillingValues(pricingQuery, billingQuery);
+                        break;
+                    }
+
             }
-
         }
-        res.send("Done updating free tier rates");
+        // res.send("Done updating free tier rates");
     });
-};
+
+}

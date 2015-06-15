@@ -11,14 +11,17 @@ var region = 0; //us-east-1
 var compType = 0; //generalCompute
 var size = 0 //micro
 
-var boxTypeSchema = new Schema({
+var ServiceSchema = new Schema({
     ProductName : {type : String},
+
     OS : {type : String, default : null},// (pricingJSON.config.regions[region].instanceTypes[compType].sizes[size].valueColumns[0]['name']);
-    AvailabilityZone : {type : String, required : true}, // (pricingJSON.config.regions[region]['region']);
-    boxType : {type : String, required : true}, //(pricingJSON.config.regions[region].instanceTypes[compType].sizes[size]['size'])
-    prices : {type : Number, required : true},//(pricingJSON.config.regions[region].instanceTypes[compType].sizes[size].valueColumns[0].prices.USD);
-    date : {type: Date, default : Date()}, //Date field added for insert reference
-    storageType : { type : String}
+    Region : {type : String, required : true}, // (pricingJSON.config.regions[region]['region']);
+    TierName : { type : String},
+    InstanceSize : { type : String},
+    TypeName : {type : String, required : true}, //(pricingJSON.config.regions[region].instanceTypes[compType].sizes[size]['size'])
+    Price : {type : Number, required : true},//(pricingJSON.config.regions[region].instanceTypes[compType].sizes[size].valueColumns[0].prices.USD);
+    DateModified : {type: Date, default : Date()}, //Date field added for insert reference
+    StorageType : { type : String}
 });
 
 //ADD URLS as AMAZON CHANGES THIER protocols
@@ -37,18 +40,17 @@ var s3PricingURL = ['http://a0.awsstatic.com/pricing/1/s3/pricing-storage-s3.min
 var GP2PricingURL = 'http://a0.awsstatic.com/pricing/1/rds/oracle/pricing-li-standard-deployments.min.js'
 var EBSPricingURL = 'http://a0.awsstatic.com/pricing/1/ebs/pricing-ebs.min.js';
 //No Micro instances supported with EC2 optimized... 
-
 var dataPricingURL = 'http://a0.awsstatic.com/pricing/1/ec2/pricing-data-transfer-with-regions.min.js';
 
-exports.checkPricing = function (){
+exports.getPricing = function (){
     var db = mongoose.connection;
 
-    var usage = mongoose.model('pricing', boxTypeSchema);
+    var usage = mongoose.model('pricing', ServiceSchema);
     MongoClient.connect(databaseUrl, function(err, db) {
         if (err) {
-            console.log('Unable to connect to the mongoDB server. Error:', err);
+            console.log('Pricing -- Unable to connect to the mongoDB server. Error:', err);
         } else {
-            console.log('Connection established to ', databaseUrl);
+            console.log('Pricing --- Connection established to ', databaseUrl);
         }
         //Temp fix for duplicate pricing values in pricing collection
         db.collection("pricing").drop();
@@ -64,11 +66,11 @@ exports.checkPricing = function (){
                 //fix any "'s within json document
                 pricingJSON = JSON.parse(preprocessJSON(body));
                 var item = usage();
-                item.ProductName = 'Amazon Elastic Compute Cloud';      
+                // item.ProductName = 'Amazon Elastic Compute Cloud';      
                 item.OS = (pricingJSON.config.regions[region].instanceTypes[compType].sizes[size].valueColumns[0]['name']);
-                item.AvailabilityZone = (pricingJSON.config.regions[region]['region']);
-                item.boxType = (pricingJSON.config.regions[region].instanceTypes[compType].sizes[size]['size']);
-                item.prices = (pricingJSON.config.regions[region].instanceTypes[compType].sizes[size].valueColumns[0].prices.USD);
+                item.Region = (pricingJSON.config.regions[region]['region']);
+                item.InstanceSize = (pricingJSON.config.regions[region].instanceTypes[compType].sizes[size]['size']);
+                item.Price = (pricingJSON.config.regions[region].instanceTypes[compType].sizes[size].valueColumns[0].prices.USD);
                 // console.log(item);
                 db.collection("pricing").insert((item.toObject()));
             });
@@ -83,10 +85,10 @@ exports.checkPricing = function (){
             //fix any "'s within json document
             pricingJSON = JSON.parse(preprocessJSON(body));
             var item = usage();      
-                item.AvailabilityZone = (pricingJSON.config.regions[region]['region']);
+                item.Region = (pricingJSON.config.regions[region]['region']);
                 item.ProductName = "Amazon RDS Service";
-                item.boxType = (pricingJSON.config.regions[region].types[0].tiers[0].name);
-                item.prices = (pricingJSON.config.regions[region].types[0].tiers[0].prices.USD);
+                item.TierName = (pricingJSON.config.regions[region].types[0].tiers[0].name);
+                item.Price = (pricingJSON.config.regions[region].types[0].tiers[0].prices.USD);
                 db.collection("pricing").insert((item.toObject()));
                 // console.log(item);
             });
@@ -103,12 +105,12 @@ exports.checkPricing = function (){
                 pricingJSON = JSON.parse(preprocessJSON(body));
                 var item = usage();   
                 item.ProductName = 'Amazon Simple Storage Service';   
-                item.AvailabilityZone = (pricingJSON.config.regions[region]['region']);
+                item.Region = (pricingJSON.config.regions[region]['region']);
                 //firstTB
-                item.boxType = (pricingJSON.config.regions[region].tiers[0].name);
+                item.TierName = (pricingJSON.config.regions[region].tiers[0].name);
                 //General storage
-                item.storageType = (pricingJSON.config.regions[region].tiers[0].storageTypes[0].type);
-                item.prices = (pricingJSON.config.regions[region].tiers[0].storageTypes[0].prices.USD);;
+                item.StorageType = (pricingJSON.config.regions[region].tiers[0].storageTypes[0].type);
+                item.Price = (pricingJSON.config.regions[region].tiers[0].storageTypes[0].prices.USD);;
                 db.collection("pricing").insert((item.toObject()));
                 // console.log(item);
             });
@@ -123,13 +125,13 @@ exports.checkPricing = function (){
                 //fix any "'s within json document
                 pricingJSON = JSON.parse(preprocessJSON(body));
                 var item = usage();
-                item.AvailabilityZone = (pricingJSON.config.regions[region]['region']);
+                item.Region = (pricingJSON.config.regions[region]['region']);
                 //pretty sure the productName is correct
-                item.ProductName = pricingJSON.config.regions[region].types[1].name;
+                item.TypeName = pricingJSON.config.regions[region].types[1].name;
                 //2 == dataXferOutInternet;
                 //1 == upTo10TBout
-                item.boxType = (pricingJSON.config.regions[region].types[1].tiers[5].name);
-                item.prices = (pricingJSON.config.regions[region].types[1].tiers[5].prices.USD);
+                item.TierName = (pricingJSON.config.regions[region].types[1].tiers[5].name);
+                item.Price = (pricingJSON.config.regions[region].types[1].tiers[5].prices.USD);
                  
                 db.collection("pricing").insert((item.toObject()));
             });
@@ -145,11 +147,11 @@ exports.checkPricing = function (){
                 //fix any "'s within json document
                 pricingJSON = JSON.parse(preprocessJSON(body));
                 var item = usage();
-                item.AvailabilityZone = (pricingJSON.config.regions[region]['region']);
-            
-                item.ProductName = pricingJSON.config.regions[region].types[0].name;
+                item.Region = (pricingJSON.config.regions[region]['region']);
+                
+                item.TypeName = pricingJSON.config.regions[region].types[0].name;
                 // console.log(item.ProductName);
-                item.prices = pricingJSON.config.regions[region].types[0].values[0].prices.USD;
+                item.Price = pricingJSON.config.regions[region].types[0].values[0].prices.USD;
                 // console.log(item);
                 db.collection("pricing").insert((item.toObject()));
             });
@@ -165,10 +167,10 @@ exports.checkPricing = function (){
                 //fix any "'s within json document
                 pricingJSON = JSON.parse(preprocessJSON(body));
                 var item = usage();
-                item.AvailabilityZone = (pricingJSON.config.regions[region]['region']);
-                item.ProductName = pricingJSON.config.regions[region].tiers[0].name;
+                item.Region = (pricingJSON.config.regions[region]['region']);
+                item.TierName = pricingJSON.config.regions[region].tiers[0].name;
                 // console.log(item.ProductName);
-                item.prices = pricingJSON.config.regions[region].tiers[0].prices.USD;
+                item.Price = pricingJSON.config.regions[region].tiers[0].prices.USD;
                 // console.log(item);
                 db.collection("pricing").insert((item.toObject()));
             });
@@ -184,11 +186,11 @@ exports.checkPricing = function (){
                 //fix any "'s within json document
                 pricingJSON = JSON.parse(preprocessJSON(body));
                 var item = usage();
-                item.AvailabilityZone = (pricingJSON.config.regions[region]['region']);
+                item.Region = (pricingJSON.config.regions[region]['region']);
             
-                item.ProductName = pricingJSON.config.regions[region].tiers[3].name;
+                item.TierName = pricingJSON.config.regions[region].tiers[3].name;
                 // console.log(item.ProductName);
-                item.prices = pricingJSON.config.regions[region].tiers[3].prices.USD;
+                item.Price = pricingJSON.config.regions[region].tiers[3].prices.USD;
                 // console.log(item);
                 db.collection("pricing").insert((item.toObject()));
             });
@@ -204,11 +206,11 @@ exports.checkPricing = function (){
                 //fix any "'s within json document
                 pricingJSON = JSON.parse(preprocessJSON(body));
                 var item = usage();
-                item.AvailabilityZone = (pricingJSON.config.regions[region]['region']);
+                item.Region = (pricingJSON.config.regions[region]['region']);
             
-                item.ProductName = pricingJSON.config.regions[region].types[0].tiers[1].name;
+                item.TierName = pricingJSON.config.regions[region].types[0].tiers[1].name;
                 // console.log(item.ProductName);
-                item.prices = pricingJSON.config.regions[region].types[0].tiers[1].prices.USD;
+                item.Price = pricingJSON.config.regions[region].types[0].tiers[1].prices.USD;
                 // console.log(item);
                 db.collection("pricing").insert((item.toObject()));
             });
@@ -223,11 +225,11 @@ exports.checkPricing = function (){
                 //fix any "'s within json document
                 pricingJSON = JSON.parse(preprocessJSON(body));
                 var item = usage();
-                item.AvailabilityZone = (pricingJSON.config.regions[region]['region']);
-            
-                item.ProductName = pricingJSON.config.regions[region].types[2].tiers[1].name;
+                item.Region = (pricingJSON.config.regions[region]['region']);
+                item.TypeName = pricingJSON.config.regions[region].types[2].name;
+                item.TierName = pricingJSON.config.regions[region].types[2].tiers[1].name;
                 // console.log(item.ProductName);
-                item.prices = pricingJSON.config.regions[region].types[2].tiers[1].prices.USD;
+                item.Price = pricingJSON.config.regions[region].types[2].tiers[1].prices.USD;
                 // console.log(item);
                 db.collection("pricing").insert((item.toObject()));
             });
