@@ -11,16 +11,10 @@ var InstancesView = Backbone.View.extend({
         if (!this.model) {
             this.model = new InstancesModel();
         }
+        this.model.addEC2Instance();
 
-        var self = this;
-        self.interval = setInterval(function() {
-            self.model.addEC2Instance();
-        }, 1000 * 60 * 60);
-        this.cpuActivity = new CPUActivityView();
-        this.networkInActivity = new NetworkInActivityView();
-        this.networkOutActivity = new NetworkOutActivityView();
         this.billingActivity = new BillingView();
-
+        this.metricsActivity = new MetricsView();
         this.bindings();
         this.render();
 
@@ -42,15 +36,16 @@ var InstancesView = Backbone.View.extend({
                     // initialize zebra striping and column styling of the table
                 });
             });
+            this.metricsActivity.model.getMetrics(instanceCollection.at(0).get('instance'));
+            this.billingActivity.model.getBilling(instanceCollection.at(0).get('instance'));
+        }.bind(this));
 
-            this.cpuActivity.model.getCPUMetrics();
-            // console.log(cpuMetricCollection.pluck('instance'));
-
-            this.networkInActivity.model.getNetworkInMetrics();
-            this.networkOutActivity.model.getNetworkOutMetrics();
-
-            // this.billingActivity.model.getBilling();
-
+        this.$el.on("change", '.instanceDropDown', function(e) {
+            console.log( $('.instanceDropDown').val()); 
+            var selected = $('.instanceDropDown').val();
+            totalCostInstancesCollection.reset();
+            this.billingActivity.model.getBilling(selected); 
+            this.metricsActivity.model.getMetrics(selected);
 
         }.bind(this));
     },
@@ -60,11 +55,7 @@ var InstancesView = Backbone.View.extend({
             instances: instanceCollection.toJSON()
         });
         this.$el.html(html);
-        this.$el.append(this.cpuActivity.el);
-        this.$el.append(this.networkInActivity.el);
-        this.$el.append(this.networkOutActivity.el);
         this.$el.append(this.billingActivity.el);
+        this.$el.append(this.metricsActivity.el);
     }
-
-
 });

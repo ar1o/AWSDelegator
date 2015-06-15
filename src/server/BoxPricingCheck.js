@@ -2,7 +2,7 @@ var request = require("request");
 var fs=require("fs");
 var mongodb = require('mongodb');
 var MongoClient = mongodb.MongoClient;
-var databaseUrl = 'mongodb://localhost:27017/awsdb';
+var databaseUrl = 'mongodb://awsdelegator:dalhousie@ds045622.mongolab.com:45622/awsdelegator';
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 // mongoose.connect(databaseUrl);

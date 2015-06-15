@@ -1,48 +1,72 @@
 var BillingView = Backbone.View.extend({
-
     className: 'BillingView',
 
     initialize: function(options) {
-        console.log("HELLO THIS IS BILLINGVIEW")
+        
         if (!this.model) {
             this.model = new BillingsModel();
         }
-        this.bindings();
-        // this.render();
 
+        this.render();
+        this.bindings();
     },
 
-    //Check for when the data is read and renders the page
     bindings: function() {
-        console.log("THIS IS INSTANTIATED");
         this.model.change('dataReady', function(model, val) {
-            console.log("THE DATA IS READY TO BE RENDERED");
-                this.render();
+            this.render();
+            var date = new Date(totalCostInstancesCollection.at(0).get('date'));            
+            $(function () {
+                $('#billingcontainer').highcharts({
+                    chart: {
+                        zoomType: 'x'
+                    },
+                    title: {
+                        text: totalCostInstancesCollection.at(0).get('resourceId')+' Cost'
+                    },
+                    xAxis: {
+                        type: 'datetime',
+                        labels: {
+                            overflow: 'justify'
+                        }
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'USD'
+                        },
+                        min: 0,
+                        minorGridLineWidth: 0,
+                        gridLineWidth: 0,
+                        alternateGridColor: null,                        
+                    },
+                    tooltip: {
+                        valueSuffix: ' m/s'
+                    },
+                    legend: {
+                        enabled: false
+                    },
+                    series: [{
+                        name: 'Cost',
+                        pointInterval: 3600 * 1000,
+                        pointStart: Date.UTC(date.getYear(), date.getMonth(), date.getDate()),
+                        data: totalCostInstancesCollection.pluck('cost')
 
-            $(function() {
-                // call the tablesorter plugin 
-                $.tablesorter.defaults.sortList = [
-                    [4, 0]
-                ];
-                $.tablesorter.defaults.widgets = ['zebra'];
-                $("#BillingTable").tablesorter({
-
-                    // header layout template; {icon} needed for some themes
-                    headerTemplate: '{content}{icon}',
-                    // initialize zebra striping and column styling of the table
+                    }],
+                    navigation: {
+                        menuItemStyle: {
+                            fontSize: '10px'
+                        }
+                    }
                 });
-
             });
         }.bind(this));
-
     },
 
     render: function() {
         var html = Handlebars.templates.BillingView({
-            billing: totalCostInstancesCollection.toJSON()
+            billing: totalCostInstancesCollection.toJSON(),
         });
         this.$el.html(html);
     }
 
 
-}); 
+});

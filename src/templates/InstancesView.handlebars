@@ -1,5 +1,5 @@
 
-<div id="EC2">
+<div id="EC2Instances">
 	<table id="InstanceTable" class="tablesorter-metro" cellspacing="1">
 		<thead>
 			<tr class="dark-row">
@@ -34,6 +34,9 @@
 				<th class="tablesorter-header" data-column="8">
 					Volume ID
 				</th>
+				<th class="tablesorter-header" data-column="8">
+					LastActiveTime
+				</th>
 			</tr>
 		</thead>
 		<tbody id="instanceData">
@@ -49,9 +52,18 @@
 				<td>{{this.duration}} sec</td>
 				<td>{{this.email}}</td>
 				<td>{{this.volumeid}}</td>
+				<td>{{this.lastActiveTime}}</td>
 			</tr>
 		{{/each}}
 		</tbody>	
 	</table>
 
 </div>
+<div class="options">
+EC2 Instance:
+<select class="instanceDropDown">
+{{#each instances}}
+<option value="{{this.instance}}">{{this.instance}}</option>
+{{/each}}
+
+ </div>

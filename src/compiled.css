@@ -44,6 +44,9 @@ table.tablesorter thead tr .headerSortUp {
   height: 100%;
   width: 100%;
 }
+.InstancesView {
+  align-self: center;
+}
 #EC2 {
   width: auto;
   padding: 10px;
@@ -60,19 +63,35 @@ table.tablesorter thead tr .headerSortUp {
   float: left;
   padding: 10px;
 }
-#Billing {
-  float: left;
+.BillingView {
+  width: 500px;
   padding: 10px;
 }
 th,
 td {
   overflow: hidden;
 }
-#time {
-  width: 150px;
+.options {
+  top: 55%;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
 }
-body {
-  font-family: 'Roboto', sans-serif;
+.MetricsView {
+  postions: absolute;
+  width: 700px;
+  padding: 10px;
+}
+#cpuContainer {
+  float: left;
+}
+#networkContainer {
+  float: left;
+}
+th,
+td {
+  overflow: hidden;
 }
 .ts-align-wrap {
   white-space: nowrap;
@@ -377,4 +396,13 @@ Test out these custom less files live
   text-align: center;
   cursor: pointer;
   background-color: #e6bf99;
+}
+body {
+  font-family: 'Roboto', sans-serif;
+}
+.chart {
+  height: 200px;
+}
+.spacer {
+  height: 20px;
 }
