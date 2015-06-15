@@ -3,15 +3,12 @@
 */
 var fs = require("fs");
 var adm = require('adm-zip');
-<<<<<<< HEAD:src/server/s3Watch.js
 
-var parser = require('./Parse/billingParse');
+var parser = require('../Parse/billingParse');
 
-=======
 var billingParser = require('../Parse/billingParse');
 var instanceParser = require('../Parse/instanceParse');
 var metricsParser = require('../Parse/metricsParse');
->>>>>>> 014a7a05495f1d8ecd75447f8b210e1c9970d3f5:src/server/Watch/s3Watch.js
 var okey;
 var params = {
     //fix the bucket name to be flexible.
