@@ -190,7 +190,7 @@ Test out these custom less files live
    or just replace (!".@{theme}") with the contents of @theme
 */
 .tablesorter-metro {
-  font: 14px 'Segoe UI Semilight', 'Open Sans', Verdana, Arial, Helvetica, sans-serif;
+  font: Roboto;
   background-color: #cdcdcd;
   margin: 10px 0 15px;
   width: 100%;
@@ -221,7 +221,7 @@ Test out these custom less files live
 }
 .tablesorter-metro th,
 .tablesorter-metro thead td {
-  font: 14px 'Segoe UI Semilight', 'Open Sans', Verdana, Arial, Helvetica, sans-serif;
+  font: 14px 'Segoe UI Semilight', 'Open Sans', Roboto;
   font-weight: bold;
   background-color: #5f3cb9;
   color: #eeeeee;
