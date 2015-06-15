@@ -9,8 +9,9 @@ var databaseUrl = 'mongodb://localhost:27017/awsdb';
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 //Retrieve the proper pricing values
-var pricingData = require('./BoxPricingCheck');
-pricingData.getPricing();
+
+// var pricingData = require('./BoxPricingCheck');
+// pricingData.getPricing();
 
 
 var billingSchema = new mongoose.Schema({
@@ -28,61 +29,39 @@ var billingSchema = new mongoose.Schema({
     NonFreeRate: Number
 
 });
-var nModified = 0;
-var ProductSchema = new Schema({
-    ProductName: {
-        type: String
-    },
-    OS: {
-        type: String,
-        default: null
-    }, // (pricingJSON.config.regions[region].instanceTypes[compType].sizes[size].valueColumns[0]['name']);
-    AvailabilityZone: {
-        type: String,
-        required: true
-    }, // (pricingJSON.config.regions[region]['region']);
-    tierName: {
-        type: String,
-        required: true
-    }, //(pricingJSON.config.regions[region].instanceTypes[compType].sizes[size]['size'])
-    typeName: {
-        type: String
-    },
-    prices: {
-        type: Number,
-        required: true
-    }, //(pricingJSON.config.regions[region].instanceTypes[compType].sizes[size].valueColumns[0].prices.USD);
-    date: {
-        type: Date,
-        default: Date()
-    }, //Date field added for insert reference
-    storageType: {
-        type: String
-    }
-});
+var ServiceSchema = new Schema({
+    ProductName : {type : String},
 
+    OS : {type : String, default : null},// (pricingJSON.config.regions[region].instanceTypes[compType].sizes[size].valueColumns[0]['name']);
+    Region : {type : String, required : true}, // (pricingJSON.config.regions[region]['region']);
+    TierName : { type : String},
+    InstanceSize : { type : String},
+    TypeName : {type : String, required : true}, //(pricingJSON.config.regions[region].instanceTypes[compType].sizes[size]['size'])
+    Price : {type : Number, required : true},//(pricingJSON.config.regions[region].instanceTypes[compType].sizes[size].valueColumns[0].prices.USD);
+    DateModified : {type: Date, default : Date()}, //Date field added for insert reference
+    StorageType : { type : String}
+});
+// 
 var billingModel = mongoose.model('billingModel', billingSchema, 'bills201506');
-var pricingModel = mongoose.model('pricingModel', ProductSchema, 'pricing');
+// var pricingModel = mongoose.model('pricingModel', ServiceSchema, 'pricing');
 // console.log(pricingModel.find({}));
 
 var updateBillingValues = function(pricingQuery, billingQuery, callback) {
     var pricingScope = {_id:0, Price : 1};
-    pricingModel.find(pricingQuery, pricingScope).exec(function(err, price) {
+    pricingModel.findOne(pricingQuery, pricingScope).exec(function(err, price) {
         
         if (err) {
             throw err;
         } else {
+            // console.log(price);
             billingModel.find(billingQuery).exec(function(e, d) {
                 if (e) {
                     throw e;
                 } else {
-                    // console.log(pricingQuery);
-                var priceString = price[0].toString();
-                var nonFreeRate = parseFloat(priceString.substring(priceString.indexOf(':')+2,priceString.length-2));
-                console.log(typeof price[0], price[0]);
+                    // console.log(price);
                     for (var i in d) {
 
-                        // console.log(d);
+
                         var m = new billingModel({
                             
                             _id: d[i]._id,
@@ -96,7 +75,7 @@ var updateBillingValues = function(pricingQuery, billingQuery, callback) {
                             ItemDescription: d[i].ItemDescription,
                             UsageQuantity: d[i].UsageQuantity,
                             RateId: d[i].RateId,
-                            NonFreeRate: nonFreeRate
+                            NonFreeRate: price.Price
                         });
                         // console.log("Document set " + d[i].ProductName + " updated.");
                         //Switch over to rate IDs for billing queries at some point.
@@ -156,7 +135,7 @@ exports.freeTier = function(req, res) {
             switch (true) {
                 // //value == .09
                 case (/DataTransfer-Out-Bytes/.test(UsageType)):
-                    console.log("matched /DataTransfer-Out-Bytes/");
+                    //console.log("matched /DataTransfer-Out-Bytes/");
                     var pricingQuery = {
                         TierName: 'upTo10TBout'
                     };
@@ -174,7 +153,7 @@ exports.freeTier = function(req, res) {
 
                     //     //value.price should == .02
                 case (/DataTransfer-Regional-Bytes/.test(UsageType)):
-                    console.log("matched /DataTransfer-Regional-Bytes/");
+                    //console.log("matched /DataTransfer-Regional-Bytes/");
 
 
                     var pricingQuery = {
@@ -194,7 +173,7 @@ exports.freeTier = function(req, res) {
                     //     //value.price should == 0.02 
                     //     //http://a0.awsstatic.com/pricing/1/ec2/pricing-data-transfer-with-regions.min.js
                 case (/AWS-Out-Bytes/.test(UsageType)):
-                    console.log("matched /AWS-Out-Bytes/");
+                    //console.log("matched /AWS-Out-Bytes/");
                     var pricingQuery = {
                         TierName: "crossRegion",
                         TypeName: "dataXferOutEC2"
@@ -215,7 +194,7 @@ exports.freeTier = function(req, res) {
                     //value.price should == 0.017
 
                 case (/InstanceUsage:db.t2.micro/.test(UsageType)): //InstanceUsage is for RDS
-                    console.log("matched /InstanceUsage:db.t2.micro/");
+                    //console.log("matched /InstanceUsage:db.t2.micro/");
 
                     var pricingQuery = {
                         TierName: "db.t2.micro"
@@ -234,7 +213,7 @@ exports.freeTier = function(req, res) {
                     //     //Mongo Queries have been completed up to this point. BoxPricingCheck does not have EBS functionality
                     //     //value.price should == .005
                 case (/Requests-Tier1/.test(UsageType)):
-                    console.log("matched /Request-Tier1/");
+                    //console.log("matched /Request-Tier1/");
 
                     var pricingQuery = {
                         TierName: "putcopypost"
@@ -252,7 +231,7 @@ exports.freeTier = function(req, res) {
 
                     //     //value.price should == 0.004
                 case (/Requests-Tier2/.test(UsageType)):
-                    console.log("matched /Request-Tier2/");
+                    //console.log("matched /Request-Tier2/");
                     var pricingQuery = {
                         TierName: "getEtc"
                     };
@@ -269,7 +248,7 @@ exports.freeTier = function(req, res) {
 
                     //     //value.price should == .1
                 case (/EBS:VolumeUsage.gp2/.test(UsageType)):
-                    console.log("matched /EBS:VolumeUsage.gp2/");
+                    //console.log("matched /EBS:VolumeUsage.gp2/");
 
                     var pricingQuery = {
                         TypeName: "Amazon EBS General Purpose (SSD) volumes"
@@ -287,7 +266,7 @@ exports.freeTier = function(req, res) {
 
                     //     //value.price should == 0.03
                 case (/TimedStorage-ByteHrs/.test(UsageType)):
-                    console.log("matched /EBS:VolumeUsage.gp2/");
+                    //console.log("matched /EBS:VolumeUsage.gp2/");
 
                     var pricingQuery = {
                         TierName: "firstTBstorage"
@@ -305,7 +284,7 @@ exports.freeTier = function(req, res) {
 
                     //     ////value.price should == .115
                 case (/RDS:GP2-Storage/.test(UsageType)):
-                    console.log("matched /EBS:VolumeUsage.gp2/");
+                    //console.log("matched /EBS:VolumeUsage.gp2/");
 
                     var pricingQuery = {
                         TierName: "db.m1.small"
@@ -322,9 +301,9 @@ exports.freeTier = function(req, res) {
                     break;
 
                 case (/BoxUsage:t2.micro/.test(UsageType)): //BoxUsage is for EC2
-                    console.log("matched /BoxUsage:t2.micro/");
+                    //console.log("matched /BoxUsage:t2.micro/");
                     if (/Windows/.test(ItemDescription)) {
-                        console.log("matched /Windows/");
+                        //console.log("matched /Windows/");
                         var pricingQuery = {
                             InstanceSize: "t2.micro",
                             OS: "mswin"
@@ -340,7 +319,7 @@ exports.freeTier = function(req, res) {
                         updateBillingValues(pricingQuery, billingQuery);
 
                     } else if (/SUSE/.test(ItemDescription)) {
-                        console.log("matched /SUSE/")
+                        //console.log("matched /SUSE/")
                         var pricingQuery = {
                             InstanceSize: "t2.micro",
                             OS: "sles"
@@ -356,7 +335,7 @@ exports.freeTier = function(req, res) {
                         updateBillingValues(pricingQuery, billingQuery);
 
                     } else if (/Linux/.test(ItemDescription)) {
-                        console.log("matched /Linux/")
+                        //console.log("matched /Linux/")
                         var pricingQuery = {
                             InstanceSize: "t2.micro",
                             OS: "linux"
@@ -372,7 +351,7 @@ exports.freeTier = function(req, res) {
                         updateBillingValues(pricingQuery, billingQuery);
                         break;
                     } else if (/RHEL/.test(ItemDescription)) {
-                        console.log("matched /RHEL/")
+                        //console.log("matched /RHEL/")
                         var pricingQuery = {
                             InstanceSize: "t2.micro",
                             OS: "rhel"
