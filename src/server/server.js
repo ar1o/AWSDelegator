@@ -26,6 +26,9 @@ app.use(require('./CORS'));
 //S3 bucket connection
 currentCollection = "";
 var s3 = require('./Watch/s3Watch');
+var freeTier = require('./FreeTier');
+var boxPricing = require('./BoxPricingCheck');
+boxPricing.getPricing();
 
 // Start mongoose and mongo
 mongoose.connect(databaseUrl, function(error) {
@@ -78,8 +81,9 @@ db.on("open", function() {
     //TODO:
     // var pricingSchema = new mongoose.Schema({})
 
-
+    freeTier.freeTier();
     s3.s3Connect(function() {
+
         var latestTime = mongoose.model('currentCollection', latestSchema, 'latest');
         mongoose.model('currentCollection').find([{}]).exec(function(e, d) {
             currentCollection = "bills" + d[0].time.substring(0, 7).replace(/-/, "");

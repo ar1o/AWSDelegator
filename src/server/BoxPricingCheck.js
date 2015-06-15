@@ -2,7 +2,7 @@ var request = require("request");
 var fs=require("fs");
 var mongodb = require('mongodb');
 var MongoClient = mongodb.MongoClient;
-var databaseUrl = 'mongodb://awsdelegator:dalhousie@ds045622.mongolab.com:45622/awsdelegator';
+var databaseUrl = 'mongodb://localhost:27017/awsdb';
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 // mongoose.connect(databaseUrl);
@@ -65,18 +65,24 @@ exports.getPricing = function (){
                 body=body.substring(body.indexOf("callback")+9,body.length-2);
                 //fix any "'s within json document
                 pricingJSON = JSON.parse(preprocessJSON(body));
-                var item = usage();
-                // item.ProductName = 'Amazon Elastic Compute Cloud';      
+                var item = usage();     
                 item.OS = (pricingJSON.config.regions[region].instanceTypes[compType].sizes[size].valueColumns[0]['name']);
                 item.Region = (pricingJSON.config.regions[region]['region']);
                 item.InstanceSize = (pricingJSON.config.regions[region].instanceTypes[compType].sizes[size]['size']);
                 item.Price = (pricingJSON.config.regions[region].instanceTypes[compType].sizes[size].valueColumns[0].prices.USD);
+                item._id = mongoose.model("pricing").findOne({InstanceSize : item.InstanceSize, OS : item.OS});
+                if(item._id != undefined){
+                    db.collection("pricing").insert((item.toObject()));
+                }
+                else{
+                    db.collection("pricing").insert(item.toObject(), {upsert : true});    
+                } 
                 // console.log(item);
-                db.collection("pricing").insert((item.toObject()));
+                
             });
         }
             //rdsPricingLoop GOOD
-           request({
+        request({
             uri: rdsPricingURL
         }, 
         function(error, response, body) {
@@ -235,6 +241,7 @@ exports.getPricing = function (){
             });
 
         });
+    
     }
 
 function preprocessJSON(str) {
