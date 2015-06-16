@@ -1,3 +1,18 @@
+billingSchema = new mongoose.Schema({
+        _id: mongoose.Schema.ObjectId,
+        ProductName: String,
+        Cost: Number,
+        ResourceId: String,
+        UsageStartDate: String,
+        "user:Volume Id": String,
+        Rate: Number,
+        UsageType: String,
+        ItemDescription: String,
+        UsageQuantity: Number,
+        RateId: Number,
+        NonFreeRate : Number
+
+    });
 var InstanceTotalCostCollection = Backbone.Collection.extend({
 	model: BillingModel,
 	initialize: function() {
@@ -25,7 +40,7 @@ var BillingsModel = Backbone.Model.extend({
 
 		(function(params) {
 			$.get(host + '/api/billing/instanceCostAll', params, function(result) {
-				console.log("billing",result);
+				console.log("billing ",result);
 				for (var i in result) {
 					var data = new BillingModel({
 						resourceId: result[i].resourceId,

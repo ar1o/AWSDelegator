@@ -1,6 +1,4 @@
-//Query and update FREE TIER billing and update associated cost rates
 
-//*Karl* -- Would it be better to instead do an upsert on each document to a new attribute?
 var request = require("request");
 var fs = require("fs");
 var mongodb = require('mongodb');
@@ -8,11 +6,6 @@ var MongoClient = mongodb.MongoClient;
 var databaseUrl = 'mongodb://localhost:27017/awsdb';
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-//Retrieve the proper pricing values
-
-// var pricingData = require('./BoxPricingCheck');
-// pricingData.getPricing();
-
 
 var billingSchema = new mongoose.Schema({
     _id: mongoose.Schema.ObjectId,
@@ -29,41 +22,22 @@ var billingSchema = new mongoose.Schema({
     NonFreeRate: Number
 
 });
-var ServiceSchema = new Schema({
-    ProductName : {type : String},
-
-    OS : {type : String, default : null},// (pricingJSON.config.regions[region].instanceTypes[compType].sizes[size].valueColumns[0]['name']);
-    Region : {type : String, required : true}, // (pricingJSON.config.regions[region]['region']);
-    TierName : { type : String},
-    InstanceSize : { type : String},
-    TypeName : {type : String, required : true}, //(pricingJSON.config.regions[region].instanceTypes[compType].sizes[size]['size'])
-    Price : {type : Number, required : true},//(pricingJSON.config.regions[region].instanceTypes[compType].sizes[size].valueColumns[0].prices.USD);
-    DateModified : {type: Date, default : Date()}, //Date field added for insert reference
-    StorageType : { type : String}
-});
 // 
 var billingModel = mongoose.model('billingModel', billingSchema, 'bills201506');
 // var pricingModel = mongoose.model('pricingModel', ServiceSchema, 'pricing');
-// console.log(pricingModel.find({}));
 
 var updateBillingValues = function(pricingQuery, billingQuery, callback) {
     var pricingScope = {_id:0, Price : 1};
     pricingModel.findOne(pricingQuery, pricingScope).exec(function(err, price) {
-        
         if (err) {
             throw err;
         } else {
-            // console.log(price);
             billingModel.find(billingQuery).exec(function(e, d) {
                 if (e) {
                     throw e;
                 } else {
-                    // console.log(price);
                     for (var i in d) {
-
-
                         var m = new billingModel({
-                            
                             _id: d[i]._id,
                             ProductName: d[i].ProductName,
                             Cost: d[i].Cost,
@@ -77,7 +51,6 @@ var updateBillingValues = function(pricingQuery, billingQuery, callback) {
                             RateId: d[i].RateId,
                             NonFreeRate: price.Price
                         });
-                        // console.log("Document set " + d[i].ProductName + " updated.");
                         //Switch over to rate IDs for billing queries at some point.
                         var upsertData = m.toObject();
                         billingModel.update({
@@ -89,7 +62,6 @@ var updateBillingValues = function(pricingQuery, billingQuery, callback) {
                             if (err) {
                                 throw err;
                             } else {
-                                //console.log(op);
                             }
                         });
                     }
@@ -98,39 +70,29 @@ var updateBillingValues = function(pricingQuery, billingQuery, callback) {
         }
     });
 }
-
 exports.freeTier = function(req, res) {
     var db = mongoose.connection;
     billingModel.aggregate({
         $match: {
-            ItemDescription: {
-                $regex: /free tier/
-            }
+            ItemDescription: {$regex: /free tier/}
         }
     }, {
         $group: {
             _id: "$RateId",
-            ItemDescription: {
-                $addToSet: "$ItemDescription"
-            },
-            UsageType: {
-                $addToSet: "$UsageType"
-            }
+            ItemDescription: {$addToSet: "$ItemDescription"},
+            UsageType: {$addToSet: "$UsageType"}
         }
     }).exec(function(e, d) {
         if (e) {
             console.error(e.message);
             console.error(e.stack);
         }
-        // console.log(d);
         var conditions;
         var update;
         var options;
         for (var r in d) {
-
             var UsageType = d[r].UsageType[0];
             var ItemDescription = d[r].ItemDescription[0];
-            // console.log(UsageType + "\t" + ItemDescription);
 
             switch (true) {
                 // //value == .09
@@ -140,12 +102,8 @@ exports.freeTier = function(req, res) {
                         TierName: 'upTo10TBout'
                     };
                     var billingQuery = {
-                        UsageType: {
-                            $regex: /DataTransfer-Out-Bytes/
-                        },
-                        ItemDescription: {
-                            $regex: /free tier/
-                        }
+                        UsageType: {$regex: /DataTransfer-Out-Bytes/},
+                        ItemDescription: {$regex: /free tier/}
                     };
                     updateBillingValues(pricingQuery, billingQuery);
 
@@ -161,12 +119,8 @@ exports.freeTier = function(req, res) {
                         TypeName: "dataXferOutEC2"
                     };
                     var billingQuery = {
-                        UsageType: {
-                            $regex: /DataTransfer-Regional-Bytes/
-                        },
-                        ItemDescription: {
-                            $regex: /free tier/
-                        }
+                        UsageType: {$regex: /DataTransfer-Regional-Bytes/},
+                        ItemDescription: {$regex: /free tier/}
                     };
                     updateBillingValues(pricingQuery, billingQuery);
                     break;
@@ -179,12 +133,8 @@ exports.freeTier = function(req, res) {
                         TypeName: "dataXferOutEC2"
                     };
                     var billingQuery = {
-                        UsageType: {
-                            $regex: 'AWS-Out-Bytes'
-                        },
-                        ItemDescription: {
-                            $regex: /free tier/
-                        }
+                        UsageType: {$regex: 'AWS-Out-Bytes'},
+                        ItemDescription: {$regex: /free tier/}
                     };
                     updateBillingValues(pricingQuery, billingQuery, function(){
                         console.log("Updated AWS-Out-Bytes values");
@@ -200,12 +150,8 @@ exports.freeTier = function(req, res) {
                         TierName: "db.t2.micro"
                     };
                     var billingQuery = {
-                        UsageType: {
-                            $regex: /InstanceUsage:db.t2.micro/
-                        },
-                        ItemDescription: {
-                            $regex: /free tier/
-                        }
+                        UsageType: {$regex: /InstanceUsage:db.t2.micro/},
+                        ItemDescription: {$regex: /free tier/}
                     };
                     updateBillingValues(pricingQuery, billingQuery);
                     break;
@@ -219,12 +165,8 @@ exports.freeTier = function(req, res) {
                         TierName: "putcopypost"
                     };
                     var billingQuery = {
-                        UsageType: {
-                            $regex: /Requests-Tier1/
-                        },
-                        ItemDescription: {
-                            $regex: /free tier/
-                        }
+                        UsageType: {$regex: /Requests-Tier1/},
+                        ItemDescription: {$regex: /free tier/}
                     };
                     updateBillingValues(pricingQuery, billingQuery);
                     break;
@@ -236,12 +178,8 @@ exports.freeTier = function(req, res) {
                         TierName: "getEtc"
                     };
                     var billingQuery = {
-                        UsageType: {
-                            $regex: /Requests-Tier2/
-                        },
-                        ItemDescription: {
-                            $regex: /free tier/
-                        }
+                        UsageType: {$regex: /Requests-Tier2/},
+                        ItemDescription: {$regex: /free tier/}
                     };
                     updateBillingValues(pricingQuery, billingQuery);
                     break;
@@ -254,12 +192,8 @@ exports.freeTier = function(req, res) {
                         TypeName: "Amazon EBS General Purpose (SSD) volumes"
                     };
                     var billingQuery = {
-                        UsageType: {
-                            $regex: /EBS:VolumeUsage.gp2/
-                        },
-                        ItemDescription: {
-                            $regex: /free tier/
-                        }
+                        UsageType: { $regex: /EBS:VolumeUsage.gp2/},
+                        ItemDescription: {$regex: /free tier/}
                     };
                     updateBillingValues(pricingQuery, billingQuery);
                     break;
@@ -272,12 +206,8 @@ exports.freeTier = function(req, res) {
                         TierName: "firstTBstorage"
                     };
                     var billingQuery = {
-                        UsageType: {
-                            $regex: /TimedStorage-ByteHrs/
-                        },
-                        ItemDescription: {
-                            $regex: /free tier/
-                        }
+                        UsageType: {$regex: /TimedStorage-ByteHrs/},
+                        ItemDescription: {$regex: /free tier/}
                     };
                     updateBillingValues(pricingQuery, billingQuery);
                     break;
@@ -290,12 +220,8 @@ exports.freeTier = function(req, res) {
                         TierName: "db.m1.small"
                     };
                     var billingQuery = {
-                        UsageType: {
-                            $regex: /RDS:GP2-Storage/
-                        },
-                        ItemDescription: {
-                            $regex: /free tier/
-                        }
+                        UsageType: {$regex: /RDS:GP2-Storage/},
+                        ItemDescription: {$regex: /free tier/}
                     };
                     updateBillingValues(pricingQuery, billingQuery);
                     break;
@@ -309,12 +235,8 @@ exports.freeTier = function(req, res) {
                             OS: "mswin"
                         };
                         var billingQuery = {
-                            UsageType: {
-                                $regex: /t2.micro/
-                            },
-                            ItemDescription: {
-                                $regex: /Windows t2.micro/
-                            }
+                            UsageType: {$regex: /t2.micro/},
+                            ItemDescription: {$regex: /Windows t2.micro/}
                         };
                         updateBillingValues(pricingQuery, billingQuery);
 
@@ -325,12 +247,8 @@ exports.freeTier = function(req, res) {
                             OS: "sles"
                         };
                         var billingQuery = {
-                            UsageType: {
-                                $regex: /t2.micro/
-                            },
-                            ItemDescription: {
-                                $regex: /per SUSE Linux t2.micro/
-                            }
+                            UsageType: {$regex: /t2.micro/},
+                            ItemDescription: {$regex: /per SUSE Linux t2.micro/}
                         };
                         updateBillingValues(pricingQuery, billingQuery);
 
@@ -340,13 +258,8 @@ exports.freeTier = function(req, res) {
                             InstanceSize: "t2.micro",
                             OS: "linux"
                         };
-                        var billingQuery = {
-                            UsageType: {
-                                $regex: /t2.micro/
-                            },
-                            ItemDescription: {
-                                $regex: /per Linux t2.micro/
-                            }
+                        var billingQuery = {UsageType: {$regex: /t2.micro/},
+                            ItemDescription: {$regex: /per Linux t2.micro/}
                         };
                         updateBillingValues(pricingQuery, billingQuery);
                         break;
@@ -357,20 +270,14 @@ exports.freeTier = function(req, res) {
                             OS: "rhel"
                         };
                         var billingQuery = {
-                            UsageType: {
-                                $regex: /t2.micro/
-                            },
-                            ItemDescription: {
-                                $regex: / RHEL t2.micro/
-                            }
+                            UsageType: {$regex: /t2.micro/},
+                            ItemDescription: {$regex: / RHEL t2.micro/}
                         };
                         updateBillingValues(pricingQuery, billingQuery);
                         break;
                     }
-
             }
         }
-        // res.send("Done updating free tier rates");
+         // res.send("Done updating free tier rates");
     });
-
 }
