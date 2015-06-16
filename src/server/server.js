@@ -92,7 +92,6 @@ db.on("open", function() {
     //Pricing data check
     pricingModel.find([{}]).exec(function(e, d){
         if(e) throw e;
-        console.log(d.length);
         if(d.length==0){
             console.log("Pricing collection Not created yet");
             console.log("Getting values")
@@ -108,7 +107,7 @@ db.on("open", function() {
             console.log("SOMETHING WRONG WITH PRICING DATA");
         }
         if(d.length==13){
-            console.log("Pricing collection already created, and appears normal!");
+            console.log("13 Pricing docs. Pricing collection already created.");
             freeTier.freeTier();
         }
     });

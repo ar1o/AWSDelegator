@@ -49,7 +49,8 @@ exports.parseMetrics = function(masterCallback) {
 				params.MetricName = 'NetworkIn';
 				params.Unit = 'Bytes';				
 				cloudwatch.getMetricStatistics(params, function(err, data) {
-					if(err) throw err;	
+					if(err) throw err;
+					console.log(data.Datapoints[0].Average);
 					doc.NetworkIn = data.Datapoints[0].Average;
 					params.MetricName = 'NetworkOut'
 					cloudwatch.getMetricStatistics(params, function(err, data) {

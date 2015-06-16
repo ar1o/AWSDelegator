@@ -24,6 +24,7 @@ var BillingView = Backbone.View.extend({
                         text: totalCostInstancesCollection.at(0).get('resourceId')+' Cost'
                     },
                     xAxis: {
+                        title : {text : "Time"},
                         type: 'datetime',
                         labels: {
                             overflow: 'justify'
@@ -31,7 +32,7 @@ var BillingView = Backbone.View.extend({
                     },
                     yAxis: {
                         title: {
-                            text: 'USD'
+                            text: 'Price (USD)'
                         },
                         min: 0,
                         minorGridLineWidth: 0,
@@ -39,7 +40,7 @@ var BillingView = Backbone.View.extend({
                         alternateGridColor: null,                        
                     },
                     tooltip: {
-                        valueSuffix: ' m/s'
+                        valueSuffix: '$/Hour'
                     },
                     legend: {
                         enabled: false
@@ -53,6 +54,7 @@ var BillingView = Backbone.View.extend({
                     }],
                     navigation: {
                         menuItemStyle: {
+                            fontType : 'Roboto',
                             fontSize: '10px'
                         }
                     }
