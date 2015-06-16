@@ -61,10 +61,10 @@ db.on("open", function() {
         Type: String,
         LaunchTime: String,
         Zone: String,
-        Lifetime: String,
+        Lifetime: Number,
         LastActiveTime: String,
         Email: String,
-        VolumeId: String
+        VolumeId: Array
     });
     var ec2metricsSchema = new mongoose.Schema({
         InstanceId: String,
@@ -73,7 +73,8 @@ db.on("open", function() {
         CPUUtilization: Number,
         Time: String
     });    
-
+    var Instances = mongoose.model('Instances', instanceSchema, 'instances');
+    var Ec2Metrics = mongoose.model('Ec2Metrics', ec2metricsSchema, 'ec2metrics');
     s3.s3Connect(function() {
         var latestTime = mongoose.model('currentCollection', latestSchema, 'latest');
         mongoose.model('currentCollection').find([{}]).exec(function(e, d) {
@@ -81,8 +82,6 @@ db.on("open", function() {
         var Billings = mongoose.model('Billings', billingSchema, currentCollection);
         });
     });
-    var Instances = mongoose.model('Instances', instanceSchema, 'instances');    
-    var Ec2Metrics = mongoose.model('Ec2Metrics', ec2metricsSchema, 'ec2metrics');    
 });
 
 if (!fs.existsSync(process.cwd() + '/data')) {
