@@ -34,7 +34,6 @@ exports.parseMetrics = function(masterCallback) {
 			}
 			var iterator = function(instance, callback) {
 				var instanceRegion = runningInstances[iteratorIndex].Zone;
-				console.log(runningInstances[iteratorIndex].VolumeId);
 				AWS.config.region = instanceRegion.substring(0,instanceRegion.length-1);
 				var cloudwatch = new AWS.CloudWatch();
 				var doc = {
@@ -51,7 +50,6 @@ exports.parseMetrics = function(masterCallback) {
 				params.Unit = 'Bytes';				
 				cloudwatch.getMetricStatistics(params, function(err, data) {
 					if(err) throw err;
-					console.log(data.Datapoints[0].Average);
 					doc.NetworkIn = data.Datapoints[0].Average;
 					params.MetricName = 'NetworkOut'
 					cloudwatch.getMetricStatistics(params, function(err, data) {
