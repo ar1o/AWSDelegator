@@ -25,7 +25,6 @@ var BillingsModel = Backbone.Model.extend({
 
 		(function(params) {
 			$.get(host + '/api/billing/instanceCostAll', params, function(result) {
-				console.log("billing ",result);
 				for (var i in result) {
 					var data = new BillingModel({
 						resourceId: result[i].resourceId,

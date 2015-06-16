@@ -23,7 +23,7 @@ mongo = require('mongodb');
 app.use(require('./CORS'));
 //S3 bucket connection
 currentCollection = "";
-var s3 = require('./Watch/s3Watch');
+var s3 = require('./parse/scheduler');
 var freeTier = require('./FreeTier');
 var boxPricing = require('./BoxPricingCheck');
 
@@ -127,21 +127,21 @@ if (!fs.existsSync(process.cwd() + '/data')) {
     fs.mkdirSync(process.cwd() + '/data');
 }
 
-app.get('/api/instances', require('./Route/instanceRoute'));
+app.get('/api/instances', require('./route/instanceRoute'));
 
-app.get('/api/metrics', require('./Route/metricsRoute'));
-app.get('/api/cpu', require('./Route/cpuRoute')).cpu;
-app.get('/api/network/in', require('./Route/networkRoute').networkIn);
-app.get('/api/network/out', require('./Route/networkRoute').networkOut);
+app.get('/api/metrics', require('./route/metricsRoute'));
+app.get('/api/cpu', require('./route/cpuRoute')).cpu;
+app.get('/api/network/in', require('./route/networkRoute').networkIn);
+app.get('/api/network/out', require('./route/networkRoute').networkOut);
 
-app.get('/api/billing/monthToDate', require('./Route/billingRoute').monthToDate);
-app.get('/api/billing/byHour', require('./Route/billingRoute').byHour);
-app.get('/api/billing/instanceCost', require('./Route/billingRoute').instanceCost);
-app.get('/api/billing/instanceCostHourly', require('./Route/billingRoute').instanceCostHourlyByDate);
-app.get('/api/billing/instanceCostAll', require('./Route/billingRoute').instanceCostAll);
+app.get('/api/billing/monthToDate', require('./route/billingRoute').monthToDate);
+app.get('/api/billing/byHour', require('./route/billingRoute').byHour);
+app.get('/api/billing/instanceCost', require('./route/billingRoute').instanceCost);
+app.get('/api/billing/instanceCostHourly', require('./route/billingRoute').instanceCostHourlyByDate);
+app.get('/api/billing/instanceCostAll', require('./route/billingRoute').instanceCostAll);
 
-app.get('/api/billing/freeTier', require('./Route/freeTierRoute').freeTier);
-app.get('/api/billing/calcFreeTierCost', require('./Route/billingRoute').calcFreeTierCost);
+app.get('/api/billing/freeTier', require('./route/freeTierRoute').freeTier);
+app.get('/api/billing/calcFreeTierCost', require('./route/billingRoute').calcFreeTierCost);
 
 function errorHandler(err, req, res, next) {
     console.error(err.message);
