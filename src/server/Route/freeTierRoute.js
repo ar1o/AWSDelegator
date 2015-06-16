@@ -9,7 +9,7 @@ var databaseUrl = 'mongodb://localhost:27017/awsdb';
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 //Retrieve the proper pricing values
-var pricingData = require('./BoxPricingCheck');
+var pricingData = require('../BoxPricingCheck');
 pricingData.getPricing();
 
 
@@ -60,10 +60,6 @@ var ProductSchema = new Schema({
         type: String
     }
 });
-
-var billingModel = mongoose.model('billingModel', billingSchema, 'bills201506');
-var pricingModel = mongoose.model('pricingModel', ProductSchema, 'pricing');
-// console.log(pricingModel.find({}));
 
 var updateBillingValues = function(pricingQuery, billingQuery, callback) {
     var pricingScope = {_id:0, Price : 1};

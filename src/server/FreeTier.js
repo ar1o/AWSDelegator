@@ -37,6 +37,7 @@ var updateBillingValues = function(pricingQuery, billingQuery, callback) {
                     throw e;
                 } else {
                     for (var i in d) {
+                        console.log(d);
                         var m = new billingModel({
                             _id: d[i]._id,
                             ProductName: d[i].ProductName,

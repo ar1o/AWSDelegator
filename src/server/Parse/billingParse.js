@@ -63,9 +63,9 @@ exports.parseBillingCSV = function(_callback) {
                                     });
                                 }
                             }
-                        }
-                        _callback();
+                        }                        
                         console.log("Database update: "+newDocCount+" documents added to "+currentCollection);
+                        _callback();
                     });
                 });
             });

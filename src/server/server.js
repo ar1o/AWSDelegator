@@ -75,10 +75,10 @@ db.on("open", function() {
         Type: String,
         LaunchTime: String,
         Zone: String,
-        Lifetime: String,
+        Lifetime: Number,
         LastActiveTime: String,
         Email: String,
-        VolumeId: String
+        VolumeId: Array
     });
     ec2metricsSchema = new mongoose.Schema({
         InstanceId: String,
@@ -86,7 +86,10 @@ db.on("open", function() {
         NetworkOut: Number,
         CPUUtilization: Number,
         Time: String
-    });
+    });    
+    var Instances = mongoose.model('Instances', instanceSchema, 'instances');
+    var Ec2Metrics = mongoose.model('Ec2Metrics', ec2metricsSchema, 'ec2metrics');
+
     //TODO:
     // var pricingSchema = new mongoose.Schema({})
     //Pricing data check
@@ -111,17 +114,13 @@ db.on("open", function() {
             freeTier.freeTier();
         }
     });
-
     s3.s3Connect(function() {
-
         var latestTime = mongoose.model('currentCollection', latestSchema, 'latest');
         mongoose.model('currentCollection').find([{}]).exec(function(e, d) {
             currentCollection = "bills" + d[0].time.substring(0, 7).replace(/-/, "");
             var Billings = mongoose.model('Billings', billingSchema, currentCollection);
         });
     });
-    var Instances = mongoose.model('Instances', instanceSchema, 'instances');    
-    var Ec2Metrics = mongoose.model('Ec2Metrics', ec2metricsSchema, 'ec2metrics');    
 });
 
 if (!fs.existsSync(process.cwd() + '/data')) {
