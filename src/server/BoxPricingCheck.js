@@ -1,10 +1,8 @@
 var request = require("request");
-var fs = require("fs");
 var mongodb = require('mongodb');
 var MongoClient = mongodb.MongoClient;
 var databaseUrl = 'mongodb://localhost:27017/awsdb';
 var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
 var freeTier = require('./FreeTier');
 // mongoose.connect(databaseUrl);
 
