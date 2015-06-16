@@ -6,21 +6,9 @@ var Schema = mongoose.Schema;
 var credentials = new AWS.SharedIniFileCredentials({
     profile: 'default'
 });
-var ServiceSchema = new Schema({
-    ProductName : {type : String},
 
-    OS : {type : String, default : null},// (pricingJSON.config.regions[region].instanceTypes[compType].sizes[size].valueColumns[0]['name']);
-    Region : {type : String, required : true}, // (pricingJSON.config.regions[region]['region']);
-    TierName : { type : String},
-    InstanceSize : { type : String},
-    TypeName : {type : String, required : true}, //(pricingJSON.config.regions[region].instanceTypes[compType].sizes[size]['size'])
-    Price : {type : Number, required : true},//(pricingJSON.config.regions[region].instanceTypes[compType].sizes[size].valueColumns[0].prices.USD);
-    DateModified : {type: Date, default : Date()}, //Date field added for insert reference
-    StorageType : { type : String}
-});
 AWS.config.credentials = credentials;
 // AWS.config.update({region: 'us-west-2'});
-
 // Express import
 var express = require('express');
 var app = express();
@@ -29,14 +17,10 @@ port = process.env.PORT || 3000;
 databaseUrl = 'mongodb://localhost:27017/awsdb';
 // Mongoose import
 mongoose = require('mongoose');
-
 // Mongo import
 mongo = require('mongodb');
-
-
 //CORS Module
 app.use(require('./CORS'));
-
 //S3 bucket connection
 currentCollection = "";
 var s3 = require('./Watch/s3Watch');
@@ -53,7 +37,18 @@ pricingModel = mongoose.model('pricingModel', ServiceSchema, 'pricing');
 var db = mongoose.connection;
 db.on("open", function() {
     console.log("mongodb is connected!!");
-    var billingSchema = new mongoose.Schema({
+    ServiceSchema = new Schema({
+        ProductName : {type : String},
+        OS : {type : String, default : null},// (pricingJSON.config.regions[region].instanceTypes[compType].sizes[size].valueColumns[0]['name']);
+        Region : {type : String, required : true}, // (pricingJSON.config.regions[region]['region']);
+        TierName : { type : String},
+        InstanceSize : { type : String},
+        TypeName : {type : String, required : true}, //(pricingJSON.config.regions[region].instanceTypes[compType].sizes[size]['size'])
+        Price : {type : Number, required : true},//(pricingJSON.config.regions[region].instanceTypes[compType].sizes[size].valueColumns[0].prices.USD);
+        DateModified : {type: Date, default : Date()}, //Date field added for insert reference
+        StorageType : { type : String}
+    });
+    billingSchema = new mongoose.Schema({
         _id: mongoose.Schema.ObjectId,
         ProductName: String,
         Cost: Number,
@@ -68,11 +63,11 @@ db.on("open", function() {
         NonFreeRate : Number
 
     });
-    var latestSchema = new mongoose.Schema({
+    latestSchema = new mongoose.Schema({
         _id: mongoose.Schema.ObjectId,
         time: String
     });
-    var instanceSchema = new mongoose.Schema({        
+    instanceSchema = new mongoose.Schema({        
         Id: String,
         State: String,
         ImageId: String,
@@ -85,7 +80,7 @@ db.on("open", function() {
         Email: String,
         VolumeId: String
     });
-    var ec2metricsSchema = new mongoose.Schema({
+    ec2metricsSchema = new mongoose.Schema({
         InstanceId: String,
         NetworkIn: Number,
         NetworkOut: Number,
@@ -97,26 +92,22 @@ db.on("open", function() {
     //Pricing data check
     pricingModel.find([{}]).exec(function(e, d){
         if(e) throw e;
-        console.log(d.length);
         if(d.length==0){
             console.log("Pricing collection Not created yet");
-            // pricingModel.drop();
-            console.log("Updating values")
+            console.log("Getting values")
             boxPricing.getPricing(function(err, ret){
                 if (err) throw err;
-                console.log("Before Timout, should still be getting box pricing")
-                
-                console.log("AFTER Timout")
-                console.log("Updating billing values");
-            });
-            //10 second delay to unsure the pricing data is in place
-            //will upsert values regardless of prior billing collection state
+            });//5 second pause
             setTimeout(function(){
                 freeTier.freeTier();
-            }, 10000);
+            }, 5000);
         }
-        else{
-            console.log("pricing already created");
+        //Something is wrong with the pricing
+        if(d.length!=13&&d.length!=0){
+            console.log("SOMETHING WRONG WITH PRICING DATA");
+        }
+        if(d.length==13){
+            console.log("13 Pricing docs. Pricing collection already created.");
             freeTier.freeTier();
         }
     });
