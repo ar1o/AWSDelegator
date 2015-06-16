@@ -3,6 +3,9 @@
 */
 var fs = require("fs");
 var adm = require('adm-zip');
+
+var parser = require('../Parse/billingParse');
+
 var billingParser = require('../Parse/billingParse');
 var instanceParser = require('../Parse/instanceParse');
 var metricsParser = require('../Parse/metricsParse');

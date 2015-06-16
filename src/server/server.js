@@ -1,8 +1,22 @@
 var http = require('http');
 var fs = require('fs');
 AWS = require('aws-sdk');
+mongoose = require('mongoose');
+var Schema = mongoose.Schema;
 var credentials = new AWS.SharedIniFileCredentials({
     profile: 'default'
+});
+var ServiceSchema = new Schema({
+    ProductName : {type : String},
+
+    OS : {type : String, default : null},// (pricingJSON.config.regions[region].instanceTypes[compType].sizes[size].valueColumns[0]['name']);
+    Region : {type : String, required : true}, // (pricingJSON.config.regions[region]['region']);
+    TierName : { type : String},
+    InstanceSize : { type : String},
+    TypeName : {type : String, required : true}, //(pricingJSON.config.regions[region].instanceTypes[compType].sizes[size]['size'])
+    Price : {type : Number, required : true},//(pricingJSON.config.regions[region].instanceTypes[compType].sizes[size].valueColumns[0].prices.USD);
+    DateModified : {type: Date, default : Date()}, //Date field added for insert reference
+    StorageType : { type : String}
 });
 AWS.config.credentials = credentials;
 // AWS.config.update({region: 'us-west-2'});
@@ -19,12 +33,15 @@ mongoose = require('mongoose');
 // Mongo import
 mongo = require('mongodb');
 
+
 //CORS Module
 app.use(require('./CORS'));
 
 //S3 bucket connection
 currentCollection = "";
 var s3 = require('./Watch/s3Watch');
+var freeTier = require('./FreeTier');
+var boxPricing = require('./BoxPricingCheck');
 
 // Start mongoose and mongo
 mongoose.connect(databaseUrl, function(error) {
@@ -32,6 +49,7 @@ mongoose.connect(databaseUrl, function(error) {
         console.log(error);
     }
 });
+pricingModel = mongoose.model('pricingModel', ServiceSchema, 'pricing');
 var db = mongoose.connection;
 db.on("open", function() {
     console.log("mongodb is connected!!");
@@ -46,7 +64,8 @@ db.on("open", function() {
         UsageType: String,
         ItemDescription: String,
         UsageQuantity: Number,
-        RateId: Number
+        RateId: Number,
+        NonFreeRate : Number
 
     });
     var latestSchema = new mongoose.Schema({
@@ -75,11 +94,40 @@ db.on("open", function() {
     });    
     var Instances = mongoose.model('Instances', instanceSchema, 'instances');
     var Ec2Metrics = mongoose.model('Ec2Metrics', ec2metricsSchema, 'ec2metrics');
+
+    //TODO:
+    // var pricingSchema = new mongoose.Schema({})
+    //Pricing data check
+    pricingModel.find([{}]).exec(function(e, d){
+        if(e) throw e;
+        console.log(d.length);
+        if(d.length==0){
+            console.log("Pricing collection Not created yet");
+            // pricingModel.drop();
+            console.log("Updating values")
+            boxPricing.getPricing(function(err, ret){
+                if (err) throw err;
+                console.log("Before Timout, should still be getting box pricing")
+                
+                console.log("AFTER Timout")
+                console.log("Updating billing values");
+            });
+            //10 second delay to unsure the pricing data is in place
+            //will upsert values regardless of prior billing collection state
+            setTimeout(function(){
+                freeTier.freeTier();
+            }, 10000);
+        }
+        else{
+            console.log("pricing already created");
+            freeTier.freeTier();
+        }
+    });
     s3.s3Connect(function() {
         var latestTime = mongoose.model('currentCollection', latestSchema, 'latest');
         mongoose.model('currentCollection').find([{}]).exec(function(e, d) {
             currentCollection = "bills" + d[0].time.substring(0, 7).replace(/-/, "");
-        var Billings = mongoose.model('Billings', billingSchema, currentCollection);
+            var Billings = mongoose.model('Billings', billingSchema, currentCollection);
         });
     });
 });
