@@ -6,9 +6,8 @@ var properties = ['RateId', 'ProductName', 'UsageType', 'Operation', 'Availabili
 ];
 var numericProperties = ['RateId', 'UsageQuantity', 'Rate', 'Cost'];
 
-/*
-* parses latestBills.csv and updates the 'awsdb' database with new bills.
-*/
+
+// parses latestBills.csv and updates the 'awsdb' database with new bills.
 exports.parseBillingCSV = function(_callback) {
     MongoClient.connect(databaseUrl, function(err, db) {
         if (err) {
@@ -64,7 +63,7 @@ exports.parseBillingCSV = function(_callback) {
                                 }
                             }
                         }                        
-                        console.log("Database update: "+newDocCount+" documents added to "+currentCollection);
+                        console.log("Database Alert: "+newDocCount+" documents added to "+currentCollection);
                         _callback();
                     });
                 });
@@ -73,9 +72,7 @@ exports.parseBillingCSV = function(_callback) {
     });
 };
 
-/*
- * checks if collection 'latest' is present in 'awsdb'. if not creates it.
- */
+// checks if collection 'latest' is present in 'awsdb'. if not creates it.
 function checkForLatestCollection(db,collections) {
     var re = /latest/g;
     var collectionExists = 0;

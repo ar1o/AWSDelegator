@@ -22,21 +22,6 @@ templates['BillingView'] = template({"1":function(depth0,helpers,partials,data) 
     + ((stack1 = helpers.each.call(depth0,(depth0 != null ? depth0.billing : depth0),{"name":"each","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
     + "		</tbody>	\n	</table>\n</div> -->\n\n\n\n\n\n";
 },"useData":true});
-templates['CPUActivityView'] = template({"1":function(depth0,helpers,partials,data) {
-    var alias1=this.lambda, alias2=this.escapeExpression;
-
-  return "			<tr class=\"tablesorter-body\">\n				<td>"
-    + alias2(alias1((depth0 != null ? depth0.instance : depth0), depth0))
-    + "</td>\n				<td>"
-    + alias2(alias1((depth0 != null ? depth0.cpu : depth0), depth0))
-    + "</td>\n\n			</tr>\n";
-},"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-    var stack1;
-
-  return "\n<div class=\"CPU\">\n	<table id=\"CPUTable\" class=\"tablesorter-metro\" cellspacing=\"1\">\n		<thead>\n			<tr class=\"dark-row\" role=\"row\">\n				<th class=\"tablesorter-header\" data-column=\"0\">\n					<div class=\"tablesorter-header-inner\">Instance ID</div>\n				</th>\n				<th class=\"tablesorter-header\" data-column=\"1\">\n					<div class=\"tablesorter-header-inner\">CPU Usage</div>\n				</th>\n\n			</tr>\n		</thead>\n		<tbody id=\"cpuData\">\n"
-    + ((stack1 = helpers.each.call(depth0,(depth0 != null ? depth0.cpuMetrics : depth0),{"name":"each","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
-    + "		</tbody>	\n	</table>\n</div>";
-},"useData":true});
 templates['InstancesView'] = template({"1":function(depth0,helpers,partials,data) {
     var alias1=this.lambda, alias2=this.escapeExpression;
 
@@ -100,35 +85,5 @@ templates['MetricsView'] = template({"1":function(depth0,helpers,partials,data) 
   return "<div id=\"networkContainer\"></div>\n<div id=\"cpuContainer\"></div>\n\n<!-- <div id=\"Metrics\">\n	<table id=\"MetricsTable\" class=\"tablesorter-metro\" cellspacing=\"1\">\n		<thead>\n			<tr class=\"dark-row\">\n				<th class=\"tablesorter-header\" data-column=\"0\">\n					Instance ID\n				</th>\n				<th class=\"tablesorter-header\" data-column=\"1\">\n					Network In\n				</th>\n				<th class=\"tablesorter-header\" data-column=\"2\">\n					Network Out\n				</th>\n				<th class=\"tablesorter-header\" data-column=\"3\">\n					Cpu Utilization\n				</th>\n				<th class=\"tablesorter-header\" data-column=\"4\">\n					Time\n				</th>\n			</tr>\n		</thead>\n		<tbody id=\"metricsData\">\n"
     + ((stack1 = helpers.each.call(depth0,(depth0 != null ? depth0.metrics : depth0),{"name":"each","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
     + "		</tbody>	\n	</table>\n</div>\n -->\n\n";
-},"useData":true});
-templates['NetworkInActivityView'] = template({"1":function(depth0,helpers,partials,data) {
-    var alias1=this.lambda, alias2=this.escapeExpression;
-
-  return "			<tr class=\"tablesorter-body\">\n				<td>"
-    + alias2(alias1((depth0 != null ? depth0.instance : depth0), depth0))
-    + "</td>\n				<td>"
-    + alias2(alias1((depth0 != null ? depth0.networkIn : depth0), depth0))
-    + "</td>\n\n			</tr>\n";
-},"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-    var stack1;
-
-  return "\n<div id=\"NetIn\">\n	<table id=\"NetInTable\" class=\"tablesorter-metro\" cellspacing=\"1\">\n		<thead>\n			<tr class=\"dark-row\" role=\"row\">\n				<th class=\"tablesorter-header\" data-column=\"0\">\n					<div class=\"tablesorter-header-inner\">Instance ID</div>\n				</th>\n				<th class=\"tablesorter-header\" data-column=\"1\">\n					<div class=\"tablesorter-header-inner\">Net In Usage</div>\n				</th>\n			</tr>\n		</thead>\n		<tbody id=\"NetInData\">\n"
-    + ((stack1 = helpers.each.call(depth0,(depth0 != null ? depth0.networkInMetrics : depth0),{"name":"each","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
-    + "		</tbody>	\n	</table>\n\n</div> \n";
-},"useData":true});
-templates['NetworkOutActivityView'] = template({"1":function(depth0,helpers,partials,data) {
-    var alias1=this.lambda, alias2=this.escapeExpression;
-
-  return "			<tr class=\"tablesorter-body\">\n				<td>"
-    + alias2(alias1((depth0 != null ? depth0.instance : depth0), depth0))
-    + "</td>\n				<td>"
-    + alias2(alias1((depth0 != null ? depth0.networkOut : depth0), depth0))
-    + "</td>\n\n			</tr>\n";
-},"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-    var stack1;
-
-  return "\n<div id=\"NetOut\">\n	<table id=\"NetOutTable\" class=\"tablesorter-metro\" cellspacing=\"1\">\n		<thead>\n			<tr class=\"dark-row\">\n				<th class=\"tablesorter-header\" data-column=\"0\">\n					<div class=\"tablesorter-header-inner\">Instance ID</div>\n				</th>\n				<th class=\"tablesorter-header\" data-column=\"1\">\n					<div class=\"tablesorter-header-inner\">Net Out</div>\n				</th>\n\n			</tr>\n		</thead>\n		<tbody id=\"NetOutData\">\n"
-    + ((stack1 = helpers.each.call(depth0,(depth0 != null ? depth0.networkOutMetrics : depth0),{"name":"each","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
-    + "		</tbody>	\n	</table>\n\n</div> \n";
 },"useData":true});
 })();

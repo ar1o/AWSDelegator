@@ -171,6 +171,7 @@ exports.instanceCost = function(req, res) {
                     instances[d[r]._id].cost += d[r].total;
                 }
             }
+            // console.log(instances);
             res.send(instances);
         });
 

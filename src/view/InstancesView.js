@@ -41,7 +41,6 @@ var InstancesView = Backbone.View.extend({
         }.bind(this));
 
         this.$el.on("change", '.instanceDropDown', function(e) {
-            console.log( $('.instanceDropDown').val()); 
             var selected = $('.instanceDropDown').val();
             totalCostInstancesCollection.reset();
             this.billingActivity.model.getBilling(selected); 

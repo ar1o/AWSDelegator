@@ -34,6 +34,7 @@ exports.parseMetrics = function(masterCallback) {
 			}
 			var iterator = function(instance, callback) {
 				var instanceRegion = runningInstances[iteratorIndex].Zone;
+				console.log(runningInstances[iteratorIndex].VolumeId);
 				AWS.config.region = instanceRegion.substring(0,instanceRegion.length-1);
 				var cloudwatch = new AWS.CloudWatch();
 				var doc = {

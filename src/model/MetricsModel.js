@@ -29,7 +29,6 @@ var MetricsModel = Backbone.Model.extend({
 
 		(function(params) {
 			$.get(host+'/api/metrics', params, function(result) {
-				console.log("metrics",result);
 				for (var i in result) {
 					var data = new MetricModel({
 						instance: result[i].InstanceId,
