@@ -24,8 +24,7 @@ app.use(require('./CORS'));
 //S3 bucket connection
 currentCollection = "";
 var s3 = require('./parse/scheduler');
-var freeTier = require('./FreeTier');
-var boxPricing = require('./BoxPricingCheck');
+
 
 // Start mongoose and mongo
 mongoose.connect(databaseUrl, function(error) {
@@ -33,11 +32,10 @@ mongoose.connect(databaseUrl, function(error) {
         console.log(error);
     }
 });
-pricingModel = mongoose.model('pricingModel', ServiceSchema, 'pricing');
 var db = mongoose.connection;
 db.on("open", function() {
     console.log("mongodb is connected!!");
-    ServiceSchema = new Schema({
+    serviceSchema = new Schema({
         ProductName : {type : String},
         OS : {type : String, default : null},// (pricingJSON.config.regions[region].instanceTypes[compType].sizes[size].valueColumns[0]['name']);
         Region : {type : String, required : true}, // (pricingJSON.config.regions[region]['region']);
@@ -89,37 +87,19 @@ db.on("open", function() {
     });    
     var Instances = mongoose.model('Instances', instanceSchema, 'instances');
     var Ec2Metrics = mongoose.model('Ec2Metrics', ec2metricsSchema, 'ec2metrics');
+    var pricingModel = mongoose.model('pricingModel', serviceSchema, 'pricing');
 
     //TODO:
     // var pricingSchema = new mongoose.Schema({})
     //Pricing data check
-    pricingModel.find([{}]).exec(function(e, d){
-        if(e) throw e;
-        if(d.length==0){
-            console.log("Pricing collection Not created yet");
-            console.log("Getting values")
-            boxPricing.getPricing(function(err, ret){
-                if (err) throw err;
-            });//5 second pause
-            setTimeout(function(){
-                freeTier.freeTier();
-            }, 5000);
-        }
-        //Something is wrong with the pricing
-        if(d.length!=13&&d.length!=0){
-            console.log("SOMETHING WRONG WITH PRICING DATA");
-        }
-        if(d.length==13){
-            console.log("13 Pricing docs. Pricing collection already created.");
-            freeTier.freeTier();
-        }
-    });
+    
     s3.s3Connect(function() {
         var latestTime = mongoose.model('currentCollection', latestSchema, 'latest');
         mongoose.model('currentCollection').find([{}]).exec(function(e, d) {
             currentCollection = "bills" + d[0].time.substring(0, 7).replace(/-/, "");
             var Billings = mongoose.model('Billings', billingSchema, currentCollection);
         });
+        require('./BoxPricingCheck').updateFreeTier();
     });
 });
 
@@ -130,9 +110,6 @@ if (!fs.existsSync(process.cwd() + '/data')) {
 app.get('/api/instances', require('./route/instanceRoute'));
 
 app.get('/api/metrics', require('./route/metricsRoute'));
-app.get('/api/cpu', require('./route/cpuRoute')).cpu;
-app.get('/api/network/in', require('./route/networkRoute').networkIn);
-app.get('/api/network/out', require('./route/networkRoute').networkOut);
 
 app.get('/api/billing/monthToDate', require('./route/billingRoute').monthToDate);
 app.get('/api/billing/byHour', require('./route/billingRoute').byHour);
@@ -140,7 +117,6 @@ app.get('/api/billing/instanceCost', require('./route/billingRoute').instanceCos
 app.get('/api/billing/instanceCostHourly', require('./route/billingRoute').instanceCostHourlyByDate);
 app.get('/api/billing/instanceCostAll', require('./route/billingRoute').instanceCostAll);
 
-app.get('/api/billing/freeTier', require('./route/freeTierRoute').freeTier);
 app.get('/api/billing/calcFreeTierCost', require('./route/billingRoute').calcFreeTierCost);
 
 function errorHandler(err, req, res, next) {
