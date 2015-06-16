@@ -15,6 +15,7 @@ var InstancesView = Backbone.View.extend({
 
         this.billingActivity = new BillingView();
         this.metricsActivity = new MetricsView();
+        this.productCost = new ProductCostView();
         this.bindings();
         this.render();
 
@@ -57,5 +58,6 @@ var InstancesView = Backbone.View.extend({
         this.$el.html(html);
         this.$el.append(this.billingActivity.el);
         this.$el.append(this.metricsActivity.el);
+        this.$el.append(this.productCost.el);
     }
 });

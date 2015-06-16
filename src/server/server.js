@@ -78,7 +78,7 @@ db.on("open", function() {
         var latestTime = mongoose.model('currentCollection', latestSchema, 'latest');
         mongoose.model('currentCollection').find([{}]).exec(function(e, d) {
             currentCollection = "bills" + d[0].time.substring(0, 7).replace(/-/, "");
-        var Billings = mongoose.model('Billings', billingSchema, currentCollection);
+            var Billings = mongoose.model('Billings', billingSchema, currentCollection);
         });
     });
     var Instances = mongoose.model('Instances', instanceSchema, 'instances');    
@@ -96,10 +96,8 @@ app.get('/api/cpu', require('./Route/cpuRoute')).cpu;
 app.get('/api/network/in', require('./Route/networkRoute').networkIn);
 app.get('/api/network/out', require('./Route/networkRoute').networkOut);
 
-app.get('/api/billing/monthToDate', require('./Route/billingRoute').monthToDate);
-app.get('/api/billing/byHour', require('./Route/billingRoute').byHour);
-app.get('/api/billing/instanceCost', require('./Route/billingRoute').instanceCost);
-app.get('/api/billing/instanceCostHourly', require('./Route/billingRoute').instanceCostHourlyByDate);
+app.get('/api/billing/totalCostProduct', require('./Route/billingRoute').totalCostProduct);
+
 app.get('/api/billing/instanceCostAll', require('./Route/billingRoute').instanceCostAll);
 
 app.get('/api/billing/freeTier', require('./Route/freeTierRoute').freeTier);
