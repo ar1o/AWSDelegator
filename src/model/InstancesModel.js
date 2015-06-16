@@ -38,7 +38,7 @@ var InstancesModel = Backbone.Model.extend({
 		var self = this;
 
 		this.aws_result().done(function(result) {
-			// console.log(result);
+			console.log(result);
 			instanceCollection.reset();
 			cpuMetricCollection.reset();
 			networkInMetricCollection.reset();

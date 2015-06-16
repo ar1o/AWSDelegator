@@ -56,7 +56,7 @@ templates['InstancesView'] = template({"1":function(depth0,helpers,partials,data
     + alias2(alias1((depth0 != null ? depth0.zone : depth0), depth0))
     + "</td>\n				<td>"
     + alias2(alias1((depth0 != null ? depth0.duration : depth0), depth0))
-    + " sec</td>\n				<td>"
+    + " min</td>\n				<td>"
     + alias2(alias1((depth0 != null ? depth0.email : depth0), depth0))
     + "</td>\n				<td>"
     + alias2(alias1((depth0 != null ? depth0.volumeid : depth0), depth0))
