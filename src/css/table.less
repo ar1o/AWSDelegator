@@ -41,8 +41,8 @@ Test out these custom less files live
 @theme                 : tablesorter-metro;
 
 /*** fonts ***/
-@tableHeaderFont       : 14px 'Segoe UI Semilight', 'Open Sans', Verdana, Arial, Helvetica, sans-serif;
-@tableBodyFont         : 14px 'Segoe UI Semilight', 'Open Sans', Verdana, Arial, Helvetica, sans-serif;
+@tableHeaderFont       : 14px 'Segoe UI Semilight', 'Open Sans', Roboto;
+@tableBodyFont         : 14px 'Segoe UI Semilight', 'Open Sans', Roboto;
 
 /*** color definitions ***/
 /* for best results, only change the hue (120),
@@ -168,7 +168,7 @@ Test out these custom less files live
    or just replace (!".@{theme}") with the contents of @theme
 */
 .@{theme} {
-	font: @tableBodyFont;
+	font: Roboto;
 	background-color: @borderAndBackground;
 	margin: 10px 0 15px;
 	width: 100%;

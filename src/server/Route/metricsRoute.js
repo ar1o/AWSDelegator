@@ -17,7 +17,6 @@ module.exports = function(req, res) {
 			Time: 1
 		}
 	}]).exec(function(err, instanceMetrics) {
-		// console.log(instanceMetrics);
 		res.send(instanceMetrics);
 	});
 }

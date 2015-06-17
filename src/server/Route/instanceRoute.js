@@ -16,7 +16,6 @@ module.exports = function(req,res){
         }
     }]).exec(function(e, d) {
         if(e) throw e;
-        // console.log(d);
         res.send(d);
     });
 }

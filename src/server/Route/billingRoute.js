@@ -39,14 +39,8 @@ exports.calcFreeTierCost = function(req, res) {
     });
 };
 
-// Get total cost of all products
-// Get total cost of each product
-// Get the % total cost of each product
-// Total cost of each product per hour
-
-
 exports.totalCostProduct = function(req, res) {
-    //Total Cost of all products
+    var totalCostProduct = {};
     mongoose.model('Billings').aggregate([{
         $match: {
             Cost: {
@@ -69,8 +63,37 @@ exports.totalCostProduct = function(req, res) {
             }
         }
     }]).exec(function(e, d) {
-        console.log(d);
-        //Total cost of each product here
+        var totalCostProduct = {};
+        totalCostProduct = {
+            data: d,
+            month: currentCollection.substring(9,11),
+            year: currentCollection.substring(5,9) 
+        }
+        res.send(totalCostProduct);
+    });
+};
+
+
+exports.hourlyCostProduct = function(req, res) {
+    var productName = req.query.productName;
+    var productName = 'Amazon Elastic Compute Cloud'
+    mongoose.model('Billings').aggregate([{
+        $match: {
+            Cost: {
+                $gt: 0
+            },
+            ProductName: {
+                $eq: productName
+            }
+        }
+    }, {
+        $group: {
+            _id: "$UsageStartDate",
+            Total: {
+                $sum: "$Cost"
+            }
+        }
+    }]).exec(function(e, d) {
         res.send(d);
     });
 };
@@ -211,8 +234,10 @@ exports.instanceCostAll = function(req, res) {
                 VolumeId: 1
             }
         }]).exec(function(err, result) {
-            // console.log(result[0].VolumeId);
-            volumeId = result[0].VolumeId
+            // console.log(result[0].VolumeId[0]);
+            // console.log(instanceId);
+
+            volumeId = result[0].VolumeId[0]
 
             //query billing collection for cost on EC2 resourceId's
             mongoose.model('Billings').aggregate([{
@@ -246,8 +271,6 @@ exports.instanceCostAll = function(req, res) {
                     _id: 1 // Need to sort by date.
                 }
             }]).exec(function(e, d) {
-                // console.log(d);
-
                 // Create a hashmap of instances
                 for (var r in d) {
                     instances[d[r]._id] = {

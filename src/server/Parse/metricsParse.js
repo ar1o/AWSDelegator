@@ -34,36 +34,40 @@ exports.parseMetrics = function(masterCallback) {
 			}
 			var iterator = function(instance, callback) {
 				var instanceRegion = runningInstances[iteratorIndex].Zone;
-				AWS.config.region = instanceRegion.substring(0,instanceRegion.length-1);
-				var cloudwatch = new AWS.CloudWatch();
-				var doc = {
-					InstanceId: runningInstances[iteratorIndex].Id,
-					NetworkIn: 0,
-					NetworkOut: 0,
-					CPUUtilization: 0,
-					Time: currentTimeIso
-				};
-				params.Dimensions[0].Value = doc.InstanceId;
-				params.StartTime = new Date(currentTime-3600*1000).toISOString();
-				params.EndTime = currentTimeIso;				
-				params.MetricName = 'NetworkIn';
-				params.Unit = 'Bytes';				
-				cloudwatch.getMetricStatistics(params, function(err, data) {
-					if(err) throw err;	
-					doc.NetworkIn = data.Datapoints[0].Average;
-					params.MetricName = 'NetworkOut'
+				AWS.config.region = instanceRegion.substring(0, instanceRegion.length - 1);
+				if (runningInstances[iteratorIndex].State != "terminated") {
+					var cloudwatch = new AWS.CloudWatch();
+					var doc = {
+						InstanceId: runningInstances[iteratorIndex].Id,
+						NetworkIn: 0,
+						NetworkOut: 0,
+						CPUUtilization: 0,
+						Time: currentTimeIso
+					};
+					params.Dimensions[0].Value = doc.InstanceId;
+					params.StartTime = new Date(currentTime - 3600 * 1000).toISOString();
+					params.EndTime = currentTimeIso;
+					params.MetricName = 'NetworkIn';
+					params.Unit = 'Bytes';
 					cloudwatch.getMetricStatistics(params, function(err, data) {
-						doc.NetworkOut = data.Datapoints[0].Average;
-						params.MetricName = 'CPUUtilization';
-						params.Unit = 'Percent';
+						if (err) throw console.log(err);
+						doc.NetworkIn = data.Datapoints[0].Average;
+						params.MetricName = 'NetworkOut'
 						cloudwatch.getMetricStatistics(params, function(err, data) {
-							doc.CPUUtilization = data.Datapoints[0].Average;
-							db.collection('ec2metrics').insert(doc);							
-							callback();
+							if (err) throw console.log(err);
+							doc.NetworkOut = data.Datapoints[0].Average;
+							params.MetricName = 'CPUUtilization';
+							params.Unit = 'Percent';
+							cloudwatch.getMetricStatistics(params, function(err, data) {
+								if (err) throw console.log(err);
+								doc.CPUUtilization = data.Datapoints[0].Average;
+								db.collection('ec2metrics').insert(doc);
+								callback();
+							});
 						});
 					});
-				});
-			}			
+				}
+			}
 			if (runningInstances.length != 0) {
 				controller(runningInstances);
 			} else {

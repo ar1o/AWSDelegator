@@ -33,6 +33,19 @@ templates['CPUActivityView'] = template({"1":function(depth0,helpers,partials,da
   if (stack1 != null) { buffer += stack1; }
   return buffer + "		</tbody>	\n	</table>\n</div>";
 },"useData":true});
+templates['EC2CostView'] = template({"1":function(depth0,helpers,partials,data) {
+  var lambda=this.lambda, escapeExpression=this.escapeExpression;
+  return "			<tr class=\"tablesorter-body\">\n				<td>"
+    + escapeExpression(lambda((depth0 != null ? depth0.productName : depth0), depth0))
+    + "</td>\n				<td>"
+    + escapeExpression(lambda((depth0 != null ? depth0.cost : depth0), depth0))
+    + "</td>				\n			</tr>\n";
+},"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  var stack1, buffer = "<div id=\"ec2CostContainer\"></div>\n\n<!-- <div>\n	<table id=\"BillingTable\" class=\"tablesorter-metro\" cellspacing=\"1\">\n		<thead>\n			<tr class=\"dark-row\" role=\"row\">\n\n				<th class=\"tablesorter-header\" data-column=\"2\" unselectable=\"on\">\n					<div class=\"tablesorter-header-inner\">Resource ID</div>\n				</th>\n				<th class=\"tablesorter-header\" data-column=\"0\" unselectable=\"on\">\n					<div id=\"time\" class=\"tablesorter-header-inner\">Cost</div>\n				</th>\n			</tr>\n		</thead>\n		<tbody id=\"billingData\">\n";
+  stack1 = helpers.each.call(depth0, (depth0 != null ? depth0.product : depth0), {"name":"each","hash":{},"fn":this.program(1, data),"inverse":this.noop,"data":data});
+  if (stack1 != null) { buffer += stack1; }
+  return buffer + "		</tbody>	\n	</table>\n</div> -->";
+},"useData":true});
 templates['InstancesView'] = template({"1":function(depth0,helpers,partials,data) {
   var lambda=this.lambda, escapeExpression=this.escapeExpression;
   return "			<tr class=\"tablesorter-body\">\n				<td>"
@@ -51,7 +64,7 @@ templates['InstancesView'] = template({"1":function(depth0,helpers,partials,data
     + escapeExpression(lambda((depth0 != null ? depth0.zone : depth0), depth0))
     + "</td>\n				<td>"
     + escapeExpression(lambda((depth0 != null ? depth0.duration : depth0), depth0))
-    + " sec</td>\n				<td>"
+    + " min</td>\n				<td>"
     + escapeExpression(lambda((depth0 != null ? depth0.email : depth0), depth0))
     + "</td>\n				<td>"
     + escapeExpression(lambda((depth0 != null ? depth0.volumeid : depth0), depth0))

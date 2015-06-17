@@ -1,27 +1,25 @@
-var BillingView = Backbone.View.extend({
-    className: 'BillingView',
+var EC2CostView = Backbone.View.extend({
+    className: 'EC2CostView',
 
     initialize: function(options) {
-        
         if (!this.model) {
-            this.model = new BillingsModel();
+            this.model = new EC2CostModel();
         }
-
         this.render();
         this.bindings();
     },
 
     bindings: function() {
         this.model.change('dataReady', function(model, val) {
-            this.render();
-            var date = new Date(totalCostInstancesCollection.at(0).get('date'));            
+                        this.render();
+            var date = new Date(EC2HourlyCostCollection.at(0).get('date'));            
             $(function () {
-                $('#billingcontainer').highcharts({
+                $('#ec2CostContainer').highcharts({
                     chart: {
                         zoomType: 'x'
                     },
                     title: {
-                        text: totalCostInstancesCollection.at(0).get('resourceId')+' Cost'
+                        text: 'EC2 Cost'
                     },
                     xAxis: {
                         title : {text : "Time"},
@@ -49,7 +47,7 @@ var BillingView = Backbone.View.extend({
                         name: 'Cost',
                         pointInterval: 3600 * 1000,
                         pointStart: Date.UTC(date.getYear(), date.getMonth(), date.getDate()),
-                        data: totalCostInstancesCollection.pluck('cost')
+                        data: EC2HourlyCostCollection.pluck('cost')
 
                     }],
                     navigation: {
@@ -60,14 +58,16 @@ var BillingView = Backbone.View.extend({
                     }
                 });
             });
+            
         }.bind(this));
     },
 
     render: function() {
-        var html = Handlebars.templates.BillingView({
-            billing: totalCostInstancesCollection.toJSON(),
+        var html = Handlebars.templates.EC2CostView({
+            product: EC2HourlyCostCollection.toJSON(),
         });
         this.$el.html(html);
+
     }
 
 

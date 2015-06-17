@@ -17,18 +17,20 @@ var ProductCostModel = Backbone.Model.extend({
 			}
 		});
 	},
-
 	addProductCost: function() {
 		var self = this;
 
 		this.aws_result().done(function(result) {
 			console.log(result);
+			console.log(result.data[0]._id);
 			productCostCollection.reset();
 
-			for (var r in result) {
+			for (var r in result.data) {
 				var data = new pCostModel({
-					productName: result[r]._id,
-					cost: result[r].Total
+					productName: result.data[r]._id,
+					cost: result.data[r].Total,
+					month: result.month,
+					year: result.year
 				});
 				productCostCollection.add(data);
 			}
@@ -37,13 +39,16 @@ var ProductCostModel = Backbone.Model.extend({
 			console.log('FAILED');
 		});
 	},
-
 	calcTotal: function() {
 		var total = 0;
 		for (var i = 0; i < productCostCollection.length; i++) {
 			total += productCostCollection.at(i).get('cost');
 		}
 		return total;
+	},
+	getMonth: function(value) {
+		var mnth = ['January', 'Febuary', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+		return mnth[value - 1];
 	}
 });
 

@@ -7,30 +7,37 @@ var ProductCostView = Backbone.View.extend({
             this.model = new ProductCostModel();
         }
 
+        
+        this.EC2Cost = new EC2CostView();
         this.render();
         this.bindings();
     },
 
     bindings: function() {
+
         this.model.change('dataReady', function(model, val) {
             this.render();
+
+            var month = this.model.getMonth(productCostCollection.at(0).get('month'));
+            var year = productCostCollection.at(0).get('year')
             var total = this.model.calcTotal();
             var fdata = [];
             for (var i = 0; i < productCostCollection.length; i++) {
                 fdata.push([productCostCollection.at(i).get('productName'), productCostCollection.at(i).get('cost')]);
             }
+            var self = this;
             $(function() {
                 $('#productcostcontainer').highcharts({
                     chart: {
                         plotBackgroundColor: null,
                         plotBorderWidth: null,
-                        plotShadow: false
+                        plotShadow: false,
                     },
                     title: {
-                        text: 'Product Cost'
+                        text: 'Product Cost - Month: ' + month + '\\' + year
                     },
                     tooltip: {
-                        pointFormat: '{series.name}: <b>USD{point.y:.1f}</b>'
+                        pointFormat: '{series.name}: <b>USD{point.y:.4f}</b>'
                     },
                     plotOptions: {
                         pie: {
@@ -48,18 +55,31 @@ var ProductCostView = Backbone.View.extend({
                     series: [{
                         type: 'pie',
                         name: 'Cost',
-                        data: fdata
+                        data: fdata,
+                        point: {
+                            events: {
+                                click: function(event) {
+                                    if (this.name == "Amazon Elastic Compute Cloud") {
+                                        self.EC2Cost.model.getCost();
+                                    } else if (this.name == "Amazon RDS Service") {
+                                        console.log(this.name);
+                                    }
+                                }
+                            }
+                        }
                     }]
                 });
             });
         }.bind(this));
-},
+    },
 
     render: function() {
         var html = Handlebars.templates.ProductCostView({
             product: productCostCollection.toJSON(),
         });
         this.$el.html(html);
+        this.$el.append(this.EC2Cost.el);
+
     }
 
 

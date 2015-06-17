@@ -56,8 +56,9 @@ var InstancesView = Backbone.View.extend({
             instances: instanceCollection.toJSON()
         });
         this.$el.html(html);
+         this.$el.append(this.productCost.el);
         this.$el.append(this.billingActivity.el);
         this.$el.append(this.metricsActivity.el);
-        this.$el.append(this.productCost.el);
+       
     }
 });
