@@ -47,9 +47,9 @@ exports.getPricing = function (){
     var usage = mongoose.model('pricing', ServiceSchema);
     MongoClient.connect(databaseUrl, function(err, db) {
         if (err) {
-            console.log('Pricing -- Unable to connect to the mongoDB server. Error:', err);
+            console.log('PricingAlert: Unable to connect to the mongoDB server. Error:', err);
         } else {
-            console.log('Pricing --- Connection established to ', databaseUrl);
+            console.log('PricingAlert: Connection established to ', databaseUrl);
         }
         for(var i=0; i< boxPricingURLs.length; i++){
             request({

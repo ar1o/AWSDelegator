@@ -1,6 +1,7 @@
 var http = require('http');
 var fs = require('fs');
 AWS = require('aws-sdk');
+awsRegions = ['us-west-1', 'us-west-2', 'us-east-1'];
 mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var credentials = new AWS.SharedIniFileCredentials({
@@ -14,7 +15,7 @@ var express = require('express');
 var app = express();
 port = process.env.PORT || 3000;
 
-databaseUrl = 'mongodb://localhost:27017/awsdb';
+databaseUrl = 'msmit.cqf5aukwo4dj.us-east-1.rds.amazonaws.com:3306';
 // Mongoose import
 mongoose = require('mongoose');
 // Mongo import
@@ -67,7 +68,7 @@ db.on("open", function() {
         _id: mongoose.Schema.ObjectId,
         time: String
     });
-    instanceSchema = new mongoose.Schema({        
+    ec2InstanceSchema = new mongoose.Schema({        
         Id: String,
         State: String,
         ImageId: String,
@@ -80,15 +81,34 @@ db.on("open", function() {
         Email: String,
         VolumeId: Array
     });
-    ec2metricsSchema = new mongoose.Schema({
+    rdsInstanceSchema = new mongoose.Schema({        
+        DBInstanceIdentifier: String,
+        DBInstanceClass: String,
+        Engine: String,
+        DBInstanceStatus: String,
+        MasterUsername: String,
+        DBName: String,
+        Endpoint: String,
+        AllocatedStorage: Number,
+        InstanceCreateTime: String,
+        AvailabilityZone: String,
+        MultiAZ: String,
+        StorageType: String
+    });
+    ec2MetricsSchema = new mongoose.Schema({
         InstanceId: String,
         NetworkIn: Number,
         NetworkOut: Number,
         CPUUtilization: Number,
         Time: String
-    });    
-    var Instances = mongoose.model('Instances', instanceSchema, 'instances');
-    var Ec2Metrics = mongoose.model('Ec2Metrics', ec2metricsSchema, 'ec2metrics');
+    });  
+    rdsMetricsSchema = new mongoose.Schema({
+            
+    });  
+    var ec2Instances = mongoose.model('ec2Instances', ec2InstanceSchema, 'ec2instances');
+    var rdsInstances = mongoose.model('rdsInstances', rdsInstanceSchema, 'rdsinstances');
+    var ec2Metrics = mongoose.model('ec2Metrics', ec2MetricsSchema, 'ec2metrics');
+    var rdsMetrics = mongoose.model('rdsMetrics', rdsMetricsSchema, 'rdsmetrics');
 
     //TODO:
     // var pricingSchema = new mongoose.Schema({})

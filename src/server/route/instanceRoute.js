@@ -20,3 +20,20 @@ module.exports = function(req,res){
         res.send(d);
     });
 }
+
+exports.getOperationPercentage = function(instancesId, res){
+    var operations = {},operationPercentage = {};
+    mongoose.model('Billings').find({Id: instancesId}).exec(function(e,d){
+        for(var i=0 in d){
+            if(operations.indexOf(d.Operation)==-1){
+                operations[d.Operation] = 1;
+            }else{
+                operations[d.Operation] +=1;
+            }
+        }
+        for(var i=0 in operations){
+            operationPercentage[operations[i]]=(operations[i]/operations.length);
+        }
+        res.send(operationPercentage);
+    });
+}
