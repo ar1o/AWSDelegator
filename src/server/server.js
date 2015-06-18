@@ -4,6 +4,9 @@ mongoose = require('mongoose');
 MongoClient = require('mongodb').MongoClient;
 Schema = mongoose.Schema;
 awsRegions = ['us-west-1', 'us-west-2', 'us-east-1'];
+billingAttributes = ['RateId', 'ProductName', 'UsageType', 'Operation', 'AvailabilityZone', 'ItemDescription',
+    'UsageStartDate', 'UsageQuantity', 'Rate', 'Cost', 'user:Volume Id', 'user:Name', 'user:Email', 'ResourceId'];
+numericAttirbutes = ['RateId', 'UsageQuantity', 'Rate', 'Cost'];
 ec2Metric = ['NetworkIn','NetworkOut','CPUUtilization'];
 ec2MetricUnit = ['Bytes','Bytes','Percent'];
 rdsMetric = ['CPUUtilization','DatabaseConnections','DiskQueueDepth','ReadIOPS','WriteIOPS'];
@@ -54,7 +57,7 @@ app.get('/api/rds/metrics', require('./route/rdsRoute').metrics);
 app.get('/api/billing/hourlyCostProduct', require('./route/billingRoute').hourlyCostProduct);
 app.get('/api/billing/instanceCostAll', require('./route/billingRoute').instanceCostAll);
 app.get('/api/billing/calcFreeTierCost', require('./route/billingRoute').calcFreeTierCost);
-app.get('/api/billing/totalCostProduct',require('./route/billingRoute').hourlyCostProduct);
+app.get('/api/billing/totalCostProduct',require('./route/billingRoute').totalCostProduct);
 
 function errorHandler(err, req, res, next) {
     console.error(err.message);

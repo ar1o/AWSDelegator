@@ -1,6 +1,6 @@
 // The instances model where we manipulate the data from AWS
 var InstancesModel = Backbone.Model.extend({
-	initialize: function() {instancesinstances
+	initialize: function() {
 		var data = {};
 		var result;
 		this.change('dataReady');
@@ -30,12 +30,11 @@ var InstancesModel = Backbone.Model.extend({
 		});
 	},
 
-	addEC2Instance: function() {
+	getEC2Instances: function() {
 		var self = this;
 		this.ec2_result().done(function(result) {
-			instanceCollection.reset();
 			for (var r in result) {
-				var data = new InstanceModel({
+				var data = new ec2InstanceModel({
 					instance: result[r].Id,
 					imageId: result[r].ImageId,
 					state: result[r].State,
@@ -48,7 +47,7 @@ var InstancesModel = Backbone.Model.extend({
 					volumeid: result[r].VolumeId,
 					lastActiveTime: result[r].LastActiveTime
 				});
-				instanceCollection.add(data);
+				ec2InstanceCollection.add(data);
 			}
 			self.set('dataReady', Date.now());
 		}).fail(function() {
@@ -56,12 +55,11 @@ var InstancesModel = Backbone.Model.extend({
 		});
 	},
 
-	addRDSInstance: function() {
+	getRDSInstances: function() {
 		var self = this;
 		this.rds_result().done(function(result) {
-			instanceCollection.reset();
 			for (var r in result) {
-				var data = new InstanceModel({
+				var data = new rdsInstanceModel({
 					instance: result[r].Id,
 					imageId: result[r].ImageId,
 					state: result[r].State,
@@ -74,7 +72,7 @@ var InstancesModel = Backbone.Model.extend({
 					volumeid: result[r].VolumeId,
 					lastActiveTime: result[r].LastActiveTime
 				});
-				instanceCollection.add(data);
+				rdsInstanceCollection.add(data);
 			}
 			self.set('dataReady', Date.now());
 		}).fail(function() {
@@ -132,4 +130,4 @@ var RDSInstancesCollection = Backbone.Collection.extend({
 });
 
 var ec2InstanceCollection = new EC2InstancesCollection();
-var ec2InstanceCollection = new RDSInstancesCollection();
+var rdsInstanceCollection = new RDSInstancesCollection();

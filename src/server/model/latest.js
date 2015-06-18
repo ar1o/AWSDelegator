@@ -3,4 +3,4 @@ latestSchema = new mongoose.Schema({
 	time: String
 });
 
-mongoose.model('currentCollection', latestSchema, 'latest');
+mongoose.model('currentBillingCollection', latestSchema, 'latest');

@@ -49,6 +49,246 @@ var updateBillingValues = function(pricingQuery, billingQuery, callback) {
         }
     });
 }
+
+exports.GetNonFreePricing = function(req, res) {
+    var UsageType = req.UsageType[0];
+    var ItemDescription = req.ItemDescription[0];
+    switch (true) {
+        // //value == .09
+        case (/DataTransfer-Out-Bytes/.test(UsageType)):
+            //console.log("matched /DataTransfer-Out-Bytes/");
+            var pricingQuery = {
+                TierName: 'upTo10TBout'
+            };
+            var billingQuery = {
+                UsageType: {
+                    $regex: /DataTransfer-Out-Bytes/
+                },
+                ItemDescription: {
+                    $regex: /free tier/
+                }
+            };
+            return [pricingQuery, billingQuery];
+
+            break;
+
+            //     //value.price should == .02
+        case (/DataTransfer-Regional-Bytes/.test(UsageType)):
+            //console.log("matched /DataTransfer-Regional-Bytes/");
+
+
+            var pricingQuery = {
+                TierName: "crossRegion",
+                TypeName: "dataXferOutEC2"
+            };
+            var billingQuery = {
+                UsageType: {
+                    $regex: /DataTransfer-Regional-Bytes/
+                },
+                ItemDescription: {
+                    $regex: /free tier/
+                }
+            };
+            return [pricingQuery, billingQuery];
+            break;
+            //     //value.price should == 0.02 
+            //     //http://a0.awsstatic.com/pricing/1/ec2/pricing-data-transfer-with-regions.min.js
+        case (/AWS-Out-Bytes/.test(UsageType)):
+            //console.log("matched /AWS-Out-Bytes/");
+            var pricingQuery = {
+                TierName: "crossRegion",
+                TypeName: "dataXferOutEC2"
+            };
+            var billingQuery = {
+                UsageType: {
+                    $regex: 'AWS-Out-Bytes'
+                },
+                ItemDescription: {
+                    $regex: /free tier/
+                }
+            };
+            return [pricingQuery, billingQuery];
+            break;
+
+            //value.price should == 0.017
+
+        case (/InstanceUsage:db.t2.micro/.test(UsageType)): //InstanceUsage is for RDS
+            //console.log("matched /InstanceUsage:db.t2.micro/");
+
+            var pricingQuery = {
+                TierName: "db.t2.micro"
+            };
+            var billingQuery = {
+                UsageType: {
+                    $regex: /InstanceUsage:db.t2.micro/
+                },
+                ItemDescription: {
+                    $regex: /free tier/
+                }
+            };
+            return [pricingQuery, billingQuery];
+            break;
+
+            //     //Mongo Queries have been completed up to this point. BoxPricingCheck does not have EBS functionality
+            //     //value.price should == .005
+        case (/Requests-Tier1/.test(UsageType)):
+            //console.log("matched /Request-Tier1/");
+
+            var pricingQuery = {
+                TierName: "putcopypost"
+            };
+            var billingQuery = {
+                UsageType: {
+                    $regex: /Requests-Tier1/
+                },
+                ItemDescription: {
+                    $regex: /free tier/
+                }
+            };
+            return [pricingQuery, billingQuery];
+            break;
+
+            //     //value.price should == 0.004
+        case (/Requests-Tier2/.test(UsageType)):
+            //console.log("matched /Request-Tier2/");
+            var pricingQuery = {
+                TierName: "getEtc"
+            };
+            var billingQuery = {
+                UsageType: {
+                    $regex: /Requests-Tier2/
+                },
+                ItemDescription: {
+                    $regex: /free tier/
+                }
+            };
+            return [pricingQuery, billingQuery];
+            break;
+
+            //     //value.price should == .1
+        case (/EBS:VolumeUsage.gp2/.test(UsageType)):
+            //console.log("matched /EBS:VolumeUsage.gp2/");
+
+            var pricingQuery = {
+                TypeName: "Amazon EBS General Purpose (SSD) volumes"
+            };
+            var billingQuery = {
+                UsageType: {
+                    $regex: /EBS:VolumeUsage.gp2/
+                },
+                ItemDescription: {
+                    $regex: /free tier/
+                }
+            };
+            return [pricingQuery, billingQuery];
+            break;
+
+            //     //value.price should == 0.03
+        case (/TimedStorage-ByteHrs/.test(UsageType)):
+            //console.log("matched /EBS:VolumeUsage.gp2/");
+
+            var pricingQuery = {
+                TierName: "firstTBstorage"
+            };
+            var billingQuery = {
+                UsageType: {
+                    $regex: /TimedStorage-ByteHrs/
+                },
+                ItemDescription: {
+                    $regex: /free tier/
+                }
+            };
+            return [pricingQuery, billingQuery];
+            break;
+
+            //     ////value.price should == .115
+        case (/RDS:GP2-Storage/.test(UsageType)):
+            //console.log("matched /EBS:VolumeUsage.gp2/");
+
+            var pricingQuery = {
+                TierName: "db.m1.small"
+            };
+            var billingQuery = {
+                UsageType: {
+                    $regex: /RDS:GP2-Storage/
+                },
+                ItemDescription: {
+                    $regex: /free tier/
+                }
+            };
+            return [pricingQuery, billingQuery];
+            break;
+
+        case (/BoxUsage:t2.micro/.test(UsageType)): //BoxUsage is for EC2
+            //console.log("matched /BoxUsage:t2.micro/");
+            if (/Windows/.test(ItemDescription)) {
+                //console.log("matched /Windows/");
+                var pricingQuery = {
+                    InstanceSize: "t2.micro",
+                    OS: "mswin"
+                };
+                var billingQuery = {
+                    UsageType: {
+                        $regex: /t2.micro/
+                    },
+                    ItemDescription: {
+                        $regex: /Windows t2.micro/
+                    }
+                };
+                return [pricingQuery, billingQuery];
+
+            } else if (/SUSE/.test(ItemDescription)) {
+                //console.log("matched /SUSE/")
+                var pricingQuery = {
+                    InstanceSize: "t2.micro",
+                    OS: "sles"
+                };
+                var billingQuery = {
+                    UsageType: {
+                        $regex: /t2.micro/
+                    },
+                    ItemDescription: {
+                        $regex: /per SUSE Linux t2.micro/
+                    }
+                };
+                return [pricingQuery, billingQuery];
+
+            } else if (/Linux/.test(ItemDescription)) {
+                //console.log("matched /Linux/")
+                var pricingQuery = {
+                    InstanceSize: "t2.micro",
+                    OS: "linux"
+                };
+                var billingQuery = {
+                    UsageType: {
+                        $regex: /t2.micro/
+                    },
+                    ItemDescription: {
+                        $regex: /per Linux t2.micro/
+                    }
+                };
+                return [pricingQuery, billingQuery];;
+                break;
+            } else if (/RHEL/.test(ItemDescription)) {
+                //console.log("matched /RHEL/")
+                var pricingQuery = {
+                    InstanceSize: "t2.micro",
+                    OS: "rhel"
+                };
+                var billingQuery = {
+                    UsageType: {
+                        $regex: /t2.micro/
+                    },
+                    ItemDescription: {
+                        $regex: / RHEL t2.micro/
+                    }
+                };
+                return [pricingQuery, billingQuery];
+                break;
+            }
+    }
+}
+
 exports.CheckFreeTier = function(req, res) {
     var db = mongoose.connection;
     mongoose.model('Billings').aggregate({

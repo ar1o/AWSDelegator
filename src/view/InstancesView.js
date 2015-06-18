@@ -8,8 +8,6 @@ var InstancesView = Backbone.View.extend({
             this.model = new InstancesModel();
         }
 
-        this.model.addEC2Instance();
-        this.model.addRDSInstance();
         this.billingActivity = new BillingView();
         this.metricsActivity = new MetricsView();
         this.bindings();
@@ -17,7 +15,7 @@ var InstancesView = Backbone.View.extend({
 
     updateViews: function(selected) {
             this.billingActivity.model.getBilling(selected); 
-            this.metricsActivity.model.getMetrics(selected);
+            this.metricsActivity.model.getEC2Metrics(selected);
     },
 
     bindings: function() {
@@ -29,7 +27,7 @@ var InstancesView = Backbone.View.extend({
                 "info":     false,
                 "bFilter": false
             });
-            // this.metricsActivity.model.getMetrics(instanceCollection.at(0).get('instance'));
+            // this.metricsActivity.model.getEC2Metrics(instanceCollection.at(0).get('instance'));
             // this.billingActivity.model.getBilling(instanceCollection.at(0).get('instance'));
         }.bind(this));
 
@@ -38,13 +36,13 @@ var InstancesView = Backbone.View.extend({
             console.log(selected);
             totalCostInstancesCollection.reset();
             this.billingActivity.model.getBilling(selected); 
-            this.metricsActivity.model.getMetrics(selected);
+            this.metricsActivity.model.getEC2Metrics(selected);
         }.bind(this));
     },
 
     render: function() {
         var html = Handlebars.templates.InstancesView({
-            instances: instanceCollection.toJSON()
+            instances: ec2InstanceCollection.toJSON()
         });
         this.$el.html(html);
         this.$el.append(this.billingActivity.el);

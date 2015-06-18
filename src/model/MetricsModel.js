@@ -1,6 +1,5 @@
 // This holds the entire collection of EC2 Instances and its information
 var MetricsCollection = Backbone.Collection.extend({
-	model: MetricModel,
 	initialize: function() {
 		// This will be called when an item is added. pushed or unshifted
 		this.on('add', function(model) {
@@ -27,7 +26,7 @@ var MetricsModel = Backbone.Model.extend({
 		(function(params) {
 			$.get(host+'/api/ec2/metrics', params, function(result) {
 				for (var i in result) {
-					var data = new MetricModel({
+					var data = new ec2MetricModel({
 						instance: result[i].InstanceId,
 						networkIn: result[i].NetworkIn,
 						networkOut: result[i].NetworkOut,
@@ -39,7 +38,7 @@ var MetricsModel = Backbone.Model.extend({
 				self.set('dataReady', Date.now());
 			});
 		})(params);
-	}
+	},
 
 	getRDSMetrics: function(instanceid) {
 		metricsCollection.reset();
