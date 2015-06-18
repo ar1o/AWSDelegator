@@ -10,11 +10,9 @@ var MetricsView = Backbone.View.extend({
         this.render();
     },
 
-    //Check for when the data is read and renders the page
     bindings: function() {
         this.model.change('dataReady', function(model, val) {
             var date = new Date(metricsCollection.at(0).get('time'));
-            // console.log(metricsCollection);
             var dataNetworkIn = []
             var dataNetworkOut = []
             var dataCpuUtilization = []
@@ -25,9 +23,7 @@ var MetricsView = Backbone.View.extend({
                 var date1 = date[0].split(/-/);                
                 //date2=[hour,minute,second]                
                 var date2 = date[1].split(':');
-                date2[2] = date2[2].substring(0,date2[2].indexOf('.'));
-                // console.log(date2);
-                // console.log(date1[0],date1[1],date1[2],date2[0],date2[1]);
+                date2[2] = date2[2].substring(0,date2[2].indexOf('.')); 
                 var utcDate = Date.UTC(date1[0],date1[1],date1[2],date2[0],date2[1]);                
                 dataNetworkIn.push([utcDate,metricsCollection.at(i).get('networkIn')]);  
                 dataNetworkOut.push([utcDate,metricsCollection.at(i).get('networkOut')]);

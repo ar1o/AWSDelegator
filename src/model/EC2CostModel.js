@@ -1,13 +1,3 @@
-var EC2CostCollection = Backbone.Collection.extend({
-	model: EC2Model,
-	initialize: function() {
-		this.on('add', function(model) {
-		});
-	}
-});
-
-var EC2HourlyCostCollection = new EC2CostCollection();
-
 var EC2CostModel = Backbone.Model.extend({
 	initialize: function() {
 		console.log("Initialized the EC2CostModel")
@@ -43,3 +33,13 @@ var EC2Model = Backbone.Model.extend({
 		cost: null,
 	}
 });
+
+var EC2CostCollection = Backbone.Collection.extend({
+	model: EC2Model,
+	initialize: function() {
+		this.on('add', function(model) {
+		});
+	}
+});
+
+var EC2HourlyCostCollection = new EC2CostCollection();

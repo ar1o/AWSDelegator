@@ -23,7 +23,9 @@ mongo = require('mongodb');
 app.use(require('./CORS'));
 //S3 bucket connection
 currentCollection = "";
-var s3 = require('./Watch/s3Watch');
+
+var s3 = require('./parse/scheduler');
+
 
 // Start mongoose and mongo
 mongoose.connect(databaseUrl, function(error) {
@@ -35,6 +37,17 @@ var db = mongoose.connection;
 db.on("open", function() {
     console.log("mongodb is connected!!");
 
+    serviceSchema = new Schema({
+        ProductName : {type : String},
+        OS : {type : String, default : null},// (pricingJSON.config.regions[region].instanceTypes[compType].sizes[size].valueColumns[0]['name']);
+        Region : {type : String, required : true}, // (pricingJSON.config.regions[region]['region']);
+        TierName : { type : String},
+        InstanceSize : { type : String},
+        TypeName : {type : String, required : true}, //(pricingJSON.config.regions[region].instanceTypes[compType].sizes[size]['size'])
+        Price : {type : Number, required : true},//(pricingJSON.config.regions[region].instanceTypes[compType].sizes[size].valueColumns[0].prices.USD);
+        DateModified : {type: Date, default : Date()}, //Date field added for insert reference
+        StorageType : { type : String}
+    });
     billingSchema = new mongoose.Schema({
         _id: mongoose.Schema.ObjectId,
         ProductName: String,
@@ -76,24 +89,27 @@ db.on("open", function() {
     });
     var Instances = mongoose.model('Instances', instanceSchema, 'instances');
     var Ec2Metrics = mongoose.model('Ec2Metrics', ec2metricsSchema, 'ec2metrics');
+    var pricingModel = mongoose.model('pricingModel', serviceSchema, 'pricing');
 
+    //TODO:
+    // var pricingSchema = new mongoose.Schema({})
+    //Pricing data check
+    
     s3.s3Connect(function() {
         var latestTime = mongoose.model('currentCollection', latestSchema, 'latest');
         mongoose.model('currentCollection').find([{}]).exec(function(e, d) {
             var Billings = mongoose.model('Billings', billingSchema, currentCollection);
         });
+        require('./BoxPricingCheck').updateFreeTier();
     });
 });
 if (!fs.existsSync(process.cwd() + '/data')) {
     fs.mkdirSync(process.cwd() + '/data');
 }
 
-app.get('/api/instances', require('./Route/instanceRoute'));
+app.get('/api/instances', require('./route/instanceRoute'));
 
-app.get('/api/metrics', require('./Route/metricsRoute'));
-app.get('/api/cpu', require('./Route/cpuRoute')).cpu;
-app.get('/api/network/in', require('./Route/networkRoute').networkIn);
-app.get('/api/network/out', require('./Route/networkRoute').networkOut);
+app.get('/api/metrics', require('./route/metricsRoute'));
 
 app.get('/api/billing/totalCostProduct', require('./Route/billingRoute').totalCostProduct);
 app.get('/api/billing/hourlyCostProduct', require('./Route/billingRoute').hourlyCostProduct);
@@ -101,6 +117,7 @@ app.get('/api/billing/hourlyCostProduct', require('./Route/billingRoute').hourly
 app.get('/api/billing/instanceCostAll', require('./Route/billingRoute').instanceCostAll);
 
 app.get('/api/billing/calcFreeTierCost', require('./Route/billingRoute').calcFreeTierCost);
+
 
 function errorHandler(err, req, res, next) {
     console.error(err.message);

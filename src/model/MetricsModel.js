@@ -1,18 +1,3 @@
-// This holds the entire collection of EC2 Instances and its information
-var MetricsCollection = Backbone.Collection.extend({
-	model: MetricModel,
-	initialize: function() {
-		// This will be called when an item is added. pushed or unshifted
-		this.on('add', function(model) {
-			// console.log('something got added');
-		});
-	}
-});
-
-// Create the collection
-var metricsCollection = new MetricsCollection();
-
-// The instances model where we manipulate the data from AWS
 var MetricsModel = Backbone.Model.extend({
 	initialize: function() {
 		var self = this;
@@ -29,7 +14,6 @@ var MetricsModel = Backbone.Model.extend({
 
 		(function(params) {
 			$.get(host+'/api/metrics', params, function(result) {
-				// console.log("metrics",result);
 				for (var i in result) {
 					var data = new MetricModel({
 						instance: result[i].InstanceId,
@@ -56,3 +40,13 @@ var MetricModel = Backbone.Model.extend({
 		time: null
 	}
 });
+
+var MetricsCollection = Backbone.Collection.extend({
+	model: MetricModel,
+	initialize: function() {
+		this.on('add', function(model) {
+		});
+	}
+});
+
+var metricsCollection = new MetricsCollection();

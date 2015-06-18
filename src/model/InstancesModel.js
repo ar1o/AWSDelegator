@@ -1,19 +1,3 @@
-// This holds the entire collection of EC2 Instances and its information
-var MetricsCollection = Backbone.Collection.extend({
-	model: InstanceModel,
-	initialize: function() {
-		// This will be called when an item is added. pushed or unshifted
-		this.on('add', function(model) {
-			// console.log('something got added');
-		});
-	}
-});
-// Create the collection
-var cpuMetricCollection = new MetricsCollection();
-var networkInMetricCollection = new MetricsCollection();
-var networkOutMetricCollection = new MetricsCollection();
-
-// The instances model where we manipulate the data from AWS
 var InstancesModel = Backbone.Model.extend({
 	initialize: function() {
 		var data = {};
@@ -33,16 +17,11 @@ var InstancesModel = Backbone.Model.extend({
 		});
 	},
 
-	// Add the information from AWS to the collection here
-	addEC2Instance: function() {
+	getEC2Instances: function() {
 		var self = this;
 
 		this.aws_result().done(function(result) {
-			console.log(result);
 			instanceCollection.reset();
-			cpuMetricCollection.reset();
-			networkInMetricCollection.reset();
-			networkOutMetricCollection.reset();
 			for (var r in result) {
 				var data = new InstanceModel({
 					instance: result[r].Id,
@@ -66,7 +45,6 @@ var InstancesModel = Backbone.Model.extend({
 	}
 });
 
-// A instance model template
 var InstanceModel = Backbone.Model.extend({
 	defaults: {
 		instance: null,
@@ -86,10 +64,8 @@ var InstanceModel = Backbone.Model.extend({
 var EC2InstancesCollection = Backbone.Collection.extend({
 	model: InstanceModel,
 	initialize: function() {
-		// This will be called when an item is added. pushed or unshifted
 		this.on('add', function(model) {});
 	}
 });
 
-// Create the collection
 var instanceCollection = new EC2InstancesCollection();

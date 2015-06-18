@@ -3,9 +3,9 @@
 */
 var fs = require("fs");
 var adm = require('adm-zip');
-var billingParser = require('../Parse/billingParse');
-var instanceParser = require('../Parse/instanceParse');
-var metricsParser = require('../Parse/metricsParse');
+var billingParser = require('./billingParse');
+var instanceParser = require('./instanceParse');
+var metricsParser = require('./metricsParse');
 var okey;
 var params = {
     //fix the bucket name to be flexible.

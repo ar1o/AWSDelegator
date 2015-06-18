@@ -1,15 +1,3 @@
-var InstanceTotalCostCollection = Backbone.Collection.extend({
-	model: BillingModel,
-	initialize: function() {
-		// This will be called when an item is added. pushed or unshifted
-		this.on('add', function(model) {});
-
-	}
-});
-
-// Create the collection
-var totalCostInstancesCollection = new InstanceTotalCostCollection();
-
 var BillingsModel = Backbone.Model.extend({
 	initialize: function() {
 		this.change('dataReady');
@@ -25,7 +13,6 @@ var BillingsModel = Backbone.Model.extend({
 
 		(function(params) {
 			$.get(host + '/api/billing/instanceCostAll', params, function(result) {
-				console.log("billing ",result);
 				for (var i in result) {
 					var data = new BillingModel({
 						resourceId: result[i].resourceId,
@@ -41,7 +28,6 @@ var BillingsModel = Backbone.Model.extend({
 	}
 });
 
-// A billings model template
 var BillingModel = Backbone.Model.extend({
 	defaults: {
 		resourceId: null,
@@ -50,3 +36,14 @@ var BillingModel = Backbone.Model.extend({
 		date: null
 	}
 });
+
+var InstanceTotalCostCollection = Backbone.Collection.extend({
+	model: BillingModel,
+	initialize: function() {
+		// This will be called when an item is added. pushed or unshifted
+		this.on('add', function(model) {});
+
+	}
+});
+
+var totalCostInstancesCollection = new InstanceTotalCostCollection();

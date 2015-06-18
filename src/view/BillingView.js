@@ -14,7 +14,14 @@ var BillingView = Backbone.View.extend({
     bindings: function() {
         this.model.change('dataReady', function(model, val) {
             this.render();
-            var date = new Date(totalCostInstancesCollection.at(0).get('date'));            
+            var date = totalCostInstancesCollection.at(0).get('date').split(' ');
+            date1=date[1].substring(0,date[1].length-1);
+            //date1=[year,month,date]
+            var date1 = date[0].split(/-/);                
+            //date2=[hour,minute,second]                
+            var date2 = date[1].split(':');
+
+            console.log(totalCostInstancesCollection.at(0).get('date'));           
             $(function () {
                 $('#billingcontainer').highcharts({
                     chart: {
@@ -40,7 +47,10 @@ var BillingView = Backbone.View.extend({
                         alternateGridColor: null,                        
                     },
                     tooltip: {
-                        valueSuffix: '$/Hour'
+                        formatter: function() {
+                            return '<b>'+ this.series.name +'</b><br/>'+
+                                new Date(this.x) +', '+ this.y;
+                        }
                     },
                     legend: {
                         enabled: false
@@ -48,7 +58,7 @@ var BillingView = Backbone.View.extend({
                     series: [{
                         name: 'Cost',
                         pointInterval: 3600 * 1000,
-                        pointStart: Date.UTC(date.getYear(), date.getMonth(), date.getDate()),
+                        pointStart: Date.UTC(date1[0],date1[1],date1[2],date2[0],date2[1],date2[2]),
                         data: totalCostInstancesCollection.pluck('cost')
 
                     }],

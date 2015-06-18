@@ -19,7 +19,7 @@ var EC2CostView = Backbone.View.extend({
                         zoomType: 'x'
                     },
                     title: {
-                        text: 'EC2 Cost'
+                        text: 'Amazon Elastic Compute Cloud Cost Per Hour'
                     },
                     xAxis: {
                         title : {text : "Time"},

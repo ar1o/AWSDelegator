@@ -4,7 +4,7 @@ var regionIteratorIndex, newInstanceCount;
 var awsRegions = ['us-west-1', 'us-west-2', 'us-east-1'];
 var instanceVolumes = {};
 var userInstances;
-// var activeInstances;
+var activeInstances;
 
 exports.parseInstances = function(_callback) {
     MongoClient.connect(databaseUrl, function(err, db) {
@@ -25,7 +25,7 @@ exports.parseInstances = function(_callback) {
             //get all user instances
             mongoose.model('Instances').find().exec(function(err, result) {
                 if (err) throw err;
-                // activeInstances = [];
+                activeInstances = [];
                 userInstances = result;
                 regionIteratorIndex = 0;
                 newInstanceCount = 0;
@@ -37,20 +37,19 @@ exports.parseInstances = function(_callback) {
                             controller();
                         } else {
                             console.log("Parse Alert: found ",newInstanceCount," new instance/s");
-                            // for(var i in userInstances){
-                            //     console.log(activeInstances.indexOf(userInstances[i].Id));
-                            //     if(activeInstances.indexOf(userInstances[i].Id)==-1){
-                            //         console.log("here");
-                            //         mongoose.model('Instances').update({
-                            //             Id: userInstances[i].Id,
-                            //         }, {
-                            //             $set: {
-                            //                 State: "terminated"
-                            //             }
-                            //         });
-                            //         terminatedInstancesCount += 1;
-                            //     }
-                            // }
+                            for(var i in userInstances){
+                                if(activeInstances.indexOf(userInstances[i].Id)==-1){
+                                    console.log("here");
+                                    mongoose.model('Instances').update({
+                                        Id: userInstances[i].Id,
+                                    }, {
+                                        $set: {
+                                            State: "terminated"
+                                        }
+                                    });
+                                    terminatedInstancesCount += 1;
+                                }
+                            }
                             if(terminatedInstancesCount!=0)
                                 console.log("Parse Alert: found ",terminatedInstancesCount," terminated instance/s");
                             _callback();
@@ -67,7 +66,7 @@ exports.parseInstances = function(_callback) {
                         for (var r in data.Reservations) {
                             //get volumeId's
                             var volumeId = [];
-                            // activeInstances.push(data.Reservations[r].Instances[0].InstanceId);
+                            activeInstances.push(data.Reservations[r].Instances[0].InstanceId);
                             for(var i=0 in data.Reservations[r].Instances[0].BlockDeviceMappings){
                                 volumeId.push(data.Reservations[r].Instances[0].BlockDeviceMappings[i].Ebs['VolumeId'])
                             }
