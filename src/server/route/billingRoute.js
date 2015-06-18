@@ -66,8 +66,8 @@ exports.totalCostProduct = function(req, res) {
         var totalCostProduct = {};
         totalCostProduct = {
             data: d,
-            month: currentCollection.substring(9,11),
-            year: currentCollection.substring(5,9) 
+            month: currentBillingCollection.substring(9,11),
+            year: currentBillingCollection.substring(5,9) 
         }
         res.send(totalCostProduct);
     });
@@ -222,7 +222,7 @@ exports.instanceCostAll = function(req, res) {
         var instances = {};
 
         // Query instances collection to associate volumeIds to instanceIds. 
-        mongoose.model('Instances').aggregate([{
+        mongoose.model('ec2Instances').aggregate([{
             $match: {
                 Id: {
                     $eq: instanceId

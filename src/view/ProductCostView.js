@@ -18,7 +18,7 @@ var ProductCostView = Backbone.View.extend({
 
         this.model.change('dataReady', function(model, val) {
             this.render();
-
+            console.log("getmonth",productCostCollection.at(0));
             var month = this.model.getMonth(productCostCollection.at(0).get('month'));
             var year = productCostCollection.at(0).get('year')
             var total = this.model.calcTotal();
@@ -61,6 +61,7 @@ var ProductCostView = Backbone.View.extend({
                                 click: function(event) {
                                     if (this.name == "Amazon Elastic Compute Cloud") {
                                         self.EC2Cost.model.getCost();
+                                        console.log(self.EC2Instances.model);
                                         self.EC2Instances.model.getEC2Instances();
                                     } else if (this.name == "Amazon RDS Service") {
                                         console.log(this.name);

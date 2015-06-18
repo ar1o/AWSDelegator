@@ -21,10 +21,8 @@ var ProductCostModel = Backbone.Model.extend({
 		var self = this;
 
 		this.aws_result().done(function(result) {
-			console.log(result);
-			console.log(result.data[0]._id);
 			productCostCollection.reset();
-
+			console.log(result);
 			for (var r in result.data) {
 				var data = new pCostModel({
 					productName: result.data[r]._id,
@@ -60,7 +58,6 @@ var pCostModel = Backbone.Model.extend({
 });
 
 var pCostCollection = Backbone.Collection.extend({
-	model: InstanceModel,
 	initialize: function() {
 		// This will be called when an item is added. pushed or unshifted
 		this.on('add', function(model) {});

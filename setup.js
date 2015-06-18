@@ -32,7 +32,7 @@ MongoClient.connect(databaseUrl, function(err, db) {
     console.log("Database Alert: connected to ", databaseUrl);
     db.collection('latest').save({
         _id: '1',
-        time: "2015:00:01 00:00:00"
+        time: "2015-00-01 00:00:00"
     });
     require('./src/server/model/pricing');
     require('./src/server/model/ec2');
