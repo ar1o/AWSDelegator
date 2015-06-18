@@ -1,408 +1,79 @@
-@import url(http://fonts.googleapis.com/css?family=Roboto:700,300,400);
-/* tables */
-.tablesorter {
-  font-family: Roboto;
-  background-color: #CCE0DB;
-  margin: 10px 0pt 10px;
-  font-size: 8pt;
-  width: auto;
-  text-align: center;
-}
-.tablesorter thead tr th,
-table.tablesorter tfoot tr th {
-  background-color: #e6EEEE;
-  border: 1px solid #FFF;
-  font-size: 8pt;
-  padding: 4px;
-}
-.tablesorter thead tr .header {
-  background-image: url(bg.gif);
-  background-repeat: no-repeat;
-  background-position: center right;
-  cursor: pointer;
-}
-.tablesorter tbody td {
-  color: #3D3D3D;
-  padding: 4px;
-  background-color: #FFF;
-  vertical-align: top;
-}
-.tablesorter tbody tr.odd td {
-  background-color: #F0F0F6;
-}
-.tablesorter thead tr .headerSortUp {
-  background-image: url(asc.gif);
-}
-.tablesorter thead tr .headerSortDown {
-  background-image: url(desc.gif);
-}
-.tablesorter thead tr .headerSortDown,
-table.tablesorter thead tr .headerSortUp {
-  background-color: #8dbdd8;
-}
+@import url(http://fonts.googleapis.com/css?family=Roboto);
 .content-view {
   height: 100%;
   width: 100%;
 }
-.InstancesView {
-  align-self: center;
-}
-#EC2 {
-  width: auto;
-  padding: 10px;
-}
-.CPU {
-  float: left;
-  padding: 10px;
-}
-#NetOut {
-  float: left;
-  padding: 10px;
-}
-#NetIn {
-  float: left;
-  padding: 10px;
-}
 .BillingView {
-  width: 500px;
-  padding: 10px;
+  /*	border-style: solid;
+	border-color: blue;	*/
 }
-th,
-td {
-  overflow: hidden;
-}
-.options {
-  top: 55%;
-  left: 0;
-  right: 0;
-  margin-left: auto;
-  margin-right: auto;
+div#billingcontainer {
+  margin: 20px;
+  /*border-style: solid;
+	border-color: black;	*/
 }
 .MetricsView {
-  postions: absolute;
-  width: 700px;
-  padding: 10px;
+  margin: 0;
+  /*	border-style: solid;
+	border-color: red;*/
 }
 #cpuContainer {
-  float: left;
+  width: 47%;
+  margin-right: 20px;
+  /*	border-style: solid;
+	border-color: black;*/
+  float: right;
 }
 #networkContainer {
+  width: 47%;
+  margin-left: 20px;
+  /*	border-style: solid;
+	border-color: green;*/
   float: left;
 }
-th,
-td {
-  overflow: hidden;
+.clear {
+  clear: both;
 }
-.ts-align-wrap {
-  white-space: nowrap;
-  width: 100%;
-  overflow: hidden;
+.ProductCostView {
+  margin: 0 auto;
+  width: 1060px;
+  /*	border-style: dashed;
+	border-color: yellow;*/
+  background-color: white;
 }
-.ts-align-wrap,
-.ts-align-left,
-.ts-align-right {
-  display: inline-block;
-  -moz-box-sizing: border-box;
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
+div#productcostcontainer {
+  margin-bottom: 20px;
+  margin-right: 20px;
+  margin-left: 20px;
+  /*	border-style: dashed;
+	border-color: blue;*/
 }
-.ts-align-left {
-  text-align: right;
+.EC2CostView {
+  /*	border-style: solid;
+	border-color: red;*/
 }
-.ts-align-right {
-  text-align: left;
+#ec2CostContainer {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  margin-right: 20px;
+  margin-left: 20px;
+  /*	border-style: solid;
+	border-color: black;*/
 }
-/* optional - colorize alignment character in Animals column */
-td:nth-child(3) .ts-align-right i {
-  color: red;
+.InstancesView {
+  /*	border-style: solid;
+	border-color: blue;*/
 }
-/* Tablesorter Custom Metro LESS Theme by Rob Garrison
-
-To create your own theme, modify the code below and run it through
-a LESS compiler, like this one: http://leafo.net/lessphp/editor.html
-or download less.js from http://lesscss.org/
-
-Test out these custom less files live
- Basic Theme : http://codepen.io/Mottie/pen/eqBbn
- Bootstrap   : http://codepen.io/Mottie/pen/Ltzpi
- Metro Style : http://codepen.io/Mottie/pen/gCslk
-
-*/
-/*** theme ***/
-/*** fonts ***/
-/*** color definitions ***/
-/* for best results, only change the hue (120),
-   leave the saturation (60%) and luminosity (75%) alone
-   pick the color from here: http://hslpicker.com/#825a2b
-
-  Inspired by http://www.jtable.org/ metro themes:
-    Blue:        hsl(212, 86%, 35%)
-    Brown        hsl(32, 50%, 30%)
-    Crimson      hsl(0, 100%, 38%)
-    Dark Grey    hsl(0, 0%, 27%)
-    Dark Orange  hsl(13, 70%, 51%)
-    Green        hsl(120, 100%, 32%)
-    Light Gray   hsl(0, 0%, 44%)
-    Pink         hsl(297, 100%, 33%)
-    Purple       hsl(257, 51%, 48%)
-    Red          hsl(5, 100%, 40%)
-
- */
-/* it might be best to match the document body background color here */
-/* ajax error message (added to thead) */
-/* becomes height using padding (so it's divided by 2) */
-/* 20px should be slightly wider than the icon width to avoid overlap */
-/* url(icons/loading.gif); */
-/* zebra striping */
-.allRows {
-  background-color: #ffffff;
-  color: #000000;
-}
-.evenRows {
-  background-color: #ffffff;
-  color: #000000;
-}
-.oddRows {
-  background-color: #fafafa;
-}
-/* hovered rows */
-.oddHovered {
-  background-color: #adadae;
-  color: #000000;
-}
-.evenHovered {
-  background-color: #c7c6c7;
-  color: #000000;
-}
-/* Columns widget */
-/* Filter widget transition */
-.filterWidgetTransition {
-  -webkit-transition: line-height 0.1s ease;
-  -moz-transition: line-height 0.1s ease;
-  -o-transition: line-height 0.1s ease;
-  transition: line-height 0.1s ease;
-}
-/*** Arrows ***/
-/* black */
-/* white */
-/* automatically choose the correct arrow/text color */
-/* variable theme name - requires less.js 1.3+;
-   or just replace (!".@{theme}") with the contents of @theme
-*/
-.tablesorter-metro {
-  font: Roboto;
-  background-color: #cdcdcd;
-  margin: 10px 0 15px;
-  width: 100%;
-  text-align: left;
-  border-spacing: 0;
-  border: 0;
-  /* style th's outside of the thead */
-  /* style header */
-  /* tfoot */
-  /* optional disabled input styling */
-  /* body */
-  /* hovered row colors
-	you'll need to add additional lines for
-	rows with more than 2 child rows
-	*/
-  /* table processing indicator - indeterminate spinner */
-  /* pager */
-  /* Column Widget - column sort colors */
-  /* caption (non-theme matching) */
-  /* filter widget */
-  /* hidden filter row */
-  /* rows hidden by filtering (needed for child rows) */
-  /* ajax error row */
-}
-.tablesorter-metro th,
-.tablesorter-metro td {
-  border: 0;
-}
-.tablesorter-metro th,
-.tablesorter-metro thead td {
-  font: 14px 'Segoe UI Semilight', 'Open Sans', Roboto;
-  font-weight: bold;
-  background-color: #5f3cb9;
-  color: #eeeeee;
-  color: #ffffff;
-  border-collapse: collapse;
-  padding: 4px;
-}
-.tablesorter-metro .dark-row th,
-.tablesorter-metro .dark-row td,
-.tablesorter-metro caption.dark-row {
-  background-color: #4b2f92;
-}
-.tablesorter-metro tbody td,
-.tablesorter-metro tfoot th,
-.tablesorter-metro tfoot td {
-  padding: 4px;
-  vertical-align: top;
-}
-.tablesorter-metro .tablesorter-header {
-  background-image: url(data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAQBAMAAADQT4M0AAAAElBMVEUAAADu7u7u7u7u7u7u7u7u7u7yb344AAAABnRSTlMAMhIHKyAHBrhHAAAATElEQVQI12NgYGBSYAABQ2Ew5SgCIlkFBQOAlKKgoBADA7MgEBgwsIAoB4ZAECXKAAFQHkg9WIejoCBIv4mgoDOQYgZpAxkDNARqEQBTkAYuMZEHPgAAAABJRU5ErkJggg==);
-  background-repeat: no-repeat;
-  background-position: right 5px center;
-  cursor: pointer;
-  white-space: normal;
-}
-.tablesorter-metro .tablesorter-header-inner {
-  padding: 4px 20px 4px 4px;
-}
-.tablesorter-metro .tablesorter-header.sorter-false {
-  background-image: none;
-  cursor: default;
-  padding: 4px;
-}
-.tablesorter-metro .tablesorter-headerAsc {
-  background-image: url(data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAQBAMAAADQT4M0AAAAHlBMVEUAAADu7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u4+jEeEAAAACXRSTlMAMwkqFV7roCD4hW+/AAAAWUlEQVQI1y3MrQ5AABSG4Xd+Rj0jiDabjKZxB6qqaarGNRh27tY5myd8b/uAeML1l2+wPqUlUd0ss+oNoZqG2rOwe15+p5iC1HNAK5IBlUjnZyIlZsxx0QAfzokSZgp96u4AAAAASUVORK5CYII=);
-}
-.tablesorter-metro .tablesorter-headerDesc {
-  background-image: url(data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAAQBAMAAADQT4M0AAAAJ1BMVEUAAADu7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u7u4RJgHSAAAADHRSTlMAMiweCQITaU7olrlu2HdvAAAAXElEQVQI12NgYGBLYAABRxEQyaooFACkmAUFDYBUoqCgGAMDiyAQODAEgShVBkMQJcwABWvOAMEphmgQtZWBZc6ZMycdGBhszpw5DJRkOnNGAaSo5wRYLXsBAwMAi4YWQHRX4F0AAAAASUVORK5CYII=);
-}
-.tablesorter-metro tfoot .tablesorter-headerAsc,
-.tablesorter-metro tfoot .tablesorter-headerDesc {
-  /* remove sort arrows from footer */
-  background-image: none;
-}
-.tablesorter-metro .disabled {
-  opacity: 0.5;
-  filter: alpha(opacity=50);
-  cursor: not-allowed;
-}
-.tablesorter-metro tbody {
-  /* Zebra Widget - row alternating colors */
-}
-.tablesorter-metro tbody td {
-  background-color: #ffffff;
-  color: #000000;
-  padding: 4px;
-  vertical-align: top;
-}
-.tablesorter-metro tbody tr.odd > td {
-  background-color: #fafafa;
-}
-.tablesorter-metro tbody tr.even > td {
-  background-color: #ffffff;
-  color: #000000;
-}
-.tablesorter-metro tbody > tr.hover > td,
-.tablesorter-metro tbody > tr:hover > td,
-.tablesorter-metro tbody > tr:hover + tr.tablesorter-childRow > td,
-.tablesorter-metro tbody > tr:hover + tr.tablesorter-childRow + tr.tablesorter-childRow > td,
-.tablesorter-metro tbody > tr.even.hover > td,
-.tablesorter-metro tbody > tr.even:hover > td,
-.tablesorter-metro tbody > tr.even:hover + tr.tablesorter-childRow > td,
-.tablesorter-metro tbody > tr.even:hover + tr.tablesorter-childRow + tr.tablesorter-childRow > td {
-  background-color: #c7c6c7;
-  color: #000000;
-}
-.tablesorter-metro tbody > tr.odd.hover > td,
-.tablesorter-metro tbody > tr.odd:hover > td,
-.tablesorter-metro tbody > tr.odd:hover + tr.tablesorter-childRow > td,
-.tablesorter-metro tbody > tr.odd:hover + tr.tablesorter-childRow + tr.tablesorter-childRow > td {
-  background-color: #adadae;
-  color: #000000;
-}
-.tablesorter-metro .tablesorter-processing {
-  background-image: url('data:image/gif;base64,R0lGODlhEAAQAPIAAP///1VVVdbW1oCAgFVVVZaWlqurq7a2tiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==');
-  background-position: center center;
-  background-repeat: no-repeat;
-}
-.tablesorter-metro div.tablesorter-pager button {
-  background-color: #7352c7;
-  color: #eeeeee;
-  border: #8c71d1 1px solid;
-  cursor: pointer;
-}
-.tablesorter-metro div.tablesorter-pager button:hover {
-  background-color: #8c71d1;
-}
-.tablesorter-metro tr.odd td.primary {
-  background-color: #dfd1f0;
-}
-.tablesorter-metro td.primary,
-.tablesorter-metro tr.even td.primary {
-  background-color: #f4f0fa;
-}
-.tablesorter-metro tr.odd td.secondary {
-  background-color: #f4f0fa;
-}
-.tablesorter-metro td.secondary,
-.tablesorter-metro tr.even td.secondary {
-  background-color: #ffffff;
-}
-.tablesorter-metro tr.odd td.tertiary {
-  background-color: #ffffff;
-}
-.tablesorter-metro td.tertiary,
-.tablesorter-metro tr.even td.tertiary {
-  background-color: #ffffff;
-}
-.tablesorter-metro caption {
-  background-color: #ffffff;
-}
-.tablesorter-metro .tablesorter-filter-row input,
-.tablesorter-metro .tablesorter-filter-row select {
-  width: 98%;
-  height: auto;
-  margin: 0;
-  padding: 4px;
-  color: #333333;
-  background-color: #ffffff;
-  border: 1px solid #bbbbbb;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-  -webkit-transition: line-height 0.1s ease;
-  -moz-transition: line-height 0.1s ease;
-  -o-transition: line-height 0.1s ease;
-  transition: line-height 0.1s ease;
-}
-.tablesorter-metro .tablesorter-filter-row {
-  background-color: #eeeeee;
-}
-.tablesorter-metro .tablesorter-filter-row td {
-  background-color: #eeeeee;
-  line-height: normal;
-  text-align: center;
-  /* center the input */
-  -webkit-transition: line-height 0.1s ease;
-  -moz-transition: line-height 0.1s ease;
-  -o-transition: line-height 0.1s ease;
-  transition: line-height 0.1s ease;
-}
-.tablesorter-metro .tablesorter-filter-row.hideme td {
-  padding: 2px;
-  margin: 0;
-  line-height: 0;
-  cursor: pointer;
-}
-.tablesorter-metro .tablesorter-filter-row.hideme * {
-  height: 1px;
-  min-height: 0;
-  border: 0;
-  padding: 0;
-  margin: 0;
-  /* don't use visibility: hidden because it disables tabbing */
-  opacity: 0;
-  filter: alpha(opacity=0);
-}
-.tablesorter-metro .filtered {
-  display: none;
-}
-.tablesorter-metro .tablesorter-errorRow td {
-  text-align: center;
-  cursor: pointer;
-  background-color: #e6bf99;
+#InstanceTable_wrapper {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  margin-right: 20px;
+  margin-left: 20px;
+  /*border-style: solid;
+	border-color: black;*/
 }
 body {
   font-family: 'Roboto', sans-serif;
-}
-.chart {
-  height: 200px;
-}
-.spacer {
-  height: 20px;
+  font-size: 11px;
+  background-image: url("../resources/agsquare.png");
 }

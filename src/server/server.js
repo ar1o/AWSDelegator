@@ -29,7 +29,6 @@ require('./model/ec2');
 require('./model/rds');
 require('./model/latest');
 require('./model/pricing');
-require('./BoxPricingCheck').getPricing();
 
 // Start mongoose and mongo
 mongoose.connect(databaseUrl, function(error) {
@@ -52,12 +51,10 @@ app.get('/api/ec2/operationPercentage', require('./route/ec2Route').operationPer
 app.get('/api/rds/instances', require('./route/rdsRoute').instances);
 app.get('/api/rds/metrics', require('./route/rdsRoute').metrics);
 
-app.get('/api/billing/monthToDate', require('./route/billingRoute').monthToDate);
-app.get('/api/billing/byHour', require('./route/billingRoute').byHour);
-app.get('/api/billing/instanceCost', require('./route/billingRoute').instanceCost);
-app.get('/api/billing/instanceCostHourly', require('./route/billingRoute').instanceCostHourlyByDate);
+app.get('/api/billing/hourlyCostProduct', require('./route/billingRoute').hourlyCostProduct);
 app.get('/api/billing/instanceCostAll', require('./route/billingRoute').instanceCostAll);
 app.get('/api/billing/calcFreeTierCost', require('./route/billingRoute').calcFreeTierCost);
+app.get('/api/billing/totalCostProduct',require('./route/billingRoute').hourlyCostProduct);
 
 function errorHandler(err, req, res, next) {
     console.error(err.message);

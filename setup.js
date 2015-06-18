@@ -42,6 +42,7 @@ MongoClient.connect(databaseUrl, function(err, db) {
         console.log("Database Alert: 'pricing' collection created");
         //get current free-tier rates
         require('./src/server/BoxPricingCheck').getPricing();
+        console.log("Free-tier pricing data retreived")
         db.createCollection("ec2Instances", function(err, collection) {
             if (err) throw err;
             console.log("Database Alert: 'ec2Instances' collection created");
@@ -54,7 +55,7 @@ MongoClient.connect(databaseUrl, function(err, db) {
                     AWS.config.credentials = awsCredentials.default;
                     ec2Parser.parseInstances(function() {
                         console.log("Parse Alert(ec2): Instance parsing completed");
-                        console.log("Setup script completed. You may now start the server.");
+                        console.log("Setup script completed, You may now start the server");
                         db.close();
                         mongoose.connection.close(function() {
 							process.exit(0);                        	

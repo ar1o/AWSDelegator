@@ -1,69 +1,32 @@
-
-<div id="EC2Instances">
-	<table id="InstanceTable" class="tablesorter-metro" cellspacing="1">
-		<thead>
-			<tr class="dark-row">
-				<th class="tablesorter-header" data-column="0">
-					Instance ID
-				</th>
-				<th class="tablesorter-header" data-column="1">
-					State
-				</th>
-				<th class="tablesorter-header" data-column="2">
-					Image
-				</th>
-				<th class="tablesorter-header" data-column="3">
-					Key Name
-				</th>
-				<th class="tablesorter-header" data-column="4">
-					Type
-				</th>
-				<!--Failing to sort-->
-				<th class="tablesorter-header" data-column="5">
-					Launched
-				</th>
-				<th class="tablesorter-header" data-column="6">
-					Zone
-				</th>
-				<th class="tablesorter-header" data-column="7">
-					Lifetime
-				</th>
-				<th class="tablesorter-header" data-column="8">
-					E-Mail
-				</th>
-				<th class="tablesorter-header" data-column="8">
-					Volume ID
-				</th>
-				<th class="tablesorter-header" data-column="8">
-					LastActiveTime
-				</th>
-			</tr>
-		</thead>
-		<tbody id="instanceData">
-		{{#each instances}}
-			<tr class="tablesorter-body">
-				<td>{{this.instance}}</td>
-				<td>{{this.state}}</td>
-				<td>{{this.imageId}}</td>
-				<td>{{this.keyName}}</td>
-				<td>{{this.instanceType}}</td>
-				<td>{{this.launchTime}}</td> 
-				<td>{{this.zone}}</td>
-				<td>{{this.duration}} min</td>
-				<td>{{this.email}}</td>
-				<td>{{this.volumeid}}</td>
-				<td>{{this.lastActiveTime}}</td>
-			</tr>
-		{{/each}}
-		</tbody>	
-	</table>
-
-</div>
-<div class="options">
-EC2 Instance:
-<select class="instanceDropDown">
-{{#each instances}}
-<option value="{{this.instance}}">{{this.instance}}</option>
-{{/each}}
-
- </div>
+<table id="InstanceTable" class="hover">
+	<thead>
+		<tr class="dark-row">
+			<th>Instance ID</th>
+			<th>State</th>
+			<th>Key Name</th>
+			<th>Type</th>
+			<th>Launched</th>
+			<th>Zone</th>
+			<th>Lifetime</th>
+			<th>E-Mail</th>
+			<th>Volume ID</th>
+			<th>LastActiveTime</th>
+		</tr>
+	</thead>
+	<tbody id="instanceData">
+	{{#each instances}}
+		<tr>
+			<td >{{this.instance}}</td>
+			<td>{{this.state}}</td>
+			<td>{{this.keyName}}</td>
+			<td>{{this.instanceType}}</td>
+			<td>{{this.launchTime}}</td> 
+			<td>{{this.zone}}</td>
+			<td>{{this.duration}} min</td>
+			<td>{{this.email}}</td>
+			<td>{{this.volumeid}}</td>
+			<td>{{this.lastActiveTime}}</td>
+		</tr>
+	{{/each}}
+	</tbody>	
+</table>

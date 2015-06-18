@@ -4,7 +4,6 @@ var MongoClient = mongodb.MongoClient;
 var databaseUrl = 'mongodb://localhost:27017/awsdb';
 var mongoose = require('mongoose');
 var freeTier = require('./FreeTier');
-
 var region = 0; //us-east-1
 var compType = 0; //generalCompute
 var size = 0 //micro
@@ -43,18 +42,16 @@ exports.updateFreeTier = function() {
             });
             getPricing(function(err, ret) {
                 if (err) throw err;
-
             });
         }
         if (d.length == databaseLength) {
             console.log(d.length,' Pricing docs. Pricing collection already created.');
-        }
+		}
         setTimeout(function(){
             freeTier.CheckFreeTier();
             console.log("NonFreeRates have been appended to the currentCollection");
         },1000);
     });
-
 }
 
 exports.getPricing = function() {
@@ -179,7 +176,6 @@ exports.getPricing = function() {
                 item.Price = pricingJSON.config.regions[region].types[2].tiers[1].prices.USD;
                 db.collection("pricing").insert((item.toObject()));
             });
-        db.close();
     });
 }
 

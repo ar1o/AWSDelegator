@@ -66,7 +66,7 @@ exports.s3Connect = function(_callback) {
                                 console.log("Parse Alert(rds): Metrics parsing completed");
                                 AWS.config.credentials = awsCredentials.dev2;
                                 rdsParser.parseInstances(function() {
-                                    console.log("Parse Alert(rds): Instance parsing completed");                                                        
+                                    console.log("Parse Alert(rds): Instance parsing completed");                                                      
                                 }); 
                             });
                         });
