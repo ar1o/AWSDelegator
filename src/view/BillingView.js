@@ -49,7 +49,7 @@ var BillingView = Backbone.View.extend({
                     tooltip: {
                         formatter: function() {
                             return '<b>'+ this.series.name +'</b><br/>'+
-                                new Date(this.x) +', '+ this.y;
+                                new Date(this.x) +', '+ this.y.toFixed(4);
                         }
                     },
                     legend: {

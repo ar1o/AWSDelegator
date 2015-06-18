@@ -1,26 +1,64 @@
+// The instances model where we manipulate the data from AWS
 var InstancesModel = Backbone.Model.extend({
-	initialize: function() {
+	initialize: function() {instancesinstances
 		var data = {};
 		var result;
 		this.change('dataReady');
 	},
-	aws_result: function() {
+	ec2_result: function() {
 		var self = this;
 		return $.ajax({
 			type: 'GET',
 			data: self.data,
 			contentType: 'plain/text',
-			url: host + '/api/instances',
+			url: host + '/api/ec2/instances',
+			success: function(data) {
+				result = data;
+			}
+		});
+	},
+	rds_result: function() {
+		var self = this;
+		return $.ajax({
+			type: 'GET',
+			data: self.data,
+			contentType: 'plain/text',
+			url: host + '/api/rds/instances',
 			success: function(data) {
 				result = data;
 			}
 		});
 	},
 
-	getEC2Instances: function() {
+	addEC2Instance: function() {
 		var self = this;
+		this.ec2_result().done(function(result) {
+			instanceCollection.reset();
+			for (var r in result) {
+				var data = new InstanceModel({
+					instance: result[r].Id,
+					imageId: result[r].ImageId,
+					state: result[r].State,
+					keyName: result[r].KeyName,
+					instanceType: result[r].Type,
+					launchTime: result[r].LaunchTime,
+					duration: result[r].Lifetime,
+					zone: result[r].Zone,
+					email: result[r].Email,
+					volumeid: result[r].VolumeId,
+					lastActiveTime: result[r].LastActiveTime
+				});
+				instanceCollection.add(data);
+			}
+			self.set('dataReady', Date.now());
+		}).fail(function() {
+			console.log('FAILED');
+		});
+	},
 
-		this.aws_result().done(function(result) {
+	addRDSInstance: function() {
+		var self = this;
+		this.rds_result().done(function(result) {
 			instanceCollection.reset();
 			for (var r in result) {
 				var data = new InstanceModel({
@@ -45,7 +83,7 @@ var InstancesModel = Backbone.Model.extend({
 	}
 });
 
-var InstanceModel = Backbone.Model.extend({
+var ec2InstanceModel = Backbone.Model.extend({
 	defaults: {
 		instance: null,
 		imageId: null,
@@ -62,10 +100,36 @@ var InstanceModel = Backbone.Model.extend({
 });
 
 var EC2InstancesCollection = Backbone.Collection.extend({
-	model: InstanceModel,
+	model: ec2InstanceModel,
+	initialize: function() {
+		// This will be called when an item is added. pushed or unshifted
+		this.on('add', function(model) {});
+	}
+});
+
+var rdsInstanceModel = Backbone.Model.extend({
+	defaults: {
+		DBInstanceIdentifier: null,
+		DBInstanceClass: null,
+		Engine: null,
+		DBInstanceStatus: null,
+		MasterUsername: null,
+		DBName: null,
+		Endpoint: null,
+		AllocatedStorage: null,
+		InstanceCreateTime: null,
+		AvailabilityZone: null,
+		MultiAZ: null,
+		StorageType: null
+	}
+});
+
+var RDSInstancesCollection = Backbone.Collection.extend({
+	model: rdsInstanceModel,
 	initialize: function() {
 		this.on('add', function(model) {});
 	}
 });
 
-var instanceCollection = new EC2InstancesCollection();
+var ec2InstanceCollection = new EC2InstancesCollection();
+var ec2InstanceCollection = new RDSInstancesCollection();

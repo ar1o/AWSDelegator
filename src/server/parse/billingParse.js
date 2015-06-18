@@ -6,16 +6,15 @@ var properties = ['RateId', 'ProductName', 'UsageType', 'Operation', 'Availabili
 ];
 var numericProperties = ['RateId', 'UsageQuantity', 'Rate', 'Cost'];
 
-
 // parses latestBills.csv and updates the 'awsdb' database with new bills.
 exports.parseBillingCSV = function(_callback) {
+    console.log("Parse Alert(Billing): CSV parsing initiated");
     MongoClient.connect(databaseUrl, function(err, db) {
         if (err) {
             console.log('Unable to connect to the mongoDB server. Error:', err);
         } else {
             console.log('Connection established to ', databaseUrl);            
             db.collections(function(err, collections_) {
-                checkForLatestCollection(db,collections_);
                 db.collection('latest').findOne(function(err, latest) {
                     fs.readFile(process.cwd() + '/data/latestBills.csv', "utf8", function(error, text) {
                         if (error) throw error;
@@ -54,7 +53,8 @@ exports.parseBillingCSV = function(_callback) {
                                             doc[properties[j]] = parseFloat(bill[propertiesIndex[j]]);
                                         }
                                     }                                    
-                                    db.collection(currentCollection).insert(doc);
+                                    db.collection(currentBillingCollection).insert(doc);
+                                    
                                     db.collection('latest').update({
                                         _id: latest._id
                                     }, {
@@ -63,7 +63,7 @@ exports.parseBillingCSV = function(_callback) {
                                 }
                             }
                         }                        
-                        console.log("Database Alert: "+newDocCount+" documents added to "+currentCollection);
+                        console.log("Database Alert: "+newDocCount+" documents added to "+currentBillingCollection);
                         _callback();
                     });
                 });
@@ -71,14 +71,3 @@ exports.parseBillingCSV = function(_callback) {
         }
     });
 };
-
-// checks if collection 'latest' is present in 'awsdb'. if not creates it.
-function checkForLatestCollection(db,collections) {
-    var re = /latest/g;
-    var collectionExists = 0;
-    for (var i in collections)
-        if (re.exec(collections[i]['namespace'])) collectionExists = 1;
-    if (collectionExists == 0) db.collection('latest').save({
-        time: "2010:01:01 00:00:00"
-    });
-}
