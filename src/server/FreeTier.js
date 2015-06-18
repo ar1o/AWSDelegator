@@ -1,44 +1,23 @@
 
-var request = require("request");
-var fs = require("fs");
-var mongodb = require('mongodb');
-var MongoClient = mongodb.MongoClient;
-var databaseUrl = 'mongodb://localhost:27017/awsdb';
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
-
-var billingSchema = new mongoose.Schema({
-    _id: mongoose.Schema.ObjectId,
-    ProductName: String,
-    Cost: Number,
-    ResourceId: String,
-    UsageStartDate: String,
-    "user:Volume Id": String,
-    Rate: Number,
-    UsageType: String,
-    ItemDescription: String,
-    UsageQuantity: Number,
-    RateId: Number,
-    NonFreeRate: Number
-
-});
 // 
-var billingModel = mongoose.model('billingModel', billingSchema, 'bills201506');
+
 // var pricingModel = mongoose.model('pricingModel', ServiceSchema, 'pricing');
+
 
 var updateBillingValues = function(pricingQuery, billingQuery, callback) {
     var pricingScope = {_id:0, Price : 1};
-    pricingModel.findOne(pricingQuery, pricingScope).exec(function(err, price) {
+    mongoose.model('pricingModel').findOne(pricingQuery, pricingScope).exec(function(err, price) {
         if (err) {
             throw err;
         } else {
-            billingModel.find(billingQuery).exec(function(e, d) {
+            mongoose.model('Billings').find(billingQuery).exec(function(e, d) {
                 if (e) {
                     throw e;
                 } else {
                     for (var i in d) {
-                        console.log(d);
-                        var m = new billingModel({
+                        var m = {
                             _id: d[i]._id,
                             ProductName: d[i].ProductName,
                             Cost: d[i].Cost,
@@ -51,18 +30,17 @@ var updateBillingValues = function(pricingQuery, billingQuery, callback) {
                             UsageQuantity: d[i].UsageQuantity,
                             RateId: d[i].RateId,
                             NonFreeRate: price.Price
-                        });
+                        };
                         //Switch over to rate IDs for billing queries at some point.
-                        var upsertData = m.toObject();
-                        billingModel.update({
-                            _id: m.id
-                        }, upsertData, {
+                        
+                        mongoose.model('Billings').update({
+                            _id: m._id
+                        }, m, {
                             upsert: true,
                             multi: true
                         }, function(err, op) {
                             if (err) {
                                 throw err;
-                            } else {
                             }
                         });
                     }
@@ -71,9 +49,9 @@ var updateBillingValues = function(pricingQuery, billingQuery, callback) {
         }
     });
 }
-exports.freeTier = function(req, res) {
+exports.CheckFreeTier = function(req, res) {
     var db = mongoose.connection;
-    billingModel.aggregate({
+    mongoose.model('Billings').aggregate({
         $match: {
             ItemDescription: {$regex: /free tier/}
         }

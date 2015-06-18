@@ -1,5 +1,28 @@
-module.exports = function(req,res){
-    mongoose.model('Instances').aggregate([{
+exports.metrics = function(req, res) {
+    console.log(req.query);
+	var instanceId = req.query.instance;
+	mongoose.model('ec2Metrics').aggregate([{
+		$match: {
+			InstanceId: {
+				$eq: instanceId
+			}
+		}
+	}, {
+		$project: {
+			_id: 0,
+			InstanceId: 1,
+			NetworkIn: 1,
+			NetworkOut: 1,
+			CPUUtilization: 1,
+			Time: 1
+		}
+	}]).exec(function(e, d) {
+		res.send(d);
+	});
+}
+
+exports.instances = function(req, res) {
+    mongoose.model('ec2Instances').aggregate([{
         $project: {
             _id:0,
             Id: 1,
@@ -16,14 +39,13 @@ module.exports = function(req,res){
         }
     }]).exec(function(e, d) {
         if(e) throw e;
-        // console.log(d);
         res.send(d);
     });
 }
 
-exports.getOperationPercentage = function(instancesId, res){
+exports.operationPercentage = function(req, res){
     var operations = {},operationPercentage = {};
-    mongoose.model('Billings').find({Id: instancesId}).exec(function(e,d){
+    mongoose.model('Billings').find({Id: req}).exec(function(e,d){
         for(var i=0 in d){
             if(operations.indexOf(d.Operation)==-1){
                 operations[d.Operation] = 1;

@@ -1,18 +1,14 @@
 // Here is where the EC2 Instances are renders the instanceCollection JSON object
 // by the handlebars template called InstancesView.handlebars
 
-
 var InstancesView = Backbone.View.extend({
-
     className: 'InstancesView',
-
     initialize: function(options) {
-
         if (!this.model) {
             this.model = new InstancesModel();
         }
         this.model.addEC2Instance();
-
+        this.model.addRDSInstance();
         this.billingActivity = new BillingView();
         this.metricsActivity = new MetricsView();
         this.bindings();
