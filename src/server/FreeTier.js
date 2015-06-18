@@ -29,7 +29,9 @@ var updateBillingValues = function(pricingQuery, billingQuery, callback) {
                             ItemDescription: d[i].ItemDescription,
                             UsageQuantity: d[i].UsageQuantity,
                             RateId: d[i].RateId,
-                            NonFreeRate: price.Price
+                            NonFreeRate: price.Price,
+                            NonFreeCost: (d[i].UsageQuantity*price.Price)
+
                         };
                         //Switch over to rate IDs for billing queries at some point.
                         

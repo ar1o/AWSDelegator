@@ -15,6 +15,7 @@ var InstancesView = Backbone.View.extend({
 
         this.billingActivity = new BillingView();
         this.metricsActivity = new MetricsView();
+        // this.NonFreeBillActivity = new NonFreeBillingView();
         this.bindings();
         this.render();
 
@@ -38,6 +39,7 @@ var InstancesView = Backbone.View.extend({
             });
             this.metricsActivity.model.getMetrics(instanceCollection.at(0).get('instance'));
             this.billingActivity.model.getBilling(instanceCollection.at(0).get('instance'));
+            // this.NonFreeBillActivity.model.getBilling(instanceCollection.at(0).get('instance'));
         }.bind(this));
 
         this.$el.on("change", '.instanceDropDown', function(e) {
@@ -45,6 +47,7 @@ var InstancesView = Backbone.View.extend({
             totalCostInstancesCollection.reset();
             this.billingActivity.model.getBilling(selected); 
             this.metricsActivity.model.getMetrics(selected);
+            // this.NonFreeBillActivity.model.getMetrics(selected);
 
         }.bind(this));
     },
@@ -56,5 +59,6 @@ var InstancesView = Backbone.View.extend({
         this.$el.html(html);
         this.$el.append(this.billingActivity.el);
         this.$el.append(this.metricsActivity.el);
+        // this.$el.append(this.NonFreeBillActivity.el);
     }
 });

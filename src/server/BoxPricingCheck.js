@@ -38,7 +38,6 @@ exports.updateFreeTier = function() {
     var db = mongoose.connection;
     pricingModel.find([{}]).exec(function(e, d) {
         if (e) throw e;
-        console.log("Length", d.length);
         //include additional check for currentCollection be
         if (d.length == 0) {
             console.log("Pricing collection Not created yet");

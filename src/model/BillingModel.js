@@ -6,8 +6,6 @@ var InstanceTotalCostCollection = Backbone.Collection.extend({
 
 	}
 });
-
-// Create the collection
 var totalCostInstancesCollection = new InstanceTotalCostCollection();
 
 var BillingsModel = Backbone.Model.extend({

@@ -51,17 +51,20 @@ table.tablesorter thead tr .headerSortUp {
   width: auto;
   padding: 10px;
 }
-.CPU {
-  float: left;
+.MetricsView {
+  postions: absolute;
+  width: 700px;
   padding: 10px;
 }
-#NetOut {
+#cpuContainer {
   float: left;
-  padding: 10px;
 }
-#NetIn {
+#networkContainer {
   float: left;
-  padding: 10px;
+}
+th,
+td {
+  overflow: hidden;
 }
 .BillingView {
   width: 500px;
@@ -78,20 +81,20 @@ td {
   margin-left: auto;
   margin-right: auto;
 }
-.MetricsView {
-  postions: absolute;
-  width: 700px;
+.NonFreeBillingView {
+  width: 500px;
   padding: 10px;
-}
-#cpuContainer {
-  float: left;
-}
-#networkContainer {
-  float: left;
 }
 th,
 td {
   overflow: hidden;
+}
+.options {
+  top: 55%;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
 }
 .ts-align-wrap {
   white-space: nowrap;

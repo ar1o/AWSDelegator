@@ -1,6 +1,5 @@
 var BillingView = Backbone.View.extend({
     className: 'BillingView',
-
     initialize: function(options) {
         
         if (!this.model) {
@@ -75,7 +74,7 @@ var BillingView = Backbone.View.extend({
 
     render: function() {
         var html = Handlebars.templates.BillingView({
-            billing: totalCostInstancesCollection.toJSON(),
+            billing: totalCostInstancesCollection.toJSON()
         });
         this.$el.html(html);
     }

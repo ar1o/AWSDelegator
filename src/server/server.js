@@ -49,7 +49,7 @@ db.on("open", function() {
     billingSchema = new mongoose.Schema({
         _id: mongoose.Schema.ObjectId,
         ProductName: String,
-        Cost: Number,
+        Cost: {type: Number, default: 0},
         ResourceId: String,
         UsageStartDate: String,
         "user:Volume Id": String,
@@ -58,7 +58,9 @@ db.on("open", function() {
         ItemDescription: String,
         UsageQuantity: Number,
         RateId: Number,
-        NonFreeRate : Number
+        NonFreeRate : Number,
+        //unsure of default : '$Cost'?
+        NonFreeCost: { type: Number, default : 0}
 
     });
     latestSchema = new mongoose.Schema({
@@ -116,8 +118,14 @@ app.get('/api/billing/byHour', require('./route/billingRoute').byHour);
 app.get('/api/billing/instanceCost', require('./route/billingRoute').instanceCost);
 app.get('/api/billing/instanceCostHourly', require('./route/billingRoute').instanceCostHourlyByDate);
 app.get('/api/billing/instanceCostAll', require('./route/billingRoute').instanceCostAll);
-
 app.get('/api/billing/calcFreeTierCost', require('./route/billingRoute').calcFreeTierCost);
+
+// app.get('/api/NonFreeBilling/monthToDate', require('./route/NonFreeBillingRoute').monthToDate);
+// app.get('/api/NonFreeBilling/byHour', require('./route/NonFreeBillingRoute').byHour);
+// app.get('/api/NonFreeBilling/instanceCost', require('./route/NonFreeBillingRoute').instanceCost);
+// app.get('/api/NonFreeBilling/instanceCostHourly', require('./route/NonFreeBillingRoute').instanceCostHourlyByDate);
+// app.get('/api/NonFreeBilling/instanceCostAll', require('./route/NonFreeBillingRoute').instanceCostAll);
+// app.get('/api/NonFreeBilling/calcFreeTierCost', require('./route/NonFreeBillingRoute').calcFreeTierCost);
 
 function errorHandler(err, req, res, next) {
     console.error(err.message);
