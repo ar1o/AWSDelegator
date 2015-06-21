@@ -51,9 +51,11 @@ exports.s3Connect = function(_callback) {
                         if (err) console.log('ERROR: ' + err);
                         console.log(files[0] + " renamed to latestBills.csv");
                     });
-                    billingParser.parseBillingCSV(function() {
-                        console.log("Parse Alert(Billing): CSV parsing completed");
+                    billingParser.parseBillingCSV(function() {   
                         if (typeof _callback=="function") _callback();
+                        //require model here, as the model also ties the schema to it, with the recently updated var of currentBillingCollection
+                        require('../model/billing');
+                        require('../FreeTier').CheckFreeTier();
                     });
                     AWS.config.credentials = awsCredentials.default;
                     ec2Parser.parseMetrics(function() {
