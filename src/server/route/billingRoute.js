@@ -1,4 +1,3 @@
-//Query all the product costs month to date
 exports.calcFreeTierCost = function(req, res) {
     mongoose.model('Billings').aggregate([{
         $match: {
@@ -40,370 +39,404 @@ exports.calcFreeTierCost = function(req, res) {
     });
 };
 
-
-
-//Query all the product costs month to date
-exports.monthToDate = function(req, res) {
+exports.totalCostProduct = function(req, res) {
+    var totalCostProduct = {};
     mongoose.model('Billings').aggregate([{
         $match: {
             Cost: {
-                $gte: 0
-            },
-            $or: [{
-                ResourceId: {
-                    $regex: '^(i-)'
-                }
-            }, {
-                ResourceId: {
-                    $regex: '^(vol-)'
-                }
-            }]
+                $gt: 0
+            }
+        }
+    }, {
+        $project: {
+            _id: 1,
+            ResourceId: 1,
+            Cost: 1,
+            ProductName: 1,
+            UsageStartDate: 1
         }
     }, {
         $group: {
             _id: "$ProductName",
-            total: {
+            Total: {
                 $sum: "$Cost"
             }
         }
     }]).exec(function(e, d) {
-        res.send(d);
+        var totalCostProduct = {};
+        totalCostProduct = {
+            data: d,
+            month: currentBillingCollection.substring(9,11),
+            year: currentBillingCollection.substring(5,9) 
+        }
+        res.send(totalCostProduct);
     });
 };
 
-//Query the total cost of a product by that hour
-exports.byHour = function(req, res) {
+
+exports.hourlyCostProduct = function(req, res) {
+    var productName = req.query.productName;
+    var productName = 'Amazon Elastic Compute Cloud'
     mongoose.model('Billings').aggregate([{
         $match: {
             Cost: {
-                $gte: 0
+                $gt: 0
             },
             ProductName: {
-                $eq: "Amazon Elastic Compute Cloud"
-            },
-            UsageStartDate: {
-                $eq: "2015-05-01 00:00:00"
+                $eq: productName
             }
         }
     }, {
         $group: {
-            _id: "$ProductName",
-            total: {
+            _id: "$UsageStartDate",
+            Total: {
                 $sum: "$Cost"
             }
         }
     }]).exec(function(e, d) {
-        // console.log(d);
         res.send(d);
     });
 };
 
 
-exports.instanceCost = function(req, res) {
-    var instances = {};
-    var count = 0;
-    // Select objects from collection
-    mongoose.model('Billings').aggregate([{
-        $match: {
-            Cost: {
-                $gte: 0
-            },
-            ResourceId: {
-                $regex: '^(i-)'
-            }
-        }
-    }, {
-        $group: {
-            _id: "$ResourceId",
-            "user:Volume Id": {
-                $addToSet: "$user:Volume Id"
-            },
-            total: {
-                $sum: "$Cost"
-            }
-        }
-    }]).exec(function(e, d) {
-        //loop over these objects, create an array of your foreign keys and a hashmap of our objects stored by ID
-        //(so that later we can do yourHashmap[some_id] to get your object from collection)
-        for (var r in d) {
-            if (d[r]['user:Volume Id'][0] == 'null') {
-                instances[d[r]._id] = {
-                    resourceId: d[r]._id,
-                    volumeId: d[r]['user:Volume Id'][0],
-                    cost: d[r].total
-                };
-            } else {
-                instances[d[r]['user:Volume Id'][0]] = {
-                    volumeId: d[r]['user:Volume Id'][0],
-                    resourceId: d[r]._id,
-                    cost: d[r].total
-                };
-            }
-            count++;
-        }
+// exports.monthToDate = function(req, res) {
+//     mongoose.model('Billings').aggregate([{
+//         $project: {
+//             _id: 0,
+//             ResourceId: 1,
+//             Cost: 1,
+//             ProductName: 1,
+//             UsageStartDate: 1
+//         }
+//     }, {
+//         $group: {
+//             _id: {
+//                 UsageStartDate: "$UsageStartDate",
+//                 ProductName: "$ProductName"
+//             },
+//             Total: {
+//                 $sum: "$Cost"
+//             }
+//         }
+//     }, {
+//         $sort: {
+//             _id: 1 // Need to sort by date.
+//         }
+//     }]).exec(function(e, d) {
+//         console.log(d[0]);
 
-        mongoose.model('Billings').aggregate({
-            $match: {
-                Cost: {
-                    $gte: 0
-                },
-                "user:Volume Id": {
-                    $regex: '^(vol-)'
-                }
-            }
-        }, {
-            $group: {
-                _id: "$user:Volume Id",
-                ResourceId: {
-                    $addToSet: "$ResourceId"
-                },
-                total: {
-                    $sum: "$Cost"
-                }
-            }
-        }).exec(function(e, d) {
-            //loop over collection B and use the foreign key on collection to access our objects from
-            //collection using the hashmap we built
-            for (var r in d) {
-                //now we have the matching collection A and collection B objects and we can do whatever
-                //you want with them.
-                if (d[r]._id in instances) {
-                    instances[d[r]._id].cost += d[r].total;
-                }
-            }
-            // console.log(instances);
-            res.send(instances);
-        });
 
-    });
-};
 
-//Given an instances get cost HOURLY
+
+        
+//         res.send(d);
+//     });
+// };
+
+// exports.instanceCost = function(req, res) {
+//     var instances = {};
+//     var count = 0;
+//     // Select objects from collection
+//     mongoose.model('Billings').aggregate([{
+//         $match: {
+//             Cost: {
+//                 $gte: 0
+//             },
+//             ResourceId: {
+//                 $regex: '^(i-)'
+//             }
+//         }
+//     }, {
+//         $group: {
+//             _id: "$ResourceId",
+//             "user:Volume Id": {
+//                 $addToSet: "$user:Volume Id"
+//             },
+//             total: {
+//                 $sum: "$Cost"
+//             }
+//         }
+//     }]).exec(function(e, d) {
+//         //loop over these objects, create an array of your foreign keys and a hashmap of our objects stored by ID
+//         //(so that later we can do yourHashmap[some_id] to get your object from collection)
+//         for (var r in d) {
+//             if (d[r]['user:Volume Id'][0] == 'null') {
+//                 instances[d[r]._id] = {
+//                     resourceId: d[r]._id,
+//                     volumeId: d[r]['user:Volume Id'][0],
+//                     cost: d[r].total
+//                 };
+//             } else {
+//                 instances[d[r]['user:Volume Id'][0]] = {
+//                     volumeId: d[r]['user:Volume Id'][0],
+//                     resourceId: d[r]._id,
+//                     cost: d[r].total
+//                 };
+//             }
+//             count++;
+//         }
+
+//         mongoose.model('Billings').aggregate({
+//             $match: {
+//                 Cost: {
+//                     $gte: 0
+//                 },
+//                 "user:Volume Id": {
+//                     $regex: '^(vol-)'
+//                 }
+//             }
+//         }, {
+//             $group: {
+//                 _id: "$user:Volume Id",
+//                 ResourceId: {
+//                     $addToSet: "$ResourceId"
+//                 },
+//                 total: {
+//                     $sum: "$Cost"
+//                 }
+//             }
+//         }).exec(function(e, d) {
+//             //loop over collection B and use the foreign key on collection to access our objects from
+//             //collection using the hashmap we built
+//             for (var r in d) {
+//                 //now we have the matching collection A and collection B objects and we can do whatever
+//                 //you want with them.
+//                 if (d[r]._id in instances) {
+//                     instances[d[r]._id].cost += d[r].total;
+//                 }
+//             }
+//             res.send(instances);
+//         });
+
+//     });
+// };
+
+/*
+* Query EC2 instances for hourly cost. 
+*/
 exports.instanceCostAll = function(req, res) {
-    // console.log("Cost request",req.query.instance);
-    var instanceId = req.query.instance;
-    var instances = {};
-    // Select objects from collection
-    mongoose.model('Billings').aggregate([{
+        // console.log("Cost request",req.query.instance);
+        var instanceId = req.query.instance;
+        var volumeId;
+        //instances hashmap
+        var instances = {};
+
+        // Query instances collection to associate volumeIds to instanceIds. 
+        mongoose.model('ec2Instances').aggregate([{
             $match: {
-                ResourceId: {
+                Id: {
                     $eq: instanceId
                 }
             }
         }, {
             $project: {
                 _id: 0,
-                ResourceId: 1,
-                "user:Volume Id": 1,
-                Cost: 1,
-                UsageStartDate: 1
+                VolumeId: 1
             }
-        }, {
-            $group: {
-                _id: "$UsageStartDate",
-                ResourceId: {
-                    $addToSet: "$ResourceId"
-                },
-                VolumeId: {
-                    $addToSet: "$user:Volume Id"
-                },
-                Total: {
-                    $sum: "$Cost"
-                }
-            }
-        }, {
-             $sort : { _id : 1
-            } 
-        }]).exec(function(e, d) {
-        // console.log("\nINSTANCE COST");
-        // console.log(d[0].ResourceId[0]);
-        // console.log(d[0].VolumeId[0]);
-        // console.log(d[0].Total);
-        // console.log(d[0]._id);
-        // loop over these objects, create an array of your foreign keys and a hashmap of our objects stored by ID
-        // (so that later we can do yourHashmap[some_id] to get your object from collection)
-        var volumeId;
-        for (var r in d) {
+        }]).exec(function(err, result) {
+            // console.log(result[0].VolumeId[0]);
+            // console.log(instanceId);
 
-            instances[d[r]._id] = {
-                    resourceId: d[r].ResourceId[0],
-                    volumeId: d[r].VolumeId[0],
-                    cost: d[r].Total,
-                    date: d[r]._id
-            };
-            if(d[r].VolumeId[0] != null) {
-                volumeId = d[r].VolumeId[0];
-            }
-        }
+            volumeId = result[0].VolumeId[0]
 
-        mongoose.model('Billings').aggregate({
-           $match: {
-                ResourceId: {
-                    $eq: volumeId
-                }
-            }
-        }, {
-            $project: {
-                _id: 0,
-                ResourceId: 1,
-                Cost: 1,
-                UsageStartDate: 1
-            }
-        }, {
-            $group: {
-                _id: "$UsageStartDate",
-                VolumeId: {
-                    $addToSet: "$ResourceId"
-                },
-                Total: {
-                    $sum: "$Cost"
-                }
-            }
-        }, {
-             $sort : { _id : 1
-            } 
-        }).exec(function(e, d) {
-            // console.log(d);
-            // console.log("instanceLENGTH: " + Object.keys(instances).length);
-            // console.log("\nVOLUME COST")
-            //loop over collection B and use the foreign key on collection to access our objects from
-            //collection using the hashmap we built
-            for (var r in d) {
-                // console.log(d[r].resourceId + "\t" + d[r]._id + "\t" + d[r].total);
-                //now we have the matching collection A and collection B objects and we can do whatever
-                //you want with them.
-                if (d[r]._id in instances) {
-                    instances[d[r]._id].cost += d[r].Total;
-                }
-            }
-            // // var total_cost = 0;
-            // // console.log("\nTOTAL COST")
-            // // for (var x in instances) {
-            // // total_cost += instances[x].cost;
-            // // console.log(instances[x].resourceId + "\t" + instances[x].cost + "\t" + instances[x].volumeId + "\t" + total_cost + "\t" + count);
-            // // }
-            res.send(instances);
-        });
-    // res.send(d);
-    });
-
-};
-
-
-exports.instanceCostHourlyByDate = function(req, res) {
-    var startDuration = "2015-06-03 00:00:00";
-    var endDuration = "2015-06-03 23:00:00"
-    var instances = {};
-    // var count = 0;
-    // Select objects from collection
-    mongoose.model('Billings').aggregate([{
-        $match: {
-            Cost: {
-                $gte: 0
-            },
-            ResourceId: {
-                $regex: '^(i-)'
-            },
-            $and: [{
-                UsageStartDate: {
-                    $gte: startDuration
+            //query billing collection for cost on EC2 resourceId's
+            mongoose.model('Billings').aggregate([{
+                $match: {
+                    ResourceId: {
+                        $eq: instanceId
+                    }
                 }
             }, {
-                UsageStartDate: {
-                    $lte: endDuration
+                $project: {
+                    _id: 0,
+                    ResourceId: 1,
+                    Cost: 1,
+                    UsageStartDate: 1
                 }
-            }]
-        }
-    }, {
-        $group: {
-            _id: "$ResourceId",
-            "user:Volume Id": {
-                $addToSet: "$user:Volume Id"
-            },
-            "UsageStartDate": {
-                $addToSet: "$UsageStartDate"
-            },
-            total: {
-                $sum: "$Cost"
-            }
-        }
-    }]).exec(function(e, d) {
-        // console.log("\nINSTANCE COST");
-
-        // console.log(d);
-        // loop over these objects, create an array of your foreign keys and a hashmap of our objects stored by ID
-        // (so that later we can do yourHashmap[some_id] to get your object from collection)
-        for (var r in d) {
-            if (d[r]['user:Volume Id'][0] == 'null') {
-                instances[d[r]._id] = {
-                    resourceId: d[r]._id,
-                    volumeId: d[r]['user:Volume Id'][0],
-                    cost: d[r].total
-                };
-            } else {
-                instances[d[r]['user:Volume Id'][0]] = {
-                    volumeId: d[r]['user:Volume Id'][0],
-                    resourceId: d[r]._id,
-                    cost: d[r].total
-                };
-            }
-            // count++;
-
-            // console.log("instanceLENGTH: " + Object.keys(instances).length);
-            // console.log(d[r]._id + "\t" + d[r]['user:Volume Id'][0] + "\t" + d[r].total);
-        }
-
-        mongoose.model('Billings').aggregate({
-            $match: {
-                Cost: {
-                    $gte: 0
-                },
-                "user:Volume Id": {
-                    $regex: '^(vol-)'
-                },
-                $and: [{
-                    UsageStartDate: {
-                        gte: startDuration
+            }, {
+                $group: {
+                    _id: "$UsageStartDate",
+                    ResourceId: {
+                        $addToSet: "$ResourceId"
+                    },
+                    VolumeId: {
+                        $addToSet: volumeId
+                    },
+                    Total: {
+                        $sum: "$Cost"
+                    }
+                }
+            }, {
+                $sort: {
+                    _id: 1 // Need to sort by date.
+                }
+            }]).exec(function(e, d) {
+                // Create a hashmap of instances
+                for (var r in d) {
+                    instances[d[r]._id] = {
+                        resourceId: d[r].ResourceId[0],
+                        volumeId: d[r].VolumeId[0],
+                        cost: d[r].Total,
+                        date: d[r]._id
+                    };
+                }
+                // Query billings collection for volumeId costs.
+                mongoose.model('Billings').aggregate({
+                    $match: {
+                        ResourceId: {
+                            $eq: volumeId
+                        }
                     }
                 }, {
-                    UsageStartDate: {
-                        lte: endDuration
+                    $project: {
+                        _id: 0,
+                        ResourceId: 1,
+                        Cost: 1,
+                        UsageStartDate: 1
                     }
-                }]
-
-            }
-        }, {
-            $group: {
-                _id: "$user:Volume Id",
-                ResourceId: {
-                    $addToSet: "$ResourceId"
-                },
-                total: {
-                    $sum: "$Cost"
-                }
-            }
-        }).exec(function(e, d) {
-            // console.log(d);
-            // console.log("instanceLENGTH: " + Object.keys(instances).length);
-            // console.log("\nVOLUME COST")
-            //loop over collection B and use the foreign key on collection to access our objects from
-            //collection using the hashmap we built
-            for (var r in d) {
-                // console.log(d[r].resourceId + "\t" + d[r]._id + "\t" + d[r].total);
-                //now we have the matching collection A and collection B objects and we can do whatever
-                //you want with them.
-                if (d[r]._id in instances) {
-                    instances[d[r]._id].cost += d[r].total;
-                }
-            }
-            // var total_cost = 0;
-            // console.log("\nTOTAL COST")
-            // for (var x in instances) {
-            // total_cost += instances[x].cost;
-            // console.log(instances[x].resourceId + "\t" + instances[x].cost + "\t" + instances[x].volumeId + "\t" + total_cost + "\t" + count);
-            // }
-            res.send(instances);
+                }, {
+                    $group: {
+                        _id: "$UsageStartDate",
+                        VolumeId: {
+                            $addToSet: "$ResourceId"
+                        },
+                        Total: {
+                            $sum: "$Cost"
+                        }
+                    }
+                }, {
+                    $sort: {
+                        _id: 1 // Need to sort by date.
+                    }
+                }).exec(function(e, d) {
+                    // Total up the costs of volumeId with respective instanceId's or that hour.
+                    for (var r in d) {
+                        if (d[r]._id in instances) {
+                            instances[d[r]._id].cost += d[r].Total;
+                        }
+                    }
+                    // Send to endpoint.
+                    res.send(instances);
+                });
+            });
         });
-
-    });
 };
+
+
+// exports.instanceCostHourlyByDate = function(req, res) {
+//     var startDuration = "2015-06-03 00:00:00";
+//     var endDuration = "2015-06-03 23:00:00"
+//     var instances = {};
+//     // var count = 0;
+//     // Select objects from collection
+//     mongoose.model('Billings').aggregate([{
+//         $match: {
+//             Cost: {
+//                 $gte: 0
+//             },
+//             ResourceId: {
+//                 $regex: '^(i-)'
+//             },
+//             $and: [{
+//                 UsageStartDate: {
+//                     $gte: startDuration
+//                 }
+//             }, {
+//                 UsageStartDate: {
+//                     $lte: endDuration
+//                 }
+//             }]
+//         }
+//     }, {
+//         $group: {
+//             _id: "$ResourceId",
+//             "user:Volume Id": {
+//                 $addToSet: "$user:Volume Id"
+//             },
+//             "UsageStartDate": {
+//                 $addToSet: "$UsageStartDate"
+//             },
+//             total: {
+//                 $sum: "$Cost"
+//             }
+//         }
+//     }]).exec(function(e, d) {
+//         // console.log("\nINSTANCE COST");
+
+//         // console.log(d);
+//         // loop over these objects, create an array of your foreign keys and a hashmap of our objects stored by ID
+//         // (so that later we can do yourHashmap[some_id] to get your object from collection)
+//         for (var r in d) {
+//             if (d[r]['user:Volume Id'][0] == 'null') {
+//                 instances[d[r]._id] = {
+//                     resourceId: d[r]._id,
+//                     volumeId: d[r]['user:Volume Id'][0],
+//                     cost: d[r].total
+//                 };
+//             } else {
+//                 instances[d[r]['user:Volume Id'][0]] = {
+//                     volumeId: d[r]['user:Volume Id'][0],
+//                     resourceId: d[r]._id,
+//                     cost: d[r].total
+//                 };
+//             }
+//             // count++;
+
+//             // console.log("instanceLENGTH: " + Object.keys(instances).length);
+//             // console.log(d[r]._id + "\t" + d[r]['user:Volume Id'][0] + "\t" + d[r].total);
+//         }
+
+//         mongoose.model('Billings').aggregate({
+//             $match: {
+//                 Cost: {
+//                     $gte: 0
+//                 },
+//                 "user:Volume Id": {
+//                     $regex: '^(vol-)'
+//                 },
+//                 $and: [{
+//                     UsageStartDate: {
+//                         gte: startDuration
+//                     }
+//                 }, {
+//                     UsageStartDate: {
+//                         lte: endDuration
+//                     }
+//                 }]
+
+//             }
+//         }, {
+//             $group: {
+//                 _id: "$user:Volume Id",
+//                 ResourceId: {
+//                     $addToSet: "$ResourceId"
+//                 },
+//                 total: {
+//                     $sum: "$Cost"
+//                 }
+//             }
+//         }).exec(function(e, d) {
+//             // console.log(d);
+//             // console.log("instanceLENGTH: " + Object.keys(instances).length);
+//             // console.log("\nVOLUME COST")
+//             //loop over collection B and use the foreign key on collection to access our objects from
+//             //collection using the hashmap we built
+//             for (var r in d) {
+//                 // console.log(d[r].resourceId + "\t" + d[r]._id + "\t" + d[r].total);
+//                 //now we have the matching collection A and collection B objects and we can do whatever
+//                 //you want with them.
+//                 if (d[r]._id in instances) {
+//                     instances[d[r]._id].cost += d[r].total;
+//                 }
+//             }
+//             // var total_cost = 0;
+//             // console.log("\nTOTAL COST")
+//             // for (var x in instances) {
+//             // total_cost += instances[x].cost;
+//             // console.log(instances[x].resourceId + "\t" + instances[x].cost + "\t" + instances[x].volumeId + "\t" + total_cost + "\t" + count);
+//             // }
+//             res.send(instances);
+//         });
+
+//     });
+// };

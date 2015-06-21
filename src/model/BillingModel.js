@@ -1,12 +1,3 @@
-var InstanceTotalCostCollection = Backbone.Collection.extend({
-	model: BillingModel,
-	initialize: function() {
-		// This will be called when an item is added. pushed or unshifted
-		this.on('add', function(model) {});
-
-	}
-});
-var totalCostInstancesCollection = new InstanceTotalCostCollection();
 
 var BillingsModel = Backbone.Model.extend({
 	initialize: function() {
@@ -35,10 +26,33 @@ var BillingsModel = Backbone.Model.extend({
 				self.set('dataReady', Date.now());
 			});
 		})(params);
+	},
+	
+	getNonFreeBilling: function(instanceid) {
+		TotalNonFreeCostCollection.reset();
+		var self = this;
+		var count = 0;
+		var params = {
+			instance: instanceid
+		};
+
+		(function(params) {
+			$.get(host + '/api/NonFreeBilling/instanceCostAll', params, function(result) {
+				for (var i in result) {
+					var data = new BillingModel({
+						resourceId: result[i].resourceId,
+						cost: result[i].cost,
+						volumeId: result[i].volumeId,
+						date: result[i].date
+					});
+					TotalNonFreeCostCollection.add(data);
+				}
+				self.set('dataReady', Date.now());
+			});
+		})(params);
 	}
 });
 
-// A billings model template
 var BillingModel = Backbone.Model.extend({
 	defaults: {
 		resourceId: null,
@@ -47,3 +61,15 @@ var BillingModel = Backbone.Model.extend({
 		date: null
 	}
 });
+
+var InstanceTotalCostCollection = Backbone.Collection.extend({
+	model: BillingModel,
+	initialize: function() {
+		// This will be called when an item is added. pushed or unshifted
+		this.on('add', function(model) {});
+
+	}
+});
+
+var TotalNonFreeCostCollection = new InstanceTotalCostCollection();
+var totalCostInstancesCollection = new InstanceTotalCostCollection();

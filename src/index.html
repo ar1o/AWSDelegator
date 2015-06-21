@@ -12,15 +12,13 @@
         <!--Let browser know website is optimized for mobile-->
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=0.2 user-scalable=yes"/>
 
-
-        <!--Import materialize.css-->
         <link media="print, projection, screen" type="text/css" href="compiled.css" rel="stylesheet"></link>
-
+        <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.7/css/jquery.dataTables.css">
+        
         <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
         <script src="http://code.highcharts.com/highcharts.js"></script>
+        <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.7/js/jquery.dataTables.js"></script>
         <script src="http://code.highcharts.com/stock/modules/exporting.js"></script>
-        <script type="text/javascript" src="lib/jquery.tablesorter.js"></script>
-        <script type="text/javascript" src="lib/jquery.tablesorter.widgets.js"></script>
         <script type="text/javascript" src="lib/handlebars.runtime.js"></script>
         <script src="lib/underscore.js"></script>
         <script src="lib/backbone.js"></script>
@@ -35,12 +33,17 @@
         <script src="model/BillingModel.js"></script>
         <script src="model/NonFreeBillingModel.js"></script>
         <script src="model/MetricsModel.js"></script>
-        
+        <script src="model/ProductCostModel.js"></script>
+        <script src="model/EC2CostModel.js"></script>
+
         <script src="view/AppView.js"></script>
         <script src="view/InstancesView.js"></script>
         <script src="view/BillingView.js"></script>
         <script src="view/NonFreeBillingView.js"></script>
         <script src="view/MetricsView.js"></script>
+        <script src="view/ProductCostView.js"></script>
+        <script src="view/EC2CostView.js"></script>
+
     </head>
 
     <body>

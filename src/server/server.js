@@ -1,29 +1,37 @@
-var http = require('http');
-var fs = require('fs');
+databaseUrl = 'mongodb://localhost:27017/awsdb';
 AWS = require('aws-sdk');
 mongoose = require('mongoose');
-var Schema = mongoose.Schema;
-var credentials = new AWS.SharedIniFileCredentials({
-    profile: 'default'
-});
-
-AWS.config.credentials = credentials;
-// AWS.config.update({region: 'us-west-2'});
-// Express import
+MongoClient = require('mongodb').MongoClient;
+Schema = mongoose.Schema;
+awsRegions = ['us-west-1', 'us-west-2', 'us-east-1'];
+billingAttributes = ['RateId', 'ProductName', 'UsageType', 'Operation', 'AvailabilityZone', 'ItemDescription',
+    'UsageStartDate', 'UsageQuantity', 'Rate', 'Cost', 'user:Volume Id', 'user:Name', 'user:Email', 'ResourceId'];
+numericAttirbutes = ['RateId', 'UsageQuantity', 'Rate', 'Cost'];
+ec2Metric = ['NetworkIn','NetworkOut','CPUUtilization'];
+ec2MetricUnit = ['Bytes','Bytes','Percent'];
+rdsMetric = ['CPUUtilization','DatabaseConnections','DiskQueueDepth','ReadIOPS','WriteIOPS'];
+rdsMetricUnit = ['Percent','Count','Count','Count/Second','Count/Second'];
+s3Region = 'us-east-1';
+s3Bucket = 'csvcontainer';
+currentBillingCollection = "";
+awsCredentials = {
+    default: new AWS.SharedIniFileCredentials({
+        profile: 'default'
+    }),
+    dev2: new AWS.SharedIniFileCredentials({
+        profile: 'dev2'
+    })
+};
 var express = require('express');
 var app = express();
 port = process.env.PORT || 3000;
-
-databaseUrl = 'mongodb://localhost:27017/awsdb';
-// Mongoose import
-mongoose = require('mongoose');
-// Mongo import
-mongo = require('mongodb');
-//CORS Module
 app.use(require('./CORS'));
-//S3 bucket connection
-currentCollection = "";
-var s3 = require('./parse/scheduler');
+
+//Instantiate mongoose schemas
+require('./model/ec2');
+require('./model/rds');
+require('./model/latest');
+require('./model/pricing');
 
 
 // Start mongoose and mongo
@@ -34,91 +42,28 @@ mongoose.connect(databaseUrl, function(error) {
 });
 var db = mongoose.connection;
 db.on("open", function() {
-    console.log("mongodb is connected!!");
-    serviceSchema = new Schema({
-        ProductName : {type : String},
-        OS : {type : String, default : null},// (pricingJSON.config.regions[region].instanceTypes[compType].sizes[size].valueColumns[0]['name']);
-        Region : {type : String, required : true}, // (pricingJSON.config.regions[region]['region']);
-        TierName : { type : String},
-        InstanceSize : { type : String},
-        TypeName : {type : String, required : true}, //(pricingJSON.config.regions[region].instanceTypes[compType].sizes[size]['size'])
-        Price : {type : Number, required : true},//(pricingJSON.config.regions[region].instanceTypes[compType].sizes[size].valueColumns[0].prices.USD);
-        DateModified : {type: Date, default : Date()}, //Date field added for insert reference
-        StorageType : { type : String}
-    });
-    billingSchema = new mongoose.Schema({
-        _id: mongoose.Schema.ObjectId,
-        ProductName: String,
-        Cost: {type: Number, default: 0},
-        ResourceId: String,
-        UsageStartDate: String,
-        "user:Volume Id": String,
-        Rate: Number,
-        UsageType: String,
-        ItemDescription: String,
-        UsageQuantity: Number,
-        RateId: Number,
-        NonFreeRate : Number,
-        //unsure of default : '$Cost'?
-        NonFreeCost: { type: Number, default : 0}
-
-    });
-    latestSchema = new mongoose.Schema({
-        _id: mongoose.Schema.ObjectId,
-        time: String
-    });
-    instanceSchema = new mongoose.Schema({        
-        Id: String,
-        State: String,
-        ImageId: String,
-        KeyName: String,
-        Type: String,
-        LaunchTime: String,
-        Zone: String,
-        Lifetime: Number,
-        LastActiveTime: String,
-        Email: String,
-        VolumeId: Array
-    });
-    ec2metricsSchema = new mongoose.Schema({
-        InstanceId: String,
-        NetworkIn: Number,
-        NetworkOut: Number,
-        CPUUtilization: Number,
-        Time: String
-    });    
-    var Instances = mongoose.model('Instances', instanceSchema, 'instances');
-    var Ec2Metrics = mongoose.model('Ec2Metrics', ec2metricsSchema, 'ec2metrics');
-    var pricingModel = mongoose.model('pricingModel', serviceSchema, 'pricing');
-
-    //TODO:
-    // var pricingSchema = new mongoose.Schema({})
-    //Pricing data check
-    
-    s3.s3Connect(function() {
-        var latestTime = mongoose.model('currentCollection', latestSchema, 'latest');
-        mongoose.model('currentCollection').find([{}]).exec(function(e, d) {
-            currentCollection = "bills" + d[0].time.substring(0, 7).replace(/-/, "");
-            var Billings = mongoose.model('Billings', billingSchema, currentCollection);
-        });
-        require('./BoxPricingCheck').updateFreeTier();
-    });
+    console.log("Database Alert: connected to ", databaseUrl);
+    require('./parse/scheduler').s3Connect(function() {
+	});
 });
 
-if (!fs.existsSync(process.cwd() + '/data')) {
-    fs.mkdirSync(process.cwd() + '/data');
-}
+app.get('/api/ec2/instances', require('./route/ec2Route').instances);
+app.get('/api/ec2/metrics', require('./route/ec2Route').metrics);
+app.get('/api/ec2/operationPercentage', require('./route/ec2Route').operationPercentage);
 
-app.get('/api/instances', require('./route/instanceRoute'));
+app.get('/api/rds/instances', require('./route/rdsRoute').instances);
+app.get('/api/rds/metrics', require('./route/rdsRoute').metrics);
 
-app.get('/api/metrics', require('./route/metricsRoute'));
-
-app.get('/api/billing/monthToDate', require('./route/billingRoute').monthToDate);
-app.get('/api/billing/byHour', require('./route/billingRoute').byHour);
-app.get('/api/billing/instanceCost', require('./route/billingRoute').instanceCost);
-app.get('/api/billing/instanceCostHourly', require('./route/billingRoute').instanceCostHourlyByDate);
+app.get('/api/billing/hourlyCostProduct', require('./route/billingRoute').hourlyCostProduct);
 app.get('/api/billing/instanceCostAll', require('./route/billingRoute').instanceCostAll);
 app.get('/api/billing/calcFreeTierCost', require('./route/billingRoute').calcFreeTierCost);
+app.get('/api/billing/totalCostProduct',require('./route/billingRoute').totalCostProduct);
+
+app.get('/api/NonFreeBilling/hourlyCostProduct', require('./route/NonFreeBillingRoute').hourlyCostProduct);
+app.get('/api/NonFreeBilling/instanceCostAll', require('./route/NonFreeBillingRoute').instanceCostAll);
+app.get('/api/NonFreeBilling/calcFreeTierCost', require('./route/NonFreeBillingRoute').calcFreeTierCost);
+app.get('/api/NonFreeBilling/totalCostProduct',require('./route/NonFreeBillingRoute').totalCostProduct);
+
 
 // app.get('/api/NonFreeBilling/monthToDate', require('./route/NonFreeBillingRoute').monthToDate);
 // app.get('/api/NonFreeBilling/byHour', require('./route/NonFreeBillingRoute').byHour);
@@ -136,6 +81,5 @@ function errorHandler(err, req, res, next) {
     });
 }
 module.exports = errorHandler;
-
 app.listen(port);
-console.log('server started on port %s', port);
+console.log('Server Alert: server started on port %s', port);

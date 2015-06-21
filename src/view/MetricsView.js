@@ -10,7 +10,6 @@ var MetricsView = Backbone.View.extend({
         this.render();
     },
 
-    //Check for when the data is read and renders the page
     bindings: function() {
         this.model.change('dataReady', function(model, val) {
             var date = new Date(metricsCollection.at(0).get('time'));

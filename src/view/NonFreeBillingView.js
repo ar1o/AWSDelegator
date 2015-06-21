@@ -1,5 +1,5 @@
-var BillingView = Backbone.View.extend({
-    className: 'BillingView',
+var NonFreeBillingView = Backbone.View.extend({
+    className: 'NonFreeBillingView',
     initialize: function(options) {
         
         if (!this.model) {
@@ -13,21 +13,21 @@ var BillingView = Backbone.View.extend({
     bindings: function() {
         this.model.change('dataReady', function(model, val) {
             this.render();
-            var date = totalCostInstancesCollection.at(0).get('date').split(' ');
+            var date = TotalNonFreeCostCollection.at(0).get('date').split(' ');
             date1=date[1].substring(0,date[1].length-1);
             //date1=[year,month,date]
             var date1 = date[0].split(/-/);                
             //date2=[hour,minute,second]                
             var date2 = date[1].split(':');
 
-            console.log(totalCostInstancesCollection.at(0).get('date'));           
+            console.log(TotalNonFreeCostCollection.at(0).get('date'));           
             $(function () {
-                $('#billingcontainer').highcharts({
+                $('#nonfreebillingcontainer').highcharts({
                     chart: {
                         zoomType: 'x'
                     },
                     title: {
-                        text: totalCostInstancesCollection.at(0).get('resourceId')+' Cost'
+                        text: TotalNonFreeCostCollection.at(0).get('resourceId')+' Recalculated Cost'
                     },
                     xAxis: {
                         title : {text : "Time"},
@@ -48,17 +48,17 @@ var BillingView = Backbone.View.extend({
                     tooltip: {
                         formatter: function() {
                             return '<b>'+ this.series.name +'</b><br/>'+
-                                new Date(this.x) +', '+ this.y.toFixed(4);
+                                new Date(this.x) +', '+ this.y;
                         }
                     },
                     legend: {
                         enabled: false
                     },
                     series: [{
-                        name: 'Cost',
+                        name: 'NonFreeCost',
                         pointInterval: 3600 * 1000,
                         pointStart: Date.UTC(date1[0],date1[1],date1[2],date2[0],date2[1],date2[2]),
-                        data: totalCostInstancesCollection.pluck('cost')
+                        data: TotalNonFreeCostCollection.pluck('cost')
 
                     }],
                     navigation: {
@@ -73,11 +73,8 @@ var BillingView = Backbone.View.extend({
     },
 
     render: function() {
-        var html = Handlebars.templates.BillingView({
-            billing: totalCostInstancesCollection.toJSON()
-        });
+        var html = Handlebars.templates.NonFreeBillingView;
         this.$el.html(html);
     }
-
 
 });
