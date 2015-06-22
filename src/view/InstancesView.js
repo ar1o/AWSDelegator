@@ -7,11 +7,13 @@ var InstancesView = Backbone.View.extend({
             this.model = new InstancesModel();
         }
         this.billingActivity = new BillingView();
+        this.nonFreeBillingActivity = new NonFreeBillingView();
         this.metricsActivity = new MetricsView();
         this.bindings();
     },
 
     updateViews: function(selected) {
+            this.nonFreeBillingActivity.model.getNonFreeBilling(selected);
             this.billingActivity.model.getBilling(selected); 
             this.metricsActivity.model.getEC2Metrics(selected);
     },
@@ -27,13 +29,14 @@ var InstancesView = Backbone.View.extend({
             });
         }.bind(this));
 
-        // this.$el.on("change", '.instanceDropDown', function(e) {
-        //     var selected = $('.instanceDropDown').val();
-        //     console.log("-->",selected);
-        //     totalCostInstancesCollection.reset();
-        //     this.billingActivity.model.getBilling(selected); 
-        //     this.metricsActivity.model.getEC2Metrics(selected);
-        // }.bind(this));
+        this.$el.on("change", '.instanceDropDown', function(e) {
+            var selected = $('.instanceDropDown').val();
+            console.log(selected);
+            totalCostInstancesCollection.reset();
+            this.billingActivity.model.getBilling(selected); 
+            this.nonFreeBillingActivity.model.getNonFreeBilling(selected);
+            this.metricsActivity.model.getEC2Metrics(selected);
+        }.bind(this));
     },
 
     render: function() {
@@ -41,6 +44,7 @@ var InstancesView = Backbone.View.extend({
             instances: ec2InstanceCollection.toJSON()
         });
         this.$el.html(html);
+        this.$el.append(this.nonFreeBillingActivity.el);
         this.$el.append(this.billingActivity.el);
         this.$el.append(this.metricsActivity.el);      
     }

@@ -36,6 +36,7 @@ require('./model/rds');
 require('./model/latest');
 require('./model/pricing');
 
+
 // Start mongoose and mongo
 mongoose.connect(databaseUrl, function(error) {
     if (error) {
@@ -46,7 +47,6 @@ var db = mongoose.connection;
 db.on("open", function() {
     console.log("Database Alert: connected to ", databaseUrl);
     require('./parse/scheduler').s3Connect(function() {
-	    require('./model/billing');
 	});
 });
 
@@ -63,6 +63,12 @@ app.get('/api/billing/calcFreeTierCost', require('./route/billingRoute').calcFre
 app.get('/api/billing/totalCostProduct',require('./route/billingRoute').totalCostProduct);
 app.get('/api/billing/rds/instanceCostAll', require('./route/rdsBillingRoute').instanceCostAll);
 app.get('/api/billing/rds/hourlyCostProduct', require('./route/rdsBillingRoute').hourlyCostProduct);
+
+app.get('/api/NonFreeBilling/hourlyCostProduct', require('./route/NonFreeBillingRoute').hourlyCostProduct);
+app.get('/api/NonFreeBilling/instanceCostAll', require('./route/NonFreeBillingRoute').instanceCostAll);
+app.get('/api/NonFreeBilling/calcFreeTierCost', require('./route/NonFreeBillingRoute').calcFreeTierCost);
+app.get('/api/NonFreeBilling/totalCostProduct',require('./route/NonFreeBillingRoute').totalCostProduct);
+
 
 function errorHandler(err, req, res, next) {
     console.error(err.message);

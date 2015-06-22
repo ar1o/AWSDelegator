@@ -29,7 +29,8 @@ var updateBillingValues = function(pricingQuery, billingQuery, callback) {
                             ItemDescription: d[i].ItemDescription,
                             UsageQuantity: d[i].UsageQuantity,
                             RateId: d[i].RateId,
-                            NonFreeRate: price.Price
+                            NonFreeRate: price.Price,
+                            NonFreeCost: (price.Price * d[i].UsageQuantity)
                         };
                         //Switch over to rate IDs for billing queries at some point.
                         
@@ -144,7 +145,7 @@ exports.GetNonFreePricing = function(req, res) {
 }
 
 exports.CheckFreeTier = function(req, res) {
-    var db = mongoose.connection;
+    // var db = mongoose.connection
     mongoose.model('Billings').aggregate({
         $match: {
             ItemDescription: {$regex: /free tier/}
@@ -160,9 +161,6 @@ exports.CheckFreeTier = function(req, res) {
             console.error(e.message);
             console.error(e.stack);
         }
-        var conditions;
-        var update;
-        var options;
         for (var r in d) {
             var UsageType = d[r].UsageType[0];
             var ItemDescription = d[r].ItemDescription[0];
