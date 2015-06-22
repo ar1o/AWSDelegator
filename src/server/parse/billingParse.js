@@ -1,6 +1,7 @@
 var fs = require("fs");
 var mongodb = require('mongodb');
 var MongoClient = mongodb.MongoClient;
+var freeTier = require('../FreeTier');
 
 // parses latestBills.csv and updates the 'awsdb' database with new bills.
 exports.parseBillingCSV = function(_callback) {
@@ -49,8 +50,21 @@ exports.parseBillingCSV = function(_callback) {
                                     }
                                 }            
                                 // if(doc['ItemDescription'].match(/free tier/g)){
-                                    
-                                // }            
+                                //     var pricingQuery = freeTier.GetNonFreePricing(doc);
+                                //     var pricingScope = {_id:0, Price : 1};
+                                //     console.log(pricingQuery);
+                                //     mongoose.model('pricingModel').findOne(pricingQuery, pricingScope).exec(function(err, price) {
+                                //         if (err) {
+                                //             throw err;
+                                //         } else {
+                                //             console.log(price);
+                                //             doc['NonFreeRate'] = price.Price;
+                                //             doc['NonFreeCost'] = price.Price * doc[billingAttributes['UsageQuantity']];
+                                //             console.log(price.Price);
+                                //         }
+                                //     });
+                                //     console.log(doc);
+                                // }         
                                 db.collection(currentBillingCollection).insert(doc);
                                 db.collection('latest').update({
                                     _id: latest._id

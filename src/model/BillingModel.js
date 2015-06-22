@@ -26,7 +26,29 @@ var BillingsModel = Backbone.Model.extend({
 			});
 		})(params);
 	},
-	
+
+	getRDSBilling: function(instanceid) {
+		totalCostInstancesCollection.reset();
+		var self = this;
+		var count = 0;
+		var params = {
+			instance: instanceid
+		};
+
+		(function(params) {
+			$.get(host + '/api/billing/rds/instanceCostAll', params, function(result) {
+				for (var i in result) {
+					var data = new RDSBillingModel({
+						resourceId: result[i].ResourceId[0],
+						cost: result[i].Total,
+						date: result[i]._id
+					});
+					totalCostInstancesCollection.add(data);
+				}
+				self.set('dataReady', Date.now());
+			});
+		})(params);
+	},
 	getNonFreeBilling: function(instanceid) {
 		TotalNonFreeCostCollection.reset();
 		var self = this;
@@ -57,6 +79,14 @@ var BillingModel = Backbone.Model.extend({
 		resourceId: null,
 		cost: null,
 		volumeId: null,
+		date: null
+	}
+});
+
+var RDSBillingModel = Backbone.Model.extend({
+	defaults: {
+		resourceId: null,
+		cost: null,
 		date: null
 	}
 });

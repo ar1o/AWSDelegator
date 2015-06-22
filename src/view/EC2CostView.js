@@ -1,9 +1,9 @@
 var EC2CostView = Backbone.View.extend({
-    className: 'EC2CostView',
+    className: 'CostView',
 
     initialize: function(options) {
         if (!this.model) {
-            this.model = new EC2CostModel();
+            this.model = new CostModel();
         }
         this.render();
         this.bindings();
@@ -12,7 +12,7 @@ var EC2CostView = Backbone.View.extend({
     bindings: function() {
         this.model.change('dataReady', function(model, val) {
                         this.render();
-            var date = new Date(EC2HourlyCostCollection.at(0).get('date'));            
+            var date = new Date(hourlyCostCollection.at(0).get('date'));            
             $(function () {
                 $('#ec2CostContainer').highcharts({
                     chart: {
@@ -38,7 +38,10 @@ var EC2CostView = Backbone.View.extend({
                         alternateGridColor: null,                        
                     },
                     tooltip: {
-                        valueSuffix: '$/Hour'
+                        formatter: function() {
+                            return '<b>'+ this.series.name +'</b><br/>'+
+                                new Date(this.x) +', '+ this.y.toFixed(4)+' $/Hour';
+                        },
                     },
                     legend: {
                         enabled: false
@@ -47,7 +50,7 @@ var EC2CostView = Backbone.View.extend({
                         name: 'Cost',
                         pointInterval: 3600 * 1000,
                         pointStart: Date.UTC(date.getYear(), date.getMonth(), date.getDate()),
-                        data: EC2HourlyCostCollection.pluck('cost')
+                        data: hourlyCostCollection.pluck('cost')
 
                     }],
                     navigation: {
@@ -64,7 +67,7 @@ var EC2CostView = Backbone.View.extend({
 
     render: function() {
         var html = Handlebars.templates.EC2CostView({
-            product: EC2HourlyCostCollection.toJSON(),
+            product: hourlyCostCollection.toJSON(),
         });
         this.$el.html(html);
 
