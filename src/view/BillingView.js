@@ -17,11 +17,11 @@ var BillingView = Backbone.View.extend({
             var date = totalCostInstancesCollection.at(0).get('date').split(' ');
             date1=date[1].substring(0,date[1].length-1);
             //date1=[year,month,date]
-            var date1 = date[0].split(/-/);                
+            var date1 = date[0].split(/-/);
+            date1[1]= date1[1]-1;             
             //date2=[hour,minute,second]                
             var date2 = date[1].split(':');
-
-            console.log(totalCostInstancesCollection.at(0).get('date'));           
+                    
             $(function () {
                 $('#billingcontainer').highcharts({
                     chart: {

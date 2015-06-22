@@ -1,4 +1,3 @@
-// This holds the entire collection of EC2 Instances and its information
 var MetricsCollection = Backbone.Collection.extend({
 	initialize: function() {
 		// This will be called when an item is added. pushed or unshifted
@@ -49,13 +48,15 @@ var MetricsModel = Backbone.Model.extend({
 		};
 
 		(function(params) {
-			$.get(host+'/api/ec2/metrics', params, function(result) {
+			$.get(host+'/api/rds/metrics', params, function(result) {
 				for (var i in result) {
-					var data = new MetricModel({
-						instance: result[i].InstanceId,
-						networkIn: result[i].NetworkIn,
-						networkOut: result[i].NetworkOut,
+					var data = new rdsMetricModel({
+						instance: result[i].DBInstanceIdentifier,
 						cpuUtilization: result[i].CPUUtilization,
+						// dbConnections: result[i].DatabaseConnections,
+						diskQueueDepth: result[i].DiskQueueDepth,
+						readIOPS: result[i].ReadIOPS,
+						writeIOPS: result[i].WriteIOPS,
 						time: result[i].Time
 					});
 					metricsCollection.add(data);
@@ -81,7 +82,7 @@ var rdsMetricModel = Backbone.Model.extend({
 	defaults: {
 		instance: String,
 		cpuUtilization: Number,
-		dbConnections: Number,
+		// dbConnections: Number,
 		diskQueueDepth: Number,
 		readIOPS: Number,
 		writeIOPS: Number,

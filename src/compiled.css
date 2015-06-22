@@ -12,6 +12,49 @@ div#billingcontainer {
   /*border-style: solid;
 	border-color: black;	*/
 }
+.RDSBillingView {
+  width: 46%;
+  margin-left: 20px;
+  border-style: solid;
+  border-color: blue;
+  float: left;
+}
+/*#rdsbillingcontainer {
+	width: 46%;
+	margin-left: 20px;
+	border-style: solid;
+	border-color: blue;
+	float: left;
+}*/
+.RDSMetricsView {
+  margin: 0;
+  border-style: solid;
+  border-color: red;
+}
+#rdsCpuContainer {
+  width: 46%;
+  margin-right: 20px;
+  border-style: solid;
+  border-color: blue;
+  float: right;
+}
+#queueDepthContainer {
+  width: 46%;
+  margin-right: 20px;
+  border-style: solid;
+  border-color: black;
+  float: right;
+}
+#readWriteIopsContainer {
+  width: 46%;
+  margin-left: 20px;
+  border-style: solid;
+  border-color: green;
+  float: left;
+}
+.clear {
+  clear: both;
+}
 .MetricsView {
   margin: 0;
   /*	border-style: solid;
