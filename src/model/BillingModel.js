@@ -100,9 +100,5 @@ var InstanceTotalCostCollection = Backbone.Collection.extend({
 	}
 });
 
-<<<<<<< HEAD
-var totalCostInstancesCollection = new InstanceTotalCostCollection();
-=======
 var TotalNonFreeCostCollection = new InstanceTotalCostCollection();
 var totalCostInstancesCollection = new InstanceTotalCostCollection();
->>>>>>> 9b44741fcfaaf29c6104ab61363a76d30855222e

@@ -77,7 +77,6 @@ var ProductCostView = Backbone.View.extend({
 
         this.$el.on('click', '#InstanceTable tr', function() {
             var name = $('td', this).eq(0).text();
-            console.log('You clicked on ' + name + '\'s row');
             if (name != "") {
                 totalCostInstancesCollection.reset();
                 self.EC2Instances.updateViews(name);
@@ -86,7 +85,6 @@ var ProductCostView = Backbone.View.extend({
 
         this.$el.on('click', '#RDSInstanceTable tr', function() {
             var name = $('td', this).eq(0).text();
-            console.log('You clicked on ' + name + '\'s row');
             if(name != "") {
                 totalCostInstancesCollection.reset();
                 name = 'arn:aws:rds:us-east-1:092841396837:db:'+name;
