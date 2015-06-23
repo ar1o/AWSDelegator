@@ -3,9 +3,7 @@ var RDSView = Backbone.View.extend({
     className: 'RDSView',
 
     initialize: function(options) {
-        console.log("RDSView initialize");
-
-        // this.ec2cost = new EC2CostView();
+        this.rdscost = new RDSCostView();
         
         this.bindings();
         this.render();
@@ -17,6 +15,6 @@ var RDSView = Backbone.View.extend({
     },
 
     render: function() {
-        // this.$el.append(this.ec2cost.el);
+        this.$el.append(this.rdscost.el);
     }
 });

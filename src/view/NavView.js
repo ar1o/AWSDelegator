@@ -3,7 +3,6 @@ var NavView = Backbone.View.extend({
     className: 'NavView',
 
     initialize: function(options) {
-        console.log("navview");
         if (!this.model) {
             this.model = new NavModel();
         }

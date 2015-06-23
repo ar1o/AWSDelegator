@@ -1,5 +1,5 @@
-var BillingView = Backbone.View.extend({
-    className: 'BillingView',
+var RDSBillingView = Backbone.View.extend({
+    className: 'RDSBillingView',
 
     initialize: function(options) {
         
@@ -17,18 +17,20 @@ var BillingView = Backbone.View.extend({
             var date = totalCostInstancesCollection.at(0).get('date').split(' ');
             date1=date[1].substring(0,date[1].length-1);
             //date1=[year,month,date]
-            var date1 = date[0].split(/-/);                
+            var date1 = date[0].split(/-/);
+            date1[1]= date1[1]-1;             
             //date2=[hour,minute,second]                
             var date2 = date[1].split(':');
-
-            console.log(totalCostInstancesCollection.at(0).get('date'));           
+            var resId = totalCostInstancesCollection.at(0).get('resourceId');
+            resId = resId.substring(resId.lastIndexOf(':')+1,resId.length);
+                    
             $(function () {
-                $('#billingcontainer').highcharts({
+                $('.RDSBillingView').highcharts({
                     chart: {
                         zoomType: 'x'
                     },
                     title: {
-                        text: totalCostInstancesCollection.at(0).get('resourceId')+' Cost'
+                        text: resId+' Cost'
                     },
                     xAxis: {
                         title : {text : "Time"},
@@ -49,7 +51,7 @@ var BillingView = Backbone.View.extend({
                     tooltip: {
                         formatter: function() {
                             return '<b>'+ this.series.name +'</b><br/>'+
-                                new Date(this.x) +', '+ this.y;
+                                new Date(this.x) +', '+ this.y.toFixed(4);
                         }
                     },
                     legend: {
@@ -74,7 +76,7 @@ var BillingView = Backbone.View.extend({
     },
 
     render: function() {
-        var html = Handlebars.templates.BillingView({
+        var html = Handlebars.templates.RDSBillingView({
             billing: totalCostInstancesCollection.toJSON(),
         });
         this.$el.html(html);

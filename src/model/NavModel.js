@@ -16,7 +16,7 @@ var NavViewCollection = Backbone.Collection.extend({
 	model: NavViewModel,
 	initialize: function() {
 		this.on('add', function(model) {
-			console.log('someting got added');
+			// console.log('someting got added');
 		});
 	}
 });
@@ -29,12 +29,3 @@ var page3 = new NavViewModel({title: 'Amazon Simple Storage Service', page_id: 3
 var pages = [page0, page1, page2, page3];
 
 NavViewCollection.add(pages);
-
-
-
-// var NavSubViewCollection = new NavViewCollection();
-
-// var subpage0 = new NavSubViewModel({title: 'Instances', page_id: 0}); 
-// var subpages = [subpage0];
-
-// NavSubViewCollection.add(subpages);

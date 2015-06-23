@@ -6,6 +6,7 @@ var ProductCostView = Backbone.View.extend({
         if (!this.model) {
             this.model = new ProductCostModel();
         }
+
         this.bindings();
     },
 
@@ -14,7 +15,6 @@ var ProductCostView = Backbone.View.extend({
 
         this.model.change('dataReady', function(model, val) {
             this.render();
-
             var month = this.model.getMonth(productCostCollection.at(0).get('month'));
             var year = productCostCollection.at(0).get('year')
             var total = this.model.calcTotal();
@@ -67,7 +67,8 @@ var ProductCostView = Backbone.View.extend({
                                         // });
                                         
                                     } else if (this.name == "Amazon RDS Service") {
-                                        console.log(this.name);
+                                        self.RDSCost.model.getRDSCost();
+                                        self.RDSInstances.model.getRDSInstances();
                                     }
                                 }
                             }
@@ -77,9 +78,10 @@ var ProductCostView = Backbone.View.extend({
             });
         }.bind(this));
 
+
         this.$el.on("change", '.instanceDropDown', function(e) {
             var selected = $('.instanceDropDown').val();
-            console.log(selected);
+            // console.log(selected);
             // this.EC2Instances.updateViews(selected);
         }.bind(this));
 
@@ -90,17 +92,16 @@ var ProductCostView = Backbone.View.extend({
 
         this.$el.on('click', '#InstanceTable tr', function() {
             var name = $('td', this).eq(0).text();
-            console.log('You clicked on ' + name + '\'s row');
+            // console.log('You clicked on ' + name + '\'s row');
             if (name != "") {
                 totalCostInstancesCollection.reset();
              
             }
         });
-
     },
 
     destroy_view: function() {
-        console.log("remove el");
+        // console.log("remove el");
         // COMPLETELY UNBIND THE VIEW
         this.undelegateEvents();
 
@@ -121,8 +122,10 @@ var ProductCostView = Backbone.View.extend({
             product: productCostCollection.toJSON(),
         });
         this.$el.html(html);
+
         // this.$el.append(this.EC2Cost.el);
         // this.$el.append(this.EC2Instances.el);
+
 
 
     }

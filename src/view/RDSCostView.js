@@ -1,11 +1,12 @@
-var EC2CostView = Backbone.View.extend({
-    className: 'EC2CostView',
+var RDSCostView = Backbone.View.extend({
+    className: 'RDSCostView',
 
     initialize: function(options) {
         if (!this.model) {
             this.model = new CostModel();
         }
-        this.model.getEC2Cost();
+        this.model.getRDSCost();
+        this.render();
         this.bindings();
     },
 
@@ -14,12 +15,12 @@ var EC2CostView = Backbone.View.extend({
             this.render();
             var date = new Date(hourlyCostCollection.at(0).get('date'));
             $(function() {
-                $('#ec2CostContainer').highcharts({
+                $('#RDSCostContainer').highcharts({
                     chart: {
                         zoomType: 'x'
                     },
                     title: {
-                        text: 'Amazon Elastic Compute Cloud Cost Per Hour'
+                        text: 'Amazon RDS Cost Per Hour'
                     },
                     xAxis: {
                         title: {
@@ -41,8 +42,8 @@ var EC2CostView = Backbone.View.extend({
                     },
                     tooltip: {
                         formatter: function() {
-                            return '<b>' + this.series.name + '</b><br/>' +
-                                new Date(this.x) + ', ' + this.y.toFixed(4) + ' $/Hour';
+                            return '<b>'+ this.series.name +'</b><br/>'+
+                                new Date(this.x) +', '+ this.y.toFixed(4)+' $/Hour';
                         },
                     },
                     legend: {
@@ -68,11 +69,9 @@ var EC2CostView = Backbone.View.extend({
     },
 
     render: function() {
-        var html = Handlebars.templates.EC2CostView({
+        var html = Handlebars.templates.RDSCostView({
             product: hourlyCostCollection.toJSON(),
         });
         this.$el.html(html);
     }
-
-
 });

@@ -3,8 +3,6 @@ var AWSView = Backbone.View.extend({
     className: 'AWSView',
 
     initialize: function(options) {
-        console.log("AWSVIEW initialize");
-
         this.productView = new ProductCostView();
 
         this.bindings();

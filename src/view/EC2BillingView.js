@@ -1,30 +1,37 @@
-var EC2CostView = Backbone.View.extend({
-    className: 'EC2CostView',
+var EC2BillingView = Backbone.View.extend({
+    className: 'EC2BillingView',
 
     initialize: function(options) {
+        
         if (!this.model) {
-            this.model = new CostModel();
+            this.model = new BillingsModel();
         }
-        this.model.getEC2Cost();
+
+        this.render();
         this.bindings();
     },
 
     bindings: function() {
         this.model.change('dataReady', function(model, val) {
             this.render();
-            var date = new Date(hourlyCostCollection.at(0).get('date'));
-            $(function() {
-                $('#ec2CostContainer').highcharts({
+            var date = totalCostInstancesCollection.at(0).get('date').split(' ');
+            date1=date[1].substring(0,date[1].length-1);
+            //date1=[year,month,date]
+            var date1 = date[0].split(/-/);
+            date1[1]= date1[1]-1;             
+            //date2=[hour,minute,second]                
+            var date2 = date[1].split(':');
+                    
+            $(function () {
+                $('#billingcontainer').highcharts({
                     chart: {
                         zoomType: 'x'
                     },
                     title: {
-                        text: 'Amazon Elastic Compute Cloud Cost Per Hour'
+                        text: totalCostInstancesCollection.at(0).get('resourceId')+' Cost'
                     },
                     xAxis: {
-                        title: {
-                            text: "Time"
-                        },
+                        title : {text : "Time"},
                         type: 'datetime',
                         labels: {
                             overflow: 'justify'
@@ -37,13 +44,13 @@ var EC2CostView = Backbone.View.extend({
                         min: 0,
                         minorGridLineWidth: 0,
                         gridLineWidth: 0,
-                        alternateGridColor: null,
+                        alternateGridColor: null,                        
                     },
                     tooltip: {
                         formatter: function() {
-                            return '<b>' + this.series.name + '</b><br/>' +
-                                new Date(this.x) + ', ' + this.y.toFixed(4) + ' $/Hour';
-                        },
+                            return '<b>'+ this.series.name +'</b><br/>'+
+                                new Date(this.x) +', '+ this.y.toFixed(4);
+                        }
                     },
                     legend: {
                         enabled: false
@@ -51,25 +58,24 @@ var EC2CostView = Backbone.View.extend({
                     series: [{
                         name: 'Cost',
                         pointInterval: 3600 * 1000,
-                        pointStart: Date.UTC(date.getYear(), date.getMonth(), date.getDate()),
-                        data: hourlyCostCollection.pluck('cost')
+                        pointStart: Date.UTC(date1[0],date1[1],date1[2],date2[0],date2[1],date2[2]),
+                        data: totalCostInstancesCollection.pluck('cost')
 
                     }],
                     navigation: {
                         menuItemStyle: {
-                            fontType: 'Roboto',
+                            fontType : 'Roboto',
                             fontSize: '10px'
                         }
                     }
                 });
             });
-
         }.bind(this));
     },
 
     render: function() {
-        var html = Handlebars.templates.EC2CostView({
-            product: hourlyCostCollection.toJSON(),
+        var html = Handlebars.templates.EC2BillingView({
+            billing: totalCostInstancesCollection.toJSON(),
         });
         this.$el.html(html);
     }

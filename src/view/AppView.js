@@ -1,7 +1,6 @@
 var AppView = Backbone.View.extend({
 
     initialize: function(options) {
-        console.log("appview");
         AppView.sharedInstance = this;
 
         this.header = new HeaderView();
@@ -23,14 +22,11 @@ var AppView = Backbone.View.extend({
         // url changes drive location within the app
         var self = this;
         this.router.on("change:view", function(a, view) {
-            console.log("change:view", view)
-            console.log(view);
             self.setView(view);
         });
 
         var prevArgs = {};
         this.router.on('change:args', function(a, args) {
-            console.log('change:args', args)
             var currentView = self.model.get('currentView');
             if (currentView.updateArguments) {
                 var changeView = currentView.updateArguments(args, prevArgs);
@@ -72,27 +68,32 @@ var AppView = Backbone.View.extend({
 
 
         this.$el.on('click', '[page-id="0"]', function(e) {
-            console.log($('[page-id="0"]').text());
+            // console.log($('[page-id="0"]').text());
             this.navView.model.isOpen = false;
             window.location.hash = '#/AWS';
         }.bind(this));
 
         this.$el.on('click', '[page-id="1"]', function(e) {
-            console.log($('[page-id="1"]').text());
+            // console.log($('[page-id="1"]').text());
             this.navView.model.isOpen = false
             window.location.hash = '#/EC2';
         }.bind(this));
 
         this.$el.on('click', '[subpage-id="0"]', function(e) {
-            console.log($('[page-id="1"]').text());
+            // console.log($('[page-id="1"]').text());
             this.navView.model.isOpen = false
-            window.location.hash = '#/Instances';
+            window.location.hash = '#/EC2Instances';
         }.bind(this));
 
         this.$el.on('click', '[page-id="2"]', function(e) {
-            console.log($('[page-id="2"]').text());
+            // console.log($('[page-id="2"]').text());
             this.navView.model.isOpen = false
             window.location.hash = '#/RDS';
+        }.bind(this));
+        this.$el.on('click', '[subpage-id="1"]', function(e) {
+            // console.log($('[page-id="1"]').text());
+            this.navView.model.isOpen = false
+            window.location.hash = '#/RDSInstances';
         }.bind(this));
 
     },
@@ -110,7 +111,7 @@ var AppView = Backbone.View.extend({
         var args = this.router.get('args');
         args.parentView = this;
         var viewInstance = new view(args);
-        console.log(args);
+        // console.log(args);
         var oldView = this.model.get('currentView');
         if (oldView && oldView.destroy)
             oldView.destroy(viewInstance);

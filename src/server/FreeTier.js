@@ -29,7 +29,8 @@ var updateBillingValues = function(pricingQuery, billingQuery, callback) {
                             ItemDescription: d[i].ItemDescription,
                             UsageQuantity: d[i].UsageQuantity,
                             RateId: d[i].RateId,
-                            NonFreeRate: price.Price
+                            NonFreeRate: price.Price,
+                            NonFreeCost: (price.Price * d[i].UsageQuantity)
                         };
                         //Switch over to rate IDs for billing queries at some point.
                         
@@ -49,8 +50,102 @@ var updateBillingValues = function(pricingQuery, billingQuery, callback) {
         }
     });
 }
+
+exports.GetNonFreePricing = function(req, res) {
+    var UsageType = req['UsageType'];
+    var ItemDescription = req['ItemDescription'];
+    switch (true) {
+        case (/DataTransfer-Out-Bytes/.test(UsageType)):
+            var pricingQuery = {
+                TierName: 'upTo10TBout'
+            };
+            return pricingQuery;
+            break;
+        case (/DataTransfer-Regional-Bytes/.test(UsageType)):
+            var pricingQuery = {
+                TierName: "crossRegion",
+                TypeName: "dataXferOutEC2"
+            };
+            return pricingQuery;
+            break;
+        case (/AWS-Out-Bytes/.test(UsageType)):
+            var pricingQuery = {
+                TierName: "crossRegion",
+                TypeName: "dataXferOutEC2"
+            };
+            return pricingQuery;
+            break;
+        case (/InstanceUsage:db.t2.micro/.test(UsageType)):
+            var pricingQuery = {
+                TierName: "db.t2.micro"
+            };
+            return pricingQuery;
+            break;
+        // Mongo Queries have been completed up to this point. BoxPricingCheck does not have EBS functionality
+        case (/Requests-Tier1/.test(UsageType)):
+            var pricingQuery = {
+                TierName: "putcopypost"
+            };
+            return pricingQuery;
+            break;
+        case (/Requests-Tier2/.test(UsageType)):
+            var pricingQuery = {
+                TierName: "getEtc"
+            };
+            return pricingQuery;
+            break;
+        case (/EBS:VolumeUsage.gp2/.test(UsageType)):
+            var pricingQuery = {
+                TypeName: "Amazon EBS General Purpose (SSD) volumes"
+            };
+            return pricingQuery;
+            break;
+        case (/TimedStorage-ByteHrs/.test(UsageType)):
+            var pricingQuery = {
+                TierName: "firstTBstorage"
+            };
+            return pricingQuery;
+            break;
+        case (/RDS:GP2-Storage/.test(UsageType)):
+            var pricingQuery = {
+                TierName: "db.m1.small"
+            };
+            return pricingQuery;
+            break;
+        case (/BoxUsage:t2.micro/.test(UsageType)):
+            if (/Windows/.test(ItemDescription)) {
+                var pricingQuery = {
+                    InstanceSize: "t2.micro",
+                    OS: "mswin"
+                };
+                return pricingQuery;
+            } else if (/SUSE/.test(ItemDescription)) {
+                var pricingQuery = {
+                    InstanceSize: "t2.micro",
+                    OS: "sles"
+                };
+                return pricingQuery;
+            } else if (/Linux/.test(ItemDescription)) {
+                var pricingQuery = {
+                    InstanceSize: "t2.micro",
+                    OS: "linux"
+                };
+                return pricingQuery;
+            } else if (/RHEL/.test(ItemDescription)) {
+                var pricingQuery = {
+                    InstanceSize: "t2.micro",
+                    OS: "rhel"
+                };
+                return pricingQuery;
+            }
+            break;
+        default:
+            console.log("Error: UsageType not in record");
+    }
+}
+
 exports.CheckFreeTier = function(req, res) {
-    var db = mongoose.connection;
+    // var db = mongoose.connection
     mongoose.model('Billings').aggregate({
         $match: {
             ItemDescription: {$regex: /free tier/}
@@ -66,9 +161,6 @@ exports.CheckFreeTier = function(req, res) {
             console.error(e.message);
             console.error(e.stack);
         }
-        var conditions;
-        var update;
-        var options;
         for (var r in d) {
             var UsageType = d[r].UsageType[0];
             var ItemDescription = d[r].ItemDescription[0];

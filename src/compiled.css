@@ -65,6 +65,49 @@ div#billingcontainer {
   /*border-style: solid;
 	border-color: black;	*/
 }
+.RDSBillingView {
+  width: 46%;
+  margin-left: 20px;
+  /*	border-style: solid;
+	border-color: blue;*/
+  float: left;
+}
+/*#rdsbillingcontainer {
+	width: 46%;
+	margin-left: 20px;
+	border-style: solid;
+	border-color: blue;
+	float: left;
+}*/
+.RDSMetricsView {
+  margin: 0;
+  /*    border-style: solid;
+    border-color: red;*/
+}
+#rdsCpuContainer {
+  width: 46%;
+  margin-right: 20px;
+  /*    border-style: solid;
+    border-color: blue;*/
+  float: right;
+}
+#queueDepthContainer {
+  width: 46%;
+  margin-right: 20px;
+  /*    border-style: solid;
+    border-color: black;*/
+  float: right;
+}
+#readWriteIopsContainer {
+  width: 46%;
+  margin-left: 20px;
+  /*    border-style: solid;
+    border-color: green;*/
+  float: left;
+}
+.clear {
+  clear: both;
+}
 .MetricsView {
   margin: 0;
   position: static !important;
@@ -112,7 +155,21 @@ div#productcostcontainer {
   /*	border-style: solid;
 	border-color: black;*/
 }
+.InstancesView {
+  min-height: 350px;
+}
+.RDSInstancesView {
+  min-height: 350px;
+}
 #InstanceTable_wrapper {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  margin-right: 20px;
+  margin-left: 20px;
+  padding: 5px;
+  /*border: 1px solid gray;*/
+}
+#RDSInstanceTable_wrapper {
   margin-top: 20px;
   margin-bottom: 20px;
   margin-right: 20px;
@@ -168,4 +225,18 @@ div#productcostcontainer {
   width: 100%;
   height: 60px;
   /* Height of the footer */
+}
+.OperationsView {
+  margin: 0 auto;
+  width: 1060px;
+  /*	border-style: dashed;
+	border-color: yellow;*/
+  background-color: white;
+}
+div#operationscontainer {
+  margin-bottom: 20px;
+  margin-right: 20px;
+  margin-left: 20px;
+  /*	border-style: dashed;
+	border-color: blue;*/
 }
