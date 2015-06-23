@@ -13,14 +13,23 @@ var BillingView = Backbone.View.extend({
     bindings: function() {
         this.model.change('dataReady', function(model, val) {
             this.render();
-            var date = totalCostInstancesCollection.at(0).get('date').split(' ');
-            date1=date[1].substring(0,date[1].length-1);
-            //date1=[year,month,date]
-            var date1 = date[0].split(/-/);                
-            //date2=[hour,minute,second]                
-            var date2 = date[1].split(':');
-
-            console.log(totalCostInstancesCollection.at(0).get('date'));           
+            try{
+                var date = totalCostInstancesCollection.at(0).get('date').split(' ');
+                date1=date[1].substring(0,date[1].length-1);
+                //date1=[year,month,date]
+                var date1 = date[0].split(/-/);                
+                //date2=[hour,minute,second]                
+                var date2 = date[1].split(':');
+            }catch(err){alert(err)}
+            try{
+                var date = combinedCostCollection.at(0).get('date').split(' ');
+                date1=date[1].substring(0,date[1].length-1);
+                //date1=[year,month,date]
+                var date1 = date[0].split(/-/);                
+                //date2=[hour,minute,second]                
+                var date2 = date[1].split(':');
+            }catch(err){alert(err)}
+    
             $(function () {
                 $('#billingcontainer').highcharts({
                     chart: {
@@ -60,6 +69,11 @@ var BillingView = Backbone.View.extend({
                         pointStart: Date.UTC(date1[0],date1[1],date1[2],date2[0],date2[1],date2[2]),
                         data: totalCostInstancesCollection.pluck('cost')
 
+                    },{
+                        name: 'Sans Free Tier',
+                        pointInterval: 3600 * 1000,
+                        pointStart: Date.UTC(date1[0],date1[1],date1[2],date2[0],date2[1],date2[2]),
+                        data: combinedCostCollection.pluck('cost')                        
                     }],
                     navigation: {
                         menuItemStyle: {
@@ -69,12 +83,14 @@ var BillingView = Backbone.View.extend({
                     }
                 });
             });
+
         }.bind(this));
     },
 
     render: function() {
         var html = Handlebars.templates.BillingView({
-            billing: totalCostInstancesCollection.toJSON()
+            billing: totalCostInstancesCollection.toJSON(),
+            combinedCost : combinedCostCollection.toJSON()
         });
         this.$el.html(html);
     }

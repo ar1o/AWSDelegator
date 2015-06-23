@@ -9,14 +9,12 @@ var InstancesView = Backbone.View.extend({
         }
 
         this.billingActivity = new BillingView();
-        this.nonFreeBillingActivity = new NonFreeBillingView();
         this.metricsActivity = new MetricsView();
-        // this.NonFreeBillActivity = new NonFreeBillingView();
         this.bindings();
     },
 
     updateViews: function(selected) {
-            this.nonFreeBillingActivity.model.getNonFreeBilling(selected);
+            this.billingActivity.model.getCombindedCost(selected);
             this.billingActivity.model.getBilling(selected); 
             this.metricsActivity.model.getEC2Metrics(selected);
     },
@@ -38,7 +36,7 @@ var InstancesView = Backbone.View.extend({
             console.log(selected);
             totalCostInstancesCollection.reset();
             this.billingActivity.model.getBilling(selected); 
-            this.nonFreeBillingActivity.model.getNonFreeBilling(selected);
+            this.billingActivity.model.getCombindedCost(selected);
             this.metricsActivity.model.getEC2Metrics(selected);
         }.bind(this));
     },
@@ -48,7 +46,6 @@ var InstancesView = Backbone.View.extend({
             instances: ec2InstanceCollection.toJSON()
         });
         this.$el.html(html);
-        this.$el.append(this.nonFreeBillingActivity.el);
         this.$el.append(this.billingActivity.el);
         this.$el.append(this.metricsActivity.el);
     }

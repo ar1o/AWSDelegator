@@ -72,20 +72,9 @@ div#productcostcontainer {
   /*border-style: solid;
 	border-color: black;*/
 }
-.NonFreeBillingView {
-  width: 500px;
-  padding: 10px;
-}
 th,
 td {
   overflow: hidden;
-}
-.options {
-  top: 55%;
-  left: 0;
-  right: 0;
-  margin-left: auto;
-  margin-right: auto;
 }
 body {
   font-family: 'Roboto', sans-serif;
