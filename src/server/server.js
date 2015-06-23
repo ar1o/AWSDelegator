@@ -31,11 +31,6 @@ port = process.env.PORT || 3000;
 app.use(require('./CORS'));
 
 //Instantiate mongoose schemas
-require('./model/ec2');
-require('./model/rds');
-require('./model/latest');
-require('./model/pricing');
-
 
 // Start mongoose and mongo
 mongoose.connect(databaseUrl, function(error) {
@@ -45,9 +40,20 @@ mongoose.connect(databaseUrl, function(error) {
 });
 var db = mongoose.connection;
 db.on("open", function() {
-    console.log("Database Alert: connected to ", databaseUrl);
-    require('./BoxPricingCheck').getPricing(function(){
-        require('./parse/scheduler').s3Connect();
+    require('./model/ec2');
+    require('./model/rds');
+    require('./model/latest');
+    require('./model/pricing');
+    mongoose.model('latest').find({},function(e,d){
+        if(e) throw e;
+        var latestTime = d[0].time; 
+        latestTime.substring(0,latestTime.indexOf(' '));
+        var time=latestTime.split('-');
+        currentBillingCollection = 'bills'+time[0]+time[1];
+        require('./model/billing');
+        require('./BoxPricingCheck').getPricing(function(){
+            require('./parse/scheduler').s3Connect();
+        });
     });
 });
 

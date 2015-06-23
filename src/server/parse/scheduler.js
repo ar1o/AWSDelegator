@@ -54,24 +54,25 @@ exports.s3Connect = function(_callback) {
                     billingParser.parseBillingCSV(function() {   
                         if (typeof _callback=="function") _callback();
                         //require model here, as the model also ties the schema to it, with the recently updated var of currentBillingCollection
-                        require('../model/billing');
+                        // require('../model/ec2');
+                        // require('../model/billing');
                     });
-                    AWS.config.credentials = awsCredentials.default;
-                    ec2Parser.parseMetrics(function() {
-                        console.log("Parse Alert(ec2): Metrics parsing completed");
-                        AWS.config.credentials = awsCredentials.default;
-                        ec2Parser.parseInstances(function() {
-                            console.log("Parse Alert(ec2): Instance parsing completed");
-                            AWS.config.credentials = awsCredentials.dev2;
-                            rdsParser.parseMetrics(function() {
-                                console.log("Parse Alert(rds): Metrics parsing completed");
-                                AWS.config.credentials = awsCredentials.dev2;
-                                rdsParser.parseInstances(function() {
-                                    console.log("Parse Alert(rds): Instance parsing completed");                                                      
-                                }); 
-                            });
-                        });
-                    });
+                    // AWS.config.credentials = awsCredentials.default;
+                    // ec2Parser.parseMetrics(function() {
+                    //     console.log("Parse Alert(ec2): Metrics parsing completed");
+                    //     AWS.config.credentials = awsCredentials.default;
+                    //     ec2Parser.parseInstances(function() {
+                    //         console.log("Parse Alert(ec2): Instance parsing completed");
+                    //         AWS.config.credentials = awsCredentials.dev2;
+                    //         rdsParser.parseMetrics(function() {
+                    //             console.log("Parse Alert(rds): Metrics parsing completed");
+                    //             AWS.config.credentials = awsCredentials.dev2;
+                    //             rdsParser.parseInstances(function() {
+                    //                 console.log("Parse Alert(rds): Instance parsing completed");                                                      
+                    //             }); 
+                    //         });
+                    //     });
+                    // });
                     s3.s3Watch();
                 });
             });

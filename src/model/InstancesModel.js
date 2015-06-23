@@ -57,7 +57,6 @@ var InstancesModel = Backbone.Model.extend({
 	},
 
 	getEC2Operations: function(instanceid){
-		console.log('ec2 ops');
 		var self = this;
 		operationsCollection.reset();
 		var params = {
@@ -66,11 +65,11 @@ var InstancesModel = Backbone.Model.extend({
 
 		(function(params) {
 			$.get(host+'/api/ec2/operations', params, function(result) {
+				console.log(result);
 				for (var i in result) {
-					var data = new ec2MetricModel({
-						instance: result[r].Id,
-						operation: result[r].Operation,
-						percentage: result[r].Percentage
+					var data = new operationsModel({
+						operation: i,
+						percentage: result[i]
 					});
 					operationsCollection.add(data);
 				}
@@ -133,7 +132,6 @@ var EC2InstancesCollection = Backbone.Collection.extend({
 
 var operationsModel = Backbone.Model.extend({
 	defaults: {
-		instance: null,
 		operation: null,
 		percentage: null
 	}
