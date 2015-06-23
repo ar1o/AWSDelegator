@@ -47,10 +47,33 @@ exports.parseBillingCSV = function(_callback) {
                                     } else {
                                         doc[billingAttributes[j]] = parseFloat(bill[propertiesIndex[j]]);
                                     }
-                                }            
-                                // if(doc['ItemDescription'].match(/free tier/g)){
-                                    
-                                // }            
+
+                                }        
+                                //handles free tier rate and cost
+                                if(doc['ItemDescription'].match(/free tier/g)){
+                                    if(/BoxUsage:t2.micro/.test(doc['UsageType'])){
+                                        if(/Windows/.test(doc['ItemDescription'])){
+                                            doc['NonFreeRate'] = pricing['BoxUsage:t2.micro']['Windows'].Price;
+                                        }else if(/SUSE/.test(doc['ItemDescription'])){
+                                            doc['NonFreeRate'] = pricing['BoxUsage:t2.micro']['SUSE'].Price;
+                                        }else if(/Linux/.test(doc['ItemDescription'])){
+                                            doc['NonFreeRate'] = pricing['BoxUsage:t2.micro']['Linux'].Price;
+                                        }else if(/RHEL/.test(doc['ItemDescription'])){
+                                            doc['NonFreeRate'] = pricing['BoxUsage:t2.micro']['RHEL'].Price;
+                                        }
+                                    }else if(/AWS-Out-Bytes/.test(doc['UsageType'])){
+                                        doc['NonFreeRate'] = pricing['AWS-Out-Bytes'].Price;
+                                    }else if(/DataTransfer-Out-Bytes/.test(doc['UsageType'])){
+                                        doc['NonFreeRate'] = pricing['DataTransfer-Out-Bytes'].Price;
+                                    }else if(/TimedStorage-ByteHrs/.test(doc['UsageType'])){
+                                        doc['NonFreeRate'] = pricing['TimedStorage-ByteHrs'].Price;
+                                    }else if(/CloudFront-Out-Bytes/.test(doc['UsageType'])){
+                                        doc['NonFreeRate'] = pricing['CloudFront-Out-Bytes'].Price;
+                                    }else{
+                                        doc['NonFreeRate'] = pricing[doc['UsageType']].Price;
+                                    }
+                                    doc['NonFreeCost'] = doc['UsageQuantity'] * doc['NonFreeRate'];
+                                }    
                                 db.collection(currentBillingCollection).insert(doc);
                                 db.collection('latest').update({
                                     _id: latest._id

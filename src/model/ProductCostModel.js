@@ -22,7 +22,6 @@ var ProductCostModel = Backbone.Model.extend({
 
 		this.aws_result().done(function(result) {
 			productCostCollection.reset();
-			console.log(result);
 			for (var r in result.data) {
 				var data = new pCostModel({
 					productName: result.data[r]._id,

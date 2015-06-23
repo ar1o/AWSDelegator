@@ -32,6 +32,7 @@ var InstancesModel = Backbone.Model.extend({
 
 	getEC2Instances: function() {
 		var self = this;
+		ec2InstanceCollection.reset();
 		this.ec2_result().done(function(result) {
 			for (var r in result) {
 				var data = new ec2InstanceModel({
@@ -55,22 +56,47 @@ var InstancesModel = Backbone.Model.extend({
 		});
 	},
 
+	getEC2Operations: function(instanceid){
+		console.log('ec2 ops');
+		var self = this;
+		operationsCollection.reset();
+		var params = {
+			instance: instanceid
+		};
+
+		(function(params) {
+			$.get(host+'/api/ec2/operations', params, function(result) {
+				for (var i in result) {
+					var data = new ec2MetricModel({
+						instance: result[r].Id,
+						operation: result[r].Operation,
+						percentage: result[r].Percentage
+					});
+					operationsCollection.add(data);
+				}
+				self.set('dataReady', Date.now());
+			});
+		})(params);
+	},
+
 	getRDSInstances: function() {
 		var self = this;
+		rdsInstanceCollection.reset();
 		this.rds_result().done(function(result) {
 			for (var r in result) {
 				var data = new rdsInstanceModel({
-					instance: result[r].Id,
-					imageId: result[r].ImageId,
-					state: result[r].State,
-					keyName: result[r].KeyName,
-					instanceType: result[r].Type,
-					launchTime: result[r].LaunchTime,
-					duration: result[r].Lifetime,
-					zone: result[r].Zone,
-					email: result[r].Email,
-					volumeid: result[r].VolumeId,
-					lastActiveTime: result[r].LastActiveTime
+					dbIdentifier: result[r].DBInstanceIdentifier,
+					dbClass: result[r].DBInstanceClass,
+					dbEngine: result[r].Engine,
+					dbStatus: result[r].DBInstanceStatus,
+					masterUsername: result[r].MasterUsername,
+					dbName: result[r].DBName,
+					endpoint: result[r].Endpoint,
+					allocatedStorage: result[r].AllocatedStorage,
+					launchTime: result[r].InstanceCreateTime,
+					zone: result[r].AvailabilityZone,
+					multiAz: result[r].MultiAZ,
+					type: result[r].StorageType
 				});
 				rdsInstanceCollection.add(data);
 			}
@@ -105,20 +131,36 @@ var EC2InstancesCollection = Backbone.Collection.extend({
 	}
 });
 
+var operationsModel = Backbone.Model.extend({
+	defaults: {
+		instance: null,
+		operation: null,
+		percentage: null
+	}
+});
+
+var OperationsCollection = Backbone.Collection.extend({
+	model: operationsModel,
+	initialize: function() {
+		// This will be called when an item is added. pushed or unshifted
+		this.on('add', function(model) {});
+	}
+});
+
 var rdsInstanceModel = Backbone.Model.extend({
 	defaults: {
-		DBInstanceIdentifier: null,
-		DBInstanceClass: null,
-		Engine: null,
-		DBInstanceStatus: null,
-		MasterUsername: null,
-		DBName: null,
-		Endpoint: null,
-		AllocatedStorage: null,
-		InstanceCreateTime: null,
-		AvailabilityZone: null,
-		MultiAZ: null,
-		StorageType: null
+		dbIdentifier: null,
+		dbClass: null,
+		dbEngine: null,
+		dbStatus: null,
+		masterUsername: null,
+		dbName: null,
+		endpoint: null,
+		allocatedStorage: null,
+		launchTime: null,
+		zone: null,
+		multiAz: null,
+		type: null
 	}
 });
 
@@ -131,3 +173,4 @@ var RDSInstancesCollection = Backbone.Collection.extend({
 
 var ec2InstanceCollection = new EC2InstancesCollection();
 var rdsInstanceCollection = new RDSInstancesCollection();
+var operationsCollection = new OperationsCollection();

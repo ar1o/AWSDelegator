@@ -1,4 +1,4 @@
-var EC2CostView = Backbone.View.extend({
+var RDSCostView = Backbone.View.extend({
     className: 'CostView',
 
     initialize: function(options) {
@@ -11,18 +11,20 @@ var EC2CostView = Backbone.View.extend({
 
     bindings: function() {
         this.model.change('dataReady', function(model, val) {
-                        this.render();
+            this.render();
             var date = new Date(hourlyCostCollection.at(0).get('date'));
-            $(function () {
-                $('#ec2CostContainer').highcharts({
+            $(function() {
+                $('#RDSCostContainer').highcharts({
                     chart: {
                         zoomType: 'x'
                     },
                     title: {
-                        text: 'Amazon Elastic Compute Cloud Cost Per Hour'
+                        text: 'Amazon RDS Cost Per Hour'
                     },
                     xAxis: {
-                        title : {text : "Time"},
+                        title: {
+                            text: "Time"
+                        },
                         type: 'datetime',
                         labels: {
                             overflow: 'justify'
@@ -35,7 +37,7 @@ var EC2CostView = Backbone.View.extend({
                         min: 0,
                         minorGridLineWidth: 0,
                         gridLineWidth: 0,
-                        alternateGridColor: null,                        
+                        alternateGridColor: null,
                     },
                     tooltip: {
                         formatter: function() {
@@ -51,26 +53,24 @@ var EC2CostView = Backbone.View.extend({
                         pointInterval: 3600 * 1000,
                         pointStart: Date.UTC(date.getYear(), date.getMonth(), date.getDate()),
                         data: hourlyCostCollection.pluck('cost')
+
                     }],
                     navigation: {
                         menuItemStyle: {
-                            fontType : 'Roboto',
+                            fontType: 'Roboto',
                             fontSize: '10px'
                         }
                     }
                 });
             });
-            
+
         }.bind(this));
     },
 
     render: function() {
-        var html = Handlebars.templates.EC2CostView({
-            product: hourlyCostCollection.toJSON()
+        var html = Handlebars.templates.RDSCostView({
+            product: hourlyCostCollection.toJSON(),
         });
         this.$el.html(html);
-
     }
-
-
 });

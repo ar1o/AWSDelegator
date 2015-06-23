@@ -1,4 +1,4 @@
-var MetricsView = Backbone.View.extend({
+var RDSMetricsView = Backbone.View.extend({
     className: 'MetricsView',
     
     initialize: function(options) {
@@ -13,9 +13,10 @@ var MetricsView = Backbone.View.extend({
     bindings: function() {
         this.model.change('dataReady', function(model, val) {
             var date = new Date(metricsCollection.at(0).get('time'));
-            var dataNetworkIn = []
-            var dataNetworkOut = []
-            var dataCpuUtilization = []
+            var dataReadIops = [];
+            var dataWriteIops = [];
+            var dataQueueDepth = [];
+            var dataCpuUtilization = [];
             for(var i=0;i<metricsCollection.length;++i){                
                 var date = metricsCollection.at(i).get('time').split('T');
                 date1=date[1].substring(0,date[1].length-1);
@@ -26,21 +27,23 @@ var MetricsView = Backbone.View.extend({
                 var date2 = date[1].split(':');
                 date2[2] = date2[2].substring(0,date2[2].indexOf('.')); 
                 var utcDate = Date.UTC(date1[0],date1[1],date1[2],date2[0],date2[1]);                
-                dataNetworkIn.push([utcDate,metricsCollection.at(i).get('networkIn')]);  
-                dataNetworkOut.push([utcDate,metricsCollection.at(i).get('networkOut')]);
+                dataReadIops.push([utcDate,metricsCollection.at(i).get('readIOPS')]);  
+                dataWriteIops.push([utcDate,metricsCollection.at(i).get('writeIOPS')]);
+                dataQueueDepth.push([utcDate,metricsCollection.at(i).get('diskQueueDepth')]);
                 dataCpuUtilization.push([utcDate,metricsCollection.at(i).get('cpuUtilization')]);       
             }               
             this.render();
 
             $(function () {
-                $('#networkContainer').highcharts({
+                $('#readWriteIopsContainer').highcharts({
                     chart: {
                         zoomType: 'x'
                     },
                     title: {
-                        text: metricsCollection.at(0).get('instance')+' Network-Usage'
+                        text: metricsCollection.at(0).get('instance')+' Disk Operations/s'
                     },
                     xAxis: {
+                        title : {text : "Time"},
                         type: 'datetime',
                         labels: {
                             overflow: 'justify'
@@ -48,7 +51,7 @@ var MetricsView = Backbone.View.extend({
                     },
                     yAxis: {
                         title: {
-                            text: 'Bytes'
+                            text: 'Count/Second'
                         },
                         min: 0,
                         minorGridLineWidth: 0,
@@ -59,19 +62,19 @@ var MetricsView = Backbone.View.extend({
                     tooltip: {
                         formatter: function() {
                             return '<b>'+ this.series.name +'</b><br/>'+
-                                new Date(this.x) +', '+ this.y;
+                                new Date(this.x) +', '+ this.y.toFixed(4);
                         }
                     },
                     legend: {
                         enabled: true
                     },
                     series: [{
-                        name: 'NetworkIn',
-                        data: dataNetworkIn
+                        name: 'ReadIOPS',
+                        data: dataReadIops
                     },
                     {
-                        name: 'NetworkOut',
-                        data: dataNetworkOut
+                        name: 'WriteIOPS',
+                        data: dataWriteIops
                     }],
                     navigation: {
                         menuItemStyle: {
@@ -82,7 +85,53 @@ var MetricsView = Backbone.View.extend({
             });
 
             $(function () {
-                $('#cpuContainer').highcharts({
+                $('#queueDepthContainer').highcharts({
+                    chart: {
+                        zoomType: 'x'
+                    },
+                    title: {
+                        text: metricsCollection.at(0).get('instance')+' Disk Queue Depth'
+                    },
+                    xAxis: {
+                        title : {text : "Time"},
+                        type: 'datetime',
+                        labels: {
+                            overflow: 'justify'
+                        }
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'Count/Second'
+                        },
+                        min: 0,
+                        minorGridLineWidth: 0,
+                        gridLineWidth: 0,
+                        alternateGridColor: null
+                        
+                    },
+                    tooltip: {
+                        formatter: function() {
+                            return '<b>'+ this.series.name +'</b><br/>'+
+                                new Date(this.x) +', '+ this.y.toFixed(4);
+                        }
+                    },
+                    legend: {
+                        enabled: false
+                    },
+                    series: [{
+                        name: 'Disk Queue Depth',
+                        data: dataQueueDepth
+                    }],
+                    navigation: {
+                        menuItemStyle: {
+                            fontSize: '10px'
+                        }
+                    }
+                });
+            });
+
+            $(function () {
+                $('#rdsCpuContainer').highcharts({
                     chart: {
                         zoomType: 'x'
                     },
@@ -90,6 +139,7 @@ var MetricsView = Backbone.View.extend({
                         text: metricsCollection.at(0).get('instance')+' CPU-Usage'
                     },
                     xAxis: {
+                        title : {text : "Time"},
                         type: 'datetime',
                         labels: {
                             overflow: 'justify'
@@ -108,11 +158,11 @@ var MetricsView = Backbone.View.extend({
                     tooltip: {
                         formatter: function() {
                             return '<b>'+ this.series.name +'</b><br/>'+
-                                new Date(this.x) +', '+ this.y;
+                                new Date(this.x) +', '+ this.y.toFixed(4);
                         }
                     },
                     legend: {
-                        enabled: true
+                        enabled: false
                     },
                     series: [{
                         name: 'CPU Utilizaton',
@@ -129,7 +179,7 @@ var MetricsView = Backbone.View.extend({
     },
 
     render: function() {
-        var html = Handlebars.templates.MetricsView({
+        var html = Handlebars.templates.RDSMetricsView({
             metrics: metricsCollection.toJSON()
         });
         this.$el.html(html);

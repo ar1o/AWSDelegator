@@ -1,4 +1,3 @@
-
 var BillingsModel = Backbone.Model.extend({
 	initialize: function() {
 		this.change('dataReady');
@@ -29,6 +28,7 @@ var BillingsModel = Backbone.Model.extend({
 	},
 	getCombindedCost: function(instanceid) {
 		combinedCostCollection.reset();
+
 		var self = this;
 		var count = 0;
 		var params = {
@@ -39,21 +39,38 @@ var BillingsModel = Backbone.Model.extend({
 			$.get(host + '/api/billing/instanceCostAll', params, function(result1) {
 				$.get(host + '/api/NonFreeBilling/instanceCostAll', params, function(result2) {
 					for (var i in result1) {
-						if(result1[i].date==result2[i].date){
+						if (result1[i].date == result2[i].date) {
 							var data = new BillingModel({
 								resourceId: result1[i].resourceId,
 								cost: result1[i].cost + result2[i].cost,
 								volumeId: result1[i].volumeId,
 								date: result1[i].date
 							});
-							console.log("ID: ",data.resourceId, "Cost", data.cost);
-						combinedCostCollection.add(data);
+							// console.log("ID: ", data.resourceId, "Cost", data.cost);
+							combinedCostCollection.add(data);
 						}
 					}
+					self.set('dataReady', Date.now());
 				});
+			});
+		})(params);
+	},
+	getRDSBilling: function(instanceid) {
+		totalCostInstancesCollection.reset();
+		(function(params) {
+			$.get(host + '/api/billing/rds/instanceCostAll', params, function(result) {
+				for (var i in result) {
+					var data = new RDSBillingModel({
+						resourceId: result[i].ResourceId[0],
+						cost: result[i].Total,
+						date: result[i]._id
+					});
+					totalCostInstancesCollection.add(data);
+				}
 				self.set('dataReady', Date.now());
 			});
 		})(params);
+
 	},
 	getNonFreeBilling: function(instanceid) {
 		TotalNonFreeCostCollection.reset();
@@ -89,6 +106,16 @@ var BillingModel = Backbone.Model.extend({
 	}
 });
 
+
+var RDSBillingModel = Backbone.Model.extend({
+	defaults: {
+		resourceId: null,
+		cost: null,
+		date: null
+	}
+});
+
+
 var InstanceTotalCostCollection = Backbone.Collection.extend({
 	model: BillingModel,
 	initialize: function() {
@@ -97,6 +124,7 @@ var InstanceTotalCostCollection = Backbone.Collection.extend({
 
 	}
 });
+
 var combinedCostCollection = new InstanceTotalCostCollection();
 var TotalNonFreeCostCollection = new InstanceTotalCostCollection();
 var totalCostInstancesCollection = new InstanceTotalCostCollection();

@@ -3,7 +3,6 @@ AWS = require('aws-sdk');
 mongoose = require('mongoose');
 MongoClient = require('mongodb').MongoClient;
 Schema = mongoose.Schema;
-awsRegions = ['us-west-1', 'us-west-2', 'us-east-1'];
 billingAttributes = ['RateId', 'ProductName', 'UsageType', 'Operation', 'AvailabilityZone', 'ItemDescription',
     'UsageStartDate', 'UsageQuantity', 'Rate', 'Cost', 'user:Volume Id', 'user:Name', 'user:Email', 'ResourceId'];
 numericAttirbutes = ['RateId', 'UsageQuantity', 'Rate', 'Cost'];
@@ -11,8 +10,12 @@ ec2Metric = ['NetworkIn','NetworkOut','CPUUtilization'];
 ec2MetricUnit = ['Bytes','Bytes','Percent'];
 rdsMetric = ['CPUUtilization','DatabaseConnections','DiskQueueDepth','ReadIOPS','WriteIOPS'];
 rdsMetricUnit = ['Percent','Count','Count','Count/Second','Count/Second'];
+awsAccountNumber = 092841396837;
+rdsRegion = 'us-east-1';
 s3Region = 'us-east-1';
 s3Bucket = 'csvcontainer';
+awsRegions = ['us-west-1', 'us-west-2', 'us-east-1'];
+
 currentBillingCollection = "";
 awsCredentials = {
     default: new AWS.SharedIniFileCredentials({
@@ -43,13 +46,14 @@ mongoose.connect(databaseUrl, function(error) {
 var db = mongoose.connection;
 db.on("open", function() {
     console.log("Database Alert: connected to ", databaseUrl);
-    require('./parse/scheduler').s3Connect(function() {
-	});
+    require('./BoxPricingCheck').getPricing(function(){
+        require('./parse/scheduler').s3Connect();
+    });
 });
 
 app.get('/api/ec2/instances', require('./route/ec2Route').instances);
 app.get('/api/ec2/metrics', require('./route/ec2Route').metrics);
-app.get('/api/ec2/operationPercentage', require('./route/ec2Route').operationPercentage);
+// app.get('/api/ec2/operations', require('./route/ec2Route').operations);
 
 app.get('/api/rds/instances', require('./route/rdsRoute').instances);
 app.get('/api/rds/metrics', require('./route/rdsRoute').metrics);
@@ -58,19 +62,14 @@ app.get('/api/billing/hourlyCostProduct', require('./route/billingRoute').hourly
 app.get('/api/billing/instanceCostAll', require('./route/billingRoute').instanceCostAll);
 app.get('/api/billing/calcFreeTierCost', require('./route/billingRoute').calcFreeTierCost);
 app.get('/api/billing/totalCostProduct',require('./route/billingRoute').totalCostProduct);
+app.get('/api/billing/rds/instanceCostAll', require('./route/rdsBillingRoute').instanceCostAll);
+app.get('/api/billing/rds/hourlyCostProduct', require('./route/rdsBillingRoute').hourlyCostProduct);
 
 app.get('/api/NonFreeBilling/hourlyCostProduct', require('./route/NonFreeBillingRoute').hourlyCostProduct);
 app.get('/api/NonFreeBilling/instanceCostAll', require('./route/NonFreeBillingRoute').instanceCostAll);
 app.get('/api/NonFreeBilling/calcFreeTierCost', require('./route/NonFreeBillingRoute').calcFreeTierCost);
 app.get('/api/NonFreeBilling/totalCostProduct',require('./route/NonFreeBillingRoute').totalCostProduct);
 
-
-// app.get('/api/NonFreeBilling/monthToDate', require('./route/NonFreeBillingRoute').monthToDate);
-// app.get('/api/NonFreeBilling/byHour', require('./route/NonFreeBillingRoute').byHour);
-// app.get('/api/NonFreeBilling/instanceCost', require('./route/NonFreeBillingRoute').instanceCost);
-// app.get('/api/NonFreeBilling/instanceCostHourly', require('./route/NonFreeBillingRoute').instanceCostHourlyByDate);
-// app.get('/api/NonFreeBilling/instanceCostAll', require('./route/NonFreeBillingRoute').instanceCostAll);
-// app.get('/api/NonFreeBilling/calcFreeTierCost', require('./route/NonFreeBillingRoute').calcFreeTierCost);
 
 function errorHandler(err, req, res, next) {
     console.error(err.message);
@@ -82,4 +81,5 @@ function errorHandler(err, req, res, next) {
 }
 module.exports = errorHandler;
 app.listen(port);
+
 console.log('Server Alert: server started on port %s', port);

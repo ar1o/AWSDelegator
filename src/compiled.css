@@ -6,11 +6,62 @@
 .BillingView {
   /*	border-style: solid;
 	border-color: blue;	*/
+<<<<<<< HEAD
 }
 div#billingcontainer {
   margin: 20px;
   /*border-style: solid;
 	border-color: black;	*/
+=======
+}
+div#billingcontainer {
+  margin: 20px;
+  /*border-style: solid;
+	border-color: black;	*/
+}
+.RDSBillingView {
+  width: 46%;
+  margin-left: 20px;
+  /*	border-style: solid;
+	border-color: blue;*/
+  float: left;
+}
+/*#rdsbillingcontainer {
+	width: 46%;
+	margin-left: 20px;
+	border-style: solid;
+	border-color: blue;
+	float: left;
+}*/
+.RDSMetricsView {
+  margin: 0;
+  /*    border-style: solid;
+    border-color: red;*/
+}
+#rdsCpuContainer {
+  width: 46%;
+  margin-right: 20px;
+  /*    border-style: solid;
+    border-color: blue;*/
+  float: right;
+}
+#queueDepthContainer {
+  width: 46%;
+  margin-right: 20px;
+  /*    border-style: solid;
+    border-color: black;*/
+  float: right;
+}
+#readWriteIopsContainer {
+  width: 46%;
+  margin-left: 20px;
+  /*    border-style: solid;
+    border-color: green;*/
+  float: left;
+}
+.clear {
+  clear: both;
+>>>>>>> 8991a0dd62724169ac00990628ee8c9ed5f5bd9c
 }
 .MetricsView {
   margin: 0;
@@ -63,6 +114,7 @@ div#productcostcontainer {
 .InstancesView {
   /*	border-style: solid;
 	border-color: blue;*/
+<<<<<<< HEAD
 }
 #InstanceTable_wrapper {
   margin-top: 20px;
@@ -75,6 +127,16 @@ div#productcostcontainer {
 th,
 td {
   overflow: hidden;
+=======
+}
+#InstanceTable_wrapper {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  margin-right: 20px;
+  margin-left: 20px;
+  /*border-style: solid;
+	border-color: black;*/
+>>>>>>> 8991a0dd62724169ac00990628ee8c9ed5f5bd9c
 }
 body {
   font-family: 'Roboto', sans-serif;

@@ -43,19 +43,3 @@ exports.instances = function(req, res) {
     });
 }
 
-exports.operationPercentage = function(req, res){
-    var operations = {},operationPercentage = {};
-    mongoose.model('Billings').find({Id: req}).exec(function(e,d){
-        for(var i=0 in d){
-            if(operations.indexOf(d.Operation)==-1){
-                operations[d.Operation] = 1;
-            }else{
-                operations[d.Operation] +=1;
-            }
-        }
-        for(var i=0 in operations){
-            operationPercentage[operations[i]]=(operations[i]/operations.length);
-        }
-        res.send(operationPercentage);
-    });
-}

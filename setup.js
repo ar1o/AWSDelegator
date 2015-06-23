@@ -34,6 +34,7 @@ MongoClient.connect(databaseUrl, function(err, db) {
         _id: '1',
         time: "2015-00-01 00:00:00"
     });
+<<<<<<< HEAD
     require('./src/server/model/pricing');
     require('./src/server/model/ec2');
     require('./src/server/model/rds');
@@ -60,6 +61,27 @@ MongoClient.connect(databaseUrl, function(err, db) {
                         mongoose.connection.close(function() {
 							process.exit(0);                        	
                         });
+=======
+    require('./src/server/model/ec2');
+    require('./src/server/model/rds');
+    
+    db.createCollection("ec2Instances", function(err, collection) {
+        if (err) throw err;
+        console.log("Database Alert: 'ec2Instances' collection created");
+        db.createCollection("rdsInstances", function(err, collection) {
+            if (err) throw err;
+            console.log("Database Alert: 'rdsInstances' collection created");
+            AWS.config.credentials = awsCredentials.dev2;
+            rdsParser.parseInstances(function() {   
+                console.log("Parse Alert(rds): Instance parsing completed");
+                AWS.config.credentials = awsCredentials.default;
+                ec2Parser.parseInstances(function() {
+                    console.log("Parse Alert(ec2): Instance parsing completed");
+                    console.log("Setup script completed, You may now start the server");
+                    db.close();
+                    mongoose.connection.close(function() {
+						process.exit(0);                        	
+>>>>>>> 8991a0dd62724169ac00990628ee8c9ed5f5bd9c
                     });
                 });
             });
