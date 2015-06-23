@@ -1,5 +1,5 @@
-var BillingView = Backbone.View.extend({
-    className: 'BillingView',
+var EC2BillingView = Backbone.View.extend({
+    className: 'EC2BillingView',
 
     initialize: function(options) {
         
@@ -74,7 +74,7 @@ var BillingView = Backbone.View.extend({
     },
 
     render: function() {
-        var html = Handlebars.templates.BillingView({
+        var html = Handlebars.templates.EC2BillingView({
             billing: totalCostInstancesCollection.toJSON(),
         });
         this.$el.html(html);

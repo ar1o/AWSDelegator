@@ -20,7 +20,7 @@ var NonFreeBillingView = Backbone.View.extend({
             //date2=[hour,minute,second]                
             var date2 = date[1].split(':');
 
-            console.log(TotalNonFreeCostCollection.at(0).get('date'));           
+            // console.log(TotalNonFreeCostCollection.at(0).get('date'));           
             $(function () {
                 $('#nonfreebillingcontainer').highcharts({
                     chart: {

@@ -25,7 +25,7 @@ var OperationsView = Backbone.View.extend({
                         plotShadow: false,
                     },
                     title: {
-                        text: 'Instance Operations Percentage'
+                        text: 'Operations Percentage'
                     },
                     tooltip: {
                         pointFormat: '{series.name}: <b>USD{point.y:.4f}</b>'

@@ -6,7 +6,7 @@ exports.instanceCostAll = function(req, res) {
     mongoose.model('Billings').aggregate([{
         $match: {
             ResourceId: {
-                $eq: instanceId
+                $regex: instanceId
             }
         }
     }, {

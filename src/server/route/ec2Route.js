@@ -57,7 +57,8 @@ exports.operations = function(req, res){
                 iOps[op] +=1;
             }
         }
-        var iTotal=0,vTotal=0,iCount=0,vCount=0;
+        var iTotal=0,iCount=0;
+        // var vTotal=0,vCount=0;
         for(var i in iOps){
             iTotal+=iOps[i];
         }

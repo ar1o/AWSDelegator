@@ -3,7 +3,7 @@ var AppRouter = Backbone.Model.extend({
     defaults: {
         view: undefined,
         args: {},
-        defaultView: 'LoginView'
+        defaultView: 'AWSView'
     },
     
     initialize: function(options) {
@@ -12,9 +12,11 @@ var AppRouter = Backbone.Model.extend({
         $(window).on('hashchange', function() { 
             self.calcHashChange();
         });
+        this.layout = options.layout;
     },
 
     switchToView: function(view, args) {
+        console.log("args",args);
         args = args || {};
         this.set('args', args);
         this.set('view', window[view]);
@@ -36,3 +38,5 @@ var AppRouter = Backbone.Model.extend({
     }
     
 });
+
+

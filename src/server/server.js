@@ -45,8 +45,10 @@ db.on("open", function() {
     require('./model/latest');
     require('./model/pricing');
     mongoose.model('latest').find({},function(e,d){
+        //get currentBillingCollection from 'latest' collection
         if(e) throw e;
-        var latestTime = d[0].time; 
+        //time: yyyy-mm-dd hh:mm:ss
+        var latestTime = d[0].time;
         latestTime.substring(0,latestTime.indexOf(' '));
         var time=latestTime.split('-');
         currentBillingCollection = 'bills'+time[0]+time[1];
@@ -63,6 +65,7 @@ app.get('/api/ec2/operations', require('./route/ec2Route').operations);
 
 app.get('/api/rds/instances', require('./route/rdsRoute').instances);
 app.get('/api/rds/metrics', require('./route/rdsRoute').metrics);
+app.get('/api/rds/operations', require('./route/rdsRoute').operations);
 
 app.get('/api/billing/hourlyCostProduct', require('./route/billingRoute').hourlyCostProduct);
 app.get('/api/billing/instanceCostAll', require('./route/billingRoute').instanceCostAll);
@@ -76,6 +79,8 @@ app.get('/api/NonFreeBilling/instanceCostAll', require('./route/NonFreeBillingRo
 app.get('/api/NonFreeBilling/calcFreeTierCost', require('./route/NonFreeBillingRoute').calcFreeTierCost);
 app.get('/api/NonFreeBilling/totalCostProduct',require('./route/NonFreeBillingRoute').totalCostProduct);
 
+app.get('/api/statistics/ec2/operations',require('./route/OperationsRoute').operations);
+app.get('/api/statistics/rds/operations',require('./route/OperationsRoute').operations);
 
 function errorHandler(err, req, res, next) {
     console.error(err.message);
