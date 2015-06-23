@@ -56,6 +56,29 @@ var InstancesModel = Backbone.Model.extend({
 		});
 	},
 
+	getEC2Operations: function(instanceid){
+		console.log('ec2 ops');
+		var self = this;
+		operationsCollection.reset();
+		var params = {
+			instance: instanceid
+		};
+
+		(function(params) {
+			$.get(host+'/api/ec2/operations', params, function(result) {
+				for (var i in result) {
+					var data = new ec2MetricModel({
+						instance: result[r].Id,
+						operation: result[r].Operation,
+						percentage: result[r].Percentage
+					});
+					operationsCollection.add(data);
+				}
+				self.set('dataReady', Date.now());
+			});
+		})(params);
+	},
+
 	getRDSInstances: function() {
 		var self = this;
 		rdsInstanceCollection.reset();
@@ -108,6 +131,22 @@ var EC2InstancesCollection = Backbone.Collection.extend({
 	}
 });
 
+var operationsModel = Backbone.Model.extend({
+	defaults: {
+		instance: null,
+		operation: null,
+		percentage: null
+	}
+});
+
+var OperationsCollection = Backbone.Collection.extend({
+	model: operationsModel,
+	initialize: function() {
+		// This will be called when an item is added. pushed or unshifted
+		this.on('add', function(model) {});
+	}
+});
+
 var rdsInstanceModel = Backbone.Model.extend({
 	defaults: {
 		dbIdentifier: null,
@@ -134,3 +173,4 @@ var RDSInstancesCollection = Backbone.Collection.extend({
 
 var ec2InstanceCollection = new EC2InstancesCollection();
 var rdsInstanceCollection = new RDSInstancesCollection();
+var operationsCollection = new OperationsCollection();

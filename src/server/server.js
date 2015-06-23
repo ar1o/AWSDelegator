@@ -46,13 +46,14 @@ mongoose.connect(databaseUrl, function(error) {
 var db = mongoose.connection;
 db.on("open", function() {
     console.log("Database Alert: connected to ", databaseUrl);
-    require('./parse/scheduler').s3Connect(function() {
-	});
+    require('./BoxPricingCheck').getPricing(function(){
+        require('./parse/scheduler').s3Connect();
+    });
 });
 
 app.get('/api/ec2/instances', require('./route/ec2Route').instances);
 app.get('/api/ec2/metrics', require('./route/ec2Route').metrics);
-app.get('/api/ec2/operationPercentage', require('./route/ec2Route').operationPercentage);
+app.get('/api/ec2/operations', require('./route/ec2Route').operations);
 
 app.get('/api/rds/instances', require('./route/rdsRoute').instances);
 app.get('/api/rds/metrics', require('./route/rdsRoute').metrics);
