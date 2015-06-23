@@ -1,9 +1,9 @@
-var OperationsView = Backbone.View.extend({
-    className: 'OperationsView',
+var AWSOperationsView = Backbone.View.extend({
+    className: 'AWSOperationsView',
 
     initialize: function(options) {
         if (!this.model) {
-            this.model = new InstancesModel();
+            this.model = new OperationsModel();
         }
         this.bindings();
         this.render();
@@ -13,6 +13,7 @@ var OperationsView = Backbone.View.extend({
         var self=this;
         this.model.change('dataReady', function(model, val) {
             self.render();
+            console.log(operationsCollection);
             var dataOperations = [];
             for (var i = 0; i < operationsCollection.length; i++) {
                 dataOperations.push([operationsCollection.at(i).get('operation'), operationsCollection.at(i).get('percentage')]);

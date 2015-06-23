@@ -45,48 +45,73 @@ exports.instances = function(req, res) {
 
 exports.operations = function(req, res){
     var instanceId = req.query.instance;
-    console.log('ec2ops: ');
-    console.log(instanceId);
-    var instance_operations = {},operationPercentage = {},volume_operations={};
-    var volumes = [];
+    var iOps = {},iOpPercent = {};
+    // var volumes = [],vOps={},vOpPercent={};
     mongoose.model('Billings').find({ResourceId: instanceId}).exec(function(e,d){
         var op;
         for(var i=0 in d){
             op = d[i].toJSON().Operation;
-            if(!(op in instance_operations)){
-                instance_operations[op] = 1;
+            if(!(op in iOps)){
+                iOps[op] = 1;
             }else{
-                instance_operations[op] +=1;
+                iOps[op] +=1;
             }
         }
-        mongoose.model('ec2Instances').find({
-            Id: instanceId,
-        }).exec(function(e,d2){
-            console.log(d2);
-            volumes = d2[0].VolumeId;
-            console.log(volumes.length);
-            for(var i in volumes){
-                // console.log('--->',volumes[i]);
-                // mongoose.model('Billings').find({ResourceId: volumes[i]}).exec(function(e,d3){
-                //     for(var j=0 in d3){
-                //         op = d3[j].toJSON().Operation;
-                //         console.log(op);
-                //         if(!(op in volume_operations)){
-                //             volume_operations[op] = 1;
-                //         }else{
-                //             volume_operations[op] +=1;
-                //         }
-                //     }
-                // });
-            }
-        });
-        console.log(volumes);
-        console.log(instance_operations);
-        console.log(volume_operations);
-        // for(var i=0 in operations){
-        //     operationPercentage[operations[i]]=(operations[i]/operations.length);
-        // }
-        // console.log(operationPercentage);
-        // res.send();
+        var iTotal=0,iCount=0;
+        // var vTotal=0,vCount=0;
+        for(var i in iOps){
+            iTotal+=iOps[i];
+        }
+        for(var i=0 in iOps){
+            iOpPercent[i]=(iOps[i]/iTotal);
+        }
+        res.send(iOpPercent);
+        // mongoose.model('ec2Instances').find({
+        //     Id: instanceId,
+        // }).exec(function(e,d2){
+        //     volumes = d2[0].VolumeId;
+        //     var index = 0;
+        //     var controller = function(){
+        //         iterator(function(){
+        //             index++;
+        //             if(index < volumes.length) controller();
+        //             else{
+        //                 var iTotal=0,vTotal=0,iCount=0,vCount=0;
+        //                 for(var i in iOps){
+        //                     iTotal+=iOps[i];
+        //                 }
+
+        //                 for(var i=0 in iOps){
+        //                     iOpPercent[i]=(iOps[i]/iTotal)*100;
+        //                 }
+
+        //                 for(var i in vOps){
+        //                     vTotal+=vOps[i];
+        //                 }
+                        
+        //                 for(var i=0 in vOps){
+        //                     vOpPercent[i]=(vOps[i]/vTotal)*100;
+        //                 }
+        //                 res.send();
+        //             }
+        //         });
+        //     };
+        //     var iterator = function(_callback){
+        //         mongoose.model('Billings').find({ResourceId: volumes[index]}).exec(function(e,d3){
+        //             var vol_op = {};
+        //             for(var j=0 in d3){
+        //                 op = d3[j].toJSON().Operation;
+        //                 if(!(op in vol_op)){
+        //                     vol_op[op] = 1;
+        //                 }else{
+        //                     vol_op[op] +=1;
+        //                 }
+        //             }
+        //             vOps[volumes[index]]=vol_op;
+        //             _callback();
+        //         });
+        //     };
+        //     controller();
+        // });
     });
 }

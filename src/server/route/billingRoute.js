@@ -40,7 +40,6 @@ exports.calcFreeTierCost = function(req, res) {
 };
 
 exports.totalCostProduct = function(req, res) {
-    var totalCostProduct = {};
     mongoose.model('Billings').aggregate([{
         $match: {
             Cost: {
@@ -63,6 +62,7 @@ exports.totalCostProduct = function(req, res) {
             }
         }
     }]).exec(function(e, d) {
+        if(e) throw e;
         var totalCostProduct = {};
         totalCostProduct = {
             data: d,

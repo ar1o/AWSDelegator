@@ -9,13 +9,15 @@ var RDSInstancesView = Backbone.View.extend({
         this.model.getRDSInstances();
         this.rdsBillingActivity = new RDSBillingView();
         this.rdsMetricsActivity = new RDSMetricsView();
+        this.operationsActivity = new OperationsView();
         this.bindings();
     },
 
     updateViews: function(selected) {
-            this.rdsBillingActivity.model.getRDSBilling(selected);
-            var rdsDbName = selected.substring(selected.lastIndexOf(':')+1,selected.length);
-            this.rdsMetricsActivity.model.getRDSMetrics(rdsDbName);
+        this.rdsBillingActivity.model.getRDSBilling(selected);
+        var rdsDbName = selected.substring(selected.lastIndexOf(':')+1,selected.length);
+        this.rdsMetricsActivity.model.getRDSMetrics(rdsDbName);
+        this.operationsActivity.model.getRDSOperations(selected);
     },
 
     bindings: function() {
@@ -47,7 +49,9 @@ var RDSInstancesView = Backbone.View.extend({
             instances: InstanceCollection.toJSON()
         });
         this.$el.html(html);
+        this.$el.append(this.operationsActivity.el);
         this.$el.append(this.rdsBillingActivity.el);
-        this.$el.append(this.rdsMetricsActivity.el);      
+        this.$el.append(this.rdsMetricsActivity.el);   
+
     }
 });

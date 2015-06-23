@@ -31,11 +31,6 @@ port = process.env.PORT || 3000;
 app.use(require('./CORS'));
 
 //Instantiate mongoose schemas
-require('./model/ec2');
-require('./model/rds');
-require('./model/latest');
-require('./model/pricing');
-
 
 // Start mongoose and mongo
 mongoose.connect(databaseUrl, function(error) {
@@ -45,9 +40,22 @@ mongoose.connect(databaseUrl, function(error) {
 });
 var db = mongoose.connection;
 db.on("open", function() {
-    console.log("Database Alert: connected to ", databaseUrl);
-    require('./BoxPricingCheck').getPricing(function(){
-        require('./parse/scheduler').s3Connect();
+    require('./model/ec2');
+    require('./model/rds');
+    require('./model/latest');
+    require('./model/pricing');
+    mongoose.model('latest').find({},function(e,d){
+        //get currentBillingCollection from 'latest' collection
+        if(e) throw e;
+        //time: yyyy-mm-dd hh:mm:ss
+        var latestTime = d[0].time;
+        latestTime.substring(0,latestTime.indexOf(' '));
+        var time=latestTime.split('-');
+        currentBillingCollection = 'bills'+time[0]+time[1];
+        require('./model/billing');
+        require('./BoxPricingCheck').getPricing(function(){
+            require('./parse/scheduler').s3Connect();
+        });
     });
 });
 
@@ -57,6 +65,7 @@ app.get('/api/ec2/operations', require('./route/ec2Route').operations);
 
 app.get('/api/rds/instances', require('./route/rdsRoute').instances);
 app.get('/api/rds/metrics', require('./route/rdsRoute').metrics);
+app.get('/api/rds/operations', require('./route/rdsRoute').operations);
 
 app.get('/api/billing/hourlyCostProduct', require('./route/billingRoute').hourlyCostProduct);
 app.get('/api/billing/instanceCostAll', require('./route/billingRoute').instanceCostAll);
@@ -70,6 +79,8 @@ app.get('/api/NonFreeBilling/instanceCostAll', require('./route/NonFreeBillingRo
 app.get('/api/NonFreeBilling/calcFreeTierCost', require('./route/NonFreeBillingRoute').calcFreeTierCost);
 app.get('/api/NonFreeBilling/totalCostProduct',require('./route/NonFreeBillingRoute').totalCostProduct);
 
+app.get('/api/statistics/ec2/operations',require('./route/OperationsRoute').operations);
+app.get('/api/statistics/rds/operations',require('./route/OperationsRoute').operations);
 
 function errorHandler(err, req, res, next) {
     console.error(err.message);

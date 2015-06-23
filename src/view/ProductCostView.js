@@ -18,10 +18,11 @@ var ProductCostView = Backbone.View.extend({
             var month = this.model.getMonth(productCostCollection.at(0).get('month'));
             var year = productCostCollection.at(0).get('year')
             var total = this.model.calcTotal();
-            var fdata = [];
+            var fdata = [];            
             for (var i = 0; i < productCostCollection.length; i++) {
                 fdata.push([productCostCollection.at(i).get('productName'), productCostCollection.at(i).get('cost')]);
             }
+            console.log(fdata);
             $(function() {
                 var t = this;
 

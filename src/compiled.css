@@ -61,6 +61,7 @@ body {
 	border-color: blue;	*/
 }
 div#billingcontainer {
+  width: 47%;
   margin: 20px;
   /*border-style: solid;
 	border-color: black;	*/
@@ -93,17 +94,17 @@ div#billingcontainer {
 }
 #queueDepthContainer {
   width: 46%;
-  margin-right: 20px;
+  margin-left: 20px;
   /*    border-style: solid;
     border-color: black;*/
-  float: right;
+  float: left;
 }
 #readWriteIopsContainer {
   width: 46%;
-  margin-left: 20px;
+  margin-right: 20px;
   /*    border-style: solid;
     border-color: green;*/
-  float: left;
+  float: right;
 }
 .clear {
   clear: both;
@@ -234,9 +235,9 @@ div#productcostcontainer {
   background-color: white;
 }
 div#operationscontainer {
-  margin-bottom: 20px;
+  width: 47%;
   margin-right: 20px;
-  margin-left: 20px;
+  float: right;
   /*	border-style: dashed;
 	border-color: blue;*/
 }
