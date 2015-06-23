@@ -108,6 +108,9 @@ templates['NonFreeBillingView'] = template({"1":function(depth0,helpers,partials
     + ((stack1 = helpers.each.call(depth0,(depth0 != null ? depth0.billing : depth0),{"name":"each","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
     + "		</tbody>	\n	</table>\n</div> -->\n\n\n\n";
 },"useData":true});
+templates['OperationsView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+    return "<div id=\"operationscontainer\"></div>\n";
+},"useData":true});
 templates['ProductCostView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     return "<div id=\"productcostcontainer\"></div>\n";
 },"useData":true});

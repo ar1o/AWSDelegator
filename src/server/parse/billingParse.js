@@ -1,7 +1,6 @@
 var fs = require("fs");
 var mongodb = require('mongodb');
 var MongoClient = mongodb.MongoClient;
-var freeTier = require('../FreeTier');
 
 // parses latestBills.csv and updates the 'awsdb' database with new bills.
 exports.parseBillingCSV = function(_callback) {
@@ -48,23 +47,32 @@ exports.parseBillingCSV = function(_callback) {
                                     } else {
                                         doc[billingAttributes[j]] = parseFloat(bill[propertiesIndex[j]]);
                                     }
-                                }            
-                                // if(doc['ItemDescription'].match(/free tier/g)){
-                                //     var pricingQuery = freeTier.GetNonFreePricing(doc);
-                                //     var pricingScope = {_id:0, Price : 1};
-                                //     console.log(pricingQuery);
-                                //     mongoose.model('pricingModel').findOne(pricingQuery, pricingScope).exec(function(err, price) {
-                                //         if (err) {
-                                //             throw err;
-                                //         } else {
-                                //             console.log(price);
-                                //             doc['NonFreeRate'] = price.Price;
-                                //             doc['NonFreeCost'] = price.Price * doc[billingAttributes['UsageQuantity']];
-                                //             console.log(price.Price);
-                                //         }
-                                //     });
-                                //     console.log(doc);
-                                // }         
+                                }        
+                                //handles free tier rate and cost
+                                if(doc['ItemDescription'].match(/free tier/g)){
+                                    if(/BoxUsage:t2.micro/.test(doc['UsageType'])){
+                                        if(/Windows/.test(doc['ItemDescription'])){
+                                            doc['NonFreeRate'] = pricing['BoxUsage:t2.micro']['Windows'].Price;
+                                        }else if(/SUSE/.test(doc['ItemDescription'])){
+                                            doc['NonFreeRate'] = pricing['BoxUsage:t2.micro']['SUSE'].Price;
+                                        }else if(/Linux/.test(doc['ItemDescription'])){
+                                            doc['NonFreeRate'] = pricing['BoxUsage:t2.micro']['Linux'].Price;
+                                        }else if(/RHEL/.test(doc['ItemDescription'])){
+                                            doc['NonFreeRate'] = pricing['BoxUsage:t2.micro']['RHEL'].Price;
+                                        }
+                                    }else if(/AWS-Out-Bytes/.test(doc['UsageType'])){
+                                        doc['NonFreeRate'] = pricing['AWS-Out-Bytes'].Price;
+                                    }else if(/DataTransfer-Out-Bytes/.test(doc['UsageType'])){
+                                        doc['NonFreeRate'] = pricing['DataTransfer-Out-Bytes'].Price;
+                                    }else if(/TimedStorage-ByteHrs/.test(doc['UsageType'])){
+                                        doc['NonFreeRate'] = pricing['TimedStorage-ByteHrs'].Price;
+                                    }else if(/CloudFront-Out-Bytes/.test(doc['UsageType'])){
+                                        doc['NonFreeRate'] = pricing['CloudFront-Out-Bytes'].Price;
+                                    }else{
+                                        doc['NonFreeRate'] = pricing[doc['UsageType']].Price;
+                                    }
+                                    doc['NonFreeCost'] = doc['UsageQuantity'] * doc['NonFreeRate'];
+                                }    
                                 db.collection(currentBillingCollection).insert(doc);
                                 db.collection('latest').update({
                                     _id: latest._id

@@ -43,19 +43,50 @@ exports.instances = function(req, res) {
     });
 }
 
-exports.operationPercentage = function(req, res){
-    var operations = {},operationPercentage = {};
-    mongoose.model('Billings').find({Id: req}).exec(function(e,d){
+exports.operations = function(req, res){
+    var instanceId = req.query.instance;
+    console.log('ec2ops: ');
+    console.log(instanceId);
+    var instance_operations = {},operationPercentage = {},volume_operations={};
+    var volumes = [];
+    mongoose.model('Billings').find({ResourceId: instanceId}).exec(function(e,d){
+        var op;
         for(var i=0 in d){
-            if(operations.indexOf(d.Operation)==-1){
-                operations[d.Operation] = 1;
+            op = d[i].toJSON().Operation;
+            if(!(op in instance_operations)){
+                instance_operations[op] = 1;
             }else{
-                operations[d.Operation] +=1;
+                instance_operations[op] +=1;
             }
         }
-        for(var i=0 in operations){
-            operationPercentage[operations[i]]=(operations[i]/operations.length);
-        }
-        res.send(operationPercentage);
+        mongoose.model('ec2Instances').find({
+            Id: instanceId,
+        }).exec(function(e,d2){
+            console.log(d2);
+            volumes = d2[0].VolumeId;
+            console.log(volumes.length);
+            for(var i in volumes){
+                // console.log('--->',volumes[i]);
+                // mongoose.model('Billings').find({ResourceId: volumes[i]}).exec(function(e,d3){
+                //     for(var j=0 in d3){
+                //         op = d3[j].toJSON().Operation;
+                //         console.log(op);
+                //         if(!(op in volume_operations)){
+                //             volume_operations[op] = 1;
+                //         }else{
+                //             volume_operations[op] +=1;
+                //         }
+                //     }
+                // });
+            }
+        });
+        console.log(volumes);
+        console.log(instance_operations);
+        console.log(volume_operations);
+        // for(var i=0 in operations){
+        //     operationPercentage[operations[i]]=(operations[i]/operations.length);
+        // }
+        // console.log(operationPercentage);
+        // res.send();
     });
 }
