@@ -6,10 +6,6 @@ var ProductCostView = Backbone.View.extend({
         if (!this.model) {
             this.model = new ProductCostModel();
         }
-
-        this.EC2Instances = new InstancesView();
-        this.EC2Cost = new EC2CostView();
-        this.render();
         this.bindings();
     },
 
@@ -27,6 +23,8 @@ var ProductCostView = Backbone.View.extend({
                 fdata.push([productCostCollection.at(i).get('productName'), productCostCollection.at(i).get('cost')]);
             }
             $(function() {
+                var t = this;
+
                 $('#productcostcontainer').highcharts({
                     chart: {
                         plotBackgroundColor: null,
@@ -59,9 +57,15 @@ var ProductCostView = Backbone.View.extend({
                         point: {
                             events: {
                                 click: function(event) {
+                                    var thisthis = this;
                                     if (this.name == "Amazon Elastic Compute Cloud") {
-                                        self.EC2Cost.model.getCost();
-                                        self.EC2Instances.model.getEC2Instances();
+
+                                        // self.EC2Cost.model.getCost(function() {
+                                        //     self.EC2Instances.model.getEC2Instances(function() {
+                                        //     });
+
+                                        // });
+                                        
                                     } else if (this.name == "Amazon RDS Service") {
                                         console.log(this.name);
                                     }
@@ -76,26 +80,40 @@ var ProductCostView = Backbone.View.extend({
         this.$el.on("change", '.instanceDropDown', function(e) {
             var selected = $('.instanceDropDown').val();
             console.log(selected);
-            this.EC2Instances.updateViews(selected);
+            // this.EC2Instances.updateViews(selected);
         }.bind(this));
 
-
-        this.$el.on("click", '#InstanceTable tr', function(e) {
-            var href = $('td', this).eq(0).text();
-            console.log("test", href);
-        });
-
+        // this.$el.on("click", '#InstanceTable tr', function(e) {
+        //     var href = $('td', this).eq(0).text();
+        //     console.log("test", href);
+        // });
 
         this.$el.on('click', '#InstanceTable tr', function() {
             var name = $('td', this).eq(0).text();
             console.log('You clicked on ' + name + '\'s row');
-            if(name != "") {
-            totalCostInstancesCollection.reset();
-            self.EC2Instances.updateViews(name);
-        }
-
+            if (name != "") {
+                totalCostInstancesCollection.reset();
+             
+            }
         });
 
+    },
+
+    destroy_view: function() {
+        console.log("remove el");
+        // COMPLETELY UNBIND THE VIEW
+        this.undelegateEvents();
+
+        this.$el.removeData().unbind();
+
+        // Remove view from DOM
+        this.remove();
+        Backbone.View.prototype.remove.call(this);
+    },
+    destroy: function() {
+        this.remove();
+        this.unbind();
+        this.model.unbind("change", this.modelChanged);
     },
 
     render: function() {
@@ -103,8 +121,8 @@ var ProductCostView = Backbone.View.extend({
             product: productCostCollection.toJSON(),
         });
         this.$el.html(html);
-        this.$el.append(this.EC2Cost.el);
-        this.$el.append(this.EC2Instances.el);
+        // this.$el.append(this.EC2Cost.el);
+        // this.$el.append(this.EC2Instances.el);
 
 
     }

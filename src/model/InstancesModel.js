@@ -19,7 +19,7 @@ var InstancesModel = Backbone.Model.extend({
 
 	getEC2Instances: function() {
 		var self = this;
-
+		console.log('getEC2Instances');
 		this.aws_result().done(function(result) {
 			instanceCollection.reset();
 			for (var r in result) {

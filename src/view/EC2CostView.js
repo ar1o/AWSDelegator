@@ -5,7 +5,8 @@ var EC2CostView = Backbone.View.extend({
         if (!this.model) {
             this.model = new EC2CostModel();
         }
-        this.render();
+        this.model.getCost();
+        // this.render();
         this.bindings();
     },
 
@@ -67,7 +68,6 @@ var EC2CostView = Backbone.View.extend({
             product: EC2HourlyCostCollection.toJSON(),
         });
         this.$el.html(html);
-
     }
 
 

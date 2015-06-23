@@ -1,5 +1,6 @@
 var ProductCostModel = Backbone.Model.extend({
 	initialize: function() {
+		console.log("initizlied ProductCOstModel")
 		var data = {};
 		var result;
 		this.addProductCost();
@@ -21,8 +22,6 @@ var ProductCostModel = Backbone.Model.extend({
 		var self = this;
 
 		this.aws_result().done(function(result) {
-			console.log(result);
-			console.log(result.data[0]._id);
 			productCostCollection.reset();
 
 			for (var r in result.data) {

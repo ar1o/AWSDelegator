@@ -7,6 +7,9 @@ var InstancesView = Backbone.View.extend({
         if (!this.model) {
             this.model = new InstancesModel();
         }
+        //render own view
+        this.model.getEC2Instances();
+        // child views
         this.billingActivity = new BillingView();
         this.metricsActivity = new MetricsView();
 
@@ -20,19 +23,19 @@ var InstancesView = Backbone.View.extend({
     },
 
     bindings: function() {
+        var self = this;
+        this.render();
         this.model.change('dataReady', function(model, val) {
+            console.log("Ec2Instances render");
             this.render();
-
             $('#InstanceTable').DataTable({
-                "iDisplayLength": 25,
-                "paging":   false,
-                "info":     false,
-                "bFilter": false
+                "iDisplayLength": 25
+                // "paging":   false,
+                // "info":     false,
+                // "bFilter": false
             });
-
-            // this.metricsActivity.model.getMetrics(instanceCollection.at(0).get('instance'));
-            // this.billingActivity.model.getBilling(instanceCollection.at(0).get('instance'));
         }.bind(this));
+
 
         this.$el.on("change", '.instanceDropDown', function(e) {
             var selected = $('.instanceDropDown').val();
@@ -41,6 +44,16 @@ var InstancesView = Backbone.View.extend({
             this.billingActivity.model.getBilling(selected); 
             this.metricsActivity.model.getMetrics(selected);
         }.bind(this));
+
+
+        this.$el.on('click', '#InstanceTable tr', function() {
+            var name = $('td', this).eq(0).text();
+            console.log('You! clicked on ' + name + '\'s row');
+            if (name != "") {
+                totalCostInstancesCollection.reset();
+                self.updateViews(name);
+            }
+        });
     },
 
     render: function() {
@@ -50,6 +63,7 @@ var InstancesView = Backbone.View.extend({
         this.$el.html(html);
         this.$el.append(this.billingActivity.el);
         this.$el.append(this.metricsActivity.el);
+
        
     }
 });

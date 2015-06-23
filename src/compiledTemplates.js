@@ -1,8 +1,8 @@
 (function() {
   var template = Handlebars.template, templates = Handlebars.templates = Handlebars.templates || {};
 templates['AppView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  return "<div class=\"content-view\"></div>\n";
-  },"useData":true});
+  return "<div class=\"content-view\">\n\n</div>\n";
+},"useData":true});
 templates['BillingView'] = template({"1":function(depth0,helpers,partials,data) {
   var lambda=this.lambda, escapeExpression=this.escapeExpression;
   return "			<tr class=\"tablesorter-body\">\n				<td>"
@@ -32,6 +32,15 @@ templates['EC2CostView'] = template({"1":function(depth0,helpers,partials,data) 
   stack1 = helpers.each.call(depth0, (depth0 != null ? depth0.product : depth0), {"name":"each","hash":{},"fn":this.program(1, data),"inverse":this.noop,"data":data});
   if (stack1 != null) { buffer += stack1; }
   return buffer + "		</tbody>	\n	</table>\n</div> -->";
+},"useData":true});
+templates['FooterView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  return "";
+},"useData":true});
+templates['HeaderView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  return "<div class=\"setting\"> </div>\n\n\n <div class=\"menu\"><i class=\"fa fa-bars fa-1x\"></i> Menu</div>\n";
+},"useData":true});
+templates['HomeView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  return "";
 },"useData":true});
 templates['InstancesView'] = template({"1":function(depth0,helpers,partials,data) {
   var lambda=this.lambda, escapeExpression=this.escapeExpression;
@@ -80,6 +89,28 @@ templates['MetricsView'] = template({"1":function(depth0,helpers,partials,data) 
   stack1 = helpers.each.call(depth0, (depth0 != null ? depth0.metrics : depth0), {"name":"each","hash":{},"fn":this.program(1, data),"inverse":this.noop,"data":data});
   if (stack1 != null) { buffer += stack1; }
   return buffer + "		</tbody>	\n	</table>\n</div>\n -->\n\n";
+},"useData":true});
+templates['NavView'] = template({"1":function(depth0,helpers,partials,data) {
+  var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing, buffer = "<div class=\"page\" page-id=\""
+    + escapeExpression(lambda((depth0 != null ? depth0.page_id : depth0), depth0))
+    + "\">"
+    + escapeExpression(lambda((depth0 != null ? depth0.title : depth0), depth0))
+    + "</div>\n";
+  stack1 = ((helpers.ifCond || (depth0 && depth0.ifCond) || helperMissing).call(depth0, (depth0 != null ? depth0.title : depth0), "==", "Amazon Elastic Compute Cloud", {"name":"ifCond","hash":{},"fn":this.program(2, data),"inverse":this.noop,"data":data}));
+  if (stack1 != null) { buffer += stack1; }
+  buffer += "\n";
+  stack1 = ((helpers.ifCond || (depth0 && depth0.ifCond) || helperMissing).call(depth0, (depth0 != null ? depth0.title : depth0), "==", "Amazon RDS Service", {"name":"ifCond","hash":{},"fn":this.program(4, data),"inverse":this.noop,"data":data}));
+  if (stack1 != null) { buffer += stack1; }
+  return buffer;
+},"2":function(depth0,helpers,partials,data) {
+  return "<div class=\"subpage\" subpage-id=\"0\"> >> EC2 Instances</div>\n";
+  },"4":function(depth0,helpers,partials,data) {
+  return "<div class=\"subpage\" subpage-id=\"0\"> >> RDS Instances</div>\n";
+  },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  var stack1, buffer = "<div class=\"slider\">\n";
+  stack1 = helpers.each.call(depth0, (depth0 != null ? depth0.pages : depth0), {"name":"each","hash":{},"fn":this.program(1, data),"inverse":this.noop,"data":data});
+  if (stack1 != null) { buffer += stack1; }
+  return buffer + "\n</div>";
 },"useData":true});
 templates['ProductCostView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   return "<div id=\"productcostcontainer\"></div>\n";
