@@ -73,7 +73,7 @@ exports.parseBillingCSV = function(_callback) {
                                     }
                                     doc['NonFreeCost'] = doc['UsageQuantity'] * doc['NonFreeRate'];
                                 }    
-                                db.collection(currentBillingCollection).insert(doc);
+                                db.collection('lineItems').insert(doc);
                                 db.collection('latest').update({
                                     _id: latest._id
                                 }, {
@@ -82,7 +82,7 @@ exports.parseBillingCSV = function(_callback) {
                             }
                         }
                     }                        
-                    console.log("Database Alert: "+newDocCount+" documents added to "+currentBillingCollection);
+                    console.log("Database Alert: "+newDocCount+" documents added to 'lineItems'");
                     _callback();
                 });
             });

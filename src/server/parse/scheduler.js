@@ -44,9 +44,6 @@ exports.s3Connect = function(_callback) {
                 }
                 fs.readdir(process.cwd() + '/data/', function(err, files) {
                     if (err) throw err;
-                    currentBillingCollection = 'bills-' + files[0].substring(files[0].length - 11, files[0].length - 4);
-                    currentBillingCollection = currentBillingCollection.replace(/-/g, "");
-                    console.log("Updated currentBillingCollection to " + currentBillingCollection);
                     fs.rename(process.cwd() + '/data/' + files[0], process.cwd() + '/data/latestBills.csv', function(err) {
                         if (err) console.log('ERROR: ' + err);
                         console.log(files[0] + " renamed to latestBills.csv");

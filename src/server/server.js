@@ -15,8 +15,8 @@ rdsRegion = 'us-east-1';
 s3Region = 'us-east-1';
 s3Bucket = 'csvcontainer';
 awsRegions = ['us-west-1', 'us-west-2', 'us-east-1'];
+s3BucketDocCount = 0;
 
-currentBillingCollection = "";
 awsCredentials = {
     default: new AWS.SharedIniFileCredentials({
         profile: 'default'
@@ -44,18 +44,9 @@ db.on("open", function() {
     require('./model/rds');
     require('./model/latest');
     require('./model/pricing');
-    mongoose.model('latest').find({},function(e,d){
-        //get currentBillingCollection from 'latest' collection
-        if(e) throw e;
-        //time: yyyy-mm-dd hh:mm:ss
-        var latestTime = d[0].time;
-        latestTime.substring(0,latestTime.indexOf(' '));
-        var time=latestTime.split('-');
-        currentBillingCollection = 'bills'+time[0]+time[1];
-        require('./model/billing');
-        require('./BoxPricingCheck').getPricing(function(){
-            require('./parse/scheduler').s3Connect();
-        });
+    require('./model/billing');
+    require('./BoxPricingCheck').getPricing(function(){
+        require('./parse/scheduler').s3Connect();
     });
 });
 
