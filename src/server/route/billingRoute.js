@@ -1,3 +1,75 @@
+//function/query to take a instance RID value, and sum both nonfree cost, and cost for per hour, then add theses values per hour
+
+exports.calcTotalCost = function(req, res) {
+    var rid = req.query.instance;
+     var vid = req.query.volume;
+    console.log("ResourceId:", rid);
+    mongoose.model('Billings').aggregate([
+        {
+            $match: {
+                $or: [{ResourceId: {$eq: rid}},{ ResourceId: {$eq: vid}}]
+            }
+        },{
+
+            $project: {
+                _id: 1,
+                UsageStartDate: 1,
+                ResourceId: 1,
+                Cost: 1,
+                NonFreeCost: 1
+            }
+        },{
+            $group: {
+                _id: "$UsageStartDate",
+                ResourceId: {
+                    $addToSet: "$ResourceId"
+                },
+                Cost: {
+                    $addToSet: "$Cost"
+                },
+                TCost: {
+                    $sum: "$Cost"
+                },
+                NonFreeCost: {
+                    $addToSet: "$NonFreeCost"
+                },
+                TNonFreeCost: {
+                    $sum: "$NonFreeCost"
+                }
+            }
+        },{
+            $project: {
+                _id: 1,
+                Total: {
+                    $add: ['$TNonFreeCost', '$TCost']
+                }
+            }
+        },{
+            $sort: {
+                _id: 1
+            }
+        
+        }
+    ]).exec(function(e, d) {
+        console.log("calcTotalCost OUTPUT:", d);
+
+        // var conditions = {
+        //     };
+        //     var update = {
+        //     };
+        //     var options = {
+            //      multi = true
+        //     };
+        //     mongoose.model('Billings').update(conditions, update, options, callback);
+
+
+        // function callback(err, numAffected) {
+        //         console.log(numAffected)
+        //     };
+        res.send(d);
+    });
+}
+
 exports.calcFreeTierCost = function(req, res) {
     mongoose.model('Billings').aggregate([{
         $match: {
@@ -27,7 +99,7 @@ exports.calcFreeTierCost = function(req, res) {
                 Cost: d[i].Cost
             };
             var options = {
-                multi: true
+                multi: true //Should consider removing multi : true, as it already iterates
             };
             mongoose.model('Billings').update(conditions, update, options, callback);
 
@@ -66,8 +138,8 @@ exports.totalCostProduct = function(req, res) {
         var totalCostProduct = {};
         totalCostProduct = {
             data: d,
-            month: currentBillingCollection.substring(9,11),
-            year: currentBillingCollection.substring(5,9) 
+            month: currentBillingCollection.substring(9, 11),
+            year: currentBillingCollection.substring(5, 9)
         }
         res.send(totalCostProduct);
     });
@@ -93,7 +165,7 @@ exports.hourlyCostProduct = function(req, res) {
                 $sum: "$Cost"
             }
         }
-    },{
+    }, {
         $sort: {
             _id: 1
         }
@@ -130,7 +202,7 @@ exports.hourlyCostProduct = function(req, res) {
 //         console.log(d[0]);
 
 
-        
+
 //         res.send(d);
 //     });
 // };
@@ -214,8 +286,8 @@ exports.hourlyCostProduct = function(req, res) {
 // };
 
 /*
-* Query EC2 instances for hourly cost. 
-*/
+ * Query EC2 instances for hourly cost. 
+ */
 exports.instanceCostAll = function(req, res) {
     // console.log("Cost request",req.query.instance);
     var instanceId = req.query.instance;

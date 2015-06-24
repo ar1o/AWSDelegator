@@ -1,5 +1,6 @@
-var BillingView = Backbone.View.extend({
-    className: 'BillingView',
+
+var EC2BillingView = Backbone.View.extend({
+    className: 'EC2BillingView',
     initialize: function(options) {
         if (!this.model) {
             this.model = new BillingsModel();
@@ -61,12 +62,14 @@ var BillingView = Backbone.View.extend({
                         pointStart: Date.UTC(date1[0], date1[1], date1[2], date2[0], date2[1], date2[2]),
                         data: totalCostInstancesCollection.pluck('cost')
 
-                    }, {
+                    }, 
+                    {
                         name: 'Sans Free Tier',
                         pointInterval: 3600 * 1000,
                         pointStart: Date.UTC(date1[0], date1[1], date1[2], date2[0], date2[1], date2[2]),
-                        data: combinedCostCollection.pluck('cost')
-                    }],
+                        data: TCost.pluck('cost')
+                    }
+                    ],
                     navigation: {
                         menuItemStyle: {
                             fontType: 'Roboto',
@@ -80,10 +83,8 @@ var BillingView = Backbone.View.extend({
     },
 
     render: function() {
-        var html = Handlebars.templates.BillingView({
-            billing: totalCostInstancesCollection.toJSON(),
-            combinedCost: combinedCostCollection.toJSON()
-        });
+        var html = Handlebars.templates.EC2BillingView({
+            billing: totalCostInstancesCollection.toJSON()        });
         this.$el.html(html);
     }
 

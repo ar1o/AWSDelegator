@@ -26,32 +26,28 @@ var BillingsModel = Backbone.Model.extend({
 			});
 		})(params);
 	},
-	getCombindedCost: function(instanceid) {
-		combinedCostCollection.reset();
+	calcTotalCost: function(instanceid, volumeId) {
+		TCost.reset();
 
 		var self = this;
 		var count = 0;
 		var params = {
-			instance: instanceid
+			instance: instanceid,
+			volume: volumeId
 		};
 
 		(function(params) {
-			$.get(host + '/api/billing/instanceCostAll', params, function(result1) {
-				$.get(host + '/api/NonFreeBilling/instanceCostAll', params, function(result2) {
-					for (var i in result1) {
-						if (result1[i].date == result2[i].date) {
-							var data = new BillingModel({
-								resourceId: result1[i].resourceId,
-								cost: result1[i].cost + result2[i].cost,
-								volumeId: result1[i].volumeId,
-								date: result1[i].date
-							});
-							// console.log("ID: ", data.resourceId, "Cost", data.cost);
-							combinedCostCollection.add(data);
-						}
-					}
-					self.set('dataReady', Date.now());
-				});
+			$.get(host + '/api/billing/calcTotalCost', params, function(result) {
+				for (var i in result) {
+					var data = new BillingModel({
+						resourceId: params.instance,
+						cost: result[i].Total,
+						date: result[i]._id
+					});
+					TCost.add(data);
+				}
+				self.getBilling(instanceid);
+				// self.set('dataReady', Date.now());
 			});
 		})(params);
 	},
@@ -71,30 +67,30 @@ var BillingsModel = Backbone.Model.extend({
 			});
 		})(params);
 
-	},
-	getNonFreeBilling: function(instanceid) {
-		TotalNonFreeCostCollection.reset();
-		var self = this;
-		var count = 0;
-		var params = {
-			instance: instanceid
-		};
-
-		(function(params) {
-			$.get(host + '/api/NonFreeBilling/instanceCostAll', params, function(result) {
-				for (var i in result) {
-					var data = new BillingModel({
-						resourceId: result[i].resourceId,
-						cost: result[i].cost,
-						volumeId: result[i].volumeId,
-						date: result[i].date
-					});
-					TotalNonFreeCostCollection.add(data);
-				}
-				self.set('dataReady', Date.now());
-			});
-		})(params);
 	}
+	// getNonFreeBilling: function(instanceid) {
+	// 	TotalNonFreeCostCollection.reset();
+	// 	var self = this;
+	// 	var count = 0;
+	// 	var params = {
+	// 		instance: instanceid
+	// 	};
+
+	// 	(function(params) {
+	// 		$.get(host + '/api/NonFreeBilling/instanceCostAll', params, function(result) {
+	// 			for (var i in result) {
+	// 				var data = new BillingModel({
+	// 					resourceId: result[i].resourceId,
+	// 					cost: result[i].cost,
+	// 					volumeId: result[i].volumeId,
+	// 					date: result[i].date
+	// 				});
+	// 				TotalNonFreeCostCollection.add(data);
+	// 			}
+	// 			self.set('dataReady', Date.now());
+	// 		});
+	// 	})(params);
+	// }
 });
 
 var BillingModel = Backbone.Model.extend({
@@ -125,6 +121,6 @@ var InstanceTotalCostCollection = Backbone.Collection.extend({
 	}
 });
 
-var combinedCostCollection = new InstanceTotalCostCollection();
-var TotalNonFreeCostCollection = new InstanceTotalCostCollection();
+var TCost = new InstanceTotalCostCollection();
+// var TotalNonFreeCostCollection = new InstanceTotalCostCollection();
 var totalCostInstancesCollection = new InstanceTotalCostCollection();

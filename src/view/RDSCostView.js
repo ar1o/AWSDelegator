@@ -1,10 +1,11 @@
 var RDSCostView = Backbone.View.extend({
-    className: 'CostView',
+    className: 'RDSCostView',
 
     initialize: function(options) {
         if (!this.model) {
             this.model = new CostModel();
         }
+        this.model.getRDSCost();
         this.render();
         this.bindings();
     },

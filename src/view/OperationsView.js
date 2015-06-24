@@ -1,5 +1,5 @@
 var OperationsView = Backbone.View.extend({
-    className: 'InstancesView',
+    className: 'OperationsView',
 
     initialize: function(options) {
         if (!this.model) {
@@ -12,7 +12,7 @@ var OperationsView = Backbone.View.extend({
 
     bindings: function() {
         this.model.change('dataReady', function(model, val) {
-            console.log(operationsCollection);
+            // console.log(operationsCollection);
             var dataOperations = [];
             for (var i = 0; i < operationsCollection.length; i++) {
                 dataOperations.push([operationsCollection.at(i).get('operation'), operationsCollection.at(i).get('percentage')]);

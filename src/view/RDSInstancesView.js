@@ -1,12 +1,12 @@
 // Here is where the RDS Instances are renders the instanceCollection JSON object
 // by the handlebars template called InstancesView.handlebars
 var RDSInstancesView = Backbone.View.extend({
-    className: 'InstancesView',
+    className: 'RDSInstancesView',
     initialize: function(options) {
         if (!this.model) {
             this.model = new InstancesModel();
         }
-
+        this.model.getRDSInstances();
         this.rdsBillingActivity = new RDSBillingView();
         this.rdsMetricsActivity = new RDSMetricsView();
         this.bindings();
@@ -19,20 +19,32 @@ var RDSInstancesView = Backbone.View.extend({
     },
 
     bindings: function() {
+                var self = this;
+
         this.model.change('dataReady', function(model, val) {
             this.render();
             $('#RDSInstanceTable').DataTable({
-                "iDisplayLength": 25,
-                "paging":   false,
-                "info":     false,
-                "bFilter": false
+                "iDisplayLength": 25
+                // "paging":   false,
+                // "info":     false,
+                // "bFilter": false
             });
         }.bind(this));
+
+
+        this.$el.on('click', '#RDSInstanceTable tr', function() {
+            var name = $('td', this).eq(0).text();
+            // console.log('You! clicked on ' + name + '\'s row');
+            if (name != "") {
+                // totalCostInstancesCollection.reset();
+                self.updateViews(name);
+            }
+        });
     },
 
     render: function() {
         var html = Handlebars.templates.RDSInstancesView({
-            instances: rdsInstanceCollection.toJSON()
+            instances: InstanceCollection.toJSON()
         });
         this.$el.html(html);
         this.$el.append(this.rdsBillingActivity.el);

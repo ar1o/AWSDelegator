@@ -71,7 +71,7 @@ exports.totalCostProduct = function(req, res) {
 
 exports.hourlyCostProduct = function(req, res) {
     var productName = req.query.productName;
-    var productName = 'Amazon Elastic Compute Cloud'
+    var productName = 'Amazon Elastic Compute Cloud' //Is this variable override intended??
     mongoose.model('Billings').aggregate([{
         $match: {
             NonFreeCost: {

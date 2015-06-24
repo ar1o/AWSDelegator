@@ -1,5 +1,5 @@
 var RDSMetricsView = Backbone.View.extend({
-    className: 'MetricsView',
+    className: 'RDSMetricsView',
     
     initialize: function(options) {
         if (!this.model) {
@@ -12,13 +12,13 @@ var RDSMetricsView = Backbone.View.extend({
 
     bindings: function() {
         this.model.change('dataReady', function(model, val) {
-            var date = new Date(metricsCollection.at(0).get('time'));
+            var date = new Date(MetricsCollection.at(0).get('time'));
             var dataReadIops = [];
             var dataWriteIops = [];
             var dataQueueDepth = [];
             var dataCpuUtilization = [];
-            for(var i=0;i<metricsCollection.length;++i){                
-                var date = metricsCollection.at(i).get('time').split('T');
+            for(var i=0;i<MetricsCollection.length;++i){                
+                var date = MetricsCollection.at(i).get('time').split('T');
                 date1=date[1].substring(0,date[1].length-1);
                 //date1=[year,month,date]
                 var date1 = date[0].split(/-/);
@@ -27,10 +27,10 @@ var RDSMetricsView = Backbone.View.extend({
                 var date2 = date[1].split(':');
                 date2[2] = date2[2].substring(0,date2[2].indexOf('.')); 
                 var utcDate = Date.UTC(date1[0],date1[1],date1[2],date2[0],date2[1]);                
-                dataReadIops.push([utcDate,metricsCollection.at(i).get('readIOPS')]);  
-                dataWriteIops.push([utcDate,metricsCollection.at(i).get('writeIOPS')]);
-                dataQueueDepth.push([utcDate,metricsCollection.at(i).get('diskQueueDepth')]);
-                dataCpuUtilization.push([utcDate,metricsCollection.at(i).get('cpuUtilization')]);       
+                dataReadIops.push([utcDate,MetricsCollection.at(i).get('readIOPS')]);  
+                dataWriteIops.push([utcDate,MetricsCollection.at(i).get('writeIOPS')]);
+                dataQueueDepth.push([utcDate,MetricsCollection.at(i).get('diskQueueDepth')]);
+                dataCpuUtilization.push([utcDate,MetricsCollection.at(i).get('cpuUtilization')]);       
             }               
             this.render();
 
@@ -40,7 +40,7 @@ var RDSMetricsView = Backbone.View.extend({
                         zoomType: 'x'
                     },
                     title: {
-                        text: metricsCollection.at(0).get('instance')+' Disk Operations/s'
+                        text: MetricsCollection.at(0).get('instance')+' Disk Operations/s'
                     },
                     xAxis: {
                         title : {text : "Time"},
@@ -90,7 +90,7 @@ var RDSMetricsView = Backbone.View.extend({
                         zoomType: 'x'
                     },
                     title: {
-                        text: metricsCollection.at(0).get('instance')+' Disk Queue Depth'
+                        text: MetricsCollection.at(0).get('instance')+' Disk Queue Depth'
                     },
                     xAxis: {
                         title : {text : "Time"},
@@ -136,7 +136,7 @@ var RDSMetricsView = Backbone.View.extend({
                         zoomType: 'x'
                     },
                     title: {
-                        text: metricsCollection.at(0).get('instance')+' CPU-Usage'
+                        text: MetricsCollection.at(0).get('instance')+' CPU-Usage'
                     },
                     xAxis: {
                         title : {text : "Time"},
@@ -180,7 +180,7 @@ var RDSMetricsView = Backbone.View.extend({
 
     render: function() {
         var html = Handlebars.templates.RDSMetricsView({
-            metrics: metricsCollection.toJSON()
+            metrics: MetricsCollection.toJSON()
         });
         this.$el.html(html);
     }

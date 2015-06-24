@@ -62,6 +62,9 @@ app.get('/api/billing/hourlyCostProduct', require('./route/billingRoute').hourly
 app.get('/api/billing/instanceCostAll', require('./route/billingRoute').instanceCostAll);
 app.get('/api/billing/calcFreeTierCost', require('./route/billingRoute').calcFreeTierCost);
 app.get('/api/billing/totalCostProduct',require('./route/billingRoute').totalCostProduct);
+
+app.get('/api/billing/calcTotalCost',require('./route/billingRoute').calcTotalCost);
+
 app.get('/api/billing/rds/instanceCostAll', require('./route/rdsBillingRoute').instanceCostAll);
 app.get('/api/billing/rds/hourlyCostProduct', require('./route/rdsBillingRoute').hourlyCostProduct);
 

@@ -32,7 +32,7 @@ var InstancesModel = Backbone.Model.extend({
 
 	getEC2Instances: function() {
 		var self = this;
-		ec2InstanceCollection.reset();
+		InstanceCollection.reset();
 		this.ec2_result().done(function(result) {
 			for (var r in result) {
 				var data = new ec2InstanceModel({
@@ -48,7 +48,7 @@ var InstancesModel = Backbone.Model.extend({
 					volumeid: result[r].VolumeId,
 					lastActiveTime: result[r].LastActiveTime
 				});
-				ec2InstanceCollection.add(data);
+				InstanceCollection.add(data);
 			}
 			self.set('dataReady', Date.now());
 		}).fail(function() {
@@ -81,7 +81,7 @@ var InstancesModel = Backbone.Model.extend({
 
 	getRDSInstances: function() {
 		var self = this;
-		rdsInstanceCollection.reset();
+		InstanceCollection.reset();
 		this.rds_result().done(function(result) {
 			for (var r in result) {
 				var data = new rdsInstanceModel({
@@ -98,7 +98,7 @@ var InstancesModel = Backbone.Model.extend({
 					multiAz: result[r].MultiAZ,
 					type: result[r].StorageType
 				});
-				rdsInstanceCollection.add(data);
+				InstanceCollection.add(data);
 			}
 			self.set('dataReady', Date.now());
 		}).fail(function() {
@@ -123,7 +123,7 @@ var ec2InstanceModel = Backbone.Model.extend({
 	}
 });
 
-var EC2InstancesCollection = Backbone.Collection.extend({
+var InstancesCollection = Backbone.Collection.extend({
 	model: ec2InstanceModel,
 	initialize: function() {
 		// This will be called when an item is added. pushed or unshifted
@@ -164,13 +164,5 @@ var rdsInstanceModel = Backbone.Model.extend({
 	}
 });
 
-var RDSInstancesCollection = Backbone.Collection.extend({
-	model: rdsInstanceModel,
-	initialize: function() {
-		this.on('add', function(model) {});
-	}
-});
-
-var ec2InstanceCollection = new EC2InstancesCollection();
-var rdsInstanceCollection = new RDSInstancesCollection();
+var InstanceCollection = new InstancesCollection();
 var operationsCollection = new OperationsCollection();

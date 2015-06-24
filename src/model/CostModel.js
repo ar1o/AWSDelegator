@@ -13,7 +13,7 @@ var CostModel = Backbone.Model.extend({
 		(function(params) {
 			$.get(host+'/api/billing/hourlyCostProduct', params, function(result) {
 				for (var i in result) {
-					var data = new EC2Model({
+					var data = new Cost({
 						date: result[i]._id,
 						cost: result[i].Total
 					});
@@ -33,7 +33,7 @@ var CostModel = Backbone.Model.extend({
 		(function(params) {
 			$.get(host+'/api/billing/rds/hourlyCostProduct', params, function(result) {
 				for (var i in result) {
-					var data = new EC2Model({
+					var data = new Cost({
 						date: result[i]._id,
 						cost: result[i].Total
 					});
@@ -45,19 +45,19 @@ var CostModel = Backbone.Model.extend({
 	}
 });
 
-var EC2Model = Backbone.Model.extend({
+var Cost = Backbone.Model.extend({
 	defaults: {
 		date: null,
 		cost: null,
 	}
 });
 
-var EC2CostCollection = Backbone.Collection.extend({
-	model: EC2Model,
+var CostCollection = Backbone.Collection.extend({
+	model: Cost,
 	initialize: function() {
 		this.on('add', function(model) {
 		});
 	}
 });
 
-var hourlyCostCollection = new EC2CostCollection();
+var hourlyCostCollection = new CostCollection();

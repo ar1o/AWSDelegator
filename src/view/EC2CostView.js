@@ -1,19 +1,19 @@
 var EC2CostView = Backbone.View.extend({
-    className: 'CostView',
+    className: 'EC2CostView',
 
     initialize: function(options) {
         if (!this.model) {
             this.model = new CostModel();
         }
-        this.render();
+        this.model.getEC2Cost();
         this.bindings();
     },
 
     bindings: function() {
         this.model.change('dataReady', function(model, val) {
-                        this.render();
+            this.render();
             var date = new Date(hourlyCostCollection.at(0).get('date'));
-            $(function () {
+            $(function() {
                 $('#ec2CostContainer').highcharts({
                     chart: {
                         zoomType: 'x'
@@ -22,7 +22,9 @@ var EC2CostView = Backbone.View.extend({
                         text: 'Amazon Elastic Compute Cloud Cost Per Hour'
                     },
                     xAxis: {
-                        title : {text : "Time"},
+                        title: {
+                            text: "Time"
+                        },
                         type: 'datetime',
                         labels: {
                             overflow: 'justify'
@@ -35,12 +37,12 @@ var EC2CostView = Backbone.View.extend({
                         min: 0,
                         minorGridLineWidth: 0,
                         gridLineWidth: 0,
-                        alternateGridColor: null,                        
+                        alternateGridColor: null,
                     },
                     tooltip: {
                         formatter: function() {
-                            return '<b>'+ this.series.name +'</b><br/>'+
-                                new Date(this.x) +', '+ this.y.toFixed(4)+' $/Hour';
+                            return '<b>' + this.series.name + '</b><br/>' +
+                                new Date(this.x) + ', ' + this.y.toFixed(4) + ' $/Hour';
                         },
                     },
                     legend: {
@@ -54,13 +56,13 @@ var EC2CostView = Backbone.View.extend({
                     }],
                     navigation: {
                         menuItemStyle: {
-                            fontType : 'Roboto',
+                            fontType: 'Roboto',
                             fontSize: '10px'
                         }
                     }
                 });
             });
-            
+
         }.bind(this));
     },
 
@@ -69,7 +71,6 @@ var EC2CostView = Backbone.View.extend({
             product: hourlyCostCollection.toJSON()
         });
         this.$el.html(html);
-
     }
 
 

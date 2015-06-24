@@ -15,7 +15,7 @@ var MetricsModel = Backbone.Model.extend({
 	},
 
 	getEC2Metrics: function(instanceid) {
-		metricsCollection.reset();
+		MetricsCollection.reset();
 		var self = this;
 		var count = 0;
 		var params = {
@@ -32,7 +32,7 @@ var MetricsModel = Backbone.Model.extend({
 						cpuUtilization: result[i].CPUUtilization,
 						time: result[i].Time
 					});
-					metricsCollection.add(data);
+					MetricsCollection.add(data);
 				}
 				self.set('dataReady', Date.now());
 			});
@@ -40,7 +40,7 @@ var MetricsModel = Backbone.Model.extend({
 	},
 
 	getRDSMetrics: function(instanceid) {
-		metricsCollection.reset();
+		MetricsCollection.reset();
 		var self = this;
 		var count = 0;
 		var params = {
@@ -84,7 +84,7 @@ var MetricsModel = Backbone.Model.extend({
 						writeIOPS: result[i].WriteIOPS,
 						time: result[i].Time
 					});
-					metricsCollection.add(data);
+					MetricsCollection.add(data);
 				}
 				self.set('dataReady', Date.now());
 			});
@@ -116,4 +116,4 @@ var rdsMetricModel = Backbone.Model.extend({
 });
 
 // Create the collection
-var metricsCollection = new MetricsCollection();
+var MetricsCollection = new MetricsCollection();

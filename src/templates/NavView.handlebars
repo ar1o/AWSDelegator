@@ -1,0 +1,14 @@
+<div class="slider">
+{{#each pages}}
+<div class="page" page-id="{{this.page_id}}">{{this.title}}</div>
+
+{{#ifCond this.title '==' "Amazon Elastic Compute Cloud"}}
+<div class="subpage" subpage-id="0"> >> EC2 Instances</div>
+{{/ifCond}}
+
+{{#ifCond this.title '==' "Amazon RDS Service"}}
+<div class="subpage" subpage-id="1"> >> RDS Instances</div>
+{{/ifCond}}
+{{/each}}
+
+</div>

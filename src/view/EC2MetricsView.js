@@ -1,5 +1,5 @@
-var MetricsView = Backbone.View.extend({
-    className: 'MetricsView',
+var EC2MetricsView = Backbone.View.extend({
+    className: 'EC2MetricsView',
     
     initialize: function(options) {
         if (!this.model) {
@@ -12,12 +12,12 @@ var MetricsView = Backbone.View.extend({
 
     bindings: function() {
         this.model.change('dataReady', function(model, val) {
-            var date = new Date(metricsCollection.at(0).get('time'));
+            var date = new Date(MetricsCollection.at(0).get('time'));
             var dataNetworkIn = []
             var dataNetworkOut = []
             var dataCpuUtilization = []
-            for(var i=0;i<metricsCollection.length;++i){                
-                var date = metricsCollection.at(i).get('time').split('T');
+            for(var i=0;i<MetricsCollection.length;++i){                
+                var date = MetricsCollection.at(i).get('time').split('T');
                 date1=date[1].substring(0,date[1].length-1);
                 //date1=[year,month,date]
                 var date1 = date[0].split(/-/);
@@ -26,9 +26,9 @@ var MetricsView = Backbone.View.extend({
                 var date2 = date[1].split(':');
                 date2[2] = date2[2].substring(0,date2[2].indexOf('.')); 
                 var utcDate = Date.UTC(date1[0],date1[1],date1[2],date2[0],date2[1]);                
-                dataNetworkIn.push([utcDate,metricsCollection.at(i).get('networkIn')]);  
-                dataNetworkOut.push([utcDate,metricsCollection.at(i).get('networkOut')]);
-                dataCpuUtilization.push([utcDate,metricsCollection.at(i).get('cpuUtilization')]);       
+                dataNetworkIn.push([utcDate,MetricsCollection.at(i).get('networkIn')]);  
+                dataNetworkOut.push([utcDate,MetricsCollection.at(i).get('networkOut')]);
+                dataCpuUtilization.push([utcDate,MetricsCollection.at(i).get('cpuUtilization')]);       
             }               
             this.render();
 
@@ -38,7 +38,7 @@ var MetricsView = Backbone.View.extend({
                         zoomType: 'x'
                     },
                     title: {
-                        text: metricsCollection.at(0).get('instance')+' Network-Usage'
+                        text: MetricsCollection.at(0).get('instance')+' Network-Usage'
                     },
                     xAxis: {
                         type: 'datetime',
@@ -87,7 +87,7 @@ var MetricsView = Backbone.View.extend({
                         zoomType: 'x'
                     },
                     title: {
-                        text: metricsCollection.at(0).get('instance')+' CPU-Usage'
+                        text: MetricsCollection.at(0).get('instance')+' CPU-Usage'
                     },
                     xAxis: {
                         type: 'datetime',
@@ -129,8 +129,8 @@ var MetricsView = Backbone.View.extend({
     },
 
     render: function() {
-        var html = Handlebars.templates.MetricsView({
-            metrics: metricsCollection.toJSON()
+        var html = Handlebars.templates.EC2MetricsView({
+            metrics: MetricsCollection.toJSON()
         });
         this.$el.html(html);
     }
