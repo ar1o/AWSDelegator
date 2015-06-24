@@ -65,7 +65,6 @@ var InstancesModel = Backbone.Model.extend({
 
 		(function(params) {
 			$.get(host+'/api/ec2/operations', params, function(result) {
-				console.log(result);
 				for (var i in result) {
 					var data = new operationsModel({
 						operation: i,
@@ -114,7 +113,6 @@ var InstancesModel = Backbone.Model.extend({
 
 		(function(params) {
 			$.get(host+'/api/rds/operations', params, function(result) {
-				console.log(result);
 				for (var i in result) {
 					var data = new operationsModel({
 						operation: i,

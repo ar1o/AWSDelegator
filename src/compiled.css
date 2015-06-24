@@ -5,12 +5,14 @@ html {
 body {
   font-family: 'Roboto', sans-serif;
   font-size: 11px;
-  margin: 0px;
+  margin: 0px auto;
   padding: 0px;
   height: 100%;
 }
 .content-view {
   display: block;
+  width: 1060px;
+  margin: 0 auto;
   margin-top: 70px;
 }
 .NavView {
@@ -56,15 +58,9 @@ body {
 .subpage:hover {
   color: orange;
 }
-.BillingView {
-  /*	border-style: solid;
-	border-color: blue;	*/
-}
-div#billingcontainer {
+.EC2BillingView {
   width: 47%;
-  margin: 20px;
-  /*border-style: solid;
-	border-color: black;	*/
+  margin-left: 20px;
 }
 .RDSBillingView {
   width: 46%;
@@ -109,24 +105,18 @@ div#billingcontainer {
 .clear {
   clear: both;
 }
-.MetricsView {
+.EC2MetricsView {
   margin: 0;
   position: static !important;
-  /*	border-style: solid;
-	border-color: red;*/
 }
 #cpuContainer {
   width: 47%;
   margin-right: 20px;
-  /*	border-style: solid;
-	border-color: black;*/
   float: right;
 }
 #networkContainer {
   width: 47%;
   margin-left: 20px;
-  /*	border-style: solid;
-	border-color: green;*/
   float: left;
 }
 .clear {
@@ -144,17 +134,11 @@ div#productcostcontainer {
   margin-right: 20px;
   margin-left: 20px;
 }
-.EC2CostView {
-  /*	border-style: solid;
-	border-color: red;*/
-}
 #ec2CostContainer {
   margin-top: 20px;
   margin-bottom: 20px;
   margin-right: 20px;
   margin-left: 20px;
-  /*	border-style: solid;
-	border-color: black;*/
 }
 .InstancesView {
   min-height: 350px;
@@ -227,17 +211,14 @@ div#productcostcontainer {
   height: 60px;
   /* Height of the footer */
 }
-.OperationsView {
-  margin: 0 auto;
-  width: 1060px;
-  /*	border-style: dashed;
-	border-color: yellow;*/
-  background-color: white;
+div#awsoperationscontainer {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  margin-right: 20px;
+  margin-left: 20px;
 }
-div#operationscontainer {
+.OperationsView {
   width: 47%;
   margin-right: 20px;
   float: right;
-  /*	border-style: dashed;
-	border-color: blue;*/
 }

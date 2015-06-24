@@ -17,12 +17,11 @@ var ProductCostView = Backbone.View.extend({
             this.render();
             var month = this.model.getMonth(productCostCollection.at(0).get('month'));
             var year = productCostCollection.at(0).get('year')
-            var total = this.model.calcTotal();
-            var fdata = [];            
+            var fdata = [];
+
             for (var i = 0; i < productCostCollection.length; i++) {
                 fdata.push([productCostCollection.at(i).get('productName'), productCostCollection.at(i).get('cost')]);
             }
-            console.log(fdata);
             $(function() {
                 var t = this;
 
@@ -68,8 +67,8 @@ var ProductCostView = Backbone.View.extend({
                                         // });
                                         
                                     } else if (this.name == "Amazon RDS Service") {
-                                        self.RDSCost.model.getRDSCost();
-                                        self.RDSInstances.model.getRDSInstances();
+                                        // self.RDSCost.model.getRDSCost();
+                                        // self.RDSInstances.model.getRDSInstances();
                                     }
                                 }
                             }
@@ -79,26 +78,6 @@ var ProductCostView = Backbone.View.extend({
             });
         }.bind(this));
 
-
-        this.$el.on("change", '.instanceDropDown', function(e) {
-            var selected = $('.instanceDropDown').val();
-            // console.log(selected);
-            // this.EC2Instances.updateViews(selected);
-        }.bind(this));
-
-        // this.$el.on("click", '#InstanceTable tr', function(e) {
-        //     var href = $('td', this).eq(0).text();
-        //     console.log("test", href);
-        // });
-
-        this.$el.on('click', '#InstanceTable tr', function() {
-            var name = $('td', this).eq(0).text();
-            // console.log('You clicked on ' + name + '\'s row');
-            if (name != "") {
-                totalCostInstancesCollection.reset();
-             
-            }
-        });
     },
 
     destroy_view: function() {
@@ -120,14 +99,9 @@ var ProductCostView = Backbone.View.extend({
 
     render: function() {
         var html = Handlebars.templates.ProductCostView({
-            product: productCostCollection.toJSON(),
+            product: productCostCollection.toJSON()
         });
         this.$el.html(html);
-
-        // this.$el.append(this.EC2Cost.el);
-        // this.$el.append(this.EC2Instances.el);
-
-
 
     }
 

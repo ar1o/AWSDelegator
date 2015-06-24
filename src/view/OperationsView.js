@@ -6,13 +6,11 @@ var OperationsView = Backbone.View.extend({
             this.model = new InstancesModel();
         }
         this.bindings();
-        this.render();
     },
 
     bindings: function() {
-        var self=this;
         this.model.change('dataReady', function(model, val) {
-            self.render();
+            this.render();
             var dataOperations = [];
             for (var i = 0; i < operationsCollection.length; i++) {
                 dataOperations.push([operationsCollection.at(i).get('operation'), operationsCollection.at(i).get('percentage')]);
@@ -50,13 +48,11 @@ var OperationsView = Backbone.View.extend({
                     }]
                 });
             });
-        });
+        }.bind(this));
     },
 
     render: function() {
-        var html = Handlebars.templates.OperationsView({
-            metrics: operationsCollection.toJSON()
-        });
+        var html = Handlebars.templates.OperationsView;
         this.$el.html(html);
     }
 });

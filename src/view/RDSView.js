@@ -5,14 +5,13 @@ var RDSView = Backbone.View.extend({
     initialize: function(options) {
         this.rdscost = new RDSCostView();
         this.rdsOperations = new AWSOperationsView();
-        this.bindings();
+        this.rdsOperations.model.getOperations('Amazon RDS Service');
         this.render();
 
     },
 
     bindings: function() {
-        this.rdscost.model.getRDSCost();
-        this.rdsOperations.model.getRDSOperations();
+
     },
 
     render: function() {

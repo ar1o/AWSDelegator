@@ -70,8 +70,7 @@ app.get('/api/NonFreeBilling/instanceCostAll', require('./route/NonFreeBillingRo
 app.get('/api/NonFreeBilling/calcFreeTierCost', require('./route/NonFreeBillingRoute').calcFreeTierCost);
 app.get('/api/NonFreeBilling/totalCostProduct',require('./route/NonFreeBillingRoute').totalCostProduct);
 
-app.get('/api/statistics/ec2/operations',require('./route/OperationsRoute').operations);
-app.get('/api/statistics/rds/operations',require('./route/OperationsRoute').operations);
+app.get('/api/statistics/operations',require('./route/OperationsRoute').operations);
 
 function errorHandler(err, req, res, next) {
     console.error(err.message);

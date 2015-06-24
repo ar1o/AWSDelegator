@@ -3,36 +3,16 @@ var OperationsModel = Backbone.Model.extend({
 		var self = this;
 		this.change('dataReady');
 	},
-	getEC2Operations: function(product) {
+
+	getOperations: function(product) {
 		operationsCollection.reset();
 		var self = this;
 		var count = 0;
 		var params = {
-			productName: 'Amazon Elastic Compute Cloud'
+			productName: product
 		};
 		(function(params) {
-			$.get(host+'/api/statistics/ec2/operations', params, function(result) {
-				// console.log(result);
-				for (var i in result) {
-					var data = new operationsModel({
-						operation: i,
-						percentage: result[i]
-					});
-					operationsCollection.add(data);
-				}
-				self.set('dataReady', Date.now());
-			});
-		})(params);
-	},
-	getRDSOperations: function(product) {
-		operationsCollection.reset();
-		var self = this;
-		var count = 0;
-		var params = {
-			productName: 'Amazon RDS Service'
-		};
-		(function(params) {
-			$.get(host+'/api/statistics/rds/operations', params, function(result) {
+			$.get(host + '/api/statistics/operations', params, function(result) {
 				for (var i in result) {
 					var data = new operationsModel({
 						operation: i,
