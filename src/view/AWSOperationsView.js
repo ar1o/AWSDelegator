@@ -1,9 +1,9 @@
-var OperationsView = Backbone.View.extend({
-    className: 'OperationsView',
+var AWSOperationsView = Backbone.View.extend({
+    className: 'AWSOperationsView',
 
     initialize: function(options) {
         if (!this.model) {
-            this.model = new InstancesModel();
+            this.model = new OperationsModel();
         }
         this.bindings();
     },
@@ -16,7 +16,7 @@ var OperationsView = Backbone.View.extend({
                 dataOperations.push([operationsCollection.at(i).get('operation'), operationsCollection.at(i).get('percentage')]);
             }
             $(function() {
-                $('#operationscontainer').highcharts({
+            $('#awsoperationscontainer').highcharts({
                     chart: {
                         plotBackgroundColor: null,
                         plotBorderWidth: null,
@@ -52,7 +52,7 @@ var OperationsView = Backbone.View.extend({
     },
 
     render: function() {
-        var html = Handlebars.templates.OperationsView;
+        var html = Handlebars.templates.AWSOperationsView;
         this.$el.html(html);
     }
 });

@@ -4,8 +4,8 @@ var EC2View = Backbone.View.extend({
 
     initialize: function(options) {
         this.ec2cost = new EC2CostView();
-
-        this.bindings();
+        this.ec2Operations = new AWSOperationsView();
+        this.ec2Operations.model.getOperations('Amazon Elastic Compute Cloud');
         this.render();
 
     },
@@ -15,5 +15,7 @@ var EC2View = Backbone.View.extend({
 
     render: function() {
         this.$el.append(this.ec2cost.el);
+        this.$el.append(this.ec2Operations.el);
     }
+
 });

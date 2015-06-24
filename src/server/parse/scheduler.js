@@ -53,8 +53,6 @@ exports.s3Connect = function(_callback) {
                     });
                     billingParser.parseBillingCSV(function() {   
                         if (typeof _callback=="function") _callback();
-                        //require model here, as the model also ties the schema to it, with the recently updated var of currentBillingCollection
-                        require('../model/billing');
                     });
                     AWS.config.credentials = awsCredentials.default;
                     ec2Parser.parseMetrics(function() {

@@ -19,6 +19,5 @@ ec2MetricsSchema = new mongoose.Schema({
     CPUUtilization: Number,
     Time: String
 });
-
 mongoose.model('ec2Metrics', ec2MetricsSchema, 'ec2Metrics');
 mongoose.model('ec2Instances', ec2InstanceSchema, 'ec2Instances');

@@ -10,17 +10,15 @@ var EC2InstancesView = Backbone.View.extend({
         this.model.getEC2Instances();
         // child views
         this.billingActivity = new EC2BillingView();
-        // this.operationsActivity = new OperationsView();
-        // this.nonFreeBillingActivity = new NonFreeBillingView();
+        this.operationsActivity = new OperationsView();
         this.metricsActivity = new EC2MetricsView();
         this.bindings();
     },
 
     updateViews: function(selected) {
-        // this.nonFreeBillingActivity.model.getNonFreeBilling(selected);
         this.billingActivity.model.getBilling(selected);
         this.metricsActivity.model.getEC2Metrics(selected);
-        // this.operationsActivity.model.getEC2Operations(selected);
+        this.operationsActivity.model.getEC2Operations(selected);
     },
 
     bindings: function() {
@@ -35,17 +33,6 @@ var EC2InstancesView = Backbone.View.extend({
                 // "bFilter": false
             });
         }.bind(this));
-
-
-        this.$el.on("change", '.instanceDropDown', function(e) {
-            var selected = $('.instanceDropDown').val();
-            totalCostInstancesCollection.reset();
-            this.billingActivity.model.getBilling(selected); 
-            // this.nonFreeBillingActivity.model.getNonFreeBilling(selected);
-            this.metricsActivity.model.getEC2Metrics(selected);
-            // this.operationsActivity.model.getEC2Operations(selected);
-        }.bind(this));
-
 
         this.$el.on('click', '#InstanceTable tr', function() {
             var name = $('td', this).eq(0).text();
@@ -62,10 +49,8 @@ var EC2InstancesView = Backbone.View.extend({
             instances: InstanceCollection.toJSON()
         });
         this.$el.html(html);
-        // this.$el.append(this.nonFreeBillingActivity.el);
+        this.$el.append(this.operationsActivity.el);
         this.$el.append(this.billingActivity.el);
         this.$el.append(this.metricsActivity.el);
-
-       
     }
 });
