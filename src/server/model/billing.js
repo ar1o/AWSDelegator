@@ -16,4 +16,4 @@ billingSchema = new mongoose.Schema({
 
 });
 
-mongoose.model('Billings', billingSchema, currentBillingCollection);
+mongoose.model('Billings', billingSchema, 'lineItems');
