@@ -68,8 +68,14 @@ exports.parseBillingCSV = function(_callback) {
                                         doc['NonFreeRate'] = pricing['TimedStorage-ByteHrs'].Price;
                                     }else if(/CloudFront-Out-Bytes/.test(doc['UsageType'])){
                                         doc['NonFreeRate'] = pricing['CloudFront-Out-Bytes'].Price;
+                                    }else if(/DataTransfer-Regional-Bytes/.test(doc['UsageType'])){
+                                        doc['NonFreeRate'] = pricing['DataTransfer-Regional-Bytes'].Price;
+                                    }else if(/Requests-Tier1/.test(doc['UsageType'])){
+                                        doc['NonFreeRate'] = pricing['Requests-Tier1'].Price;
+                                    }else if(/Requests-Tier2/.test(doc['UsageType'])){
+                                        doc['NonFreeRate'] = pricing['Requests-Tier2'].Price;
                                     }else{
-                                        doc['NonFreeRate'] = pricing[doc['UsageType']].Price;
+                                        doc['NonFreeRate'] = pricing[doc['UsageType']].Price;                                    
                                     }
                                     doc['NonFreeCost'] = doc['UsageQuantity'] * doc['NonFreeRate'];
                                 }    

@@ -1,8 +1,4 @@
-databaseUrl = 'mongodb://localhost:27017/awsdb';
-AWS = require('aws-sdk');
-mongoose = require('mongoose');
-MongoClient = require('mongodb').MongoClient;
-Schema = mongoose.Schema;
+
 billingAttributes = ['RateId', 'ProductName', 'UsageType', 'Operation', 'AvailabilityZone', 'ItemDescription',
     'UsageStartDate', 'UsageQuantity', 'Rate', 'Cost', 'user:Volume Id', 'user:Name', 'user:Email', 'ResourceId'];
 numericAttirbutes = ['RateId', 'UsageQuantity', 'Rate', 'Cost'];
@@ -10,27 +6,16 @@ ec2Metric = ['NetworkIn','NetworkOut','CPUUtilization'];
 ec2MetricUnit = ['Bytes','Bytes','Percent'];
 rdsMetric = ['CPUUtilization','DatabaseConnections','DiskQueueDepth','ReadIOPS','WriteIOPS'];
 rdsMetricUnit = ['Percent','Count','Count','Count/Second','Count/Second'];
-awsAccountNumber = 092841396837;
-rdsRegion = 'us-east-1';
-s3Region = 'us-east-1';
-s3Bucket = 'csvcontainer';
-awsRegions = ['us-west-1', 'us-west-2', 'us-east-1'];
-s3BucketDocCount = 0;
 
-awsCredentials = {
-    default: new AWS.SharedIniFileCredentials({
-        profile: 'default'
-    }),
-    dev2: new AWS.SharedIniFileCredentials({
-        profile: 'dev2'
-    })
-};
+AWS = require('aws-sdk');
+mongoose = require('mongoose');
+MongoClient = require('mongodb').MongoClient;
+Schema = mongoose.Schema;
 var express = require('express');
 var app = express();
 port = process.env.PORT || 3000;
 app.use(require('./CORS'));
-
-//Instantiate mongoose schemas
+require('./config.js');
 
 // Start mongoose and mongo
 mongoose.connect(databaseUrl, function(error) {
