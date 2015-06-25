@@ -65,7 +65,7 @@ var MetricsModel = Backbone.Model.extend({
 	},
 
 	getRDSMetrics: function(instanceid) {
-		metricsCollection.reset();
+		MetricsCollection.reset();
 		var self = this;
 		var count = 0;
 		var params = {

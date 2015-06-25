@@ -44,7 +44,6 @@ var BillingsModel = Backbone.Model.extend({
 						cost: result[i].Total,
 						date: result[i]._id
 					});
-					console.log(data);
 					TCost.add(data);
 				}
 				self.getBilling(instanceid);
@@ -54,6 +53,11 @@ var BillingsModel = Backbone.Model.extend({
 	},
 	getRDSBilling: function(instanceid) {
 		totalCostInstancesCollection.reset();
+		var self = this;
+		var count = 0;
+		var params = {
+			instance: instanceid
+		};
 		(function(params) {
 			$.get(host + '/api/billing/rds/instanceCostAll', params, function(result) {
 				for (var i in result) {

@@ -54,8 +54,6 @@ exports.calcTotalCost = function(req, res) {
         
         }
     ]).exec(function(e, d) {
-        console.log("calcTotalCost OUTPUT:", d);
-
         // var conditions = {
         //     };
         //     var update = {
