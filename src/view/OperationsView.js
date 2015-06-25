@@ -21,9 +21,13 @@ var OperationsView = Backbone.View.extend({
                         plotBackgroundColor: null,
                         plotBorderWidth: null,
                         plotShadow: false,
+                        backgroundColor: '#f7f7f7'
                     },
                     title: {
-                        text: 'Operations Percentage'
+                        text: 'Operations'
+                    },
+                    credits: {
+                        enabled: false
                     },
                     tooltip: {
                         pointFormat: '{series.name}: <b>USD{point.y:.4f}</b>'

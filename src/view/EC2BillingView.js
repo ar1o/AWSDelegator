@@ -25,7 +25,11 @@ var EC2BillingView = Backbone.View.extend({
             $(function () {
                 $('#billingcontainer').highcharts({
                     chart: {
-                        zoomType: 'x'
+                        zoomType: 'x',
+                        backgroundColor: '#f7f7f7'
+                    },
+                    credits: {
+                        enabled: false
                     },
                     title: {
                         text: totalCostInstancesCollection.at(0).get('resourceId')+' Cost'
@@ -42,8 +46,8 @@ var EC2BillingView = Backbone.View.extend({
                             text: 'Price (USD)'
                         },
                         min: 0,
-                        minorGridLineWidth: 0,
-                        gridLineWidth: 0,
+                        minorGridLineWidth: 0.5,
+                        gridLineWidth: 0.5,
                         alternateGridColor: null,                        
                     },
                     tooltip: {

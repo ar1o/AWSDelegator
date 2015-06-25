@@ -15,12 +15,15 @@ var RDSCostView = Backbone.View.extend({
             this.render();
             var date = new Date(hourlyCostCollection.at(0).get('date'));
             $(function() {
-                $('#RDSCostContainer').highcharts({
+                $('#RDSCostContainer').highcharts('StockChart',{
                     chart: {
                         zoomType: 'x'
                     },
                     title: {
                         text: 'Amazon RDS Cost Per Hour'
+                    },
+                    credits: {
+                        enabled: false
                     },
                     xAxis: {
                         title: {
@@ -30,22 +33,19 @@ var RDSCostView = Backbone.View.extend({
                         labels: {
                             overflow: 'justify'
                         }
+
+
                     },
                     yAxis: {
                         title: {
                             text: 'Price (USD)'
                         },
                         min: 0,
-                        minorGridLineWidth: 0,
-                        gridLineWidth: 0,
+                        minorGridLineWidth: 0.5,
+                        gridLineWidth: 0.5,
                         alternateGridColor: null,
                     },
-                    tooltip: {
-                        formatter: function() {
-                            return '<b>'+ this.series.name +'</b><br/>'+
-                                new Date(this.x) +', '+ this.y.toFixed(4)+' $/Hour';
-                        },
-                    },
+     
                     legend: {
                         enabled: false
                     },

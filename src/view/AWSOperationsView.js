@@ -22,8 +22,11 @@ var AWSOperationsView = Backbone.View.extend({
                         plotBorderWidth: null,
                         plotShadow: false,
                     },
+                    credits: {
+                        enabled: false
+                    },
                     title: {
-                        text: 'Operations Percentage'
+                        text: 'Operations'
                     },
                     tooltip: {
                         pointFormat: '{series.name}: <b>USD{point.y:.4f}</b>'

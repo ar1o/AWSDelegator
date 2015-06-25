@@ -30,6 +30,10 @@ var ProductCostView = Backbone.View.extend({
                         plotBackgroundColor: null,
                         plotBorderWidth: null,
                         plotShadow: false,
+                        backgroundColor: '#f7f7f7'
+                    },
+                    credits: {
+                        enabled: false
                     },
                     title: {
                         text: 'Amazon Web Service Cost Breakdown - Month: ' + month + ' ' + year
