@@ -1,15 +1,13 @@
 //function/query to take a instance RID value, and sum both nonfree cost, and cost for per hour, then add theses values per hour
 
 exports.calcTotalCost = function(req, res) {
-    console.log(req.query.instance);
-    console.log(req.query.volume);
     var rid = req.query.instance;
-    var vid = req.query.volume;
-    console.log("ResourceId:", rid);
+    var vid =req.query.volume;
+    vid = vid.split(',');
     mongoose.model('Billings').aggregate([
         {
             $match: {
-                $or: [{ResourceId: {$eq: rid}},{ ResourceId: {$eq: vid}}]
+                $or: [{ResourceId: {$eq: rid}},{ ResourceId: {$in : vid}}]
             }
         },{
 
@@ -43,6 +41,7 @@ exports.calcTotalCost = function(req, res) {
             $project: {
                 _id: 1,
                 VolumeId: 1,
+                ResourceId: 1,
                 Total: {
                     $add: ['$TNonFreeCost', '$TCost']
                 }
@@ -54,25 +53,10 @@ exports.calcTotalCost = function(req, res) {
         
         }
     ]).exec(function(e, d) {
-        console.log("calcTotalCost OUTPUT:", d);
-
-        // var conditions = {
-        //     };
-        //     var update = {
-        //     };
-        //     var options = {
-            //      multi = true
-        //     };
-        //     mongoose.model('Billings').update(conditions, update, options, callback);
-
-
-        // function callback(err, numAffected) {
-        //         console.log(numAffected)
-        //     };
+        // console.log("calcTotal Cost OUTPUT:", d);
         res.send(d);
     });
 }
-
 exports.calcFreeTierCost = function(req, res) {
     mongoose.model('Billings').aggregate([{
         $match: {

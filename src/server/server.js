@@ -37,7 +37,7 @@ db.on("open", function() {
 
 app.get('/api/ec2/instances', require('./route/ec2Route').instances);
 app.get('/api/ec2/metrics', require('./route/ec2Route').metrics);
-// app.get('/api/ec2/operations', require('./route/ec2Route').operations);
+app.get('/api/ec2/operations', require('./route/ec2Route').operations);
 
 app.get('/api/rds/instances', require('./route/rdsRoute').instances);
 app.get('/api/rds/metrics', require('./route/rdsRoute').metrics);

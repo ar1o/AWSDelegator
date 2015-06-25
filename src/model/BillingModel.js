@@ -28,7 +28,10 @@ var BillingsModel = Backbone.Model.extend({
 	},
 	calcTotalCost: function(instanceid, volumeId) {
 		TCost.reset();
-
+		//First check for the number of attached volumes
+		console.log("The volume id is",volumeId);
+		var volumeArray = volumeId.split(',');
+		console.log("Number of volumes attached is ",volumeArray);
 		var self = this;
 		var count = 0;
 		var params = {
@@ -44,11 +47,10 @@ var BillingsModel = Backbone.Model.extend({
 						cost: result[i].Total,
 						date: result[i]._id
 					});
-					console.log(data);
+					console.log("BillingModel, ln 50, data",data);
 					TCost.add(data);
 				}
 				self.getBilling(instanceid);
-				// self.set('dataReady', Date.now());
 			});
 		})(params);
 	},
