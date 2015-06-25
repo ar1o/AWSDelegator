@@ -118,11 +118,10 @@ var parseBills = function(){
                             fs.rename(process.cwd() + '/data/' + files[0], process.cwd() + '/data/latestBills.csv', function(err) {
                                 if (err) console.log('ERROR: ' + err);
                                 console.log(files[0] + " renamed to latestBills.csv");
-                                billingParser.parseBillingCSV(function() {
-                                    console.log("end of file");
-                                    _callback();
-                                }); 
-                            });                           
+                            });
+                            billingParser.parseBillingCSV(function() {
+                                _callback();
+                            }); 
                         });
                     });
                 });

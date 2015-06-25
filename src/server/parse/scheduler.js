@@ -43,8 +43,7 @@ exports.s3Connect = function(_callback) {
             if(nextMonth < 10){
                 nextMonth='0'+String(nextMonth);
                 nextYear = String(nextYear);
-            }
-            else{
+            }else{
                 nextMonth = String(nextMonth);
                 nextYear = String(nextYear);
             }
@@ -62,7 +61,6 @@ exports.s3Connect = function(_callback) {
                     Bucket: s3Bucket,
                     Key: okey
                 };
-                                console.log(okey);
                 var datasheet = fs.createWriteStream('datasheet.zip');
                 s3.getObject(params).createReadStream().pipe(datasheet);
                 datasheet.on('close', function() {

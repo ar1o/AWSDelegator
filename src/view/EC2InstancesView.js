@@ -15,10 +15,8 @@ var EC2InstancesView = Backbone.View.extend({
         this.bindings();
     },
 
-    updateViews: function(selected, vselected) {
+    updateViews: function(selected) {
         this.billingActivity.model.calcTotalCost(selected, vselected);
-        //calcTotalCost calls getBilling at end of operation
-        // this.billingActivity.model.getBilling(selected);
         this.metricsActivity.model.getEC2Metrics(selected);
         this.operationsActivity.model.getEC2Operations(selected);
     },
