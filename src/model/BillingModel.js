@@ -28,7 +28,10 @@ var BillingsModel = Backbone.Model.extend({
 	},
 	calcTotalCost: function(instanceid, volumeId) {
 		TCost.reset();
-
+		//First check for the number of attached volumes
+		console.log("The volume id is",volumeId);
+		var volumeArray = volumeId.split(',');
+		console.log("Number of volumes attached is ",volumeArray);
 		var self = this;
 		var count = 0;
 		var params = {
@@ -47,7 +50,6 @@ var BillingsModel = Backbone.Model.extend({
 					TCost.add(data);
 				}
 				self.getBilling(instanceid);
-				// self.set('dataReady', Date.now());
 			});
 		})(params);
 	},
@@ -71,31 +73,7 @@ var BillingsModel = Backbone.Model.extend({
 				self.set('dataReady', Date.now());
 			});
 		})(params);
-
 	}
-	// getNonFreeBilling: function(instanceid) {
-	// 	TotalNonFreeCostCollection.reset();
-	// 	var self = this;
-	// 	var count = 0;
-	// 	var params = {
-	// 		instance: instanceid
-	// 	};
-
-	// 	(function(params) {
-	// 		$.get(host + '/api/NonFreeBilling/instanceCostAll', params, function(result) {
-	// 			for (var i in result) {
-	// 				var data = new BillingModel({
-	// 					resourceId: result[i].resourceId,
-	// 					cost: result[i].cost,
-	// 					volumeId: result[i].volumeId,
-	// 					date: result[i].date
-	// 				});
-	// 				TotalNonFreeCostCollection.add(data);
-	// 			}
-	// 			self.set('dataReady', Date.now());
-	// 		});
-	// 	})(params);
-	// }
 });
 
 var BillingModel = Backbone.Model.extend({
@@ -127,5 +105,4 @@ var InstanceTotalCostCollection = Backbone.Collection.extend({
 });
 
 var TCost = new InstanceTotalCostCollection();
-// var TotalNonFreeCostCollection = new InstanceTotalCostCollection();
 var totalCostInstancesCollection = new InstanceTotalCostCollection();

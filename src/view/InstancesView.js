@@ -13,8 +13,8 @@ var InstancesView = Backbone.View.extend({
         this.bindings();
     },
 
-    updateViews: function(selected) {
-            this.billingActivity.model.getCombindedCost(selected);
+    updateViews: function(selected, vselected) {
+            this.billingActivity.model.getCombindedCost(selected, vselected);
             this.billingActivity.model.getBilling(selected); 
             this.metricsActivity.model.getEC2Metrics(selected);
 
