@@ -41,6 +41,7 @@ var EC2MetricsView = Backbone.View.extend({
                         text: MetricsCollection.at(0).get('instance')+' Network-Usage'
                     },
                     xAxis: {
+                        title : {text : "Time"},
                         type: 'datetime',
                         labels: {
                             overflow: 'justify'
@@ -90,6 +91,7 @@ var EC2MetricsView = Backbone.View.extend({
                         text: MetricsCollection.at(0).get('instance')+' CPU-Usage'
                     },
                     xAxis: {
+                        title : {text : "Time"},
                         type: 'datetime',
                         labels: {
                             overflow: 'justify'
@@ -112,10 +114,9 @@ var EC2MetricsView = Backbone.View.extend({
                         }
                     },
                     legend: {
-                        enabled: true
+                        enabled: false
                     },
                     series: [{
-                        name: 'CPU Utilizaton',
                         data: dataCpuUtilization
                     }],
                     navigation: {

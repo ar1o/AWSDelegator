@@ -1,8 +1,4 @@
-databaseUrl = 'mongodb://localhost:27017/awsdb';
-AWS = require('aws-sdk');
-mongoose = require('mongoose');
-MongoClient = require('mongodb').MongoClient;
-Schema = mongoose.Schema;
+
 billingAttributes = ['RateId', 'ProductName', 'UsageType', 'Operation', 'AvailabilityZone', 'ItemDescription',
     'UsageStartDate', 'UsageQuantity', 'Rate', 'Cost', 'user:Volume Id', 'user:Name', 'user:Email', 'ResourceId'];
 numericAttirbutes = ['RateId', 'UsageQuantity', 'Rate', 'Cost'];
@@ -10,32 +6,16 @@ ec2Metric = ['NetworkIn','NetworkOut','CPUUtilization'];
 ec2MetricUnit = ['Bytes','Bytes','Percent'];
 rdsMetric = ['CPUUtilization','DatabaseConnections','DiskQueueDepth','ReadIOPS','WriteIOPS'];
 rdsMetricUnit = ['Percent','Count','Count','Count/Second','Count/Second'];
-awsAccountNumber = 092841396837;
-rdsRegion = 'us-east-1';
-s3Region = 'us-east-1';
-s3Bucket = 'csvcontainer';
-awsRegions = ['us-west-1', 'us-west-2', 'us-east-1'];
 
-currentBillingCollection = "";
-awsCredentials = {
-    default: new AWS.SharedIniFileCredentials({
-        profile: 'default'
-    }),
-    dev2: new AWS.SharedIniFileCredentials({
-        profile: 'dev2'
-    })
-};
+AWS = require('aws-sdk');
+mongoose = require('mongoose');
+MongoClient = require('mongodb').MongoClient;
+Schema = mongoose.Schema;
 var express = require('express');
 var app = express();
 port = process.env.PORT || 3000;
 app.use(require('./CORS'));
-
-//Instantiate mongoose schemas
-require('./model/ec2');
-require('./model/rds');
-require('./model/latest');
-require('./model/pricing');
-
+require('./config.js');
 
 // Start mongoose and mongo
 mongoose.connect(databaseUrl, function(error) {
@@ -45,7 +25,11 @@ mongoose.connect(databaseUrl, function(error) {
 });
 var db = mongoose.connection;
 db.on("open", function() {
-    console.log("Database Alert: connected to ", databaseUrl);
+    require('./model/ec2');
+    require('./model/rds');
+    require('./model/latest');
+    require('./model/pricing');
+    require('./model/billing');
     require('./BoxPricingCheck').getPricing(function(){
         require('./parse/scheduler').s3Connect();
     });
@@ -57,6 +41,7 @@ app.get('/api/ec2/metrics', require('./route/ec2Route').metrics);
 
 app.get('/api/rds/instances', require('./route/rdsRoute').instances);
 app.get('/api/rds/metrics', require('./route/rdsRoute').metrics);
+app.get('/api/rds/operations', require('./route/rdsRoute').operations);
 
 app.get('/api/billing/hourlyCostProduct', require('./route/billingRoute').hourlyCostProduct);
 app.get('/api/billing/instanceCostAll', require('./route/billingRoute').instanceCostAll);
@@ -73,6 +58,7 @@ app.get('/api/NonFreeBilling/instanceCostAll', require('./route/NonFreeBillingRo
 app.get('/api/NonFreeBilling/calcFreeTierCost', require('./route/NonFreeBillingRoute').calcFreeTierCost);
 app.get('/api/NonFreeBilling/totalCostProduct',require('./route/NonFreeBillingRoute').totalCostProduct);
 
+app.get('/api/statistics/operations',require('./route/OperationsRoute').operations);
 
 function errorHandler(err, req, res, next) {
     console.error(err.message);

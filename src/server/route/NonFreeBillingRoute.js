@@ -60,8 +60,8 @@ exports.totalCostProduct = function(req, res) {
         var totalCostProduct = {};
         totalCostProduct = {
             data: d,
-            month: currentBillingCollection.substring(9,11),
-            year: currentBillingCollection.substring(5,9) 
+            month: "05",
+            year: "2015" 
         }
         // console.log(totalCostProduct);
         res.send(totalCostProduct);

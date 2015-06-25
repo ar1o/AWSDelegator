@@ -3,6 +3,9 @@
 templates['AppView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     return "<div class=\"content-view\"> </div>\r\n";
 },"useData":true});
+templates['AWSOperationsView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+    return "<div id=\"awsoperationscontainer\"> </div>";
+},"useData":true});
 templates['AWSView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     return "";
 },"useData":true});
@@ -91,6 +94,9 @@ templates['EC2MetricsView'] = template({"1":function(depth0,helpers,partials,dat
   return "<div id=\"networkContainer\"></div>\r\n<div id=\"cpuContainer\"></div>\r\n<div class=\"clear\"></div>\r\n\r\n<!-- <div id=\"Metrics\">\r\n	<table id=\"MetricsTable\" class=\"tablesorter-metro\" cellspacing=\"1\">\r\n		<thead>\r\n			<tr class=\"dark-row\">\r\n				<th class=\"tablesorter-header\" data-column=\"0\">\r\n					Instance ID\r\n				</th>\r\n				<th class=\"tablesorter-header\" data-column=\"1\">\r\n					Network In\r\n				</th>\r\n				<th class=\"tablesorter-header\" data-column=\"2\">\r\n					Network Out\r\n				</th>\r\n				<th class=\"tablesorter-header\" data-column=\"3\">\r\n					Cpu Utilization\r\n				</th>\r\n				<th class=\"tablesorter-header\" data-column=\"4\">\r\n					Time\r\n				</th>\r\n			</tr>\r\n		</thead>\r\n		<tbody id=\"metricsData\">\r\n"
     + ((stack1 = helpers.each.call(depth0,(depth0 != null ? depth0.metrics : depth0),{"name":"each","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
     + "		</tbody>	\r\n	</table>\r\n</div>\r\n -->\r\n\r\n";
+},"useData":true});
+templates['EC2View'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+    return "";
 },"useData":true});
 templates['FooterView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     return "";

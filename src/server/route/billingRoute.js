@@ -7,7 +7,7 @@ exports.calcTotalCost = function(req, res) {
     mongoose.model('Billings').aggregate([
         {
             $match: {
-                $or: [{ResourceId: {$eq: rid}},{ ResourceId: {$eq: vid}}]
+                $or: [{ResourceId: {$eq: rid}},{ ResourceId: {$in : {$eq: vid}}}]
             }
         },{
 
@@ -52,20 +52,6 @@ exports.calcTotalCost = function(req, res) {
         }
     ]).exec(function(e, d) {
         console.log("calcTotalCost OUTPUT:", d);
-
-        // var conditions = {
-        //     };
-        //     var update = {
-        //     };
-        //     var options = {
-            //      multi = true
-        //     };
-        //     mongoose.model('Billings').update(conditions, update, options, callback);
-
-
-        // function callback(err, numAffected) {
-        //         console.log(numAffected)
-        //     };
         res.send(d);
     });
 }
@@ -112,7 +98,6 @@ exports.calcFreeTierCost = function(req, res) {
 };
 
 exports.totalCostProduct = function(req, res) {
-    var totalCostProduct = {};
     mongoose.model('Billings').aggregate([{
         $match: {
             Cost: {
@@ -135,11 +120,12 @@ exports.totalCostProduct = function(req, res) {
             }
         }
     }]).exec(function(e, d) {
+        if(e) throw e;
         var totalCostProduct = {};
         totalCostProduct = {
             data: d,
-            month: currentBillingCollection.substring(9, 11),
-            year: currentBillingCollection.substring(5, 9)
+            month: "05",
+            year: "2015" 
         }
         res.send(totalCostProduct);
     });
@@ -388,7 +374,6 @@ exports.instanceCostAll = function(req, res) {
                         instances[d[r]._id].cost += d[r].Total;
                     }
                 }
-                // Send to endpoint.
                 res.send(instances);
             });
         });

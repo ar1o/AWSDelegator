@@ -21,7 +21,7 @@ tramp
 
 # elpa packages
 /elpa/
-
+src/compiledTemplates.js
 # reftex files
 *.rel
 

@@ -5,12 +5,14 @@ html {
 body {
   font-family: 'Roboto', sans-serif;
   font-size: 11px;
-  margin: 0px;
+  margin: 0px auto;
   padding: 0px;
   height: 100%;
 }
 .content-view {
   display: block;
+  width: 1060px;
+  margin: 0 auto;
   margin-top: 70px;
 }
 .NavView {
@@ -56,14 +58,9 @@ body {
 .subpage:hover {
   color: orange;
 }
-.BillingView {
-  /*	border-style: solid;
-	border-color: blue;	*/
-}
-div#billingcontainer {
-  margin: 20px;
-  /*border-style: solid;
-	border-color: black;	*/
+.EC2BillingView {
+  width: 47%;
+  margin-left: 20px;
 }
 .RDSBillingView {
   width: 46%;
@@ -93,39 +90,33 @@ div#billingcontainer {
 }
 #queueDepthContainer {
   width: 46%;
-  margin-right: 20px;
+  margin-left: 20px;
   /*    border-style: solid;
     border-color: black;*/
-  float: right;
+  float: left;
 }
 #readWriteIopsContainer {
   width: 46%;
-  margin-left: 20px;
+  margin-right: 20px;
   /*    border-style: solid;
     border-color: green;*/
-  float: left;
+  float: right;
 }
 .clear {
   clear: both;
 }
-.MetricsView {
+.EC2MetricsView {
   margin: 0;
   position: static !important;
-  /*	border-style: solid;
-	border-color: red;*/
 }
 #cpuContainer {
   width: 47%;
   margin-right: 20px;
-  /*	border-style: solid;
-	border-color: black;*/
   float: right;
 }
 #networkContainer {
   width: 47%;
   margin-left: 20px;
-  /*	border-style: solid;
-	border-color: green;*/
   float: left;
 }
 .clear {
@@ -145,17 +136,11 @@ div#productcostcontainer {
   /*	border-style: dashed;
 	border-color: blue;*/
 }
-.EC2CostView {
-  /*	border-style: solid;
-	border-color: red;*/
-}
 #ec2CostContainer {
   margin-top: 20px;
   margin-bottom: 20px;
   margin-right: 20px;
   margin-left: 20px;
-  /*	border-style: solid;
-	border-color: black;*/
 }
 .InstancesView {
   min-height: 350px;
@@ -239,17 +224,14 @@ td {
   height: 60px;
   /* Height of the footer */
 }
-.OperationsView {
-  margin: 0 auto;
-  width: 1060px;
-  /*	border-style: dashed;
-	border-color: yellow;*/
-  background-color: white;
-}
-div#operationscontainer {
+div#awsoperationscontainer {
+  margin-top: 20px;
   margin-bottom: 20px;
   margin-right: 20px;
   margin-left: 20px;
-  /*	border-style: dashed;
-	border-color: blue;*/
+}
+.OperationsView {
+  width: 47%;
+  margin-right: 20px;
+  float: right;
 }
