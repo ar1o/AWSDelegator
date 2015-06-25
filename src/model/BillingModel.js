@@ -47,7 +47,6 @@ var BillingsModel = Backbone.Model.extend({
 						cost: result[i].Total,
 						date: result[i]._id
 					});
-					console.log("BillingModel, ln 50, data",data);
 					TCost.add(data);
 				}
 				self.getBilling(instanceid);
@@ -56,6 +55,11 @@ var BillingsModel = Backbone.Model.extend({
 	},
 	getRDSBilling: function(instanceid) {
 		totalCostInstancesCollection.reset();
+		var self = this;
+		var count = 0;
+		var params = {
+			instance: instanceid
+		};
 		(function(params) {
 			$.get(host + '/api/billing/rds/instanceCostAll', params, function(result) {
 				for (var i in result) {
@@ -69,31 +73,7 @@ var BillingsModel = Backbone.Model.extend({
 				self.set('dataReady', Date.now());
 			});
 		})(params);
-
 	}
-	// getNonFreeBilling: function(instanceid) {
-	// 	TotalNonFreeCostCollection.reset();
-	// 	var self = this;
-	// 	var count = 0;
-	// 	var params = {
-	// 		instance: instanceid
-	// 	};
-
-	// 	(function(params) {
-	// 		$.get(host + '/api/NonFreeBilling/instanceCostAll', params, function(result) {
-	// 			for (var i in result) {
-	// 				var data = new BillingModel({
-	// 					resourceId: result[i].resourceId,
-	// 					cost: result[i].cost,
-	// 					volumeId: result[i].volumeId,
-	// 					date: result[i].date
-	// 				});
-	// 				TotalNonFreeCostCollection.add(data);
-	// 			}
-	// 			self.set('dataReady', Date.now());
-	// 		});
-	// 	})(params);
-	// }
 });
 
 var BillingModel = Backbone.Model.extend({
@@ -125,5 +105,4 @@ var InstanceTotalCostCollection = Backbone.Collection.extend({
 });
 
 var TCost = new InstanceTotalCostCollection();
-// var TotalNonFreeCostCollection = new InstanceTotalCostCollection();
 var totalCostInstancesCollection = new InstanceTotalCostCollection();
