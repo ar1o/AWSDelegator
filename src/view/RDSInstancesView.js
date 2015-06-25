@@ -26,7 +26,7 @@ var RDSInstancesView = Backbone.View.extend({
         this.model.change('dataReady', function(model, val) {
             this.render();
             $('#RDSInstanceTable').DataTable({
-                "iDisplayLength": 25
+                "iDisplayLength": 15
                 // "paging":   false,
                 // "info":     false,
                 // "bFilter": false

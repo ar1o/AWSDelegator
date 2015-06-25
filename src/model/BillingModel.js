@@ -44,6 +44,7 @@ var BillingsModel = Backbone.Model.extend({
 						cost: result[i].Total,
 						date: result[i]._id
 					});
+					console.log(data);
 					TCost.add(data);
 				}
 				self.getBilling(instanceid);

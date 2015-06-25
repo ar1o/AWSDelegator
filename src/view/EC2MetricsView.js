@@ -35,10 +35,14 @@ var EC2MetricsView = Backbone.View.extend({
             $(function () {
                 $('#networkContainer').highcharts({
                     chart: {
-                        zoomType: 'x'
+                        zoomType: 'x',
+                        backgroundColor: '#f7f7f7'
                     },
                     title: {
                         text: MetricsCollection.at(0).get('instance')+' Network-Usage'
+                    },
+                    credits: {
+                        enabled: false
                     },
                     xAxis: {
                         title : {text : "Time"},
@@ -52,8 +56,8 @@ var EC2MetricsView = Backbone.View.extend({
                             text: 'Bytes'
                         },
                         min: 0,
-                        minorGridLineWidth: 0,
-                        gridLineWidth: 0,
+                        minorGridLineWidth: 0.5,
+                        gridLineWidth: 0.5,
                         alternateGridColor: null
                         
                     },
@@ -85,10 +89,14 @@ var EC2MetricsView = Backbone.View.extend({
             $(function () {
                 $('#cpuContainer').highcharts({
                     chart: {
-                        zoomType: 'x'
+                        zoomType: 'x',
+                        backgroundColor: '#f7f7f7'
                     },
                     title: {
                         text: MetricsCollection.at(0).get('instance')+' CPU-Usage'
+                    },
+                    credits: {
+                        enabled: false
                     },
                     xAxis: {
                         title : {text : "Time"},
@@ -102,8 +110,8 @@ var EC2MetricsView = Backbone.View.extend({
                             text: 'Percentage'
                         },
                         min: 0,
-                        minorGridLineWidth: 0,
-                        gridLineWidth: 0,
+                        minorGridLineWidth: 0.5,
+                        gridLineWidth: 0.5,
                         alternateGridColor: null
                         
                     },

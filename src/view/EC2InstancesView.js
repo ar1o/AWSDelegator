@@ -15,7 +15,7 @@ var EC2InstancesView = Backbone.View.extend({
         this.bindings();
     },
 
-    updateViews: function(selected) {
+    updateViews: function(selected, vselected) {
         this.billingActivity.model.calcTotalCost(selected, vselected);
         this.metricsActivity.model.getEC2Metrics(selected);
         this.operationsActivity.model.getEC2Operations(selected);
@@ -27,7 +27,7 @@ var EC2InstancesView = Backbone.View.extend({
         this.model.change('dataReady', function(model, val) {
             this.render();
             $('#InstanceTable').DataTable({
-                "iDisplayLength": 25
+                "iDisplayLength": 15
                 // "paging":   false,
                 // "info":     false,
                 // "bFilter": false

@@ -1,8 +1,10 @@
 //function/query to take a instance RID value, and sum both nonfree cost, and cost for per hour, then add theses values per hour
 
 exports.calcTotalCost = function(req, res) {
+    console.log(req.query.instance);
+    console.log(req.query.volume);
     var rid = req.query.instance;
-     var vid = req.query.volume;
+    var vid = req.query.volume;
     console.log("ResourceId:", rid);
     mongoose.model('Billings').aggregate([
         {
@@ -40,7 +42,6 @@ exports.calcTotalCost = function(req, res) {
         },{
             $project: {
                 _id: 1,
-                ResourceId: 1,
                 VolumeId: 1,
                 Total: {
                     $add: ['$TNonFreeCost', '$TCost']

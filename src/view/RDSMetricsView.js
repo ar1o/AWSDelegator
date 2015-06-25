@@ -37,7 +37,11 @@ var RDSMetricsView = Backbone.View.extend({
             $(function () {
                 $('#readWriteIopsContainer').highcharts({
                     chart: {
-                        zoomType: 'x'
+                        zoomType: 'x',
+                        backgroundColor: '#f7f7f7'
+                    },
+                    credits: {
+                        enabled: false
                     },
                     title: {
                         text: MetricsCollection.at(0).get('instance')+' Disk Operations/s'
@@ -54,8 +58,8 @@ var RDSMetricsView = Backbone.View.extend({
                             text: 'Count/Second'
                         },
                         min: 0,
-                        minorGridLineWidth: 0,
-                        gridLineWidth: 0,
+                        minorGridLineWidth: 0.5,
+                        gridLineWidth: 0.5,
                         alternateGridColor: null
                         
                     },
@@ -87,10 +91,14 @@ var RDSMetricsView = Backbone.View.extend({
             $(function () {
                 $('#queueDepthContainer').highcharts({
                     chart: {
-                        zoomType: 'x'
+                        zoomType: 'x',
+                        backgroundColor: '#f7f7f7'
                     },
                     title: {
                         text: MetricsCollection.at(0).get('instance')+' Disk Queue Depth'
+                    },
+                    credits: {
+                        enabled: false
                     },
                     xAxis: {
                         title : {text : "Time"},
@@ -104,8 +112,8 @@ var RDSMetricsView = Backbone.View.extend({
                             text: 'Count/Second'
                         },
                         min: 0,
-                        minorGridLineWidth: 0,
-                        gridLineWidth: 0,
+                        minorGridLineWidth: 0.5,
+                        gridLineWidth: 0.5,
                         alternateGridColor: null
                         
                     },
@@ -133,10 +141,14 @@ var RDSMetricsView = Backbone.View.extend({
             $(function () {
                 $('#rdsCpuContainer').highcharts({
                     chart: {
-                        zoomType: 'x'
+                        zoomType: 'x',
+                        backgroundColor: '#f7f7f7'
                     },
                     title: {
                         text: MetricsCollection.at(0).get('instance')+' CPU-Usage'
+                    },
+                    credits: {
+                        enabled: false
                     },
                     xAxis: {
                         title : {text : "Time"},
@@ -150,8 +162,8 @@ var RDSMetricsView = Backbone.View.extend({
                             text: 'Percentage'
                         },
                         min: 0,
-                        minorGridLineWidth: 0,
-                        gridLineWidth: 0,
+                        minorGridLineWidth: 0.5,
+                        gridLineWidth: 0.5,
                         alternateGridColor: null
                         
                     },

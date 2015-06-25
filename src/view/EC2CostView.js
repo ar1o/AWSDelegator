@@ -14,12 +14,15 @@ var EC2CostView = Backbone.View.extend({
             this.render();
             var date = new Date(hourlyCostCollection.at(0).get('date'));
             $(function() {
-                $('#ec2CostContainer').highcharts({
+                $('#ec2CostContainer').highcharts('StockChart',{
                     chart: {
-                        zoomType: 'x'
+                        zoomType: 'x',
                     },
                     title: {
                         text: 'Amazon Elastic Compute Cloud Cost Per Hour'
+                    },
+                    credits: {
+                        enabled: false
                     },
                     xAxis: {
                         title: {
@@ -35,16 +38,11 @@ var EC2CostView = Backbone.View.extend({
                             text: 'Price (USD)'
                         },
                         min: 0,
-                        minorGridLineWidth: 0,
-                        gridLineWidth: 0,
+                        minorGridLineWidth: 0.5,
+                        gridLineWidth: 0.5,
                         alternateGridColor: null,
                     },
-                    tooltip: {
-                        formatter: function() {
-                            return '<b>' + this.series.name + '</b><br/>' +
-                                new Date(this.x) + ', ' + this.y.toFixed(4) + ' $/Hour';
-                        },
-                    },
+          
                     legend: {
                         enabled: false
                     },
