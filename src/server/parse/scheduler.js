@@ -33,7 +33,6 @@ exports.s3Connect = function(_callback) {
             var year,nextYear,month,nextMonth;
             year = parseInt(time[0]);
             month = parseInt(time[1]);
-            month=12;
             if(month==12){
                 nextYear = year+1;
                 nextMonth = 1;
@@ -41,8 +40,10 @@ exports.s3Connect = function(_callback) {
                 nextYear = year;
                 nextMonth = month+1;
             }
-            if(nextMonth < 10)nextMonth='0'+String(nextMonth);
-            else{
+            if(nextMonth < 10){
+                nextMonth='0'+String(nextMonth);
+                nextYear = String(nextYear);
+            }else{
                 nextMonth = String(nextMonth);
                 nextYear = String(nextYear);
             }

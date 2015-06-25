@@ -137,6 +137,8 @@ div#productcostcontainer {
   margin-bottom: 20px;
   margin-right: 20px;
   margin-left: 20px;
+  /*	border-style: dashed;
+	border-color: blue;*/
 }
 .EC2CostView {
   padding-top: 20px;
@@ -183,6 +185,17 @@ div#productcostcontainer {
   border-bottom: 1px solid #aaa;
   border-top: 1px solid #aaa;
   /*border: 1px solid gray;*/
+}
+th,
+td {
+  overflow: hidden;
+}
+.options {
+  top: 55%;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
 }
 .HeaderView {
   position: absolute;

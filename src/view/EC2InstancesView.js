@@ -15,8 +15,8 @@ var EC2InstancesView = Backbone.View.extend({
         this.bindings();
     },
 
-    updateViews: function(selected) {
-        this.billingActivity.model.getBilling(selected);
+    updateViews: function(selected, vselected) {
+        this.billingActivity.model.calcTotalCost(selected, vselected);
         this.metricsActivity.model.getEC2Metrics(selected);
         this.operationsActivity.model.getEC2Operations(selected);
     },
@@ -36,10 +36,11 @@ var EC2InstancesView = Backbone.View.extend({
 
         this.$el.on('click', '#InstanceTable tr', function() {
             var name = $('td', this).eq(0).text();
-            // console.log('You! clicked on ' + name + '\'s row');
+         var vname = $('td', this).eq(8).text();
+
+            console.log('You! clicked on ' + vname + '\'s row');
             if (name != "") {
-                totalCostInstancesCollection.reset();
-                self.updateViews(name);
+                self.updateViews(name, vname);
             }
         });
     },

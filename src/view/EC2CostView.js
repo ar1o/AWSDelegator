@@ -51,7 +51,6 @@ var EC2CostView = Backbone.View.extend({
                         pointInterval: 3600 * 1000,
                         pointStart: Date.UTC(date.getYear(), date.getMonth(), date.getDate()),
                         data: hourlyCostCollection.pluck('cost')
-
                     }],
                     navigation: {
                         menuItemStyle: {
@@ -67,7 +66,7 @@ var EC2CostView = Backbone.View.extend({
 
     render: function() {
         var html = Handlebars.templates.EC2CostView({
-            product: hourlyCostCollection.toJSON(),
+            product: hourlyCostCollection.toJSON()
         });
         this.$el.html(html);
     }

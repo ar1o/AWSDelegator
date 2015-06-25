@@ -121,7 +121,7 @@ var parseBills = function(){
                             });
                             billingParser.parseBillingCSV(function() {
                                 _callback();
-                            });                            
+                            }); 
                         });
                     });
                 });

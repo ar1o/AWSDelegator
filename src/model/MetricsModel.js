@@ -23,7 +23,7 @@ var MetricsModel = Backbone.Model.extend({
 		};
 
 		(function(params) {
-			$.get(host+'/api/ec2/metrics', params, function(result) {
+			$.get(host + '/api/ec2/metrics', params, function(result) {
 				for (var i in result) {
 					var data = new ec2MetricModel({
 						instance: result[i].InstanceId,
@@ -48,7 +48,32 @@ var MetricsModel = Backbone.Model.extend({
 		};
 
 		(function(params) {
-			$.get(host+'/api/rds/metrics', params, function(result) {
+			$.get(host + '/api/ec2/metrics', params, function(result) {
+				for (var i in result) {
+					var data = new ec2MetricModel({
+						instance: result[i].InstanceId,
+						networkIn: result[i].NetworkIn,
+						networkOut: result[i].NetworkOut,
+						cpuUtilization: result[i].CPUUtilization,
+						time: result[i].Time
+					});
+					metricsCollection.add(data);
+				}
+				self.set('dataReady', Date.now());
+			});
+		})(params);
+	},
+
+	getRDSMetrics: function(instanceid) {
+		metricsCollection.reset();
+		var self = this;
+		var count = 0;
+		var params = {
+			instance: instanceid
+		};
+
+		(function(params) {
+			$.get(host + '/api/rds/metrics', params, function(result) {
 				for (var i in result) {
 					var data = new rdsMetricModel({
 						instance: result[i].DBInstanceIdentifier,

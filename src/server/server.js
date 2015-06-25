@@ -37,7 +37,7 @@ db.on("open", function() {
 
 app.get('/api/ec2/instances', require('./route/ec2Route').instances);
 app.get('/api/ec2/metrics', require('./route/ec2Route').metrics);
-app.get('/api/ec2/operations', require('./route/ec2Route').operations);
+// app.get('/api/ec2/operations', require('./route/ec2Route').operations);
 
 app.get('/api/rds/instances', require('./route/rdsRoute').instances);
 app.get('/api/rds/metrics', require('./route/rdsRoute').metrics);
@@ -47,6 +47,9 @@ app.get('/api/billing/hourlyCostProduct', require('./route/billingRoute').hourly
 app.get('/api/billing/instanceCostAll', require('./route/billingRoute').instanceCostAll);
 app.get('/api/billing/calcFreeTierCost', require('./route/billingRoute').calcFreeTierCost);
 app.get('/api/billing/totalCostProduct',require('./route/billingRoute').totalCostProduct);
+
+app.get('/api/billing/calcTotalCost',require('./route/billingRoute').calcTotalCost);
+
 app.get('/api/billing/rds/instanceCostAll', require('./route/rdsBillingRoute').instanceCostAll);
 app.get('/api/billing/rds/hourlyCostProduct', require('./route/rdsBillingRoute').hourlyCostProduct);
 
@@ -67,4 +70,5 @@ function errorHandler(err, req, res, next) {
 }
 module.exports = errorHandler;
 app.listen(port);
+
 console.log('Server Alert: server started on port %s', port);
