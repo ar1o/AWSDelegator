@@ -16,29 +16,25 @@ var EC2MetricsView = Backbone.View.extend({
             var dataNetworkIn = []
             var dataNetworkOut = []
             var dataCpuUtilization = []
-            for(var i=0;i<MetricsCollection.length;++i){                
-                var date = MetricsCollection.at(i).get('time').split('T');
-                date1=date[1].substring(0,date[1].length-1);
-                //date1=[year,month,date]
-                var date1 = date[0].split(/-/);
-                date1[1]= date1[1]-1;               
-                //date2=[hour,minute,second]                
-                var date2 = date[1].split(':');
-                date2[2] = date2[2].substring(0,date2[2].indexOf('.')); 
-                var utcDate = Date.UTC(date1[0],date1[1],date1[2],date2[0],date2[1]);                
-                dataNetworkIn.push([utcDate,MetricsCollection.at(i).get('networkIn')]);  
-                dataNetworkOut.push([utcDate,MetricsCollection.at(i).get('networkOut')]);
-                dataCpuUtilization.push([utcDate,MetricsCollection.at(i).get('cpuUtilization')]);       
-            }               
+            var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sept','Oct','Nov','Dec'];
+            for(var i=0;i<MetricsCollection.length;++i){        
+                dataNetworkIn.push([MetricsCollection.at(i).get('time'),MetricsCollection.at(i).get('networkIn')]);  
+                dataNetworkOut.push([MetricsCollection.at(i).get('time'),MetricsCollection.at(i).get('networkOut')]);
+                dataCpuUtilization.push([MetricsCollection.at(i).get('time'),MetricsCollection.at(i).get('cpuUtilization')]);
+            } 
             this.render();
 
             $(function () {
                 $('#networkContainer').highcharts({
                     chart: {
-                        zoomType: 'x'
+                        zoomType: 'x',
+                        backgroundColor: '#f7f7f7'
                     },
                     title: {
                         text: MetricsCollection.at(0).get('instance')+' Network-Usage'
+                    },
+                    credits: {
+                        enabled: false
                     },
                     xAxis: {
                         title : {text : "Time"},
@@ -52,8 +48,8 @@ var EC2MetricsView = Backbone.View.extend({
                             text: 'Bytes'
                         },
                         min: 0,
-                        minorGridLineWidth: 0,
-                        gridLineWidth: 0,
+                        minorGridLineWidth: 0.5,
+                        gridLineWidth: 0.5,
                         alternateGridColor: null
                         
                     },
@@ -85,10 +81,14 @@ var EC2MetricsView = Backbone.View.extend({
             $(function () {
                 $('#cpuContainer').highcharts({
                     chart: {
-                        zoomType: 'x'
+                        zoomType: 'x',
+                        backgroundColor: '#f7f7f7'
                     },
                     title: {
                         text: MetricsCollection.at(0).get('instance')+' CPU-Usage'
+                    },
+                    credits: {
+                        enabled: false
                     },
                     xAxis: {
                         title : {text : "Time"},
@@ -102,8 +102,8 @@ var EC2MetricsView = Backbone.View.extend({
                             text: 'Percentage'
                         },
                         min: 0,
-                        minorGridLineWidth: 0,
-                        gridLineWidth: 0,
+                        minorGridLineWidth: 0.5,
+                        gridLineWidth: 0.5,
                         alternateGridColor: null
                         
                     },

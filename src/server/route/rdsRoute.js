@@ -6,7 +6,22 @@ exports.metrics = function(req, res) {
 				$eq: instanceId
 			}
 		}
-	}]).exec(function(e, d) {
+	}, {
+		$project: {
+			_id: 0,
+			DBInstanceIdentifier: 1,
+			CPUUtilization: 1,
+			DatabaseConnections: 1,
+			DiskQueueDepth: 1,
+			ReadIOPS: 1,
+			WriteIOPS: 1,
+			Time: 1
+		}
+	},{
+        $sort: {
+            Time: 1
+        }
+    }]).exec(function(e, d) {
 		res.send(d);
 	});
 }

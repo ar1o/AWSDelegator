@@ -1,16 +1,3 @@
-
-billingAttributes = ['RateId', 'ProductName', 'UsageType', 'Operation', 'AvailabilityZone', 'ItemDescription',
-    'UsageStartDate', 'UsageQuantity', 'Rate', 'Cost', 'user:Volume Id', 'user:Name', 'user:Email', 'ResourceId'];
-numericAttirbutes = ['RateId', 'UsageQuantity', 'Rate', 'Cost'];
-ec2Metric = ['NetworkIn','NetworkOut','CPUUtilization'];
-ec2MetricUnit = ['Bytes','Bytes','Percent'];
-rdsMetric = ['CPUUtilization','DatabaseConnections','DiskQueueDepth','ReadIOPS','WriteIOPS'];
-rdsMetricUnit = ['Percent','Count','Count','Count/Second','Count/Second'];
-
-AWS = require('aws-sdk');
-mongoose = require('mongoose');
-MongoClient = require('mongodb').MongoClient;
-Schema = mongoose.Schema;
 var express = require('express');
 var app = express();
 port = process.env.PORT || 3000;
@@ -47,6 +34,9 @@ app.get('/api/billing/hourlyCostProduct', require('./route/billingRoute').hourly
 app.get('/api/billing/instanceCostAll', require('./route/billingRoute').instanceCostAll);
 app.get('/api/billing/calcFreeTierCost', require('./route/billingRoute').calcFreeTierCost);
 app.get('/api/billing/totalCostProduct',require('./route/billingRoute').totalCostProduct);
+
+app.get('/api/billing/calcTotalCost',require('./route/billingRoute').calcTotalCost);
+
 app.get('/api/billing/rds/instanceCostAll', require('./route/rdsBillingRoute').instanceCostAll);
 app.get('/api/billing/rds/hourlyCostProduct', require('./route/rdsBillingRoute').hourlyCostProduct);
 
@@ -67,4 +57,5 @@ function errorHandler(err, req, res, next) {
 }
 module.exports = errorHandler;
 app.listen(port);
+
 console.log('Server Alert: server started on port %s', port);

@@ -16,7 +16,11 @@ exports.metrics = function(req, res) {
 			CPUUtilization: 1,
 			Time: 1
 		}
-	}]).exec(function(e, d) {
+	},{
+        $sort: {
+            Time: 1
+        }
+    }]).exec(function(e, d) {
 		res.send(d);
 	});
 }

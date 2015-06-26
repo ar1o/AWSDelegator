@@ -15,20 +15,27 @@ body {
   margin: 0 auto;
   margin-top: 70px;
 }
+.AWSView {
+  margin: 0 auto;
+  padding-top: 20px;
+}
+.RDSView {
+  padding-top: 20px;
+}
 .NavView {
   position: absolute;
   left: -318px;
   width: 318px;
   transition: left 0.2s;
   top: 68px;
-  background-color: #ededed;
+  background-color: #f7f7f7;
 }
 .NavView.visible {
   left: 0;
   transition: left 0.2s;
-  border-right: 1px solid #aaa;
-  border-top: 1px solid #aaa;
-  border-bottom: 1px solid #aaa;
+  border-right: 1px solid #ccc;
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
 }
 .NavView .page {
   padding: 5px;
@@ -63,7 +70,7 @@ body {
   margin-left: 20px;
 }
 .RDSBillingView {
-  width: 46%;
+  width: 47%;
   margin-left: 20px;
   /*	border-style: solid;
 	border-color: blue;*/
@@ -78,28 +85,25 @@ body {
 }*/
 .RDSMetricsView {
   margin: 0;
-  /*    border-style: solid;
-    border-color: red;*/
+  padding-bottom: 20px;
 }
 #rdsCpuContainer {
-  width: 46%;
+  width: 47%;
   margin-right: 20px;
-  /*    border-style: solid;
-    border-color: blue;*/
+  margin-left: 20px;
+  margin-top: 20px;
   float: right;
 }
 #queueDepthContainer {
-  width: 46%;
+  width: 47%;
   margin-left: 20px;
-  /*    border-style: solid;
-    border-color: black;*/
+  margin-top: 20px;
   float: left;
 }
 #readWriteIopsContainer {
-  width: 46%;
-  margin-right: 20px;
-  /*    border-style: solid;
-    border-color: green;*/
+  width: 47%;
+  margin-left: 20px;
+  margin-top: 20px;
   float: right;
 }
 .clear {
@@ -107,14 +111,15 @@ body {
 }
 .EC2MetricsView {
   margin: 0;
-  position: static !important;
+  margin-top: 20px;
+  padding-bottom: 20px;
 }
-#cpuContainer {
+div#cpuContainer {
   width: 47%;
   margin-right: 20px;
   float: right;
 }
-#networkContainer {
+div#networkContainer {
   width: 47%;
   margin-left: 20px;
   float: left;
@@ -124,7 +129,6 @@ body {
 }
 .ProductCostView {
   margin: 0 auto;
-  margin-top: 70px;
   width: 1060px;
   background-color: white;
 }
@@ -133,6 +137,11 @@ div#productcostcontainer {
   margin-bottom: 20px;
   margin-right: 20px;
   margin-left: 20px;
+  /*	border-style: dashed;
+	border-color: blue;*/
+}
+.EC2CostView {
+  padding-top: 20px;
 }
 #ec2CostContainer {
   margin-top: 20px;
@@ -140,27 +149,53 @@ div#productcostcontainer {
   margin-right: 20px;
   margin-left: 20px;
 }
-.InstancesView {
+.RDSCostView {
+  padding-top: 20px;
+}
+.EC2InstancesView {
   min-height: 350px;
+  padding-top: 20px;
 }
 .RDSInstancesView {
   min-height: 350px;
+  padding-top: 20px;
 }
 #InstanceTable_wrapper {
+  background-color: #f7f7f7;
   margin-top: 20px;
   margin-bottom: 20px;
   margin-right: 20px;
   margin-left: 20px;
   padding: 5px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #aaa;
+  border-top: 1px solid #aaa;
   /*border: 1px solid gray;*/
 }
 #RDSInstanceTable_wrapper {
+  background-color: #f7f7f7;
   margin-top: 20px;
   margin-bottom: 20px;
   margin-right: 20px;
   margin-left: 20px;
   padding: 5px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #aaa;
+  border-top: 1px solid #aaa;
   /*border: 1px solid gray;*/
+}
+th,
+td {
+  overflow: hidden;
+}
+.options {
+  top: 55%;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
 }
 .HeaderView {
   position: absolute;
@@ -168,8 +203,9 @@ div#productcostcontainer {
   width: 100%;
   margin: 0 auto;
   height: 68px;
-  background-color: #ededed;
-  border-bottom: 1px solid #aaa;
+  background-color: #f7f7f7;
+  border-bottom: 1px solid #ccc;
+  box-shadow: #e6e6e6 0 1px 3px;
 }
 .setting:before {
   font-family: FontAwesome;
@@ -193,9 +229,9 @@ div#productcostcontainer {
   font-size: 16px;
   width: 80px;
   height: 68px;
-  border-right: 1px solid #aaa;
+  border-right: 1px solid #ccc;
   margin-left: 30px;
-  background-color: #ededed;
+  background-color: #f7f7f7;
   line-height: 68px;
   vertical-align: middle;
 }
@@ -203,19 +239,21 @@ div#productcostcontainer {
   color: orange;
 }
 .FooterView {
-  background-color: #ededed;
+  background-color: #f7f7f7;
   /*background-color: red;*/
-  border-top: 1px solid #aaa;
+  border-top: 1px solid #ccc;
   bottom: 0;
   width: 100%;
   height: 60px;
   /* Height of the footer */
 }
+.AWSOperationsView {
+  margin: 0 auto;
+  width: 1060px;
+  margin-bottom: 20px;
+}
 div#awsoperationscontainer {
   margin-top: 20px;
-  margin-bottom: 20px;
-  margin-right: 20px;
-  margin-left: 20px;
 }
 .OperationsView {
   width: 47%;

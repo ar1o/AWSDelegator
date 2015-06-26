@@ -27,10 +27,14 @@ var RDSBillingView = Backbone.View.extend({
             $(function () {
                 $('.RDSBillingView').highcharts({
                     chart: {
-                        zoomType: 'x'
+                        zoomType: 'x',
+                        backgroundColor: '#f7f7f7'
                     },
                     title: {
                         text: resId+' Cost'
+                    },
+                    credits: {
+                        enabled: false
                     },
                     xAxis: {
                         title : {text : "Time"},
@@ -44,8 +48,8 @@ var RDSBillingView = Backbone.View.extend({
                             text: 'Price (USD)'
                         },
                         min: 0,
-                        minorGridLineWidth: 0,
-                        gridLineWidth: 0,
+                        minorGridLineWidth: 0.5,
+                        gridLineWidth: 0.5,
                         alternateGridColor: null,                        
                     },
                     tooltip: {

@@ -3,8 +3,8 @@ var mongodb = require('mongodb');
 var MongoClient = mongodb.MongoClient;
 
 // parses latestBills.csv and updates the 'awsdb' database with new bills.
-exports.parseBillingCSV = function(_callback) {
-    console.log("Parse Alert(Billing): CSV parsing initiated");
+exports.parseBillingCSV = function(callback) {
+    console.log("Parse Alert(Billing): Billing CSV parsing initiated");
     MongoClient.connect(databaseUrl, function(err, db) {
         if (err) {
             console.log('Unable to connect to the mongoDB server. Error:', err);
@@ -24,8 +24,22 @@ exports.parseBillingCSV = function(_callback) {
                     for (var i = 0; i < header.length; ++i) header[i] = header[i];
                     for (var i = 0; i < billingAttributes.length; ++i) propertiesIndex.push(header.indexOf(billingAttributes[i]));
                     for (var i = 0; i < numericAttirbutes.length; ++i) numericPropertiesIndex.push(billingAttributes.indexOf(numericAttirbutes[i]));                    
-                    for (var i = 1; i < lines.length; ++i) {
-                        //replaces ',,' with ',"null",'
+                    var i = 1;
+                    var controller2 = function(){
+                        iterator2(function(){
+                            i++;
+                            if(i < lines.length) {
+                                controller2();
+                            }
+                            else{
+                                console.log("Database Alert: "+newDocCount+" documents added to 'lineItems'");
+                                callback();
+                            }
+                        });
+                    };
+                    var iterator2 = function(_callback){
+                        // console.log("iterator2",i,lines.length);
+                         //replaces ',,' with ',"null",'
                         lines[i] = lines[i].replace(/,,/g, ",\"null\",");
                         //replaces remaining ',,' with ',"null",'
                         lines[i] = lines[i].replace(/,,/g, ",\"null\",");
@@ -47,6 +61,7 @@ exports.parseBillingCSV = function(_callback) {
                                     } else {
                                         doc[billingAttributes[j]] = parseFloat(bill[propertiesIndex[j]]);
                                     }
+
                                 }        
                                 //handles free tier rate and cost
                                 if(doc['ItemDescription'].match(/free tier/g)){
@@ -79,17 +94,22 @@ exports.parseBillingCSV = function(_callback) {
                                     }
                                     doc['NonFreeCost'] = doc['UsageQuantity'] * doc['NonFreeRate'];
                                 }    
-                                db.collection('lineItems').insert(doc);
-                                db.collection('latest').update({
-                                    _id: latest._id
-                                }, {
-                                    time: bill[propertiesIndex[billingAttributes.indexOf('UsageStartDate')]]
-                                });
+                                 db.collection('lineItems').insert(doc,function(){
+                                    db.collection('latest').update({
+                                        _id: latest._id
+                                    }, {
+                                        time: bill[propertiesIndex[billingAttributes.indexOf('UsageStartDate')]]
+                                    },function(){
+                                        _callback();
+                                    });
+                                });                               
+                            }else{
+                                console.log("Database Alert: "+newDocCount+" documents added to 'lineItems'");
+                                callback();
                             }
-                        }
-                    }                        
-                    console.log("Database Alert: "+newDocCount+" documents added to 'lineItems'");
-                    _callback();
+                        }else _callback();
+                    };
+                    controller2();                    
                 });
             });
         }

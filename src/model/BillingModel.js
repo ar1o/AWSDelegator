@@ -26,7 +26,31 @@ var BillingsModel = Backbone.Model.extend({
 			});
 		})(params);
 	},
+	calcTotalCost: function(instanceid, volumeId) {
+		TCost.reset();
 
+		var self = this;
+		var count = 0;
+		var params = {
+			instance: instanceid,
+			volume: volumeId
+		};
+
+		(function(params) {
+			$.get(host + '/api/billing/calcTotalCost', params, function(result) {
+				for (var i in result) {
+					var data = new BillingModel({
+						resourceId: params.instance,
+						cost: result[i].Total,
+						date: result[i]._id
+					});
+					TCost.add(data);
+				}
+				self.getBilling(instanceid);
+				// self.set('dataReady', Date.now());
+			});
+		})(params);
+	},
 	getRDSBilling: function(instanceid) {
 		totalCostInstancesCollection.reset();
 		var self = this;
@@ -34,7 +58,6 @@ var BillingsModel = Backbone.Model.extend({
 		var params = {
 			instance: instanceid
 		};
-
 		(function(params) {
 			$.get(host + '/api/billing/rds/instanceCostAll', params, function(result) {
 				for (var i in result) {
@@ -48,30 +71,31 @@ var BillingsModel = Backbone.Model.extend({
 				self.set('dataReady', Date.now());
 			});
 		})(params);
-	},
-	getNonFreeBilling: function(instanceid) {
-		TotalNonFreeCostCollection.reset();
-		var self = this;
-		var count = 0;
-		var params = {
-			instance: instanceid
-		};
 
-		(function(params) {
-			$.get(host + '/api/NonFreeBilling/instanceCostAll', params, function(result) {
-				for (var i in result) {
-					var data = new BillingModel({
-						resourceId: result[i].resourceId,
-						cost: result[i].cost,
-						volumeId: result[i].volumeId,
-						date: result[i].date
-					});
-					TotalNonFreeCostCollection.add(data);
-				}
-				self.set('dataReady', Date.now());
-			});
-		})(params);
 	}
+	// getNonFreeBilling: function(instanceid) {
+	// 	TotalNonFreeCostCollection.reset();
+	// 	var self = this;
+	// 	var count = 0;
+	// 	var params = {
+	// 		instance: instanceid
+	// 	};
+
+	// 	(function(params) {
+	// 		$.get(host + '/api/NonFreeBilling/instanceCostAll', params, function(result) {
+	// 			for (var i in result) {
+	// 				var data = new BillingModel({
+	// 					resourceId: result[i].resourceId,
+	// 					cost: result[i].cost,
+	// 					volumeId: result[i].volumeId,
+	// 					date: result[i].date
+	// 				});
+	// 				TotalNonFreeCostCollection.add(data);
+	// 			}
+	// 			self.set('dataReady', Date.now());
+	// 		});
+	// 	})(params);
+	// }
 });
 
 var BillingModel = Backbone.Model.extend({
@@ -83,6 +107,7 @@ var BillingModel = Backbone.Model.extend({
 	}
 });
 
+
 var RDSBillingModel = Backbone.Model.extend({
 	defaults: {
 		resourceId: null,
@@ -90,6 +115,7 @@ var RDSBillingModel = Backbone.Model.extend({
 		date: null
 	}
 });
+
 
 var InstanceTotalCostCollection = Backbone.Collection.extend({
 	model: BillingModel,
@@ -100,5 +126,6 @@ var InstanceTotalCostCollection = Backbone.Collection.extend({
 	}
 });
 
-var TotalNonFreeCostCollection = new InstanceTotalCostCollection();
+var TCost = new InstanceTotalCostCollection();
+// var TotalNonFreeCostCollection = new InstanceTotalCostCollection();
 var totalCostInstancesCollection = new InstanceTotalCostCollection();
