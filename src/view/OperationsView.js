@@ -42,13 +42,22 @@ var OperationsView = Backbone.View.extend({
                                 style: {
                                     color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
                                 }
-                            }
+                            },
                         }
                     },
                     series: [{
                         type: 'pie',
                         name: 'Operations',
-                        data: dataOperations
+                        data: dataOperations,
+                        events: { 
+                            click: function() {
+                                alert(
+                                    'The name is ' + this.name +
+                                    ' and the identifier is ' + this.options.id
+                                );
+                                console.log(options);
+                            }
+                        }
                     }]
                 });
             });

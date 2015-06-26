@@ -10,6 +10,7 @@ var _params = {
 };
 
 exports.s3Connect = function(_callback) {
+    s3.s3Watch();
     fs.readdir(process.cwd() + '/data/', function(err, files) {
         if (err) throw err;
         var latestBillsindex = files.indexOf('latestBills.csv');
@@ -43,7 +44,8 @@ exports.s3Connect = function(_callback) {
             if(nextMonth < 10){
                 nextMonth='0'+String(nextMonth);
                 nextYear = String(nextYear);
-            }else{
+            }
+            else{
                 nextMonth = String(nextMonth);
                 nextYear = String(nextYear);
             }
@@ -52,6 +54,7 @@ exports.s3Connect = function(_callback) {
                 if (err) throw err;
                 var okey = awsAccountNumber+'-aws-billing-detailed-line-items-with-resources-and-tags-'+time[0]+'-'+time[1]+'.csv.zip';
                 var _okey = awsAccountNumber+'-aws-billing-detailed-line-items-with-resources-and-tags-'+nextYear+'-'+nextMonth+'.csv.zip';
+                
                 for(var i in data.Contents){                    
                     if (data.Contents[i].Key==_okey){
                         okey = _okey;
@@ -76,26 +79,29 @@ exports.s3Connect = function(_callback) {
                             if (err) console.log('ERROR: ' + err);
                             console.log(files[0] + " renamed to latestBills.csv");
                         });
-                        billingParser.parseBillingCSV(function() {   
-                            if (typeof _callback=="function") _callback();
+                        billingParser.parseBillingCSV(function() {
+                            console.log("ParseAlert(Billing): Billing CSV parsing completed")
+                            if (typeof _callback=="function") _callback();                                                        
                         });
+                        //Parse 'metrics' before 'instances' as new instances
                         AWS.config.credentials = awsCredentials.default;
-                        ec2Parser.parseMetrics(function() {
-                            console.log("Parse Alert(ec2): Metrics parsing completed");
+                        ec2Parser.parseMetrics('scheduler', function() {
+                            console.log("  Parse Alert(ec2): Metrics parsing completed");
                             AWS.config.credentials = awsCredentials.default;
                             ec2Parser.parseInstances(function() {
-                                console.log("Parse Alert(ec2): Instance parsing completed");
+                                console.log(" Parse Alert(ec2): Instance parsing completed");
                                 AWS.config.credentials = awsCredentials.dev2;
-                                rdsParser.parseMetrics(function() {
-                                    console.log("Parse Alert(rds): Metrics parsing completed");
+                                rdsParser.parseMetrics('scheduler', function() {
+                                    console.log("  Parse Alert(rds): Metrics parsing completed");
                                     AWS.config.credentials = awsCredentials.dev2;
                                     rdsParser.parseInstances(function() {
-                                        console.log("Parse Alert(rds): Instance parsing completed");                                                      
-                                    }); 
+                                        console.log(" Parse Alert(rds): Instance parsing completed");
+                                    });
                                 });
+
                             });
+
                         });
-                        s3.s3Watch();
                     });
                 });
             });

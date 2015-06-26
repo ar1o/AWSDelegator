@@ -1,13 +1,10 @@
+var AWS = require('aws-sdk');
 var fs = require('fs');
 var adm = require('adm-zip');
 var ec2Parser = require('./src/server/parse/ec2Parse');
 var rdsParser = require('./src/server/parse/rdsParse');
 var billingParser = require('./src/server/parse/billingParse');
-MongoClient = require('mongodb').MongoClient;
-AWS = require('aws-sdk');
-mongoose = require('mongoose');
-Schema = mongoose.Schema;
-require('./src/server/config.js');
+require('./src/server/config');
 
 billingAttributes = ['RateId', 'ProductName', 'UsageType', 'Operation', 'AvailabilityZone', 'ItemDescription',
     'UsageStartDate', 'UsageQuantity', 'Rate', 'Cost', 'user:Volume Id', 'user:Name', 'user:Email', 'ResourceId'];
@@ -43,23 +40,34 @@ var parseInstances = function(){
                 console.log("Database Alert: 'rdsInstances' collection created");
                 AWS.config.credentials = awsCredentials.dev2;
                 rdsParser.parseInstances(function() {   
-                    console.log("Parse Alert(rds): Instance parsing completed");
+                    console.log(" Parse Alert(rds): Instance parsing completed");
                     AWS.config.credentials = awsCredentials.default;
                     ec2Parser.parseInstances(function() {
-                        console.log("Parse Alert(ec2): Instance parsing completed");                        
-                        db.close();                            
-                        mongoose.connection.close(function() {
-                            require('./src/server/BoxPricingCheck').getPricing(function(){
-                                console.log("Parse Alert(BoxPricingCheck): BoxPricing parsing completed");                        
-                                parseBills();
-                            });                            
-                        });
+                        console.log(" Parse Alert(ec2): Instance parsing completed");                        
+                        parseMetrics(); 
                     });
                 });
             });
         });
     });
 };
+
+var parseMetrics = function(){
+    AWS.config.credentials = awsCredentials.dev2;
+    rdsParser.parseMetrics('setup', function(err) {
+        if (err) throw err;
+        console.log("  Parse Alert(rds): Metrics parsing completed");
+        AWS.config.credentials = awsCredentials.default;
+        ec2Parser.parseMetrics('setup', function(err) {
+            if(err) throw err;
+            require('./src/server/BoxPricingCheck').getPricing(function() {
+                console.log("  Parse Alert(ec2): Metrics parsing completed");
+                console.log("Parse Alert(BoxPricingCheck): BoxPricing parsing completed");
+                parseBills();
+            });                
+        });
+    });
+}
 
 var parseBills = function(){
     var _params = {
@@ -81,7 +89,7 @@ var parseBills = function(){
                 if (index < billDataSheetIndex.length) controller();
                 else {
                     console.log("Setup script completed, You may now start the server");
-                    process.exit(0);  
+                    process.exit(0);
                 }                
             });
         };

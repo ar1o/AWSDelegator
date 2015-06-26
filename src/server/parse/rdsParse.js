@@ -1,5 +1,5 @@
 exports.parseInstances = function(callback) {
-    console.log("Parse Alert(rds): Instance parsing initiated");
+    console.log(" Parse Alert(rds): Instance parsing initiated");
     MongoClient.connect(databaseUrl, function(err, db) {
         if (err) throw err;
         db.collections(function(err, collections) {
@@ -13,13 +13,13 @@ exports.parseInstances = function(callback) {
                         if (regionIteratorIndex < awsRegions.length) {
                             controller1();
                         } else {
-                            console.log("Parse Alert(rds): found ",newInstanceCount," new instance/s");
+                            console.log(" Parse Alert(rds): found ",newInstanceCount," new instance/s");
                             callback();
                         }
                     });
                 }
                 var iterator1 = function(callback) {
-                    console.log('Parse Alert(rds): parsing instances in ', awsRegions[regionIteratorIndex]);
+                    console.log(' Parse Alert(rds): parsing instances in ', awsRegions[regionIteratorIndex]);
                     var rds = new AWS.RDS({
                         region: awsRegions[regionIteratorIndex]
                     });
@@ -56,8 +56,8 @@ exports.parseInstances = function(callback) {
     });
 }
 
-exports.parseMetrics = function(masterCallback) {
-    console.log("Parse Alert(rds): Metrics parsing initiated");
+exports.parseMetrics = function(caller,masterCallback) {
+    console.log("  Parse Alert(rds): Metrics parsing initiated by",caller);
     MongoClient.connect(databaseUrl, function(err, db) {
         if (err) throw err;
         mongoose.model('rdsInstances').find({
@@ -66,7 +66,8 @@ exports.parseMetrics = function(masterCallback) {
             index1 = 0;
             var currentDate = new Date();
             var currentTime = currentDate.getTime();
-            var currentTimeIso = new Date(currentTime).toISOString();           
+            var currentTimeIso = new Date(currentTime).toISOString(); 
+            var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sept','Oct','Nov','Dec'];          
             var params = {
                 EndTime: 0,
                 MetricName: '',
@@ -91,38 +92,58 @@ exports.parseMetrics = function(masterCallback) {
                 });
             }
             var iterator1 = function(instance, callback) {
+                console.log('  Parse Alert(rds): parsing metrics of',availableInstances[index1].DBInstanceIdentifier);
                 var instanceRegion = availableInstances[index1].AvailabilityZone;
                 AWS.config.region = instanceRegion.substring(0,instanceRegion.length-1);
                 var cloudwatch = new AWS.CloudWatch();
-                var doc = {
-                    DBInstanceIdentifier: availableInstances[index1].DBInstanceIdentifier,
-                    CPUUtilization: 0,
-                    DatabaseConnections: 0,
-                    DiskQueueDepth: 0,
-                    ReadIOPS: 0,
-                    WriteIOPS: 0,
-                    Time: currentTimeIso
-                };
+                var instanceMetrics = {};
                 var index2 = 0;
                 var controller2 = function(){
                     iterator2(function(){
                         index2++;
                         if(index2 < rdsMetric.length) controller2();
                         else{
-                            db.collection('rdsMetrics').insert(doc);
+                            for(var i in instanceMetrics){
+                                //time format: Thu Jun 25 2015 05:25:00 GMT-0300 (ADT) 
+                                var date = i.split(' ');
+                                var mm1 = String(months.indexOf(date[1])), dd = date[2], yyyy = date[3];
+                                var time = date[4].split(':');
+                                var hh = time[0], mm2 = time[1], ss = time[2];
+                                var _time = new Date(yyyy,mm1,dd,hh,mm2,ss,0000);
+                                var utcTime = _time.getTime();
+                                var doc = {
+                                    DBInstanceIdentifier: availableInstances[index1].DBInstanceIdentifier,
+                                    CPUUtilization: instanceMetrics[i].CPUUtilization,
+                                    DatabaseConnections: instanceMetrics[i].DatabaseConnections,
+                                    DiskQueueDepth: instanceMetrics[i].DiskQueueDepth,
+                                    ReadIOPS: instanceMetrics[i].ReadIOPS,
+                                    WriteIOPS: instanceMetrics[i].WriteIOPS,
+                                    Time: utcTime
+                                };
+                                db.collection('rdsMetrics').insert(doc);
+                            }
                             callback();
                         }
                     });
                 };
                 var iterator2 = function(_callback){
-                    params.Dimensions[0].Value = doc.DBInstanceIdentifier;
-                    params.StartTime = new Date(currentTime-3600*1000).toISOString();
-                    params.EndTime = currentTimeIso;                
+                    if(caller=='scheduler'){
+                        params.StartTime = new Date(currentTime-1000*3600).toISOString();
+                        params.EndTime = currentTimeIso;      
+                    }else if(caller=='setup'){
+                        params.StartTime = new Date(currentTime-1000*3600*24*14).toISOString();
+                        params.EndTime = new Date(currentTime-1000*3600).toISOString();  
+                    }
+                    params.Dimensions[0].Value = availableInstances[index1].DBInstanceIdentifier;                
                     params.MetricName = rdsMetric[index2];
                     params.Unit = rdsMetricUnit[index2];
                     cloudwatch.getMetricStatistics(params, function(err, data) {
                         if(err) throw err;
-                        doc[rdsMetric[index2]] = data.Datapoints[0].Average;
+                        for(var i in data.Datapoints){
+                            if(!(data.Datapoints[i].Timestamp in instanceMetrics))
+                                instanceMetrics[data.Datapoints[i].Timestamp]={};
+                            instanceMetrics[data.Datapoints[i].Timestamp][rdsMetric[index2]]=data.Datapoints[i].Average;
+                        }
                         _callback();
                     });  
                 };

@@ -1,5 +1,5 @@
 exports.parseInstances = function(callback) {
-    console.log("Parse Alert(ec2): Instance parsing initiated");
+    console.log(" Parse Alert(ec2): Instance parsing initiated");
     MongoClient.connect(databaseUrl, function(err, db) {
         if (err) throw err;
         var instanceVolumes = {};
@@ -16,7 +16,7 @@ exports.parseInstances = function(callback) {
                     if (regionIteratorIndex < awsRegions.length) {
                         controller1();
                     } else {
-                        console.log("Parse Alert(ec2): found ",newInstanceCount," new instance/s");
+                        console.log(" Parse Alert(ec2): found ",newInstanceCount," new instance/s");
                         for(var i in userInstances){
                             if(activeInstances.indexOf(userInstances[i].Id)==-1){
                                 mongoose.model('ec2Instances').update({
@@ -30,13 +30,13 @@ exports.parseInstances = function(callback) {
                             }
                         }
                         if(terminatedInstancesCount!=0)
-                            console.log("Parse Alert(ec2): found ",terminatedInstancesCount," terminated instance/s");
+                            console.log(" Parse Alert(ec2): found ",terminatedInstancesCount," terminated instance/s");
                         callback();
                     }
                 });
             }
             var iterator1 = function(callback) {
-                console.log('Parse Alert(ec2): parsing instances in ', awsRegions[regionIteratorIndex]);
+                console.log(' Parse Alert(ec2): parsing instances in ', awsRegions[regionIteratorIndex]);
                 var ec2 = new AWS.EC2({
                     region: awsRegions[regionIteratorIndex]
                 });
@@ -146,8 +146,8 @@ exports.parseInstances = function(callback) {
     });
 }
 
-exports.parseMetrics = function(masterCallback) {
-    console.log("Parse Alert(ec2): Metrics parsing initiated");
+exports.parseMetrics = function(caller,masterCallback) {
+    console.log("  Parse Alert(ec2): Metrics parsing initiated by",caller);
     MongoClient.connect(databaseUrl, function(err, db) {
         if (err) throw err;
         mongoose.model('ec2Instances').find({
@@ -157,7 +157,7 @@ exports.parseMetrics = function(masterCallback) {
             var currentDate = new Date();
             var currentTime = currentDate.getTime();
             var currentTimeIso = new Date(currentTime).toISOString();           
-
+            var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sept','Oct','Nov','Dec'];
             var params = {
                 EndTime: 0,
                 MetricName: '',
@@ -180,37 +180,78 @@ exports.parseMetrics = function(masterCallback) {
                     }
                 });
             };
-            var iterator1 = function(instance, callback) {
+            var iterator1 = function(instance, callback) {    
+                console.log('  Parse Alert(ec2): parsing metrics of',runningInstances[index1].Id);            
                 var instanceRegion = runningInstances[index1].Zone;
                 AWS.config.region = instanceRegion.substring(0,instanceRegion.length-1);
                 var cloudwatch = new AWS.CloudWatch();
-                var doc = {
-                    InstanceId: runningInstances[index1].Id,
-                    NetworkIn: 0,
-                    NetworkOut: 0,
-                    CPUUtilization: 0,
-                    Time: currentTimeIso
-                };
+                var instanceMetrics = {};
                 var index2 = 0;
                 var controller2 = function(){
                     iterator2(function(){
                         index2++;
                         if(index2 < ec2Metric.length) controller2();
                         else{
-                            db.collection('ec2Metrics').insert(doc);
+                            // var index3 = 0;
+                            // var controller3 = function() {
+                            //     iterator3(function() {
+                            //         index3++;
+                            //         if (index3 < Object.keys(instanceMetrics).length) controller3();
+                            //         else {
+                            //             callback();
+                            //         }
+                            //     });
+                            // };
+                            // var iterator3 = function(_callback) {
+                            //     console.log(instanceMetrics[index3]);
+                            //     var doc = {
+                            //         InstanceId: runningInstances[index1].Id,
+                            //         NetworkIn: runningInstances[index3].,
+                            //         NetworkOut: 0,
+                            //         CPUUtilization: 0,
+                            //         Time: currentTimeIso
+                            //     };                                
+                            // };
+                            // controller3();            
+                            for(var i in instanceMetrics){
+                                //time format: Thu Jun 25 2015 05:25:00 GMT-0300 (ADT) 
+                                var date = i.split(' ');
+                                var mm1 = String(months.indexOf(date[1])), dd = date[2], yyyy = date[3];
+                                var time = date[4].split(':');
+                                var hh = time[0], mm2 = time[1], ss = time[2];
+                                var _time = new Date(yyyy,mm1,dd,hh,mm2,ss,0000);
+                                var utcTime = _time.getTime();
+                                var doc = {
+                                    InstanceId: runningInstances[index1].Id,
+                                    NetworkIn: instanceMetrics[i].NetworkIn,
+                                    NetworkOut: instanceMetrics[i].NetworkOut,
+                                    CPUUtilization: instanceMetrics[i].CPUUtilization,
+                                    Time: utcTime
+                                };
+                                db.collection('ec2Metrics').insert(doc);
+                            }
                             callback();
                         }
                     });
                 };
                 var iterator2 = function(_callback){
-                    params.Dimensions[0].Value = doc.InstanceId;
-                    params.StartTime = new Date(currentTime-3600*1000).toISOString();
-                    params.EndTime = currentTimeIso;                
+                    params.Dimensions[0].Value = runningInstances[index1].Id;
+                    if(caller=='scheduler'){
+                        params.StartTime = new Date(currentTime-1000*3600).toISOString();
+                        params.EndTime = currentTimeIso;      
+                    }else if(caller=='setup'){
+                        params.StartTime = new Date(currentTime-1000*3600*24*14).toISOString();
+                        params.EndTime = new Date(currentTime-1000*3600).toISOString();  
+                    }                    
                     params.MetricName = ec2Metric[index2];
                     params.Unit = ec2MetricUnit[index2];
                     cloudwatch.getMetricStatistics(params, function(err, data) {
                         if(err) throw err;
-                        doc[ec2Metric[index2]] = data.Datapoints[0].Average;
+                        for(var i in data.Datapoints){
+                            if(!(data.Datapoints[i].Timestamp in instanceMetrics))
+                                instanceMetrics[data.Datapoints[i].Timestamp]={};
+                            instanceMetrics[data.Datapoints[i].Timestamp][ec2Metric[index2]]=data.Datapoints[i].Average;
+                        }
                         _callback();
                     });  
                 };
