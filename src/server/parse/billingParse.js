@@ -61,20 +61,22 @@ exports.parseBillingCSV = function(callback) {
                                     } else {
                                         doc[billingAttributes[j]] = parseFloat(bill[propertiesIndex[j]]);
                                     }
-
                                 }        
                                 //handles free tier rate and cost
                                 if(doc['ItemDescription'].match(/free tier/g)){
                                     if(/BoxUsage:t2.micro/.test(doc['UsageType'])){
+                                        var zone = doc['AvailabilityZone'];
+                                        if(/[a-z]$/.test(zone)) zone = zone.substring(0,zone.length-1);
                                         if(/Windows/.test(doc['ItemDescription'])){
-                                            doc['NonFreeRate'] = pricing['BoxUsage:t2.micro']['Windows'].Price;
+                                            doc['NonFreeRate'] = pricing['BoxUsage:t2.micro']['Windows'][zone];
                                         }else if(/SUSE/.test(doc['ItemDescription'])){
-                                            doc['NonFreeRate'] = pricing['BoxUsage:t2.micro']['SUSE'].Price;
+                                            doc['NonFreeRate'] = pricing['BoxUsage:t2.micro']['SUSE'][zone];
                                         }else if(/Linux/.test(doc['ItemDescription'])){
-                                            doc['NonFreeRate'] = pricing['BoxUsage:t2.micro']['Linux'].Price;
+                                            doc['NonFreeRate'] = pricing['BoxUsage:t2.micro']['Linux'][zone];
                                         }else if(/RHEL/.test(doc['ItemDescription'])){
-                                            doc['NonFreeRate'] = pricing['BoxUsage:t2.micro']['RHEL'].Price;
+                                            doc['NonFreeRate'] = pricing['BoxUsage:t2.micro']['RHEL'][zone];
                                         }
+                                        console.log(zone,doc['NonFreeRate']);
                                     }else if(/AWS-Out-Bytes/.test(doc['UsageType'])){
                                         doc['NonFreeRate'] = pricing['AWS-Out-Bytes'].Price;
                                     }else if(/DataTransfer-Out-Bytes/.test(doc['UsageType'])){

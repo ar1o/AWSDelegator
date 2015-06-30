@@ -7,6 +7,7 @@ require('./model/rds');
 require('./model/latest');
 require('./model/pricing');
 require('./model/billing');
+require('./model/usageMeter');
 
 awsAccountNumber = '092841396837';
 rdsRegion = 'us-east-1';

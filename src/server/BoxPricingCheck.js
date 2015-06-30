@@ -56,13 +56,20 @@ exports.getPricing = function(callback) {
                 uri: boxUsageURLs[index]
         },
         function(error, response, body) {
-            var _doc = {};
             var body = body.substring(body.indexOf("callback") + 9, body.length - 2);
             var pricingJSON = JSON.parse(preprocessJSON(body));
-            _doc['Price']=(pricingJSON.config.regions[region].instanceTypes[compType].sizes[size].valueColumns[0].prices.USD);
-            _doc['Region']=(pricingJSON.config.regions[region]['region']);
-            _doc['InstanceSize']=(pricingJSON.config.regions[region].instanceTypes[compType].sizes[size]['size']);
-            doc[osType[index]]=_doc;
+
+            var _pricing = {};
+            for(var p in pricingJSON.config.regions){
+                var _region = pricingJSON.config.regions[p];
+                _pricing[_region.region] = parseFloat(_region.instanceTypes[0].sizes[0].valueColumns[0].prices.USD);
+            }
+            doc[osType[index]] = _pricing;
+
+            // _doc['Price']=(pricingJSON.config.regions[region].instanceTypes[compType].sizes[size].valueColumns[0].prices.USD);
+            // _doc['Region']=(pricingJSON.config.regions[region]['region']);
+            // _doc['InstanceSize']=(pricingJSON.config.regions[region].instanceTypes[compType].sizes[size]['size']);
+            // doc[osType[index]]=_doc;
             _callback();
         });
     };
@@ -101,8 +108,8 @@ exports.getPricing = function(callback) {
                 var item = {};
                 item.Region = (pricingJSON.config.regions[region]['region']);
                 item.TypeName = pricingJSON.config.regions[region].types[1].name;
-                item.TierName = (pricingJSON.config.regions[region].types[1].tiers[5].name);
-                item.Price = (pricingJSON.config.regions[region].types[1].tiers[5].prices.USD);
+                item.TierName = (pricingJSON.config.regions[region].types[1].tiers[3].name);
+                item.Price = (pricingJSON.config.regions[region].types[1].tiers[3].prices.USD);
                 pricing[usageTypes[index2]]=item;
                 _callback();
                 break;

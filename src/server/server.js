@@ -47,6 +47,10 @@ app.get('/api/NonFreeBilling/totalCostProduct',require('./route/NonFreeBillingRo
 
 app.get('/api/statistics/operations',require('./route/OperationsRoute').operations);
 
+app.get('/api/meter/rate',require('./route/meterRoute').rate);
+app.get('/api/meter/usage',require('./route/meterRoute').usage);
+app.get('/api/meter/balance',require('./route/meterRoute').balance);
+
 function errorHandler(err, req, res, next) {
     console.error(err.message);
     console.error(err.stack);
