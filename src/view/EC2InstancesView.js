@@ -38,7 +38,7 @@ var EC2InstancesView = Backbone.View.extend({
             var name = $('td', this).eq(0).text();
          var vname = $('td', this).eq(8).text();
 
-            console.log('You! clicked on ' + vname + '\'s row');
+            // console.log('You! clicked on ' + vname + '\'s row');
             if (name != "") {
                 self.updateViews(name, vname);
             }
