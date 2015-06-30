@@ -25,9 +25,21 @@ var parseInstances = function(){
     MongoClient.connect(databaseUrl, function(err, db) {
         if (err) throw err;
         console.log("Database Alert: connected to ", databaseUrl);
+        var currentTimeMilliseconds = (new Date).getTime();
+        var currentTimeIso = new Date(currentTimeMilliseconds).toISOString();
+        var currentTimeMilliseconds = (new Date).getTime();
+        var currentTimeIso = new Date(currentTimeMilliseconds).toISOString();
+        var _time = currentTimeIso.split('T');
+        _time[1] = _time[1].substring(0, _time[1].indexOf('.'));
+        _time = _time[0] + ' ' + _time[1];
+        
         db.collection('latest').save({
             _id: '1',
-            time: "2015-00-01 00:00:00"
+            time: '2015-01-01 00:00:00'
+        });
+        db.collection('usageMeter').save({
+            _id: '1',
+            time: _time
         });
         require('./src/server/model/ec2');
         require('./src/server/model/rds');
@@ -44,7 +56,7 @@ var parseInstances = function(){
                     AWS.config.credentials = awsCredentials.default;
                     ec2Parser.parseInstances(function() {
                         console.log(" Parse Alert(ec2): Instance parsing completed");                        
-                        parseMetrics(); 
+                        // parseMetrics(); 
                     });
                 });
             });

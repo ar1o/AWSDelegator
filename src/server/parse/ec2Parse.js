@@ -242,7 +242,7 @@ exports.parseMetrics = function(caller,masterCallback) {
                     }else if(caller=='setup'){
                         params.StartTime = new Date(currentTime-1000*3600*24*14).toISOString();
                         params.EndTime = new Date(currentTime-1000*3600).toISOString();  
-                    }                    
+                    }
                     params.MetricName = ec2Metric[index2];
                     params.Unit = ec2MetricUnit[index2];
                     cloudwatch.getMetricStatistics(params, function(err, data) {

@@ -13,8 +13,9 @@ var OperationsView = Backbone.View.extend({
             this.render();
             var dataOperations = [];
             for (var i = 0; i < operationsCollection.length; i++) {
-                dataOperations.push([operationsCollection.at(i).get('operation'), operationsCollection.at(i).get('percentage')]);
+                dataOperations.push({name: operationsCollection.at(i).get('operation'), y:operationsCollection.at(i).get('percentage'), id: i});
             }
+            console.log(dataOperations);
             $(function() {
                 $('#operationscontainer').highcharts({
                     chart: {
@@ -23,6 +24,8 @@ var OperationsView = Backbone.View.extend({
                         plotShadow: false,
                         backgroundColor: '#f7f7f7'
                     },
+                    // colors: ['#50B432', '#ED561B', '#DDDF00', '#24CBE5', 
+                    //          '#64E572', '#FF9655', '#FFF263', '#6AF9C4'],
                     title: {
                         text: 'Operations'
                     },
@@ -47,15 +50,12 @@ var OperationsView = Backbone.View.extend({
                     },
                     series: [{
                         type: 'pie',
-                        name: 'Operations',
                         data: dataOperations,
-                        events: { 
-                            click: function() {
-                                alert(
-                                    'The name is ' + this.name +
-                                    ' and the identifier is ' + this.options.id
-                                );
-                                console.log(options);
+                        point: {
+                            events: {
+                                click: function(event) {
+                                    alert(this.name + " " + this.y+" "+this.color);
+                                }
                             }
                         }
                     }]
