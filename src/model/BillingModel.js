@@ -3,22 +3,22 @@ var BillingsModel = Backbone.Model.extend({
 		this.change('dataReady');
 	},
 
-	getBilling: function(instanceid) {
+	getBilling: function(instanceid, volumeId) {
 		totalCostInstancesCollection.reset();
 		var self = this;
 		var count = 0;
 		var params = {
-			instance: instanceid
+			instance: instanceid,
+			volume: volumeId
 		};
 
 		(function(params) {
 			$.get(host + '/api/billing/instanceCostAll', params, function(result) {
 				for (var i in result) {
 					var data = new BillingModel({
-						resourceId: result[i].resourceId,
-						cost: result[i].cost,
-						volumeId: result[i].volumeId,
-						date: result[i].date
+						resourceId: params.instance,
+						cost: result[i].Total,
+						date: result[i]._id
 					});
 					totalCostInstancesCollection.add(data);
 				}
@@ -26,12 +26,13 @@ var BillingsModel = Backbone.Model.extend({
 			});
 		})(params);
 	},
+
 	calcTotalCost: function(instanceid, volumeId) {
 		TCost.reset();
 		//First check for the number of attached volumes
-		console.log("The volume id is",volumeId);
+		// console.log("The volume id is",volumeId);
 		var volumeArray = volumeId.split(',');
-		console.log("Number of volumes attached is ",volumeArray);
+		// console.log("Number of volumes attached is ",volumeArray);
 		var self = this;
 		var count = 0;
 		var params = {
@@ -49,7 +50,7 @@ var BillingsModel = Backbone.Model.extend({
 					});
 					TCost.add(data);
 				}
-				self.getBilling(instanceid);
+				self.getBilling(instanceid, volumeId);
 			});
 		})(params);
 	},

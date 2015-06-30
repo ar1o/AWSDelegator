@@ -166,108 +166,45 @@ exports.hourlyCostProduct = function(req, res) {
  * Query EC2 instances for hourly cost. 
  */
 exports.instanceCostAll = function(req, res) {
-    // console.log("Cost request",req.query.instance);
     var instanceId = req.query.instance;
-    var volumeId;
-    //instances hashmap
-    var instances = {};
+    var volumeId = req.query.volume;
+    volumeId = volumeId.split(',');
 
-    // Query instances collection to associate volumeIds to instanceIds. 
-    mongoose.model('ec2Instances').aggregate([{
-        $match: {
-            Id: {
-                $eq: instanceId
-            }
-        }
-    }, {
-        $project: {
-            _id: 0,
-            VolumeId: 1
-        }
-    }]).exec(function(err, result) {
-        // console.log(result[0].VolumeId[0]);
-        // console.log(instanceId);
-        volumeId = result[0].VolumeId[0]
 
-        //query billing collection for cost on EC2 resourceId's
-        mongoose.model('Billings').aggregate([{
+        mongoose.model('Billings').aggregate([
+        {
             $match: {
-                ResourceId: {
-                    $eq: instanceId
-                }
+                $or: [{ResourceId: {$eq: instanceId}},{ ResourceId: {$in : volumeId}}]
             }
-        }, {
+        },{
+
             $project: {
-                _id: 0,
+                _id: 1,
+                UsageStartDate: 1,
                 ResourceId: 1,
                 Cost: 1,
-                UsageStartDate: 1
             }
-        }, {
+        },{
             $group: {
                 _id: "$UsageStartDate",
                 ResourceId: {
                     $addToSet: "$ResourceId"
                 },
-                VolumeId: {
-                    $addToSet: volumeId
+                Cost: {
+                    $addToSet: "$Cost"
                 },
                 Total: {
                     $sum: "$Cost"
                 }
             }
-        }, {
+        },{
             $sort: {
-                _id: 1 // Need to sort by date.
+                _id: 1
             }
-        }]).exec(function(e, d) {
-            // Create a hashmap of instances
-            for (var r in d) {
-                instances[d[r]._id] = {
-                    resourceId: d[r].ResourceId[0],
-                    volumeId: d[r].VolumeId[0],
-                    cost: d[r].Total,
-                    date: d[r]._id
-                };
-            }
-            // Query billings collection for volumeId costs.
-            mongoose.model('Billings').aggregate({
-                $match: {
-                    ResourceId: {
-                        $eq: volumeId
-                    }
-                }
-            }, {
-                $project: {
-                    _id: 0,
-                    ResourceId: 1,
-                    Cost: 1,
-                    UsageStartDate: 1
-                }
-            }, {
-                $group: {
-                    _id: "$UsageStartDate",
-                    VolumeId: {
-                        $addToSet: "$ResourceId"
-                    },
-                    Total: {
-                        $sum: "$Cost"
-                    }
-                }
-            }, {
-                $sort: {
-                    _id: 1 // Need to sort by date.
-                }
-            }).exec(function(e, d) {
-                // Total up the costs of volumeId with respective instanceId's or that hour.
-                for (var r in d) {
-                    if (d[r]._id in instances) {
-                        instances[d[r]._id].cost += d[r].Total;
-                    }
-                }
-                // Send to endpoint.
-                res.send(instances);
-            });
-        });
+        
+        }
+    ]).exec(function(e, d) {
+        console.log(d);
+        res.send(d);
     });
 };
