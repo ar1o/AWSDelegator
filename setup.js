@@ -56,7 +56,7 @@ var parseInstances = function(){
                     AWS.config.credentials = awsCredentials.default;
                     ec2Parser.parseInstances(function() {
                         console.log(" Parse Alert(ec2): Instance parsing completed");                        
-                        // parseMetrics(); 
+                        parseMetrics();
                     });
                 });
             });
