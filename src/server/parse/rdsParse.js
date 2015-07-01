@@ -1,5 +1,4 @@
 exports.parseInstances = function(callback) {
-    console.log(" Parse Alert(rds): Instance parsing initiated");
     MongoClient.connect(databaseUrl, function(err, db) {
         if (err) throw err;
         db.collections(function(err, collections) {
@@ -13,13 +12,13 @@ exports.parseInstances = function(callback) {
                         if (regionIteratorIndex < awsRegions.length) {
                             controller1();
                         } else {
-                            console.log(" Parse Alert(rds): found ",newInstanceCount," new instance/s");
+                            console.log("ParseAlert(rds): found ",newInstanceCount," new instance/s");
                             callback();
                         }
                     });
                 }
                 var iterator1 = function(callback) {
-                    console.log(' Parse Alert(rds): parsing instances in ', awsRegions[regionIteratorIndex]);
+                    // console.log('ParseAlert(rds): parsing instances in ', awsRegions[regionIteratorIndex]);
                     var rds = new AWS.RDS({
                         region: awsRegions[regionIteratorIndex]
                     });
@@ -57,7 +56,6 @@ exports.parseInstances = function(callback) {
 }
 
 exports.parseMetrics = function(caller,masterCallback) {
-    console.log("  Parse Alert(rds): Metrics parsing initiated by",caller);
     MongoClient.connect(databaseUrl, function(err, db) {
         if (err) throw err;
         mongoose.model('rdsInstances').find({
@@ -92,7 +90,7 @@ exports.parseMetrics = function(caller,masterCallback) {
                 });
             }
             var iterator1 = function(instance, callback) {
-                console.log('  Parse Alert(rds): parsing metrics of',availableInstances[index1].DBInstanceIdentifier);
+                // console.log('ParseAlert(rds): parsing metrics of',availableInstances[index1].DBInstanceIdentifier);
                 var instanceRegion = availableInstances[index1].AvailabilityZone;
                 AWS.config.region = instanceRegion.substring(0,instanceRegion.length-1);
                 var cloudwatch = new AWS.CloudWatch();

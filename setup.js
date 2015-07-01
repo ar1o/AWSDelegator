@@ -3,6 +3,7 @@ var fs = require('fs');
 var adm = require('adm-zip');
 var ec2Parser = require('./src/server/parse/ec2Parse');
 var rdsParser = require('./src/server/parse/rdsParse');
+var iamParser = require('./src/server/parse/iamParse');
 var billingParser = require('./src/server/parse/billingParse');
 require('./src/server/config');
 
@@ -21,18 +22,34 @@ mongoose.connect(databaseUrl, function(error) {
     }
 });
 
-var parseInstances = function(){
+var setupServer = function(){
+    setupDatabase(function(){
+        parseInstances(function(){
+            parseMetrics(function(){
+                parseBills(function(){
+                    parseGroups(function(){
+                        parseUsers(function(){
+                            console.log("Setup script completed, You may now start the server");
+                            process.exit(0);
+                        });                        
+                    });                    
+                });
+            });
+        });
+    });
+};
+
+var setupDatabase = function(callback){
     MongoClient.connect(databaseUrl, function(err, db) {
         if (err) throw err;
-        console.log("Database Alert: connected to ", databaseUrl);
+        console.log("DatabaseAlert: connected to ", databaseUrl);
         var currentTimeMilliseconds = (new Date).getTime();
         var currentTimeIso = new Date(currentTimeMilliseconds).toISOString();
         var currentTimeMilliseconds = (new Date).getTime();
         var currentTimeIso = new Date(currentTimeMilliseconds).toISOString();
         var _time = currentTimeIso.split('T');
         _time[1] = _time[1].substring(0, _time[1].indexOf('.'));
-        _time = _time[0] + ' ' + _time[1];
-        
+        _time = _time[0] + ' ' + _time[1];        
         db.collection('latest').save({
             _id: '1',
             time: '2015-01-01 00:00:00'
@@ -42,46 +59,57 @@ var parseInstances = function(){
             time: _time
         });
         require('./src/server/model/ec2');
-        require('./src/server/model/rds');
-        
-        db.createCollection("ec2Instances", function(err, collection) {
+        require('./src/server/model/rds');        
+        db.createCollection('ec2Instances', function(err, collection) {
             if (err) throw err;
-            console.log("Database Alert: 'ec2Instances' collection created");
-            db.createCollection("rdsInstances", function(err, collection) {
+            console.log("DatabaseAlert: 'ec2Instances' collection created");
+            db.createCollection('rdsInstances', function(err, collection) {
                 if (err) throw err;
-                console.log("Database Alert: 'rdsInstances' collection created");
-                AWS.config.credentials = awsCredentials.dev2;
-                rdsParser.parseInstances(function() {   
-                    console.log(" Parse Alert(rds): Instance parsing completed");
-                    AWS.config.credentials = awsCredentials.default;
-                    ec2Parser.parseInstances(function() {
-                        console.log(" Parse Alert(ec2): Instance parsing completed");                        
-                        parseMetrics();
+                console.log("DatabaseAlert: 'rdsInstances' collection created");
+                db.createCollection('iamGroups', function(err, collection) {
+                    if (err) throw err;
+                    console.log("DatabaseAlert: 'iamGroups' collection created");
+                    db.createCollection('iamUsers', function(err, collection) {
+                        if (err) throw err;
+                        console.log("DatabaseAlert: 'iamUsers' collection created");
+                        callback();
                     });
                 });
             });
         });
     });
+}
+
+var parseInstances = function(callback){
+    AWS.config.credentials = awsCredentials.dev2;
+    rdsParser.parseInstances(function() {
+        console.log('Parse Alert(rds): Instance parsing completed');
+        AWS.config.credentials = awsCredentials.default;
+        ec2Parser.parseInstances(function() {
+            console.log('Parse Alert(ec2): Instance parsing completed');
+            callback();
+        });
+    });
 };
 
-var parseMetrics = function(){
+var parseMetrics = function(callback){
     AWS.config.credentials = awsCredentials.dev2;
     rdsParser.parseMetrics('setup', function(err) {
         if (err) throw err;
-        console.log("  Parse Alert(rds): Metrics parsing completed");
+        console.log('Parse Alert(rds): Metrics parsing completed');
         AWS.config.credentials = awsCredentials.default;
         ec2Parser.parseMetrics('setup', function(err) {
             if(err) throw err;
             require('./src/server/BoxPricingCheck').getPricing(function() {
-                console.log("  Parse Alert(ec2): Metrics parsing completed");
-                console.log("Parse Alert(BoxPricingCheck): BoxPricing parsing completed");
-                parseBills();
+                console.log('Parse Alert(ec2): Metrics parsing completed');
+                console.log('Parse Alert(BoxPricingCheck): BoxPricing parsing completed');
+                callback();
             });                
         });
     });
 }
 
-var parseBills = function(){
+var parseBills = function(callback){
     var _params = {
         Bucket: s3Bucket
     };
@@ -99,9 +127,8 @@ var parseBills = function(){
             iterator(function() {
                 index++;
                 if (index < billDataSheetIndex.length) controller();
-                else {
-                    console.log("Setup script completed, You may now start the server");
-                    process.exit(0);
+                else {                    
+                    callback();
                 }                
             });
         };
@@ -151,4 +178,50 @@ var parseBills = function(){
     });          
 };
 
-parseInstances();
+var parseGroups = function(callback){    
+    MongoClient.connect(databaseUrl, function(err, db) {
+        if (err) throw err;
+        AWS.config.credentials = awsCredentials.dev2;
+        var iam = new AWS.IAM();
+        iam.listGroups({}, function(err, iamGroups) {
+            if (err) throw err;
+            for (var i=0 in iamGroups.Groups) {
+                var doc = {
+                    Path: iamGroups.Groups[i].Path,
+                    GroupName: iamGroups.Groups[i].GroupName,
+                    GroupId: iamGroups.Groups[i].GroupId,
+                    Arn: iamGroups.Groups[i].Arn,
+                    CreateDate: iamGroups.Groups[i].CreateDate,
+                    Credits: 0
+                };
+                db.collection('iamGroups').insert(doc);            
+            }
+            callback();
+        });
+    });
+}
+
+var parseUsers = function(callback){
+    MongoClient.connect(databaseUrl, function(err, db) {
+        if (err) throw err;
+        AWS.config.credentials = awsCredentials.dev2;
+        var iam = new AWS.IAM();
+        iam.listUsers({}, function(err, iamUsers) {
+            if (err) throw err;
+            for (var i=0 in iamUsers.Users) {
+                var doc = {
+                    Path: iamUsers.Users[i].Path,
+                    UserName: iamUsers.Users[i].UserName,
+                    UserId: iamUsers.Users[i].UserId,
+                    Arn: iamUsers.Users[i].Arn,
+                    CreateDate: iamUsers.Users[i].CreateDate,
+                    Credits: 0                    
+                };
+                db.collection('iamUsers').insert(doc);            
+            }
+            callback();
+        });
+    });
+}
+
+setupServer();

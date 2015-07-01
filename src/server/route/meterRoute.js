@@ -67,8 +67,6 @@ exports.usage = function(req,res) {
                     }
                 }
             }]).exec(function(e, d3) {
-                console.log(startDate,endDate);
-                console.log('d3',d3);
                 res.send({time:endDate,total:d3[0].total});
             });
         });
