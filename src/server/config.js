@@ -4,6 +4,7 @@ mongoose = require('mongoose');
 Schema = mongoose.Schema;
 require('./model/ec2');
 require('./model/rds');
+require('./model/iam');
 require('./model/latest');
 require('./model/pricing');
 require('./model/billing');
