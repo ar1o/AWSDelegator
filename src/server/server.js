@@ -36,7 +36,6 @@ app.get('/api/billing/calcFreeTierCost', require('./route/billingRoute').calcFre
 app.get('/api/billing/totalCostProduct',require('./route/billingRoute').totalCostProduct);
 
 app.get('/api/billing/calcTotalCost',require('./route/billingRoute').calcTotalCost);
-
 app.get('/api/billing/rds/instanceCostAll', require('./route/rdsBillingRoute').instanceCostAll);
 app.get('/api/billing/rds/hourlyCostProduct', require('./route/rdsBillingRoute').hourlyCostProduct);
 
@@ -50,6 +49,8 @@ app.get('/api/statistics/operations',require('./route/OperationsRoute').operatio
 app.get('/api/meter/rate',require('./route/meterRoute').rate);
 app.get('/api/meter/usage',require('./route/meterRoute').usage);
 app.get('/api/meter/balance',require('./route/meterRoute').balance);
+
+app.post('/api/credentials/setCredentials',require('./route/credentialsRoute').setCredentials);
 
 function errorHandler(err, req, res, next) {
     console.error(err.message);
