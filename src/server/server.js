@@ -4,6 +4,9 @@ port = process.env.PORT || 3000;
 app.use(require('./CORS'));
 require('./config.js');
 
+// Front-end code
+app.use("/pub", express.static('../public/'));
+
 // Start mongoose and mongo
 mongoose.connect(databaseUrl, function(error) {
     if (error) {

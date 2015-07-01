@@ -20,7 +20,7 @@ module.exports = function(grunt) {
             dev: {
                 options: {
                     port: 4000,
-                    base: 'src',
+                    base: 'src/public',
                     hostname: '*'
                 }
             },
@@ -49,19 +49,19 @@ module.exports = function(grunt) {
                 livereload: true
             },
             handlebars: {
-                files: 'src/templates/*.handlebars',
+                files: 'src/public/templates/*.handlebars',
                 tasks: 'handlebars'
             },
             less: {
-                files: ['src/css/*.less', 'src/css/*.css'],
+                files: ['src/public/css/*.less', 'src/public/css/*.css'],
                 tasks: 'less'
             }
         },
 
         smushit: {
             group1: {
-                src: ['optimized/resources/*'],
-                dest: 'optimized/resources'
+                src: ['optimized/public/resources/*'],
+                dest: 'optimized/public/resources'
             }
         },
 
@@ -71,13 +71,13 @@ module.exports = function(grunt) {
                     ieCompat: false
                 },
                 files: {
-                    'src/compiled.css': ['src/css/base.less']
+                    'src/public/compiled.css': ['src/public/css/base.less']
                 }
             }
         },
     });
     grunt.registerTask('handlebars', 'Compiling templates', function() {
-        shell.exec('handlebars src/templates/ -f src/compiledTemplates.js');
+        shell.exec('handlebars src/public/templates/ -f src/public/compiledTemplates.js');
     });
 
     grunt.registerTask('optimize', 'WOOP', function() {
