@@ -47,7 +47,7 @@ var AppView = Backbone.View.extend({
 
         this.$el.on("mouseenter", '.menu', function(e) {
             this.navView.model.isOpen = true;
-            var length_calc = (this.$el.height() - 60);
+            var length_calc = (this.$el.height() - 20);
             var length = length_calc + 'px';
             self.$('.NavView').css({
                 'height': length

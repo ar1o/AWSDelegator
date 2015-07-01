@@ -4,12 +4,11 @@ var MongoClient = mongodb.MongoClient;
 
 // parses latestBills.csv and updates the 'awsdb' database with new bills.
 exports.parseBillingCSV = function(callback) {
-    console.log("Parse Alert(Billing): Billing CSV parsing initiated");
+    console.log("ParseAlert(billing): billing parse initiated");
     MongoClient.connect(databaseUrl, function(err, db) {
         if (err) {
             console.log('Unable to connect to the mongoDB server. Error:', err);
-        } else {
-            console.log('Connection established to ', databaseUrl);   
+        } else { 
             db.collection('latest').findOne(function(err, latest) {
                 fs.readFile(process.cwd() + '/data/latestBills.csv', "utf8", function(error, text) {
                     if (error) throw error;
@@ -76,9 +75,10 @@ exports.parseBillingCSV = function(callback) {
                                         }else if(/RHEL/.test(doc['ItemDescription'])){
                                             doc['NonFreeRate'] = pricing['BoxUsage:t2.micro']['RHEL'][zone];
                                         }
-                                        console.log(zone,doc['NonFreeRate']);
                                     }else if(/AWS-Out-Bytes/.test(doc['UsageType'])){
                                         doc['NonFreeRate'] = pricing['AWS-Out-Bytes'].Price;
+                                    }else if(/EBS:VolumeUsage.gp2/.test(doc['UsageType'])){
+                                        doc['NonFreeRate'] = pricing['EBS:VolumeUsage.gp2'].Price;
                                     }else if(/DataTransfer-Out-Bytes/.test(doc['UsageType'])){
                                         doc['NonFreeRate'] = pricing['DataTransfer-Out-Bytes'].Price;
                                     }else if(/TimedStorage-ByteHrs/.test(doc['UsageType'])){
