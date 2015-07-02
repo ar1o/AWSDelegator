@@ -96,7 +96,6 @@ var AppView = Backbone.View.extend({
 
         this.$el.on('click', '[subpage-id="2"]', function(e) {
             this.navView.model.isOpen = false
-            console.log('click IAMGroups')
             window.location.hash = '#/IAMGroups';
         }.bind(this));
 
