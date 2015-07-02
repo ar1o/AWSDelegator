@@ -51,7 +51,6 @@ var MeterModel = Backbone.Model.extend({
 				value : result[0].total.toFixed(2),
 				duration : result[0]._id
 			});
-			console.log(data);
 			usageRateCollection.add(data);
 			self.set('rateDataReady', Date.now());
 		}).fail(function() {
