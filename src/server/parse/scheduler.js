@@ -43,9 +43,9 @@ var parseAWSServices = function() {
             console.log('ParseAlert(rds): parsing completed');
             console.log('ParseAlert(iam): parsing initiated');
             AWS.config.credentials = awsCredentials.dev2;
-            // parseIAM(function() {
-            //     console.log('ParseAlert(iam): parsing completed');
-            // });
+            parseIAM(function() {
+                console.log('ParseAlert(iam): parsing completed');
+            });
         })
     });
 }

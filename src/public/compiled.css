@@ -209,8 +209,8 @@ td {
 }
 .setting:before {
   font-family: FontAwesome;
-  content: "Setup \f013";
-  font-size: 16px;
+  content: "\f013";
+  font-size: 20px;
   float: right;
   text-align: right;
   margin-top: 0;
@@ -261,4 +261,27 @@ div#awsoperationscontainer {
 }
 .MeterView {
   border: 1px black solid;
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px;
+  position: absolute;
+  right: 110px;
+  padding-top: 8px;
+}
+.rate {
+  border: 1px blue solid;
+  padding-left: 10px;
+  float: left;
+  width: 80px;
+}
+.usage {
+  border: 1px red solid;
+  float: left;
+  padding-left: 10px;
+  width: 80px;
+}
+.balance {
+  border: 1px green solid;
+  float: left;
+  padding-left: 10px;
+  width: 80px;
 }

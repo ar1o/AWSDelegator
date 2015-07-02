@@ -4,7 +4,7 @@ var AWSView = Backbone.View.extend({
 
     initialize: function(options) {
         this.productView = new ProductCostView();
-
+        this.monthlyView = new AWSMonthlyCostView();
         this.bindings();
         this.render();
 
@@ -16,5 +16,6 @@ var AWSView = Backbone.View.extend({
 
     render: function() {
         this.$el.append(this.productView.el);
+        this.$el.append(this.monthlyView.el);
     }
 });

@@ -8,14 +8,15 @@ exports.parseGroups = function(callback){
 			iam.listGroups({}, function(err, iamGroups) {
 				if (err) throw err;
 				checkGroupConsistency(iamGroups, dbGroups);
-				for (var group in iamGroups) {
+				for (var group=0 in iamGroups.Groups) {
+					// console.log("PATH",iamGroups.Groups[0]);ß
 					if (isNewEntry(group, dbGroups)) {
 						var doc = {
-							Path: iamGroups.Groups[i].Path,
-							GroupName: iamGroups.Groups[i].GroupName,
-							GroupId: iamGroups.Groups[i].GroupId,
-							Arn: iamGroups.Groups[i].Arn,
-							CreateDate: iamGroups.Groups[i].CreateDate,
+							Path: iamGroups.Groups[group].Path,
+							GroupName: iamGroups.Groups[group].GroupName,
+							GroupId: iamGroups.Groups[group].GroupId,
+							Arn: iamGroups.Groups[group].Arn,
+							CreateDate: iamGroups.Groups[group].CreateDate,
 							Credits: 0
 						};
 						newGroups+=1;
@@ -39,14 +40,14 @@ exports.parseUsers = function(callback){
 			iam.listUsers({}, function(err, iamUsers) {
 				if (err) throw err;
 				checkUserConsistency(iamUsers, dbUsers);
-				for (var user in iamUsers) {
+				for (var user=0 in iamUsers.Users) {
 					if (isNewEntry(user, dbUsers)) {
 						var doc = {
-							Path: iamUsers.Users[i].Path,
-							UserName: iamUsers.Users[i].UserName,
-							UserId: iamUsers.Users[i].UserId,
-							Arn: iamUsers.Users[i].Arn,
-							CreateDate: iamUsers.Users[i].CreateDate,
+							Path: iamUsers.Users[user].Path,
+							UserName: iamUsers.Users[user].UserName,
+							UserId: iamUsers.Users[user].UserId,
+							Arn: iamUsers.Users[user].Arn,
+							CreateDate: iamUsers.Users[user].CreateDate,
 							Credits: 0
 						};
 						newUsers+=1;

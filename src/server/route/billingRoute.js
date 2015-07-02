@@ -1,5 +1,4 @@
 //function/query to take a instance RID value, and sum both nonfree cost, and cost for per hour, then add theses values per hour
-
 exports.calcTotalCost = function(req, res) {
     var rid = req.query.instance;
     var vid =req.query.volume;
@@ -56,47 +55,6 @@ exports.calcTotalCost = function(req, res) {
         res.send(d);
     });
 }
-//Unsure if this is used...
-exports.calcFreeTierCost = function(req, res) {
-    mongoose.model('Billings').aggregate([{
-        $match: {
-            ItemDescription: {
-                $regex: /free tier/
-            }
-        }
-    }, {
-        $project: {
-            _id: 1,
-            Rate: 1,
-            UsageQuantity: 1,
-            ResourceId: 1,
-            Cost: {
-                $multiply: ["$Rate", "$UsageQuantity"]
-            }
-        }
-    }]).exec(function(e, d) {
-        for (var i in d) {
-            // console.log(d[i]._id + "\t" + d[i].Cost + "\t" + d[i].Rate);
-            var conditions = {
-                _id: {
-                    $eq: d[i]._id
-                }
-            };
-            var update = {
-                Cost: d[i].Cost
-            };
-            var options = {
-                multi: true //Should consider removing multi : true, as it already iterates
-            };
-            mongoose.model('Billings').update(conditions, update, options, callback);
-
-            function callback(err, numAffected) {
-                console.log(numAffected)
-            };
-        }
-        res.send(d);
-    });
-};
 
 exports.totalCostProduct = function(req, res) {
     mongoose.model('Billings').aggregate([{
@@ -148,6 +106,29 @@ exports.hourlyCostProduct = function(req, res) {
     }, {
         $group: {
             _id: "$UsageStartDate",
+            Total: {
+                $sum: "$Cost"
+            }
+        }
+    }, {
+        $sort: {
+            _id: 1
+        }
+    }]).exec(function(e, d) {
+        res.send(d);
+    });
+};
+
+exports.groupByMonth = function(req, res) {
+    mongoose.model('Billings').aggregate([{
+        $match: {
+            Cost: {
+                $gt: 0
+            }
+        }
+    }, {
+        $group: {
+            _id: {$substr: ['$UsageStartDate', 0, 7]},             
             Total: {
                 $sum: "$Cost"
             }

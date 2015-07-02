@@ -1,5 +1,8 @@
 (function() {
   var template = Handlebars.template, templates = Handlebars.templates = Handlebars.templates || {};
+templates['AWSMonthlyCostView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  return "<div id=\"container\"> testtesttest</div>";
+  },"useData":true});
 templates['AWSOperationsView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   return "<div id=\"awsoperationscontainer\"> </div>";
   },"useData":true});
@@ -98,17 +101,22 @@ templates['HeaderView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":func
   },"useData":true});
 templates['MeterView'] = template({"1":function(depth0,helpers,partials,data) {
   var lambda=this.lambda, escapeExpression=this.escapeExpression;
-  return "		"
+  return "		$"
+    + escapeExpression(lambda((depth0 != null ? depth0.value : depth0), depth0))
+    + "/Hour\n";
+},"3":function(depth0,helpers,partials,data) {
+  var lambda=this.lambda, escapeExpression=this.escapeExpression;
+  return "		$"
     + escapeExpression(lambda((depth0 != null ? depth0.value : depth0), depth0))
     + "\n";
 },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  var stack1, buffer = "<div>usage rate \n";
+  var stack1, buffer = "<div class=\"rate\">Rate: \n";
   stack1 = helpers.each.call(depth0, (depth0 != null ? depth0.rate : depth0), {"name":"each","hash":{},"fn":this.program(1, data),"inverse":this.noop,"data":data});
   if (stack1 != null) { buffer += stack1; }
-  buffer += "</div>\n<div>usage \n";
-  stack1 = helpers.each.call(depth0, (depth0 != null ? depth0.usage : depth0), {"name":"each","hash":{},"fn":this.program(1, data),"inverse":this.noop,"data":data});
+  buffer += "</div>\n<div class=\"usage\">Usage: \n";
+  stack1 = helpers.each.call(depth0, (depth0 != null ? depth0.usage : depth0), {"name":"each","hash":{},"fn":this.program(3, data),"inverse":this.noop,"data":data});
   if (stack1 != null) { buffer += stack1; }
-  return buffer + "</div>";
+  return buffer + "</div>\n\n<div class=\"balance\">Balance: $123\n\n</div>";
 },"useData":true});
 templates['NavView'] = template({"1":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing, buffer = "<div class=\"page\" page-id=\""
