@@ -8,8 +8,8 @@ exports.parseGroups = function(callback){
 			iam.listGroups({}, function(err, iamGroups) {
 				if (err) throw err;
 				checkGroupConsistency(iamGroups, dbGroups);
-				for (var group in iamGroups) {
-					if (isNewEntry(group, dbGroups)) {
+				for (var i=0 in iamGroups.Groups) {
+					if (isNewEntry(iamGroups.Groups[i], dbGroups)) {
 						var doc = {
 							Path: iamGroups.Groups[i].Path,
 							GroupName: iamGroups.Groups[i].GroupName,
@@ -39,8 +39,8 @@ exports.parseUsers = function(callback){
 			iam.listUsers({}, function(err, iamUsers) {
 				if (err) throw err;
 				checkUserConsistency(iamUsers, dbUsers);
-				for (var user in iamUsers) {
-					if (isNewEntry(user, dbUsers)) {
+				for (var i=0 in iamUsers.Users) {
+					if (isNewEntry(iamUsers.Users[i], dbUsers)) {
 						var doc = {
 							Path: iamUsers.Users[i].Path,
 							UserName: iamUsers.Users[i].UserName,

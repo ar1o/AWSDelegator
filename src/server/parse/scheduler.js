@@ -43,15 +43,17 @@ var parseAWSServices = function() {
             console.log('ParseAlert(rds): parsing completed');
             console.log('ParseAlert(iam): parsing initiated');
             AWS.config.credentials = awsCredentials.dev2;
-            // parseIAM(function() {
-            //     console.log('ParseAlert(iam): parsing completed');
-            // });
+            parseIAM(function() {
+                console.log('ParseAlert(iam): parsing completed');
+            });
         })
     });
 }
 
 var deleteLatestBills = function(callback){
-    fs.readdir(process.cwd() +'/data/', function(err, files) {
+    var maindir = process.cwd();
+    maindir = maindir.substring(0,maindir.lastIndexOf('/'));
+    fs.readdir(maindir +'/data/', function(err, files) {
         if (err) throw err;
         var latestBillsindex = files.indexOf('latestBills.csv');
         if (latestBillsindex != -1) {
