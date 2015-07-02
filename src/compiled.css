@@ -263,11 +263,11 @@ div#awsoperationscontainer {
 }
 .ConfigurationView {
   margin-right: 0;
-  margin-left: 82%;
+  margin-left: 72%;
   overflow: hidden;
   position: fixed;
-  left: 18%;
-  width: 18%;
+  left: 28%;
+  width: 28%;
   top: 48px;
   background-color: #f7f7f7;
 }
@@ -278,6 +278,7 @@ div#awsoperationscontainer {
   border-right: 1px solid #ccc;
   border-top: 1px solid #ccc;
   border-bottom: 1px solid #ccc;
+  height: calc(30%);
 }
 .ConfigurationView .page {
   padding: 5px;

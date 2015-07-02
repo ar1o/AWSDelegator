@@ -26,9 +26,10 @@
     "grunt-express-server": "~0.5.1"
   },
   "dependencies": {
-    "express": "~4.12.3",
-    "aws-sdk": "~2.1.26",
     "adm-zip": "~0.4.7",
+    "aws-sdk": "~2.1.26",
+    "body-parser": "^1.13.1",
+    "express": "~4.12.3",
     "mongodb": "~2.0.33",
     "mongoose": "~4.0.3"
   }

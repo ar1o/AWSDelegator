@@ -3,6 +3,11 @@ var app = express();
 port = process.env.PORT || 3000;
 app.use(require('./CORS'));
 require('./config.js');
+var bodyParser = require('body-parser');
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+    extended : false
+}));
 
 // Start mongoose and mongo
 mongoose.connect(databaseUrl, function(error) {
@@ -50,7 +55,7 @@ app.get('/api/meter/rate',require('./route/meterRoute').rate);
 app.get('/api/meter/usage',require('./route/meterRoute').usage);
 app.get('/api/meter/balance',require('./route/meterRoute').balance);
 
-app.post('/api/credentials/setCredentials',require('./route/credentialsRoute').setCredentials);
+app.post('/setCredentials',require('./route/CredentialsRoute').setCredentials);
 
 function errorHandler(err, req, res, next) {
     console.error(err.message);
