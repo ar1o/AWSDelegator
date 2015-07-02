@@ -51,9 +51,8 @@ var parseAWSServices = function() {
 }
 
 var deleteLatestBills = function(callback){
-    var maindir = process.cwd();
-    maindir = maindir.substring(0,maindir.lastIndexOf('/'));
-    fs.readdir(maindir +'/data/', function(err, files) {
+    console.log(process.cwd());
+    fs.readdir(process.cwd() +'/data/', function(err, files) {
         if (err) throw err;
         var latestBillsindex = files.indexOf('latestBills.csv');
         if (latestBillsindex != -1) {
