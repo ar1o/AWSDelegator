@@ -28,6 +28,7 @@ var page2 = new ConfigurationViewModel({title: 'S3 Region', page_id: 2});
 var page3 = new ConfigurationViewModel({title: 'AWS Regions', page_id: 3});
 var page4 = new ConfigurationViewModel({title: 'Credentials', page_id: 4});
 var page5 = new ConfigurationViewModel({title: 'Database URL', page_id: 5});
-var pages = [page0, page1, page2, page3, page4, page5];
+var page6 = new ConfigurationViewModel({title: 'Credits', page_id: 6});
+var pages = [page0, page1, page2, page3, page4, page5, page6];
 
 ConfigurationViewCollection.add(pages);

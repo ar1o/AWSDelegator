@@ -22,13 +22,14 @@ templates['ConfigurationView'] = template({"1":function(depth0,helpers,partials,
     + ((stack1 = (helpers.ifCond || (depth0 && depth0.ifCond) || alias1).call(depth0,(depth0 != null ? depth0.title : depth0),"==","S3 Region",{"name":"ifCond","hash":{},"fn":this.program(8, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
     + "\r\n"
     + ((stack1 = (helpers.ifCond || (depth0 && depth0.ifCond) || alias1).call(depth0,(depth0 != null ? depth0.title : depth0),"==","AWS Regions",{"name":"ifCond","hash":{},"fn":this.program(10, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
-    + "\r\n\r\n\r\n";
+    + ((stack1 = (helpers.ifCond || (depth0 && depth0.ifCond) || alias1).call(depth0,(depth0 != null ? depth0.title : depth0),"==","Credits",{"name":"ifCond","hash":{},"fn":this.program(12, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
+    + "\r\n\r\n";
 },"2":function(depth0,helpers,partials,data) {
     return this.escapeExpression(this.lambda((depth0 != null ? depth0.title : depth0), depth0))
     + "<br> \r\n<input type=\"text\" name=\"Account_Number\"> \r\n<br>\r\n";
 },"4":function(depth0,helpers,partials,data) {
     return this.escapeExpression(this.lambda((depth0 != null ? depth0.title : depth0), depth0))
-    + "<br> \r\n<input type=\"test\" name=\"Credentials\">\r\n";
+    + "<br> \r\n<input type=\"text\" name=\"Credentials\">\r\n";
 },"6":function(depth0,helpers,partials,data) {
     return this.escapeExpression(this.lambda((depth0 != null ? depth0.title : depth0), depth0))
     + "<br> \r\n<input type=\"radio\" name='RDS_Region' value=\"us-west-1\">us-west-1\r\n<input type=\"radio\" name='RDS_Region' value=\"us-west-2\">us-west-2\r\n<input type=\"radio\" name='RDS_Region' value=\"us-east-1\">us-east-1<br>\r\n";
@@ -37,13 +38,16 @@ templates['ConfigurationView'] = template({"1":function(depth0,helpers,partials,
     + "<br>\r\n<input type=\"radio\" name='S3_Region' value=\"us-west-1\">us-west-1\r\n<input type=\"radio\" name='S3_Region' value=\"us-west-2\">us-west-2\r\n<input type=\"radio\" name='S3_Region' value=\"us-east-1\">us-east-1<br>\r\n";
 },"10":function(depth0,helpers,partials,data) {
     return this.escapeExpression(this.lambda((depth0 != null ? depth0.title : depth0), depth0))
-    + "<br> \r\n<input type=\"checkbox\" name='AWS_Regions' value=\"us-west-1\">us-west-1\r\n<input type=\"checkbox\" name='AWS_Regions' value=\"us-west-2\">us-west-1\r\n<input type=\"checkbox\" name='AWS_Regions' value=\"us-east-1\">us-east-1<br>\r\n\r\n";
+    + "<br> \r\n<input type=\"checkbox\" name='AWS_Regions' value=\"us-west-1\">us-west-1\r\n<input type=\"checkbox\" name='AWS_Regions' value=\"us-west-2\">us-west-2\r\n<input type=\"checkbox\" name='AWS_Regions' value=\"us-east-1\">us-east-1<br>\r\n\r\n";
+},"12":function(depth0,helpers,partials,data) {
+    return this.escapeExpression(this.lambda((depth0 != null ? depth0.title : depth0), depth0))
+    + "<br> \r\n<input type=\"text\" name=\"Credits\"> \r\n<br>\r\n";
 },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var stack1;
 
-  return "<div class=\"slider\">\r\n<form action='/setCredentials' method=\"post\">\r\n"
+  return "\r\n<div class=\"slider\">\r\n\r\n<form id=\"credentials\" action=\"/setCredentials\" method=\"post\">\r\n\r\n"
     + ((stack1 = helpers.each.call(depth0,(depth0 != null ? depth0.pages : depth0),{"name":"each","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
-    + "<input type=\"submit\" value=\"Sign in\">\r\n</form>\r\n</div>";
+    + "<br>\r\n<hr>\r\n<input type=\"submit\" value=\"Sign in\">\r\n</form>\r\n";
 },"useData":true});
 templates['EC2BillingView'] = template({"1":function(depth0,helpers,partials,data) {
     var alias1=this.lambda, alias2=this.escapeExpression;
@@ -138,7 +142,7 @@ templates['FooterView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":func
     return "";
 },"useData":true});
 templates['HeaderView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-    return "<div class=\"setting\"><i class=\"fa fa-cogs fa-1x\"></i> Config </div>\r\n\r\n<div class=\"menu\"><i class=\"fa fa-bars fa-1x\"></i> Menu</div>";
+    return "<div class=\"setting\"><i class=\"fa fa-cogs fa-1x\"></i></div>\r\n\r\n<div class=\"menu\"><i class=\"fa fa-bars fa-1x\"></i></div>";
 },"useData":true});
 templates['MeterView'] = template({"1":function(depth0,helpers,partials,data) {
     return "		"

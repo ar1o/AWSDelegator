@@ -15,6 +15,7 @@ exports.s3Connect = function(_callback) {
     s3.s3Watch();    
     parseBills();
     parseAWSServices();
+
 };
 
 var parseBills = function() {
@@ -36,6 +37,7 @@ var parseAWSServices = function() {
     console.log('ParseAlert(ec2): parsing initiated');
     AWS.config.credentials = awsCredentials.default;
     parseEC2(function() {
+
         console.log('ParseAlert(ec2): parsing completed');
         console.log('ParseAlert(rds): parsing initiated');
         AWS.config.credentials = awsCredentials.dev2;

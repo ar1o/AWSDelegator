@@ -209,16 +209,15 @@ td {
 .setting {
   top: 0;
   margin-left: auto;
-  content: "Config \f013";
   font-size: 16px;
   margin-top: 0;
   width: 90px;
   height: 48px;
   border-left: 1px solid #ccc;
-  padding-left: 30px;
   margin-right: 30px;
+  text-align: right;
   line-height: 48px;
-  vertical-align: middle;
+  vertical-align: right;
   position: relative;
 }
 .setting:hover {
@@ -232,6 +231,7 @@ td {
   height: 48px;
   border-right: 1px solid #ccc;
   margin-left: 30px;
+  text-align: left;
   line-height: 48px;
   vertical-align: middle;
 }
@@ -266,7 +266,7 @@ div#awsoperationscontainer {
   margin-left: 72%;
   overflow: hidden;
   position: fixed;
-  left: -28%;
+  left: 28%;
   width: 28%;
   top: 48px;
   background-color: #f7f7f7;
@@ -275,10 +275,10 @@ div#awsoperationscontainer {
   left: 0;
   text-align: center;
   transition: left 0.2s;
-  border-right: 1px solid #ccc;
+  border-left: 1px solid #ccc;
   border-top: 1px solid #ccc;
   border-bottom: 1px solid #ccc;
-  height: calc(30%);
+  height: calc(45%);
 }
 .ConfigurationView .page {
   padding: 5px;
@@ -308,7 +308,4 @@ div#awsoperationscontainer {
 }
 .subpage:hover {
   color: orange;
-}
-.MeterView {
-  border: 1px black solid;
 }

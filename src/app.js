@@ -1,9 +1,13 @@
 var express = require('express');
 var app = express();
 port = process.env.PORT || 3000;
+var bodyParser= require('body-parser');
+// app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({
+//     extended : true
+// }));
 app.use(require(__dirname +'/server/CORS'));
 require(__dirname +'/server/config.js');
-
 // Front-end code
 app.use('/',express.static(__dirname + '/public'));
 
@@ -13,6 +17,7 @@ mongoose.connect(databaseUrl, function(error) {
         console.log(error);
     }
 });
+
 var db = mongoose.connection;
 db.on("open", function() {
     require(__dirname +'/server/model/ec2');
@@ -53,6 +58,8 @@ app.get('/api/statistics/operations',require(__dirname +'/server/route/Operation
 app.get('/api/meter/rate',require(__dirname +'/server/route/meterRoute').rate);
 app.get('/api/meter/usage',require(__dirname +'/server/route/meterRoute').usage);
 app.get('/api/meter/balance',require(__dirname +'/server/route/meterRoute').balance);
+
+app.post('/setCredentials',require(__dirname +'/server/route/CredentialsRoute').setCredentials);
 
 function errorHandler(err, req, res, next) {
     console.error(err.message);
