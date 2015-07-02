@@ -54,6 +54,9 @@ app.get('/api/meter/rate',require(__dirname +'/server/route/meterRoute').rate);
 app.get('/api/meter/usage',require(__dirname +'/server/route/meterRoute').usage);
 app.get('/api/meter/balance',require(__dirname +'/server/route/meterRoute').balance);
 
+app.get('/api/usage/groups',require(__dirname +'/server/route/iamRoute').groups);
+app.get('/api/usage/users',require(__dirname +'/server/route/iamRoute').users);
+
 function errorHandler(err, req, res, next) {
     console.error(err.message);
     console.error(err.stack);
