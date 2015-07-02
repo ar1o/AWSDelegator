@@ -1,5 +1,4 @@
 exports.parseInstances = function(callback) {
-    console.log(" Parse Alert(ec2): Instance parsing initiated");
     MongoClient.connect(databaseUrl, function(err, db) {
         if (err) throw err;
         var instanceVolumes = {};
@@ -16,7 +15,7 @@ exports.parseInstances = function(callback) {
                     if (regionIteratorIndex < awsRegions.length) {
                         controller1();
                     } else {
-                        console.log(" Parse Alert(ec2): found ",newInstanceCount," new instance/s");
+                        console.log("ParseAlert(ec2): found ",newInstanceCount," new instance/s");
                         for(var i in userInstances){
                             if(activeInstances.indexOf(userInstances[i].Id)==-1){
                                 mongoose.model('ec2Instances').update({
@@ -30,13 +29,13 @@ exports.parseInstances = function(callback) {
                             }
                         }
                         if(terminatedInstancesCount!=0)
-                            console.log(" Parse Alert(ec2): found ",terminatedInstancesCount," terminated instance/s");
+                            console.log("ParseAlert(ec2): found ",terminatedInstancesCount," terminated instance/s");
                         callback();
                     }
                 });
             }
             var iterator1 = function(callback) {
-                console.log(' Parse Alert(ec2): parsing instances in ', awsRegions[regionIteratorIndex]);
+                // console.log('ParseAlert(ec2): parsing instances in ', awsRegions[regionIteratorIndex]);
                 var ec2 = new AWS.EC2({
                     region: awsRegions[regionIteratorIndex]
                 });
@@ -147,7 +146,6 @@ exports.parseInstances = function(callback) {
 }
 
 exports.parseMetrics = function(caller,masterCallback) {
-    console.log("  Parse Alert(ec2): Metrics parsing initiated by",caller);
     MongoClient.connect(databaseUrl, function(err, db) {
         if (err) throw err;
         mongoose.model('ec2Instances').find({
@@ -181,7 +179,7 @@ exports.parseMetrics = function(caller,masterCallback) {
                 });
             };
             var iterator1 = function(instance, callback) {    
-                console.log('  Parse Alert(ec2): parsing metrics of',runningInstances[index1].Id);            
+                // console.log('ParseAlert(ec2): parsing metrics of',runningInstances[index1].Id);            
                 var instanceRegion = runningInstances[index1].Zone;
                 AWS.config.region = instanceRegion.substring(0,instanceRegion.length-1);
                 var cloudwatch = new AWS.CloudWatch();
@@ -191,28 +189,7 @@ exports.parseMetrics = function(caller,masterCallback) {
                     iterator2(function(){
                         index2++;
                         if(index2 < ec2Metric.length) controller2();
-                        else{
-                            // var index3 = 0;
-                            // var controller3 = function() {
-                            //     iterator3(function() {
-                            //         index3++;
-                            //         if (index3 < Object.keys(instanceMetrics).length) controller3();
-                            //         else {
-                            //             callback();
-                            //         }
-                            //     });
-                            // };
-                            // var iterator3 = function(_callback) {
-                            //     console.log(instanceMetrics[index3]);
-                            //     var doc = {
-                            //         InstanceId: runningInstances[index1].Id,
-                            //         NetworkIn: runningInstances[index3].,
-                            //         NetworkOut: 0,
-                            //         CPUUtilization: 0,
-                            //         Time: currentTimeIso
-                            //     };                                
-                            // };
-                            // controller3();            
+                        else{          
                             for(var i in instanceMetrics){
                                 //time format: Thu Jun 25 2015 05:25:00 GMT-0300 (ADT) 
                                 var date = i.split(' ');

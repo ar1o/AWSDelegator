@@ -1,0 +1,314 @@
+@import url(http://fonts.googleapis.com/css?family=Roboto);
+html {
+  background-color: white;
+}
+body {
+  font-family: 'Roboto', sans-serif;
+  font-size: 11px;
+  margin: 0px auto;
+  padding: 0px;
+  height: 100%;
+}
+.content-view {
+  display: block;
+  width: 1060px;
+  margin: 0 auto;
+  margin-top: 70px;
+}
+.AWSView {
+  margin: 0 auto;
+  padding-top: 20px;
+}
+.RDSView {
+  padding-top: 20px;
+}
+.NavView {
+  position: fixed;
+  left: -318px;
+  width: 318px;
+  top: 48px;
+  background-color: #f7f7f7;
+}
+.NavView.visible {
+  left: 0;
+  transition: left 0.2s;
+  border-right: 1px solid #ccc;
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+}
+.NavView .page {
+  padding: 5px;
+  /*border: 1px dashed black;*/
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px;
+  margin-left: 22px;
+  vertical-align: middle;
+  line-height: 30px;
+}
+.NavView .page:hover {
+  color: orange;
+}
+.highcharts-container {
+  position: static !important;
+}
+.subpage {
+  padding: 10px;
+  padding-top: 0;
+  /*border: 1px dashed black;*/
+  font-family: 'Roboto', sans-serif;
+  font-size: 12px;
+  margin-left: 42px;
+  vertical-align: middle;
+  line-height: 30px;
+}
+.subpage:hover {
+  color: orange;
+}
+.EC2BillingView {
+  width: 47%;
+  margin-left: 20px;
+}
+.RDSBillingView {
+  width: 47%;
+  margin-left: 20px;
+  /*	border-style: solid;
+	border-color: blue;*/
+  float: left;
+}
+/*#rdsbillingcontainer {
+	width: 46%;
+	margin-left: 20px;
+	border-style: solid;
+	border-color: blue;
+	float: left;
+}*/
+.RDSMetricsView {
+  margin: 0;
+  padding-bottom: 20px;
+}
+#rdsCpuContainer {
+  width: 47%;
+  margin-right: 20px;
+  margin-left: 20px;
+  margin-top: 20px;
+  float: right;
+}
+#queueDepthContainer {
+  width: 47%;
+  margin-left: 20px;
+  margin-top: 20px;
+  float: left;
+}
+#readWriteIopsContainer {
+  width: 47%;
+  margin-left: 20px;
+  margin-top: 20px;
+  float: right;
+}
+.clear {
+  clear: both;
+}
+.EC2MetricsView {
+  margin: 0;
+  margin-top: 20px;
+  padding-bottom: 20px;
+}
+div#cpuContainer {
+  width: 47%;
+  margin-right: 20px;
+  float: right;
+}
+div#networkContainer {
+  width: 47%;
+  margin-left: 20px;
+  float: left;
+}
+.clear {
+  clear: both;
+}
+.ProductCostView {
+  margin: 0 auto;
+  width: 1060px;
+  background-color: white;
+}
+div#productcostcontainer {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  margin-right: 20px;
+  margin-left: 20px;
+  /*	border-style: dashed;
+	border-color: blue;*/
+}
+.EC2CostView {
+  padding-top: 20px;
+}
+#ec2CostContainer {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  margin-right: 20px;
+  margin-left: 20px;
+}
+.RDSCostView {
+  padding-top: 20px;
+}
+.EC2InstancesView {
+  min-height: 350px;
+  padding-top: 20px;
+}
+.RDSInstancesView {
+  min-height: 350px;
+  padding-top: 20px;
+}
+#InstanceTable_wrapper {
+  background-color: #f7f7f7;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  margin-right: 20px;
+  margin-left: 20px;
+  padding: 5px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #aaa;
+  border-top: 1px solid #aaa;
+  /*border: 1px solid gray;*/
+}
+#RDSInstanceTable_wrapper {
+  background-color: #f7f7f7;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  margin-right: 20px;
+  margin-left: 20px;
+  padding: 5px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #aaa;
+  border-top: 1px solid #aaa;
+  /*border: 1px solid gray;*/
+}
+th,
+td {
+  overflow: hidden;
+}
+.options {
+  top: 55%;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+}
+.HeaderView {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  margin: 0 auto;
+  height: 48px;
+  background-color: #f7f7f7;
+  border-bottom: 1px solid #ccc;
+  box-shadow: #e6e6e6 0 1px 3px;
+}
+.setting {
+  top: 0;
+  margin-left: auto;
+  content: "Config \f013";
+  font-size: 16px;
+  margin-top: 0;
+  width: 90px;
+  height: 48px;
+  border-left: 1px solid #ccc;
+  padding-left: 30px;
+  margin-right: 30px;
+  line-height: 48px;
+  vertical-align: middle;
+  position: relative;
+}
+.setting:hover {
+  color: orange;
+}
+.menu {
+  position: absolute;
+  top: 0;
+  font-size: 16px;
+  width: 90px;
+  height: 48px;
+  border-right: 1px solid #ccc;
+  margin-left: 30px;
+  line-height: 48px;
+  vertical-align: middle;
+}
+.menu:hover {
+  color: orange;
+}
+.FooterView {
+  position: relative;
+  background-color: #f7f7f7;
+  /*background-color: red;*/
+  border-top: 1px solid #ccc;
+  bottom: 0;
+  width: 100%;
+  height: 48px;
+  /* Height of the footer */
+}
+.AWSOperationsView {
+  margin: 0 auto;
+  width: 1060px;
+  margin-bottom: 20px;
+}
+div#awsoperationscontainer {
+  margin-top: 20px;
+}
+.OperationsView {
+  width: 47%;
+  margin-right: 20px;
+  float: right;
+}
+.ConfigurationView {
+  margin-right: 0;
+  margin-left: 72%;
+  overflow: hidden;
+  position: fixed;
+  left: -28%;
+  width: 28%;
+  top: 48px;
+  background-color: #f7f7f7;
+}
+.ConfigurationView.visible {
+  left: 0;
+  text-align: center;
+  transition: left 0.2s;
+  border-right: 1px solid #ccc;
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+  height: calc(30%);
+}
+.ConfigurationView .page {
+  padding: 5px;
+  /*border: 1px dashed black;*/
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px;
+  margin-left: auto;
+  margin-right: 30px;
+  vertical-align: middle;
+  line-height: 30px;
+}
+.ConfigurationView .page:hover {
+  color: orange;
+}
+.highcharts-container {
+  position: static !important;
+}
+.subpage {
+  padding: 10px;
+  padding-top: 0;
+  /*border: 1px dashed black;*/
+  font-family: 'Roboto', sans-serif;
+  font-size: 12px;
+  margin-right: 42px;
+  vertical-align: middle;
+  line-height: 30px;
+}
+.subpage:hover {
+  color: orange;
+}
+.MeterView {
+  border: 1px black solid;
+}

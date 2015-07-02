@@ -1,0 +1,44 @@
+<div class="slider">
+<form action='/setCredentials' method="post">
+{{#each pages}}
+<div></div>
+
+{{#ifCond this.title '==' "Account Number"}}
+{{this.title}}<br> 
+<input type="text" name="Account_Number"> 
+<br>
+{{/ifCond}}
+
+{{#ifCond this.title '==' "Credentials"}}
+{{this.title}}<br> 
+<input type="test" name="Credentials">
+{{/ifCond}}
+
+{{#ifCond this.title '==' "RDS Region"}}
+{{this.title}}<br> 
+<input type="radio" name='RDS_Region' value="us-west-1">us-west-1
+<input type="radio" name='RDS_Region' value="us-west-2">us-west-2
+<input type="radio" name='RDS_Region' value="us-east-1">us-east-1<br>
+{{/ifCond}}
+
+{{#ifCond this.title '==' "S3 Region"}}
+{{this.title}}<br>
+<input type="radio" name='S3_Region' value="us-west-1">us-west-1
+<input type="radio" name='S3_Region' value="us-west-2">us-west-2
+<input type="radio" name='S3_Region' value="us-east-1">us-east-1<br>
+{{/ifCond}}
+
+{{#ifCond this.title '==' "AWS Regions"}}
+{{this.title}}<br> 
+<input type="checkbox" name='AWS_Regions' value="us-west-1">us-west-1
+<input type="checkbox" name='AWS_Regions' value="us-west-2">us-west-1
+<input type="checkbox" name='AWS_Regions' value="us-east-1">us-east-1<br>
+
+{{/ifCond}}
+
+
+
+{{/each}}
+<input type="submit" value="Sign in">
+</form>
+</div>
