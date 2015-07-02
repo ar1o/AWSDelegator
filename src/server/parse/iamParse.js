@@ -9,14 +9,14 @@ exports.parseGroups = function(callback){
 				if (err) throw err;
 				checkGroupConsistency(iamGroups, dbGroups);
 				for (var i=0 in iamGroups.Groups) {
-					if (isNewEntry(iamGroups.Groups[i], dbGroups)) {
+					if (isNewGroup(iamGroups.Groups[i], dbGroups)) {
 						var doc = {
 							Path: iamGroups.Groups[i].Path,
 							GroupName: iamGroups.Groups[i].GroupName,
 							GroupId: iamGroups.Groups[i].GroupId,
 							Arn: iamGroups.Groups[i].Arn,
 							CreateDate: iamGroups.Groups[i].CreateDate,
-							Credits: 0
+							Amount: 0
 						};
 						newGroups+=1;
 						db.collection('iamGroups').insert(doc);
@@ -40,14 +40,14 @@ exports.parseUsers = function(callback){
 				if (err) throw err;
 				checkUserConsistency(iamUsers, dbUsers);
 				for (var i=0 in iamUsers.Users) {
-					if (isNewEntry(iamUsers.Users[i], dbUsers)) {
+					if (isNewUser(iamUsers.Users[i], dbUsers)) {
 						var doc = {
 							Path: iamUsers.Users[i].Path,
 							UserName: iamUsers.Users[i].UserName,
 							UserId: iamUsers.Users[i].UserId,
 							Arn: iamUsers.Users[i].Arn,
 							CreateDate: iamUsers.Users[i].CreateDate,
-							Credits: 0
+							Amount: 0
 						};
 						newUsers+=1;
 						db.collection('iamUsers').insert(doc);
@@ -90,9 +90,18 @@ var checkUserConsistency = function(iamUsers,dbUsers){
     }
 }
 
-var isNewEntry = function(group,dbGroups){
-    for(var i in dbGroups)
-        if(i.GroupId == group.GroupId)
+var isNewGroup = function(group,dbGroups){
+    for(var i in dbGroups){
+        if(dbGroups[i].GroupId == group.GroupId)
             return false;
+    }
+    return true;
+}
+
+var isNewUser = function(user,dbUsers){
+    for(var i in dbUsers){
+        if(dbUsers[i].UserId == user.UserId)
+            return false;
+    }
     return true;
 }

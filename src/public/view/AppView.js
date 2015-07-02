@@ -74,19 +74,35 @@ var AppView = Backbone.View.extend({
             window.location.hash = '#/EC2';
         }.bind(this));
 
-        this.$el.on('click', '[subpage-id="0"]', function(e) {
-            this.navView.model.isOpen = false
-            window.location.hash = '#/EC2Instances';
-        }.bind(this));
-
         this.$el.on('click', '[page-id="2"]', function(e) {
             this.navView.model.isOpen = false
             window.location.hash = '#/RDS';
         }.bind(this));
 
+        this.$el.on('click', '[page-id="3"]', function(e) {
+            this.navView.model.isOpen = false
+            window.location.hash = '#/UsageMonitor';
+        }.bind(this));
+
+        this.$el.on('click', '[subpage-id="0"]', function(e) {
+            this.navView.model.isOpen = false
+            window.location.hash = '#/EC2Instances';
+        }.bind(this));
+        
         this.$el.on('click', '[subpage-id="1"]', function(e) {
             this.navView.model.isOpen = false
             window.location.hash = '#/RDSInstances';
+        }.bind(this));
+
+        this.$el.on('click', '[subpage-id="2"]', function(e) {
+            this.navView.model.isOpen = false
+            console.log('click IAMGroups')
+            window.location.hash = '#/IAMGroups';
+        }.bind(this));
+
+        this.$el.on('click', '[subpage-id="3"]', function(e) {
+            this.navView.model.isOpen = false
+            window.location.hash = '#/IAMUsers';
         }.bind(this));
 
     },

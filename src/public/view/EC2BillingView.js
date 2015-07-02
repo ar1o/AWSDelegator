@@ -1,4 +1,3 @@
-
 var EC2BillingView = Backbone.View.extend({
     className: 'EC2BillingView',
     initialize: function(options) {
