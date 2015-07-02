@@ -259,3 +259,6 @@ div#awsoperationscontainer {
   margin-right: 20px;
   float: right;
 }
+.MeterView {
+  border: 1px black solid;
+}

@@ -23,7 +23,8 @@
     "handlebars": "^2.0.0-alpha.4",
     "shelljs": "^0.3.0",
     "uglify-js": "^2.4.15",
-    "grunt-express-server": "~0.5.1"
+    "grunt-express-server": "~0.5.1",
+    "grunt-nodemon": "~0.4.0"
   },
   "dependencies": {
     "express": "~4.12.3",

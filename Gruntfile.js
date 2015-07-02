@@ -1,15 +1,15 @@
 module.exports = function(grunt) {
 
-    grunt.loadNpmTasks('grunt-contrib-watch'); 
+    grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-contrib-less');
     grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-express-server');
 
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-smushit');
-    
+
     var shell = require('shelljs');
-    
+
 
     // Project configuration.
     grunt.initConfig({
@@ -35,12 +35,17 @@ module.exports = function(grunt) {
         },
         express: {
             dev: {
-            options: {
-                script: 'src/server/server.js',
-                delay: 1000,
-                background: false
+                options: {
+                    script: 'src/app.js',
+                    delay: 1000,
+                    background: false
 
-              }
+                }
+            }
+        },
+        nodemon: {
+            dev: {
+                script: 'src/server/server.js'
             }
         },
 
@@ -76,6 +81,16 @@ module.exports = function(grunt) {
             }
         },
     });
+
+    // grunt.loadNpmTasks('grunt-express-server');
+    // grunt.registerTask('dev', ['rebuild', 'express', 'watch']);
+    // load nodemon
+    grunt.loadNpmTasks('grunt-nodemon');
+
+    // register the nodemon task when we run grunt
+    grunt.registerTask('default', ['nodemon']);
+
+
     grunt.registerTask('handlebars', 'Compiling templates', function() {
         shell.exec('handlebars src/public/templates/ -f src/public/compiledTemplates.js');
     });
@@ -93,30 +108,32 @@ module.exports = function(grunt) {
         shell.cp('-R', 'src/*', 'optimized/');
         // build list of files to not delete
         var keep = {};
-        for(var i in manifest.web_accessible_resources)
-            keep[ manifest.web_accessible_resources[i] ] = true;
+        for (var i in manifest.web_accessible_resources)
+            keep[manifest.web_accessible_resources[i]] = true;
         // merge manifest JS files
         var UglifyJS = require("uglify-js");
         var cache = {};
-        for(var i in manifest.content_scripts) {
+        for (var i in manifest.content_scripts) {
             // first 
             // go over every file
             var self = manifest.content_scripts[i];
             var js = [];
-            for(var j in self.js) {
+            for (var j in self.js) {
                 var path = 'optimized/' + self.js[j];
                 var code;
-                try{
+                try {
                     code = fs.readFileSync(path).toString();
                     cache[path] = code;
-                }catch(e) {
+                } catch (e) {
                     code = cache[path];
                 }
                 // delete files
-                if(!keep[self.js[j]])
+                if (!keep[self.js[j]])
                     shell.rm('-rf', path);
                 // minify and store
-                code = UglifyJS.minify(code, {fromString: true}).code;
+                code = UglifyJS.minify(code, {
+                    fromString: true
+                }).code;
                 js.push(code);
             }
             // build optimized file and update manifest
@@ -135,27 +152,27 @@ module.exports = function(grunt) {
     function endsWith(str, suffix) {
         return str.indexOf(suffix, str.length - suffix.length) !== -1;
     }
-    
+
     function destroyUseless(folder) {
         var fs = require('fs');
         var files = fs.readdirSync(folder);
         var fileCount = 0;
-        for(var i in files) {
+        for (var i in files) {
             var name = files[i];
-            var path = folder+'/'+name;
-            if(name[0] == '.' || name[0] == '#' || name[name.length-1] == '~' || endsWith(name, '.orig')) {
+            var path = folder + '/' + name;
+            if (name[0] == '.' || name[0] == '#' || name[name.length - 1] == '~' || endsWith(name, '.orig')) {
                 shell.rm('-rf', path);
-            }else if(fs.statSync(path).isDirectory()) {
+            } else if (fs.statSync(path).isDirectory()) {
                 fileCount += destroyUseless(path);
-            }else{
+            } else {
                 fileCount += 1;
             }
         }
-        if(!fileCount)
+        if (!fileCount)
             shell.rm('-rf', folder);
         return fileCount;
     }
-    
+
     grunt.registerTask('dropDeadweight', 'Deleting unrequired files and folders', function() {
         shell.rm('-rf', 'optimized/templates');
         shell.rm('-rf', 'optimized/css');

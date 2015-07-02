@@ -204,7 +204,6 @@ exports.instanceCostAll = function(req, res) {
         
         }
     ]).exec(function(e, d) {
-        console.log(d);
         res.send(d);
     });
 };
