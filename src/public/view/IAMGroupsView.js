@@ -1,7 +1,6 @@
 var IAMGroupsView = Backbone.View.extend({
     className: 'IAMGroupsView',
     initialize: function(options) {
-        console.log('initialize');
         if (!this.model) {
             this.model = new UsageMonitorModel();
         }
