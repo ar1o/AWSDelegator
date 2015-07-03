@@ -15,7 +15,6 @@ var OperationsView = Backbone.View.extend({
             for (var i = 0; i < operationsCollection.length; i++) {
                 dataOperations.push({name: operationsCollection.at(i).get('operation'), y:operationsCollection.at(i).get('percentage'), id: i});
             }
-            console.log(dataOperations);
             $(function() {
                 $('#operationscontainer').highcharts({
                     chart: {

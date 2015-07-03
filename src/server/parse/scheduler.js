@@ -15,7 +15,6 @@ exports.s3Connect = function(_callback) {
     s3.s3Watch();    
     parseBills();
     parseAWSServices();
-
 };
 
 var parseBills = function() {
@@ -37,7 +36,6 @@ var parseAWSServices = function() {
     console.log('ParseAlert(ec2): parsing initiated');
     AWS.config.credentials = awsCredentials.default;
     parseEC2(function() {
-
         console.log('ParseAlert(ec2): parsing completed');
         console.log('ParseAlert(rds): parsing initiated');
         AWS.config.credentials = awsCredentials.dev2;
@@ -45,14 +43,15 @@ var parseAWSServices = function() {
             console.log('ParseAlert(rds): parsing completed');
             console.log('ParseAlert(iam): parsing initiated');
             AWS.config.credentials = awsCredentials.dev2;
-            // parseIAM(function() {
-            //     console.log('ParseAlert(iam): parsing completed');
-            // });
+            parseIAM(function() {
+                console.log('ParseAlert(iam): parsing completed');
+            });
         })
     });
 }
 
 var deleteLatestBills = function(callback){
+    console.log(process.cwd());
     fs.readdir(process.cwd() +'/data/', function(err, files) {
         if (err) throw err;
         var latestBillsindex = files.indexOf('latestBills.csv');

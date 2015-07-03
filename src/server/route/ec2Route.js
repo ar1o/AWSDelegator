@@ -1,5 +1,4 @@
 exports.metrics = function(req, res) {
-    console.log(req.query);
 	var instanceId = req.query.instance;
 	mongoose.model('ec2Metrics').aggregate([{
 		$match: {

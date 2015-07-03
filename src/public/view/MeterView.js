@@ -29,7 +29,6 @@ var MeterView = Backbone.View.extend({
         	usage: usageCollection.toJSON()
         	// balance: creditBalanceCollection.toJSON()
         });
-        console.log(usageRateCollection.toJSON());
         this.$el.html(html);
     }
 });

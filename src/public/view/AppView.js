@@ -6,7 +6,6 @@ var AppView = Backbone.View.extend({
         this.header = new HeaderView();
         this.footer = new FooterView();
         this.navView = new NavView();
-        this.configurationView = new ConfigurationView()
 
         this.router = new AppRouter({
             defaultView: 'AWSView'
@@ -40,26 +39,22 @@ var AppView = Backbone.View.extend({
                 }
             }
         });
-
-
     },
 
     bindings: function() {
 
         this.$el.on("mouseenter", '.menu', function(e) {
             this.navView.model.isOpen = true;
-            var length_calc = (this.$el.height() - 60);
+            var length_calc = (this.$el.height() - 20);
             var length = length_calc + 'px';
             self.$('.NavView').css({
                 'height': length
             });
         }.bind(this));
 
-        // this.$el.on("mouseleave", '.menu', function(e) {
-        //     this.navView.model.isOpen = false;
-        // }.bind(this));
-    
-        
+        this.$el.on("mouseleave", '.menu', function(e) {
+            this.navView.model.isOpen = false;
+        }.bind(this));
 
         this.$el.on("mouseenter", '.NavView', function(e) {
             this.navView.model.isOpen = true;
@@ -69,56 +64,44 @@ var AppView = Backbone.View.extend({
             this.navView.model.isOpen = false;
         }.bind(this));
 
-        this.$el.on("mouseenter", '.setting', function(e) {
-            this.configurationView.model.openConfig = true;
-            var length_calc = (this.$el.height() - 60);
-            var length = length_calc + 'px';
-            self.$('.ConfigurationView').css({
-                //altered this to fix runaway height issue
-                'configHeight': length
-            });
-        }.bind(this));
-        //workaround. not sure how I broke this
-        // this.$el.on("mouseleave", '.setting', function(e) {
-        //     this.configurationView.model.openConfig = false;
-        // }.bind(this));
-
-        this.$el.on("mouseenter", '.ConfigurationView', function(e) {
-            this.configurationView.model.openConfig = true;
-        }.bind(this));
-
-        this.$el.on("mouseleave", '.ConfigurationView', function(e) {
-            this.configurationView.model.openConfig = false;
-        }.bind(this));
-
-//Need to alter these as to prevent configuration from linking to menu pages
         this.$el.on('click', '[page-id="0"]', function(e) {
-            // console.log($('[page-id="0"]').text());
             this.navView.model.isOpen = false;
             window.location.hash = '#/AWS';
         }.bind(this));
 
         this.$el.on('click', '[page-id="1"]', function(e) {
-            // console.log($('[page-id="1"]').text());
             this.navView.model.isOpen = false
             window.location.hash = '#/EC2';
         }.bind(this));
 
-        this.$el.on('click', '[subpage-id="0"]', function(e) {
-            // console.log($('[page-id="1"]').text());
-            this.navView.model.isOpen = false
-            window.location.hash = '#/EC2Instances';
-        }.bind(this));
-
         this.$el.on('click', '[page-id="2"]', function(e) {
-            // console.log($('[page-id="2"]').text());
             this.navView.model.isOpen = false
             window.location.hash = '#/RDS';
         }.bind(this));
+
+        this.$el.on('click', '[page-id="3"]', function(e) {
+            this.navView.model.isOpen = false
+            window.location.hash = '#/UsageMonitor';
+        }.bind(this));
+
+        this.$el.on('click', '[subpage-id="0"]', function(e) {
+            this.navView.model.isOpen = false
+            window.location.hash = '#/EC2Instances';
+        }.bind(this));
+        
         this.$el.on('click', '[subpage-id="1"]', function(e) {
-            // console.log($('[page-id="1"]').text());
             this.navView.model.isOpen = false
             window.location.hash = '#/RDSInstances';
+        }.bind(this));
+
+        this.$el.on('click', '[subpage-id="2"]', function(e) {
+            this.navView.model.isOpen = false
+            window.location.hash = '#/IAMGroups';
+        }.bind(this));
+
+        this.$el.on('click', '[subpage-id="3"]', function(e) {
+            this.navView.model.isOpen = false
+            window.location.hash = '#/IAMUsers';
         }.bind(this));
 
     },
@@ -127,7 +110,6 @@ var AppView = Backbone.View.extend({
         this.$el.html(Handlebars.templates.AppView());
         this.$el.append(this.header.el);
         this.$el.append(this.navView.el);
-        this.$el.append(this.configurationView.el);
         this.$el.append(this.footer.el);
 
         this.setView(this.router.get('view'));

@@ -3,6 +3,9 @@
 templates['AppView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     return "<div class=\"content-view\"> </div>\r\n";
 },"useData":true});
+templates['AWSMonthlyCostView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+    return "<div id=\"awsmonthlycostcontainer\"> testtesttest</div>";
+},"useData":true});
 templates['AWSOperationsView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     return "<div id=\"awsoperationscontainer\"> </div>";
 },"useData":true});
@@ -137,7 +140,49 @@ templates['FooterView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":func
     return "";
 },"useData":true});
 templates['HeaderView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-    return "<div class=\"setting\"><i class=\"fa fa-cogs fa-1x\"></i></div>\r\n\r\n<div class=\"menu\"><i class=\"fa fa-bars fa-1x\"></i></div>";
+    return "<div class=\"setting\"> </div>\r\n\r\n<div class=\"menu\"><i class=\"fa fa-bars fa-1x\"></i> Menu</div>";
+},"useData":true});
+templates['IAMGroupsView'] = template({"1":function(depth0,helpers,partials,data) {
+    var alias1=this.lambda, alias2=this.escapeExpression;
+
+  return "		<tr>\r\n			<td >"
+    + alias2(alias1((depth0 != null ? depth0.groupName : depth0), depth0))
+    + "</td>\r\n			<td>"
+    + alias2(alias1((depth0 != null ? depth0.groupId : depth0), depth0))
+    + "</td>\r\n			<td>"
+    + alias2(alias1((depth0 != null ? depth0.arn : depth0), depth0))
+    + "</td>\r\n			<td>"
+    + alias2(alias1((depth0 != null ? depth0.createDate : depth0), depth0))
+    + "</td>\r\n			<td>"
+    + alias2(alias1((depth0 != null ? depth0.amount : depth0), depth0))
+    + "</td> \r\n		</tr>\r\n";
+},"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+    var stack1;
+
+  return "<table id=\"GroupsTable\" class=\"hover\">\r\n	<thead>\r\n		<tr class=\"dark-row\">\r\n			<th>GroupName</th>\r\n			<th>GroupId</th>\r\n			<th>Arn</th>\r\n			<th>CreateDate</th>\r\n			<th>Amount</th>\r\n		</tr>\r\n	</thead>\r\n	<tbody id=\"instanceData\">\r\n"
+    + ((stack1 = helpers.each.call(depth0,(depth0 != null ? depth0.instances : depth0),{"name":"each","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
+    + "	</tbody>	\r\n</table>\r\n";
+},"useData":true});
+templates['IAMUsersView'] = template({"1":function(depth0,helpers,partials,data) {
+    var alias1=this.lambda, alias2=this.escapeExpression;
+
+  return "		<tr>\r\n			<td >"
+    + alias2(alias1((depth0 != null ? depth0.userName : depth0), depth0))
+    + "</td>\r\n			<td>"
+    + alias2(alias1((depth0 != null ? depth0.userId : depth0), depth0))
+    + "</td>\r\n			<td>"
+    + alias2(alias1((depth0 != null ? depth0.arn : depth0), depth0))
+    + "</td>\r\n			<td>"
+    + alias2(alias1((depth0 != null ? depth0.createDate : depth0), depth0))
+    + "</td>\r\n			<td>"
+    + alias2(alias1((depth0 != null ? depth0.amount : depth0), depth0))
+    + "</td> \r\n		</tr>\r\n";
+},"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+    var stack1;
+
+  return "<table id=\"UsersTable\" class=\"hover\">\r\n	<thead>\r\n		<tr class=\"dark-row\">\r\n			<th>UserName</th>\r\n			<th>UserId</th>\r\n			<th>Arn</th>\r\n			<th>CreateDate</th>\r\n			<th>Amount</th>\r\n		</tr>\r\n	</thead>\r\n	<tbody id=\"instanceData\">\r\n"
+    + ((stack1 = helpers.each.call(depth0,(depth0 != null ? depth0.instances : depth0),{"name":"each","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
+    + "	</tbody>	\r\n</table>\r\n";
 },"useData":true});
 templates['MeterView'] = template({"1":function(depth0,helpers,partials,data) {
     return "		"

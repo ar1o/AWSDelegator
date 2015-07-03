@@ -36,7 +36,7 @@ var ProductCostView = Backbone.View.extend({
                         enabled: false
                     },
                     title: {
-                        text: 'Amazon Web Service Cost Breakdown - Month: ' + month + ' ' + year
+                        text: 'Amazon Web Service Cost Breakdown - '+year
                     },
                     tooltip: {
                         pointFormat: '{series.name}: <b>USD{point.y:.4f}</b>'
