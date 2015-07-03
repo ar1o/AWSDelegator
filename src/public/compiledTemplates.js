@@ -15,31 +15,26 @@ templates['ConfigurationView'] = template({"1":function(depth0,helpers,partials,
   return "<div></div>\r\n\r\n"
     + ((stack1 = (helpers.ifCond || (depth0 && depth0.ifCond) || alias1).call(depth0,(depth0 != null ? depth0.title : depth0),"==","Account Number",{"name":"ifCond","hash":{},"fn":this.program(2, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
     + "\r\n"
-    + ((stack1 = (helpers.ifCond || (depth0 && depth0.ifCond) || alias1).call(depth0,(depth0 != null ? depth0.title : depth0),"==","Credentials",{"name":"ifCond","hash":{},"fn":this.program(4, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = (helpers.ifCond || (depth0 && depth0.ifCond) || alias1).call(depth0,(depth0 != null ? depth0.title : depth0),"==","RDS Region",{"name":"ifCond","hash":{},"fn":this.program(4, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
     + "\r\n"
-    + ((stack1 = (helpers.ifCond || (depth0 && depth0.ifCond) || alias1).call(depth0,(depth0 != null ? depth0.title : depth0),"==","RDS Region",{"name":"ifCond","hash":{},"fn":this.program(6, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = (helpers.ifCond || (depth0 && depth0.ifCond) || alias1).call(depth0,(depth0 != null ? depth0.title : depth0),"==","S3 Region",{"name":"ifCond","hash":{},"fn":this.program(6, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
     + "\r\n"
-    + ((stack1 = (helpers.ifCond || (depth0 && depth0.ifCond) || alias1).call(depth0,(depth0 != null ? depth0.title : depth0),"==","S3 Region",{"name":"ifCond","hash":{},"fn":this.program(8, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
-    + "\r\n"
-    + ((stack1 = (helpers.ifCond || (depth0 && depth0.ifCond) || alias1).call(depth0,(depth0 != null ? depth0.title : depth0),"==","AWS Regions",{"name":"ifCond","hash":{},"fn":this.program(10, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
-    + ((stack1 = (helpers.ifCond || (depth0 && depth0.ifCond) || alias1).call(depth0,(depth0 != null ? depth0.title : depth0),"==","Credits",{"name":"ifCond","hash":{},"fn":this.program(12, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = (helpers.ifCond || (depth0 && depth0.ifCond) || alias1).call(depth0,(depth0 != null ? depth0.title : depth0),"==","AWS Regions",{"name":"ifCond","hash":{},"fn":this.program(8, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = (helpers.ifCond || (depth0 && depth0.ifCond) || alias1).call(depth0,(depth0 != null ? depth0.title : depth0),"==","Credits",{"name":"ifCond","hash":{},"fn":this.program(10, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
     + "\r\n\r\n";
 },"2":function(depth0,helpers,partials,data) {
     return this.escapeExpression(this.lambda((depth0 != null ? depth0.title : depth0), depth0))
     + "<br> \r\n<input type=\"text\" name=\"Account_Number\"> \r\n<br>\r\n";
 },"4":function(depth0,helpers,partials,data) {
     return this.escapeExpression(this.lambda((depth0 != null ? depth0.title : depth0), depth0))
-    + "<br> \r\n<input type=\"text\" name=\"Credentials\">\r\n";
+    + "<br> \r\n<input type=\"radio\" name='RDS_Region' value=\"us-west-1\">us-west-1\r\n<input type=\"radio\" name='RDS_Region' value=\"us-west-2\">us-west-2\r\n<input type=\"radio\" name='RDS_Region' value=\"us-east-1\">us-east-1<br>\r\n";
 },"6":function(depth0,helpers,partials,data) {
     return this.escapeExpression(this.lambda((depth0 != null ? depth0.title : depth0), depth0))
-    + "<br> \r\n<input type=\"radio\" name='RDS_Region' value=\"us-west-1\">us-west-1\r\n<input type=\"radio\" name='RDS_Region' value=\"us-west-2\">us-west-2\r\n<input type=\"radio\" name='RDS_Region' value=\"us-east-1\">us-east-1<br>\r\n";
+    + "<br>\r\n<input type=\"radio\" name='S3_Region' value=\"us-west-1\">us-west-1\r\n<input type=\"radio\" name='S3_Region' value=\"us-west-2\">us-west-2\r\n<input type=\"radio\" name='S3_Region' value=\"us-east-1\">us-east-1<br>\r\n";
 },"8":function(depth0,helpers,partials,data) {
     return this.escapeExpression(this.lambda((depth0 != null ? depth0.title : depth0), depth0))
-    + "<br>\r\n<input type=\"radio\" name='S3_Region' value=\"us-west-1\">us-west-1\r\n<input type=\"radio\" name='S3_Region' value=\"us-west-2\">us-west-2\r\n<input type=\"radio\" name='S3_Region' value=\"us-east-1\">us-east-1<br>\r\n";
-},"10":function(depth0,helpers,partials,data) {
-    return this.escapeExpression(this.lambda((depth0 != null ? depth0.title : depth0), depth0))
     + "<br> \r\n<input type=\"checkbox\" name='AWS_Regions' value=\"us-west-1\">us-west-1\r\n<input type=\"checkbox\" name='AWS_Regions' value=\"us-west-2\">us-west-2\r\n<input type=\"checkbox\" name='AWS_Regions' value=\"us-east-1\">us-east-1<br>\r\n\r\n";
-},"12":function(depth0,helpers,partials,data) {
+},"10":function(depth0,helpers,partials,data) {
     return this.escapeExpression(this.lambda((depth0 != null ? depth0.title : depth0), depth0))
     + "<br> \r\n<input type=\"text\" name=\"Credits\"> \r\n<br>\r\n";
 },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
@@ -47,7 +42,7 @@ templates['ConfigurationView'] = template({"1":function(depth0,helpers,partials,
 
   return "\r\n<div class=\"slider\">\r\n\r\n<form id=\"credentials\" action=\"/setCredentials\" method=\"post\">\r\n\r\n"
     + ((stack1 = helpers.each.call(depth0,(depth0 != null ? depth0.pages : depth0),{"name":"each","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
-    + "<br>\r\n<hr>\r\n<input type=\"submit\" value=\"Sign in\">\r\n</form>\r\n";
+    + "<br>\r\n<hr>\r\n<input type=\"submit\" value=\"Sign in\" onclick=\"showElements(this.form)\">\r\n</form>\r\n";
 },"useData":true});
 templates['EC2BillingView'] = template({"1":function(depth0,helpers,partials,data) {
     var alias1=this.lambda, alias2=this.escapeExpression;

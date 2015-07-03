@@ -12,11 +12,6 @@
 <br>
 {{/ifCond}}
 
-{{#ifCond this.title '==' "Credentials"}}
-{{this.title}}<br> 
-<input type="text" name="Credentials">
-{{/ifCond}}
-
 {{#ifCond this.title '==' "RDS Region"}}
 {{this.title}}<br> 
 <input type="radio" name='RDS_Region' value="us-west-1">us-west-1
@@ -48,5 +43,5 @@
 {{/each}}
 <br>
 <hr>
-<input type="submit" value="Sign in">
+<input type="submit" value="Sign in" onclick="showElements(this.form)">
 </form>

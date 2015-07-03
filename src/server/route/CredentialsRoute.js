@@ -8,18 +8,15 @@ exports.setCredentials = function(req, res) {
 		var credentials = [];
 		var regions = [];
 		var i = 0;
-        console.log(chunk.toString());
         var input = chunk.toString();
         var index = 0;
         //while input continues to have key:value.
         do{
       		key = input.substring(index, input.indexOf('=', index));
       		value = input.substring(input.indexOf('=', index)+1, input.indexOf('&', index));
-      		console.log("Value:",value)
+      		//To take care of last key: value pair
       		if(index > input.lastIndexOf('&')){
       			value = input.substring(input.lastIndexOf('=')+1, input.lastIndexOf(''));
-      			console.log("Key:",key);
-      			console.log("Value:",value);
       			credentials[key]=value;
       			break;
       		}
@@ -28,7 +25,7 @@ exports.setCredentials = function(req, res) {
 
       		if(key=="AWS_Regions"){
       			regions[i]=value;
-      			i= i+1;
+      			i = i + 1;
       		}
       		else{
       			credentials[key]=value;
@@ -39,9 +36,26 @@ exports.setCredentials = function(req, res) {
         console.log(credentials);
         console.log(regions);
         // console.log(dict['Account_Number']);
+        if(isNaN(credentials["Account_Number"])||credentials["Account_Number"].length!=12){
+	    	console.log("Invalid Account number entered.\nPlease try again.\nLength of:",credentials["Account_Number"].length);
+	    	return;
+	    }
+	    if(isNaN(credentials["Credits"])){
+	    	console.log("Credits entered is not a number.\nPlease try again.");
+	    	return;
+	    }
+	    //awsAccountNumber = '092841396837';
+	    awsAccountNumber = credentials[0];
+		rdsRegion = credentials[1];
+		s3Region = credentials[2];
+		// s3Bucket = 'csvcontainer'; //Bucket Name??
+		awsRegions = regions;
+		console.log(awsRegions, s3Region, awsAccountNumber, rdsRegion);
         
-      console.log("exiting while loop");
+      console.log("Credentials successfully updated");
     });
+	//verify account number is numeric
+	
     ///Before setting the input values to the actual config variables, do error checking
     /*ACCOunt number == all numbers, length of 12
     RDS and S3 Regions are checkboxes, so there's limited variation. Make sure there is one selected though
@@ -49,12 +63,15 @@ exports.setCredentials = function(req, res) {
     credits. Its a number...
     AWS_Regions >=1
     */
+    //Account# check
+
+	// databaseUrl = 'mongodb://localhost:27017/awsdb';//?
     req.on('end', function() {
       // empty 200 OK response for now
       res.writeHead(200, "OK", {'Content-Type': 'text/html'});
       res.end();
     });
-	// var Account_Number=req.body.Account_Number;
+	// var Account_Number=req.body.Account_Number;http://stackoverflow.com/questions/1799284/how-to-break-exit-from-a-each-function-in-jquery
 	// console.log(Account_Number);
 
 	// res.send("AccountNumber" + req.body.Account_Number);
