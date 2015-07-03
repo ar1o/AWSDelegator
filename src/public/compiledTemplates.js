@@ -145,7 +145,7 @@ templates['FooterView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":func
     return "";
 },"useData":true});
 templates['HeaderView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-    return "<div class=\"setting\"><i class=\"fa fa-cogs fa-1x\"></i></div>\r\n\r\n<div class=\"menu\"><i class=\"fa fa-bars fa-1x\"></i></div>";
+    return "<div class=\"setting\"> </div>\r\n\r\n<div class=\"menu\"><i class=\"fa fa-bars fa-1x\"></i> Menu</div>";
 },"useData":true});
 templates['IAMGroupsView'] = template({"1":function(depth0,helpers,partials,data) {
     var alias1=this.lambda, alias2=this.escapeExpression;

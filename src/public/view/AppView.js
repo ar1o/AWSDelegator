@@ -83,12 +83,21 @@ var AppView = Backbone.View.extend({
         this.$el.on('click', '[page-id="3"]', function(e) {
             this.navView.model.isOpen = false
             window.location.hash = '#/UsageMonitor';
+<<<<<<< HEAD:src/public/view/AppView.js
         }.bind(this));
 
         this.$el.on('click', '[subpage-id="0"]', function(e) {
             this.navView.model.isOpen = false
             window.location.hash = '#/EC2Instances';
         }.bind(this));
+=======
+        }.bind(this));
+
+        this.$el.on('click', '[subpage-id="0"]', function(e) {
+            this.navView.model.isOpen = false
+            window.location.hash = '#/EC2Instances';
+        }.bind(this));
+>>>>>>> 440d7e1148728a9afd8c05f9c316737260f50c55:src/public/view/AppView.js
         
         this.$el.on('click', '[subpage-id="1"]', function(e) {
             this.navView.model.isOpen = false
@@ -105,6 +114,7 @@ var AppView = Backbone.View.extend({
             window.location.hash = '#/IAMUsers';
         }.bind(this));
 
+<<<<<<< HEAD:src/public/view/AppView.js
         this.$el.on("click", '.setting', function(e) {
             this.configurationView.model.openConfig = true;
             var length_calc = (this.$el.height() - 60);
@@ -125,6 +135,8 @@ var AppView = Backbone.View.extend({
             this.configurationView.model.openConfig = false;
         }.bind(this));
 
+=======
+>>>>>>> 440d7e1148728a9afd8c05f9c316737260f50c55:src/public/view/AppView.js
     },
 
     render: function() {
