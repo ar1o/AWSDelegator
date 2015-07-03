@@ -1,10 +1,14 @@
-<div>usage rate 
+<div class="rate">Rate: 
 	{{#each rate}}
-		{{this.value}}
+		${{this.value}}/Hour
 	{{/each}}
 </div>
-<div>usage 
-	{{#each usage}}
-		{{this.value}}
-	{{/each}}
+<div class="usage">Usage:      N/A
+{{!-- 	{{#each usage}}
+		${{this.value}}
+	{{/each}} --}}
+</div>
+
+<div class="balance">Balance: N/A
+
 </div>

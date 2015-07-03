@@ -33,8 +33,8 @@ exports.setCredentials = function(req, res) {
       	}
 // Account_Number=123456789&RDS_Region=us-west-1&S3_Region=us-west-1&AWS_Regions=us-west-1&AWS_Regions=us-west-2&AWS_Regions=us-east-1&Credentials=111&Credits=111
         while(input.indexOf('=', index)!=-1&& index!=0);
-        console.log(credentials);
-        console.log(regions);
+        console.log("Credentials",credentials);
+        console.log("regions",regions);
         // console.log(dict['Account_Number']);
         if(isNaN(credentials["Account_Number"])||credentials["Account_Number"].length!=12){
 	    	console.log("Invalid Account number entered.\nPlease try again.\nLength of:",credentials["Account_Number"].length);
@@ -45,12 +45,12 @@ exports.setCredentials = function(req, res) {
 	    	return;
 	    }
 	    //awsAccountNumber = '092841396837';
-	    awsAccountNumber = credentials[0];
-		rdsRegion = credentials[1];
-		s3Region = credentials[2];
+	    var awsAccountNumber = credentials['Account_Number'];
+		var rdsRegion = credentials['RDS_Region'];
+		var s3Region = credentials['S3_Region'];
 		// s3Bucket = 'csvcontainer'; //Bucket Name??
 		awsRegions = regions;
-		console.log(awsRegions, s3Region, awsAccountNumber, rdsRegion);
+		console.log(awsRegions, awsAccountNumber, rdsRegion, s3Region);
         
       console.log("Credentials successfully updated");
     });
