@@ -42,6 +42,7 @@ exports.parseInstances = function(callback) {
                 ec2.describeInstances({}, function(err, data) {
                     if (err) throw err;
                     for (var r in data.Reservations) {
+                        
                         //get volumeId's
                         var volumeId = [];
                         activeInstances.push(data.Reservations[r].Instances[0].InstanceId);
@@ -78,6 +79,7 @@ exports.parseInstances = function(callback) {
                             newInstanceCount += 1;
                             db.collection('ec2Instances').insert(doc);
                         }else{
+                            // console.log(data.Reservations[r].Instances[0].State);
                             var objectId,j;
                             for(var i=0 in userInstances){
                                 if(userInstances[i].Id == data.Reservations[r].Instances[0].InstanceId){
@@ -112,7 +114,7 @@ exports.parseInstances = function(callback) {
                                     $set: {
                                         Lifetime: lifetime,
                                         LastActiveTime: currentTimeIso,
-                                        State: "running",
+                                        State: "stopped",
                                         VolumeId: instanceVolumes[instanceId]
                                     }
                                 });

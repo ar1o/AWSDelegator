@@ -4,7 +4,7 @@ var MongoClient = mongodb.MongoClient;
 
 // parses latestBills.csv and updates the 'awsdb' database with new bills.
 exports.parseBillingCSV = function(callback) {
-    console.log("ParseAlert(billing): billing parse initiated");
+    console.log("ParseAlert(bills): billing parse initiated");
     MongoClient.connect(databaseUrl, function(err, db) {
         if (err) {
             console.log('Unable to connect to the mongoDB server. Error:', err);
