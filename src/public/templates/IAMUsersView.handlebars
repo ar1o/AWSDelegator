@@ -1,0 +1,22 @@
+<table id="UsersTable" class="hover">
+	<thead>
+		<tr class="dark-row">
+			<th>UserName</th>
+			<th>UserId</th>
+			<th>Arn</th>
+			<th>CreateDate</th>
+			<th>Amount</th>
+		</tr>
+	</thead>
+	<tbody id="instanceData">
+	{{#each instances}}
+		<tr>
+			<td >{{this.userName}}</td>
+			<td>{{this.userId}}</td>
+			<td>{{this.arn}}</td>
+			<td>{{this.createDate}}</td>
+			<td>{{this.amount}}</td> 
+		</tr>
+	{{/each}}
+	</tbody>	
+</table>

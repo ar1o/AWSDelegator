@@ -23,11 +23,17 @@ mongoose.connect(databaseUrl, function(error) {
 });
 
 var setupServer = function(){
+    console.log('SetupAlert: setting up database');
     setupDatabase(function(){
+        console.log('SetupAlert: parsing instances');
         parseInstances(function(){
+            console.log('SetupAlert: parsing metrics');
             parseMetrics(function(){
+                console.log('SetupAlert: parsing bills');
                 parseBills(function(){
+                    console.log('SetupAlert: parsing groups');
                     parseGroups(function(){
+                        console.log('SetupAlert: parsing users');
                         parseUsers(function(){
                             console.log("Setup script completed, You may now start the server");
                             process.exit(0);
@@ -83,10 +89,10 @@ var setupDatabase = function(callback){
 var parseInstances = function(callback){
     AWS.config.credentials = awsCredentials.dev2;
     rdsParser.parseInstances(function() {
-        console.log('Parse Alert(rds): Instance parsing completed');
+        console.log('ParseAlert(rds): Instance parsing completed');
         AWS.config.credentials = awsCredentials.default;
         ec2Parser.parseInstances(function() {
-            console.log('Parse Alert(ec2): Instance parsing completed');
+            console.log('ParseAlert(ec2): Instance parsing completed');
             callback();
         });
     });
@@ -96,13 +102,13 @@ var parseMetrics = function(callback){
     AWS.config.credentials = awsCredentials.dev2;
     rdsParser.parseMetrics('setup', function(err) {
         if (err) throw err;
-        console.log('Parse Alert(rds): Metrics parsing completed');
+        console.log('ParseAlert(rds): Metrics parsing completed');
         AWS.config.credentials = awsCredentials.default;
         ec2Parser.parseMetrics('setup', function(err) {
             if(err) throw err;
             require('./src/server/BoxPricingCheck').getPricing(function() {
-                console.log('Parse Alert(ec2): Metrics parsing completed');
-                console.log('Parse Alert(BoxPricingCheck): BoxPricing parsing completed');
+                console.log('ParseAlert(ec2): Metrics parsing completed');
+                console.log('ParseAlert(BoxPricingCheck): BoxPricing parsing completed');
                 callback();
             });                
         });
@@ -192,7 +198,7 @@ var parseGroups = function(callback){
                     GroupId: iamGroups.Groups[i].GroupId,
                     Arn: iamGroups.Groups[i].Arn,
                     CreateDate: iamGroups.Groups[i].CreateDate,
-                    Credits: 0
+                    Amount: 0
                 };
                 db.collection('iamGroups').insert(doc);            
             }
@@ -215,7 +221,7 @@ var parseUsers = function(callback){
                     UserId: iamUsers.Users[i].UserId,
                     Arn: iamUsers.Users[i].Arn,
                     CreateDate: iamUsers.Users[i].CreateDate,
-                    Credits: 0                    
+                    Amount: 0                    
                 };
                 db.collection('iamUsers').insert(doc);            
             }

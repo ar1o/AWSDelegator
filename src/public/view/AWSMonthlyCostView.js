@@ -6,6 +6,7 @@ var AWSMonthlyCostView = Backbone.View.extend({
             this.model = new CostModel();
         }
         this.model.getAWSMonthlyCost();
+        this.model.getAWSMonthlyCostNonFree();
         this.bindings();
     },
 
@@ -16,14 +17,13 @@ var AWSMonthlyCostView = Backbone.View.extend({
                 var date = AWSMonthlyCost.at(i).get('date');
                 month.push(this.model.getMonth(date.substring(5, 7)));
             }
-            console.log(AWSMonthlyCost.pluck('date'));
             this.render();
 
-
             $(function() {
-                $('#container').highcharts({
+                $('#awsmonthlycostcontainer').highcharts({
                     chart: {
-                        type: 'column'
+                        type: 'column',
+                        backgroundColor: '#f7f7f7'
                     },
                     title: {
                         text: 'AWS Monthly Cost'
@@ -33,7 +33,7 @@ var AWSMonthlyCostView = Backbone.View.extend({
                         crosshair: true
                     },
                     yAxis: {
-                        min: 0,
+                        // min: 0,
                         title: {
                             text: 'USD ($)'
                         }
@@ -61,8 +61,11 @@ var AWSMonthlyCostView = Backbone.View.extend({
                         }
                     },
                     series: [{
-                        name: 'Amazon Web Service',
+                        name: 'Amazon Web Service with Free-tier',
                         data: AWSMonthlyCost.pluck('cost')
+                    }, {
+                        name: 'Amazon Web Service without Free-tier',
+                        data: AWSMonthlyCostNF.pluck('cost')
                     }]
                 });
             });

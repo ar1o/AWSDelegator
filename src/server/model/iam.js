@@ -4,7 +4,7 @@ iamGroupsSchema = new mongoose.Schema({
     GroupId: String,
     Arn: String,
     CreateDate: String,
-    Credits: Number
+    Amount: Number
 });
 
 iamUsersSchema = new mongoose.Schema({
@@ -13,7 +13,7 @@ iamUsersSchema = new mongoose.Schema({
     UserId: String,
     Arn: String,
     CreateDate: String,
-    Credits: Number
+    Amount: Number
 });
 mongoose.model('iamGroups', iamGroupsSchema, 'iamGroups');
 mongoose.model('iamUsers', iamUsersSchema, 'iamUsers');

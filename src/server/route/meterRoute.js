@@ -17,13 +17,24 @@ exports.rate = function(req,res) {
             $project: {
                 _id: 1,
                 UsageStartDate: 1,
-                Cost: 1
+                Cost: 1,
+                NonFreeCost: 1
             }
         }, {
             $group: {
                 _id: "$UsageStartDate",
                 total: {
                     $sum: "$Cost"
+                },
+                TNonFreeCost: {
+                    $sum: "$NonFreeCost"
+                }
+            }        
+        }, {
+            $project: {
+                _id: 1,
+                total: {
+                    $add: ['$TNonFreeCost', '$total']
                 }
             }
         }]).exec(function(e, d) {

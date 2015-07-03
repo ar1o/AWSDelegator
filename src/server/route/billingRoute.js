@@ -118,20 +118,25 @@ exports.hourlyCostProduct = function(req, res) {
         res.send(d);
     });
 };
-
 exports.groupByMonth = function(req, res) {
     mongoose.model('Billings').aggregate([{
         $match: {
-            Cost: {
-                $gt: 0
-            }
+
+        }
+    }, {
+        $project: {
+            _id: 1,
+            Cost: 1,
+            UsageStartDate: 1
         }
     }, {
         $group: {
-            _id: {$substr: ['$UsageStartDate', 0, 7]},             
+            _id: {
+                $substr: ['$UsageStartDate', 0, 7]
+            },
             Total: {
                 $sum: "$Cost"
-            }
+            },
         }
     }, {
         $sort: {
@@ -142,6 +147,45 @@ exports.groupByMonth = function(req, res) {
     });
 };
 
+exports.groupByMonthNF = function(req, res) {
+    mongoose.model('Billings').aggregate([{
+        $match: {
+
+        }
+    }, {
+        $project: {
+            _id: 1,
+            Cost: 1,
+            NonFreeCost: 1,
+            UsageStartDate: 1
+        }
+    }, {
+        $group: {
+            _id: {
+                $substr: ['$UsageStartDate', 0, 7]
+            },
+            TCost: {
+                $sum: "$Cost"
+            },
+            TNonFreeCost: {
+                $sum: "$NonFreeCost"
+            }
+        }
+    }, {
+        $project: {
+            _id: 1,
+            Total: {
+                $add: ['$TNonFreeCost', '$TCost']
+            }
+        }
+    }, {
+        $sort: {
+            _id: 1
+        }
+    }]).exec(function(e, d) {
+        res.send(d);
+    });
+};
 
 /*
  * Query EC2 instances for hourly cost. 

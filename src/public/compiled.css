@@ -140,6 +140,19 @@ div#productcostcontainer {
   /*	border-style: dashed;
 	border-color: blue;*/
 }
+.AWSMonthlyCostView {
+  margin: 0 auto;
+  width: 1060px;
+  background-color: white;
+}
+div#awsmonthlycostcontainer {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  margin-right: 20px;
+  margin-left: 20px;
+  /*	border-style: dashed;
+	border-color: blue;*/
+}
 .EC2CostView {
   padding-top: 20px;
 }
@@ -160,6 +173,14 @@ div#productcostcontainer {
   min-height: 350px;
   padding-top: 20px;
 }
+.IAMGroupsView {
+  min-height: 350px;
+  padding-top: 20px;
+}
+.IAMUsersView {
+  min-height: 350px;
+  padding-top: 20px;
+}
 #InstanceTable_wrapper {
   background-color: #f7f7f7;
   margin-top: 20px;
@@ -174,6 +195,32 @@ div#productcostcontainer {
   /*border: 1px solid gray;*/
 }
 #RDSInstanceTable_wrapper {
+  background-color: #f7f7f7;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  margin-right: 20px;
+  margin-left: 20px;
+  padding: 5px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #aaa;
+  border-top: 1px solid #aaa;
+  /*border: 1px solid gray;*/
+}
+#GroupsTable_wrapper {
+  background-color: #f7f7f7;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  margin-right: 20px;
+  margin-left: 20px;
+  padding: 5px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #aaa;
+  border-top: 1px solid #aaa;
+  /*border: 1px solid gray;*/
+}
+#UsersTable_wrapper {
   background-color: #f7f7f7;
   margin-top: 20px;
   margin-bottom: 20px;
@@ -260,7 +307,6 @@ div#awsoperationscontainer {
   float: right;
 }
 .MeterView {
-  border: 1px black solid;
   font-family: 'Roboto', sans-serif;
   font-size: 14px;
   position: absolute;
@@ -268,20 +314,17 @@ div#awsoperationscontainer {
   padding-top: 8px;
 }
 .rate {
-  border: 1px blue solid;
   padding-left: 10px;
   float: left;
-  width: 80px;
+  width: 75px;
 }
 .usage {
-  border: 1px red solid;
   float: left;
   padding-left: 10px;
-  width: 80px;
+  width: 70px;
 }
 .balance {
-  border: 1px green solid;
   float: left;
   padding-left: 10px;
-  width: 80px;
+  width: 75px;
 }

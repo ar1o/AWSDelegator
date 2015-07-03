@@ -60,6 +60,22 @@ var CostModel = Backbone.Model.extend({
 			});
 		})();
 	},
+	getAWSMonthlyCostNonFree: function() {
+		AWSMonthlyCostNF.reset();
+		var self = this;
+		(function() {
+			$.get(host + '/api/billing/groupByMonthNF', function(result) {
+				for (var i in result) {
+					var data = new Cost({
+						date: result[i]._id,
+						cost: result[i].Total
+					});
+					AWSMonthlyCostNF.add(data);
+				}
+				self.set('dataReady', Date.now());
+			});
+		})();
+	},
 	getMonth: function(value) {
 		var mnth = ['January', 'Febuary', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 		return mnth[value - 1];
@@ -83,3 +99,4 @@ var CostCollection = Backbone.Collection.extend({
 
 var hourlyCostCollection = new CostCollection();
 var AWSMonthlyCost = new CostCollection(); 
+var AWSMonthlyCostNF = new CostCollection(); 

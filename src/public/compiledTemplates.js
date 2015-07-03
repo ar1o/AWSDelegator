@@ -1,7 +1,7 @@
 (function() {
   var template = Handlebars.template, templates = Handlebars.templates = Handlebars.templates || {};
 templates['AWSMonthlyCostView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  return "<div id=\"container\"> testtesttest</div>";
+  return "<div id=\"awsmonthlycostcontainer\"> testtesttest</div>";
   },"useData":true});
 templates['AWSOperationsView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   return "<div id=\"awsoperationscontainer\"> </div>";
@@ -99,24 +99,54 @@ templates['FooterView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":func
 templates['HeaderView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   return "<div class=\"setting\"> </div>\n\n<div class=\"menu\"><i class=\"fa fa-bars fa-1x\"></i> Menu</div>";
   },"useData":true});
+templates['IAMGroupsView'] = template({"1":function(depth0,helpers,partials,data) {
+  var lambda=this.lambda, escapeExpression=this.escapeExpression;
+  return "		<tr>\n			<td >"
+    + escapeExpression(lambda((depth0 != null ? depth0.groupName : depth0), depth0))
+    + "</td>\n			<td>"
+    + escapeExpression(lambda((depth0 != null ? depth0.groupId : depth0), depth0))
+    + "</td>\n			<td>"
+    + escapeExpression(lambda((depth0 != null ? depth0.arn : depth0), depth0))
+    + "</td>\n			<td>"
+    + escapeExpression(lambda((depth0 != null ? depth0.createDate : depth0), depth0))
+    + "</td>\n			<td>"
+    + escapeExpression(lambda((depth0 != null ? depth0.amount : depth0), depth0))
+    + "</td> \n		</tr>\n";
+},"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  var stack1, buffer = "<table id=\"GroupsTable\" class=\"hover\">\n	<thead>\n		<tr class=\"dark-row\">\n			<th>GroupName</th>\n			<th>GroupId</th>\n			<th>Arn</th>\n			<th>CreateDate</th>\n			<th>Amount</th>\n		</tr>\n	</thead>\n	<tbody id=\"instanceData\">\n";
+  stack1 = helpers.each.call(depth0, (depth0 != null ? depth0.instances : depth0), {"name":"each","hash":{},"fn":this.program(1, data),"inverse":this.noop,"data":data});
+  if (stack1 != null) { buffer += stack1; }
+  return buffer + "	</tbody>	\n</table>\n";
+},"useData":true});
+templates['IAMUsersView'] = template({"1":function(depth0,helpers,partials,data) {
+  var lambda=this.lambda, escapeExpression=this.escapeExpression;
+  return "		<tr>\n			<td >"
+    + escapeExpression(lambda((depth0 != null ? depth0.userName : depth0), depth0))
+    + "</td>\n			<td>"
+    + escapeExpression(lambda((depth0 != null ? depth0.userId : depth0), depth0))
+    + "</td>\n			<td>"
+    + escapeExpression(lambda((depth0 != null ? depth0.arn : depth0), depth0))
+    + "</td>\n			<td>"
+    + escapeExpression(lambda((depth0 != null ? depth0.createDate : depth0), depth0))
+    + "</td>\n			<td>"
+    + escapeExpression(lambda((depth0 != null ? depth0.amount : depth0), depth0))
+    + "</td> \n		</tr>\n";
+},"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  var stack1, buffer = "<table id=\"UsersTable\" class=\"hover\">\n	<thead>\n		<tr class=\"dark-row\">\n			<th>UserName</th>\n			<th>UserId</th>\n			<th>Arn</th>\n			<th>CreateDate</th>\n			<th>Amount</th>\n		</tr>\n	</thead>\n	<tbody id=\"instanceData\">\n";
+  stack1 = helpers.each.call(depth0, (depth0 != null ? depth0.instances : depth0), {"name":"each","hash":{},"fn":this.program(1, data),"inverse":this.noop,"data":data});
+  if (stack1 != null) { buffer += stack1; }
+  return buffer + "	</tbody>	\n</table>\n";
+},"useData":true});
 templates['MeterView'] = template({"1":function(depth0,helpers,partials,data) {
   var lambda=this.lambda, escapeExpression=this.escapeExpression;
   return "		$"
     + escapeExpression(lambda((depth0 != null ? depth0.value : depth0), depth0))
     + "/Hour\n";
-},"3":function(depth0,helpers,partials,data) {
-  var lambda=this.lambda, escapeExpression=this.escapeExpression;
-  return "		$"
-    + escapeExpression(lambda((depth0 != null ? depth0.value : depth0), depth0))
-    + "\n";
 },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, buffer = "<div class=\"rate\">Rate: \n";
   stack1 = helpers.each.call(depth0, (depth0 != null ? depth0.rate : depth0), {"name":"each","hash":{},"fn":this.program(1, data),"inverse":this.noop,"data":data});
   if (stack1 != null) { buffer += stack1; }
-  buffer += "</div>\n<div class=\"usage\">Usage: \n";
-  stack1 = helpers.each.call(depth0, (depth0 != null ? depth0.usage : depth0), {"name":"each","hash":{},"fn":this.program(3, data),"inverse":this.noop,"data":data});
-  if (stack1 != null) { buffer += stack1; }
-  return buffer + "</div>\n\n<div class=\"balance\">Balance: $123\n\n</div>";
+  return buffer + "</div>\n<div class=\"usage\">Usage:      N/A\n</div>\n\n<div class=\"balance\">Balance: N/A\n\n</div>";
 },"useData":true});
 templates['NavView'] = template({"1":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing, buffer = "<div class=\"page\" page-id=\""
@@ -129,11 +159,16 @@ templates['NavView'] = template({"1":function(depth0,helpers,partials,data) {
   buffer += "\n";
   stack1 = ((helpers.ifCond || (depth0 && depth0.ifCond) || helperMissing).call(depth0, (depth0 != null ? depth0.title : depth0), "==", "Amazon RDS Service", {"name":"ifCond","hash":{},"fn":this.program(4, data),"inverse":this.noop,"data":data}));
   if (stack1 != null) { buffer += stack1; }
+  buffer += "\n";
+  stack1 = ((helpers.ifCond || (depth0 && depth0.ifCond) || helperMissing).call(depth0, (depth0 != null ? depth0.title : depth0), "==", "Usage Monitor", {"name":"ifCond","hash":{},"fn":this.program(6, data),"inverse":this.noop,"data":data}));
+  if (stack1 != null) { buffer += stack1; }
   return buffer;
 },"2":function(depth0,helpers,partials,data) {
-  return "<div class=\"subpage\" subpage-id=\"0\"> >> EC2 Instances</div>\n";
+  return "<div class=\"subpage\" subpage-id=\"0\"> EC2 Instances</div>\n";
   },"4":function(depth0,helpers,partials,data) {
-  return "<div class=\"subpage\" subpage-id=\"1\"> >> RDS Instances</div>\n";
+  return "<div class=\"subpage\" subpage-id=\"1\"> RDS Instances</div>\n";
+  },"6":function(depth0,helpers,partials,data) {
+  return "<div class=\"subpage\" subpage-id=\"2\"> IAM Groups</div>\n<div class=\"subpage\" subpage-id=\"3\"> IAM Users</div>\n";
   },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   var stack1, buffer = "<div class=\"slider\">\n";
   stack1 = helpers.each.call(depth0, (depth0 != null ? depth0.pages : depth0), {"name":"each","hash":{},"fn":this.program(1, data),"inverse":this.noop,"data":data});

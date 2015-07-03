@@ -38,8 +38,7 @@ app.get('/api/billing/instanceCostAll', require(__dirname +'/server/route/billin
 app.get('/api/billing/totalCostProduct',require(__dirname +'/server/route/billingRoute').totalCostProduct);
 
 app.get('/api/billing/groupByMonth',require(__dirname +'/server/route/billingRoute').groupByMonth);
-
-
+app.get('/api/billing/groupByMonthNF',require(__dirname +'/server/route/billingRoute').groupByMonthNF);
 
 app.get('/api/billing/calcTotalCost',require(__dirname +'/server/route/billingRoute').calcTotalCost);
 
@@ -56,6 +55,9 @@ app.get('/api/statistics/operations',require(__dirname +'/server/route/Operation
 app.get('/api/meter/rate',require(__dirname +'/server/route/meterRoute').rate);
 app.get('/api/meter/usage',require(__dirname +'/server/route/meterRoute').usage);
 app.get('/api/meter/balance',require(__dirname +'/server/route/meterRoute').balance);
+
+app.get('/api/usage/groups',require(__dirname +'/server/route/iamRoute').groups);
+app.get('/api/usage/users',require(__dirname +'/server/route/iamRoute').users);
 
 function errorHandler(err, req, res, next) {
     console.error(err.message);
