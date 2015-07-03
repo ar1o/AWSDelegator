@@ -26,6 +26,7 @@ var setupServer = function(){
     console.log('SetupAlert: setting up database');
     setupDatabase(function(){
         console.log('SetupAlert: parsing instances');
+        AWS.config.credentials = awsCredentials.default;
         parseInstances(function(){
             console.log('SetupAlert: parsing metrics');
             parseMetrics(function(){
@@ -87,10 +88,8 @@ var setupDatabase = function(callback){
 }
 
 var parseInstances = function(callback){
-    AWS.config.credentials = awsCredentials.dev2;
     rdsParser.parseInstances(function() {
         console.log('ParseAlert(rds): Instance parsing completed');
-        AWS.config.credentials = awsCredentials.default;
         ec2Parser.parseInstances(function() {
             console.log('ParseAlert(ec2): Instance parsing completed');
             callback();
@@ -99,11 +98,9 @@ var parseInstances = function(callback){
 };
 
 var parseMetrics = function(callback){
-    AWS.config.credentials = awsCredentials.dev2;
     rdsParser.parseMetrics('setup', function(err) {
         if (err) throw err;
         console.log('ParseAlert(rds): Metrics parsing completed');
-        AWS.config.credentials = awsCredentials.default;
         ec2Parser.parseMetrics('setup', function(err) {
             if(err) throw err;
             require('./src/server/BoxPricingCheck').getPricing(function() {
@@ -187,7 +184,6 @@ var parseBills = function(callback){
 var parseGroups = function(callback){    
     MongoClient.connect(databaseUrl, function(err, db) {
         if (err) throw err;
-        AWS.config.credentials = awsCredentials.dev2;
         var iam = new AWS.IAM();
         iam.listGroups({}, function(err, iamGroups) {
             if (err) throw err;
@@ -210,7 +206,6 @@ var parseGroups = function(callback){
 var parseUsers = function(callback){
     MongoClient.connect(databaseUrl, function(err, db) {
         if (err) throw err;
-        AWS.config.credentials = awsCredentials.dev2;
         var iam = new AWS.IAM();
         iam.listUsers({}, function(err, iamUsers) {
             if (err) throw err;
