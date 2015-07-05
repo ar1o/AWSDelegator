@@ -16,7 +16,7 @@ exports.parseGroups = function(callback){
 								controller1();
 							} else {
 								if(newGroups!=0)
-									console.log('ParseAlert(iam): found '+newGroups+' new groups');
+									console.log('ParseAlert(iam): found '+newGroups+' new group/s');
 								callback();
 							}
 						});
@@ -65,7 +65,7 @@ exports.parseUsers = function(callback){
 								controller1();
 							} else {
 								if(newUsers!=0)
-									console.log('ParseAlert(iam): found '+newUsers+' new users');
+									console.log('ParseAlert(iam): found '+newUsers+' new user/s');
 								callback();
 							}
 						});
@@ -227,7 +227,7 @@ var checkGroupConsistency = function(iamGroups,dbGroups,callback){
 			if (index1 < dbGroups.length) controller1();
 			else {
 				if(oldUsers!=0)
-					console.log('ParseAlert(iam): removed '+oldUsers+' new groups');
+					console.log('ParseAlert(iam): removed '+oldUsers+' group/s');
 				callback();
 			}
 		});
@@ -268,7 +268,7 @@ var checkUserConsistency = function(iamUsers,dbUsers,callback){
 			if (index1 < dbUsers.length) controller1();
 			else {
 				if(oldUsers!=0)
-					console.log('ParseAlert(iam): removed '+oldUsers+' new users');
+					console.log('ParseAlert(iam): removed '+oldUsers+' user/s');
 				callback();
 			}
 		});

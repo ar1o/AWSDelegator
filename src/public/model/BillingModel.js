@@ -1,6 +1,7 @@
 var BillingsModel = Backbone.Model.extend({
 	initialize: function() {
 		this.change('dataReady');
+		this.change('operationDataReady');
 	},
 
 	getBilling: function(instanceid, volumeId) {
@@ -34,7 +35,6 @@ var BillingsModel = Backbone.Model.extend({
 		var volumeArray = volumeId.split(',');
 		// console.log("Number of volumes attached is ",volumeArray);
 		var self = this;
-		var count = 0;
 		var params = {
 			instance: instanceid,
 			volume: volumeId
@@ -54,10 +54,33 @@ var BillingsModel = Backbone.Model.extend({
 			});
 		})(params);
 	},
+	calculateOperationCost: function(selected, resourceId, product){
+		operationCostCollection.reset();
+		var self = this;
+		var params = {
+			operation: selected[0],
+			instance: resourceId,
+			productName: product
+		};
+		(function(params) {
+			$.get(host + '/api/billing/ec2/operationCost', params, function(result) {
+				for (var i in result) {
+					var data = new operationCostModel({
+						resourceId: resourceId,
+						operation: selected[0],
+						color: selected[1],
+						cost: result[i].Cost,
+						date: result[i].UsageStartDate
+					});
+					operationCostCollection.add(data);
+				}
+				self.set('operationDataReady', Date.now());
+			});
+		})(params);
+	},
 	getRDSBilling: function(instanceid) {
 		totalCostInstancesCollection.reset();
 		var self = this;
-		var count = 0;
 		var params = {
 			instance: instanceid
 		};
@@ -105,5 +128,23 @@ var InstanceTotalCostCollection = Backbone.Collection.extend({
 	}
 });
 
+var operationCostModel =  Backbone.Model.extend({
+	defaults: {
+		resourceId: null,
+		operation: null,
+		color: null,
+		cost: 0,
+		date: null
+	}
+});
+
+var OperationCostCollection = Backbone.Collection.extend({
+	model: operationCostModel,
+	initialize: function() {
+		this.on('add', function(model) {});
+	}
+});
+
 var TCost = new InstanceTotalCostCollection();
 var totalCostInstancesCollection = new InstanceTotalCostCollection();
+var operationCostCollection = new OperationCostCollection();
