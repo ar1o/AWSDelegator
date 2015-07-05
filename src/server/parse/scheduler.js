@@ -14,7 +14,7 @@ var _params = {
 exports.s3Connect = function(_callback) {
     var currentTimeMilliseconds = (new Date).getTime();
     var currentTimeIso = new Date(currentTimeMilliseconds).toISOString();
-    console.log();
+    console.log('\n\n\n');    
     console.log('--->@s3Connect:',currentTimeIso);    
     s3.s3Watch();
     parseBills();
@@ -134,7 +134,7 @@ var renameCSV = function(callback){
         if (err) throw err;
         fs.rename(process.cwd() + '/data/' + files[0], process.cwd() + '/data/latestBills.csv', function(err) {
             if (err) console.log('ERROR: ' + err);
-            console.log(files[0] + " renamed to latestBills.csv");
+            console.log('billingCsv:',files[0]);
             callback();
         });        
     });
@@ -166,9 +166,11 @@ var parseRDS = function(callback) {
 }
 
 var parseIAM = function(callback){    
-    iamParser.parseGroups(function(){        
-        iamParser.parseUsers(function(){            
-            callback();
+    iamParser.parseGroups(function(){
+        iamParser.parseUsers(function(){
+            iamParser.parseUserGroups(function(){
+                callback();
+            });    
         });
     });
 }
