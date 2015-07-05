@@ -15,7 +15,8 @@ exports.parseInstances = function(callback) {
                     if (regionIteratorIndex < awsRegions.length) {
                         controller1();
                     } else {
-                        console.log("ParseAlert(ec2): found ",newInstanceCount," new instance/s");
+                        if(newInstanceCount!=0)
+                            console.log("ParseAlert(ec2): found ",newInstanceCount," new instance/s");
                         for(var i in userInstances){
                             if(activeInstances.indexOf(userInstances[i].Id)==-1){
                                 mongoose.model('ec2Instances').update({
