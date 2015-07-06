@@ -1,4 +1,4 @@
-var OperationsView = Backbone.View.extend({
+var RDSOperationsView = Backbone.View.extend({
     className: 'OperationsView',
 
     initialize: function(options) {
@@ -6,7 +6,7 @@ var OperationsView = Backbone.View.extend({
             this.model = new InstancesModel();
         }
         self = this;
-        billingActivity = new EC2BillingView();
+        rdsBillingActivity = new RDSBillingView();
         this.bindings();
     },
 
@@ -55,7 +55,7 @@ var OperationsView = Backbone.View.extend({
                         point: {
                             events: {
                                 click: function(event) {
-                                    billingActivity.updateView([this.name,this.color]);
+                                    rdsBillingActivity.updateView([this.name,this.color]);
                                 }
                             }
                         }

@@ -37,11 +37,11 @@ var parseBills = function() {
 var printBanner = function() {
     var currentTimeMilliseconds = (new Date).getTime();
     var currentTimeIso = new Date(currentTimeMilliseconds).toISOString();
-    console.log("    ___      _____ ___      _               _           ");
-    console.log("   /_\\ \\    / / __|   \\ ___| |___ __ _ __ _| |_ ___ _ _ ");
-    console.log("  / _ \\ \\/\\/ /\\__ \\ |) / -_) / -_) _` / _` |  _/ _ \\ '_|");
-    console.log(" /_/ \\_\\_/\\_/ |___/___/\\___|_\\___\\__, \\__,_|\\__\\___/_|  ");
-    console.log("      "+currentTimeIso+"    |___/                  \n");
+    console.log("     ___      _____ ___      _               _           ");
+    console.log("    /_\\ \\    / / __|   \\ ___| |___ __ _ __ _| |_ ___ _ _ ");
+    console.log("   / _ \\ \\/\\/ /\\__ \\ |) / -_) / -_) _` / _` |  _/ _ \\ '_|");
+    console.log("  /_/ \\_\\_/\\_/ |___/___/\\___|_\\___\\__, \\__,_|\\__\\___/_|  ");
+    console.log("       "+currentTimeIso+"    |___/                  \n");
 }
 
 var parseAWSServices = function() {
