@@ -65,11 +65,6 @@ exports.getPricing = function(callback) {
                 _pricing[_region.region] = parseFloat(_region.instanceTypes[0].sizes[0].valueColumns[0].prices.USD);
             }
             doc[osType[index]] = _pricing;
-
-            // _doc['Price']=(pricingJSON.config.regions[region].instanceTypes[compType].sizes[size].valueColumns[0].prices.USD);
-            // _doc['Region']=(pricingJSON.config.regions[region]['region']);
-            // _doc['InstanceSize']=(pricingJSON.config.regions[region].instanceTypes[compType].sizes[size]['size']);
-            // doc[osType[index]]=_doc;
             _callback();
         });
     };
@@ -100,7 +95,7 @@ exports.getPricing = function(callback) {
                 item.Region = (pricingJSON.config.regions[region]['region']);
                 item.TypeName = pricingJSON.config.regions[region].types[2].name;
                 item.TierName = pricingJSON.config.regions[region].types[2].tiers[1].name;
-                item.Price = pricingJSON.config.regions[region].types[2].tiers[1].prices.USD;
+                item.Price = parseFloat(pricingJSON.config.regions[region].types[2].tiers[1].prices.USD);
                 pricing[usageTypes[index2]]=item;
                 _callback();
                 break;
@@ -109,7 +104,7 @@ exports.getPricing = function(callback) {
                 item.Region = (pricingJSON.config.regions[region]['region']);
                 item.TypeName = pricingJSON.config.regions[region].types[1].name;
                 item.TierName = (pricingJSON.config.regions[region].types[1].tiers[3].name);
-                item.Price = (pricingJSON.config.regions[region].types[1].tiers[3].prices.USD);
+                item.Price = parseFloat(pricingJSON.config.regions[region].types[1].tiers[3].prices.USD);
                 pricing[usageTypes[index2]]=item;
                 _callback();
                 break;
@@ -118,7 +113,7 @@ exports.getPricing = function(callback) {
                 item.Region = (pricingJSON.config.regions[region]['region']);
                 item.TypeName = pricingJSON.config.regions[region].types[1].name;
                 item.TierName = (pricingJSON.config.regions[region].types[1].tiers[5].name);
-                item.Price = (pricingJSON.config.regions[region].types[1].tiers[5].prices.USD);
+                item.Price = parseFloat(pricingJSON.config.regions[region].types[1].tiers[5].prices.USD);
                 pricing[usageTypes[index2]]=item;
                 _callback();
                 break;
@@ -127,7 +122,7 @@ exports.getPricing = function(callback) {
                 item.Region = (pricingJSON.config.regions[region]['region']);
                 item.ProductName = "Amazon RDS Service";
                 item.TierName = (pricingJSON.config.regions[region].types[0].tiers[0].name);
-                item.Price = (pricingJSON.config.regions[region].types[0].tiers[0].prices.USD);
+                item.Price = parseFloat(pricingJSON.config.regions[region].types[0].tiers[0].prices.USD);
                 pricing[usageTypes[index2]]=item;
                 _callback();
                 break;
@@ -135,7 +130,7 @@ exports.getPricing = function(callback) {
                 var item = {};
                 item.Region = (pricingJSON.config.regions[region]['region']);
                 item.TierName = pricingJSON.config.regions[region].types[0].tiers[1].name; 
-                item.Price = pricingJSON.config.regions[region].types[0].tiers[1].prices.USD;
+                item.Price = parseFloat(pricingJSON.config.regions[region].types[0].tiers[1].prices.USD);
                 pricing[usageTypes[index2]]=item;
                 _callback();
                 break;
@@ -143,7 +138,7 @@ exports.getPricing = function(callback) {
                 var item = {};
                 item.Region = (pricingJSON.config.regions[region]['region']);
                 item.TypeName = pricingJSON.config.regions[region].types[0].name;
-                item.Price = pricingJSON.config.regions[region].types[0].values[0].prices.USD;
+                item.Price = parseFloat(pricingJSON.config.regions[region].types[0].values[0].prices.USD);
                 pricing[usageTypes[index2]]=item;
                 _callback();
                 break;
@@ -151,7 +146,7 @@ exports.getPricing = function(callback) {
                 var item = {};
                 item.Region = (pricingJSON.config.regions[region]['region']);
                 item.TierName = pricingJSON.config.regions[region].tiers[0].name;
-                item.Price = pricingJSON.config.regions[region].tiers[0].prices.USD;
+                item.Price = parseFloat(pricingJSON.config.regions[region].tiers[0].prices.USD);
                 pricing[usageTypes[index2]]=item;
                 _callback();
                 break;
@@ -159,7 +154,7 @@ exports.getPricing = function(callback) {
                 var item = {};
                 item.Region = (pricingJSON.config.regions[region]['region']);
                 item.TierName = pricingJSON.config.regions[region].tiers[3].name;                
-                item.Price = pricingJSON.config.regions[region].tiers[3].prices.USD;
+                item.Price = parseFloat(pricingJSON.config.regions[region].tiers[3].prices.USD);
                 pricing[usageTypes[index2]]=item;
                 _callback();
                 break;
@@ -169,7 +164,7 @@ exports.getPricing = function(callback) {
                 item.Region = (pricingJSON.config.regions[region]['region']);
                 item.TierName = (pricingJSON.config.regions[region].tiers[0].name);                
                 item.StorageType = (pricingJSON.config.regions[region].tiers[0].storageTypes[0].type);
-                item.Price = (pricingJSON.config.regions[region].tiers[0].storageTypes[0].prices.USD);;
+                item.Price = parseFloat(pricingJSON.config.regions[region].tiers[0].storageTypes[0].prices.USD);;
                 pricing[usageTypes[index2]]=item;
                 _callback();
                 break;
