@@ -2,7 +2,6 @@ var EC2OperationsView = Backbone.View.extend({
     className: 'OperationsView',
 
     initialize: function(options) {
-        // console.log(options);
         if (!this.model) {
             this.model = new InstancesModel();
         }

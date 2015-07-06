@@ -149,7 +149,6 @@ var renameCSV = function(callback){
 
 var parseBillings = function(callback){
     billingParser.parseBillingCSV(function() {        
-        if (typeof _callback == "function") _callback();
         callback();
     });
 }
