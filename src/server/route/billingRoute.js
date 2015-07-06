@@ -121,18 +121,21 @@ exports.hourlyCostProduct = function(req, res) {
 exports.groupByMonth = function(req, res) {
     mongoose.model('Billings').aggregate([{
         $match: {
-
+             Cost: {
+                $gt: 0
+            }
         }
     }, {
         $project: {
             _id: 1,
             Cost: 1,
+            ProductName: 1,
             UsageStartDate: 1
         }
     }, {
         $group: {
             _id: {
-                $substr: ['$UsageStartDate', 0, 7]
+                "UsageStartDate":{$substr: ['$UsageStartDate', 0, 7]}, "ProductName":"$ProductName" 
             },
             Total: {
                 $sum: "$Cost"

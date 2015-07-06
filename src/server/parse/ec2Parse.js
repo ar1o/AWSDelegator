@@ -112,7 +112,7 @@ exports.parseInstances = function(callback) {
                                     $set: {
                                         Lifetime: lifetime,
                                         LastActiveTime: currentTimeIso,
-                                        State: "running",
+                                        State: "stopped",
                                         VolumeId: instanceVolumes[instanceId]
                                     }
                                 });
