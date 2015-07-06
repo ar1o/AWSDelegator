@@ -1,3 +1,5 @@
+
+
 var ConfigurationModel = Backbone.Model.extend({
 	defaults: {
 		openConfig: false
@@ -8,7 +10,8 @@ var ConfigurationModel = Backbone.Model.extend({
 	}
 
 });
-
+// var accountNumber = $.get('/getAccount');
+// console.log(accountNumber);
 var ConfigurationViewModel = Backbone.Model.extend({
 });
 

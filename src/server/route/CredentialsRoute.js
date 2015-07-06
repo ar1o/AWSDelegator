@@ -28,30 +28,40 @@ exports.setCredentials = function(req, res) {
       			i = i + 1;
       		}
       		else{
+
       			credentials[key]=value;
       		}
       	}
 // Account_Number=123456789&RDS_Region=us-west-1&S3_Region=us-west-1&AWS_Regions=us-west-1&AWS_Regions=us-west-2&AWS_Regions=us-east-1&Credentials=111&Credits=111
         while(input.indexOf('=', index)!=-1&& index!=0);
-        console.log("Credentials",credentials);
-        console.log("regions",regions);
         // console.log(dict['Account_Number']);
-        if(isNaN(credentials["Account_Number"])||credentials["Account_Number"].length!=12){
-	    	console.log("Invalid Account number entered.\nPlease try again.\nLength of:",credentials["Account_Number"].length);
-	    	return;
-	    }
+      if(credentials["RDS_Region"] == undefined){
+        console.log("Please input a RDS Region");
+        return;
+      }
+      if(credentials["S3_Region"] == undefined){
+        console.log("Please input a S3 Region");
+        return;
+      }
 	    if(isNaN(credentials["Credits"])){
 	    	console.log("Credits entered is not a number.\nPlease try again.");
 	    	return;
 	    }
-	    //awsAccountNumber = '092841396837';
-	    var awsAccountNumber = credentials['Account_Number'];
-		var rdsRegion = credentials['RDS_Region'];
-		var s3Region = credentials['S3_Region'];
-		// s3Bucket = 'csvcontainer'; //Bucket Name??
-		awsRegions = regions;
-		console.log(awsRegions, awsAccountNumber, rdsRegion, s3Region);
-        
+      
+      console.log("credits before",credits);
+      credits = credentials["Credits"];
+      console.log("credits after",credits);
+      console.log("RDS REGION", rdsRegion);
+		  rdsRegion = credentials['RDS_Region'];
+      console.log("RDS REGION",rdsRegion);
+      console.log("S3 REGION",s3Region);
+		  s3Region = credentials['S3_Region'];
+      console.log("S3 REGION",s3Region);
+		  // s3Bucket = 'csvcontainer'; //Bucket Name??
+      console.log("before",awsRegions);
+		  awsRegions = regions;
+      console.log("after",awsRegions);
+		 
       console.log("Credentials successfully updated");
     });
 	//verify account number is numeric
@@ -59,7 +69,7 @@ exports.setCredentials = function(req, res) {
     ///Before setting the input values to the actual config variables, do error checking
     /*ACCOunt number == all numbers, length of 12
     RDS and S3 Regions are checkboxes, so there's limited variation. Make sure there is one selected though
-    Credentials... other than tring to connect with it and acc #, hard to test
+
     credits. Its a number...
     AWS_Regions >=1
     */
@@ -71,26 +81,9 @@ exports.setCredentials = function(req, res) {
       res.writeHead(200, "OK", {'Content-Type': 'text/html'});
       res.end();
     });
-	// var Account_Number=req.body.Account_Number;http://stackoverflow.com/questions/1799284/how-to-break-exit-from-a-each-function-in-jquery
-	// console.log(Account_Number);
 
-	// res.send("AccountNumber" + req.body.Account_Number);
-	// console.log(req.body);
-	// alert(req);
-	// awsAccountNumber = ;
-	// rdsRegion = ;
-	// s3Region = ;
-	// s3Bucket = 'csvcontainer';
-	// awsRegions = [];
-	// awsCredentials = {
-	// 	default: new AWS.SharedIniFileCredentials({
-	// 		profile: 'default'
-	// 	}),
-	// 	dev2: new AWS.SharedIniFileCredentials({
-	// 		profile: 'dev2'
-	// 	})
-	// };
-
-	// databaseUrl = 'mongodb://localhost:27017/awsdb';
-	//// res.send();
+}
+//Assumes an rds lineItem...
+exports.getAccountNumber = function(req, res) {
+      res.send(awsAccountNumber);
 }

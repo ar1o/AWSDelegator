@@ -16,31 +16,27 @@ templates['ConfigurationView'] = template({"1":function(depth0,helpers,partials,
     var stack1, alias1=helpers.helperMissing;
 
   return ((stack1 = (helpers.ifCond || (depth0 && depth0.ifCond) || alias1).call(depth0,(depth0 != null ? depth0.title : depth0),"==","Account Number",{"name":"ifCond","hash":{},"fn":this.program(2, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
-    + "\r\n"
     + ((stack1 = (helpers.ifCond || (depth0 && depth0.ifCond) || alias1).call(depth0,(depth0 != null ? depth0.title : depth0),"==","RDS Region",{"name":"ifCond","hash":{},"fn":this.program(4, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
-    + "\r\n"
     + ((stack1 = (helpers.ifCond || (depth0 && depth0.ifCond) || alias1).call(depth0,(depth0 != null ? depth0.title : depth0),"==","S3 Region",{"name":"ifCond","hash":{},"fn":this.program(6, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
-    + "\r\n"
     + ((stack1 = (helpers.ifCond || (depth0 && depth0.ifCond) || alias1).call(depth0,(depth0 != null ? depth0.title : depth0),"==","AWS Regions",{"name":"ifCond","hash":{},"fn":this.program(8, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
-    + "\r\n"
     + ((stack1 = (helpers.ifCond || (depth0 && depth0.ifCond) || alias1).call(depth0,(depth0 != null ? depth0.title : depth0),"==","Credits",{"name":"ifCond","hash":{},"fn":this.program(10, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
     + "\r\n";
 },"2":function(depth0,helpers,partials,data) {
-    return "						"
+    return "					<div type=\"text\" id=\"account\" value=\"\"></div>\r\n						"
     + this.escapeExpression(this.lambda((depth0 != null ? depth0.title : depth0), depth0))
-    + "<br> \r\n						<input type=\"text\" name=\"Account_Number\"> \r\n						<br>\r\n";
+    + ":\r\n						<h3><div id = \"div1\"></div></h3>\r\n						<hr>\r\n";
 },"4":function(depth0,helpers,partials,data) {
     return "						"
     + this.escapeExpression(this.lambda((depth0 != null ? depth0.title : depth0), depth0))
-    + "<br> \r\n						<input type=\"radio\" name='RDS_Region' value=\"us-west-1\">us-west-1\r\n						<input type=\"radio\" name='RDS_Region' value=\"us-west-2\">us-west-2\r\n						<input type=\"radio\" name='RDS_Region' value=\"us-east-1\">us-east-1<br>\r\n";
+    + "<br> \r\n						<input type=\"radio\" name='RDS_Region' value=\"us-west-1\">us-west-1\r\n						<input type=\"radio\" name='RDS_Region' value=\"us-west-2\">us-west-2\r\n						<input type=\"radio\" name='RDS_Region' value=\"us-east-1\">us-east-1<hr>\r\n";
 },"6":function(depth0,helpers,partials,data) {
     return "						"
     + this.escapeExpression(this.lambda((depth0 != null ? depth0.title : depth0), depth0))
-    + "<br>\r\n						<input type=\"radio\" name='S3_Region' value=\"us-west-1\">us-west-1\r\n						<input type=\"radio\" name='S3_Region' value=\"us-west-2\">us-west-2\r\n						<input type=\"radio\" name='S3_Region' value=\"us-east-1\">us-east-1<br>\r\n";
+    + "<br>\r\n						<input type=\"radio\" name='S3_Region' value=\"us-west-1\">us-west-1\r\n						<input type=\"radio\" name='S3_Region' value=\"us-west-2\">us-west-2\r\n						<input type=\"radio\" name='S3_Region' value=\"us-east-1\">us-east-1<hr>\r\n";
 },"8":function(depth0,helpers,partials,data) {
     return "						"
     + this.escapeExpression(this.lambda((depth0 != null ? depth0.title : depth0), depth0))
-    + "<br> \r\n						<input type=\"checkbox\" name='AWS_Regions' value=\"us-west-1\">us-west-1\r\n						<input type=\"checkbox\" name='AWS_Regions' value=\"us-west-2\">us-west-2\r\n						<input type=\"checkbox\" name='AWS_Regions' value=\"us-east-1\">us-east-1<br>\r\n";
+    + "<br> \r\n						<input type=\"checkbox\" name='AWS_Regions' value=\"us-west-1\">us-west-1\r\n						<input type=\"checkbox\" name='AWS_Regions' value=\"us-west-2\">us-west-2\r\n						<input type=\"checkbox\" name='AWS_Regions' value=\"us-east-1\">us-east-1<hr>\r\n";
 },"10":function(depth0,helpers,partials,data) {
     return "						"
     + this.escapeExpression(this.lambda((depth0 != null ? depth0.title : depth0), depth0))
@@ -48,7 +44,7 @@ templates['ConfigurationView'] = template({"1":function(depth0,helpers,partials,
 },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var stack1;
 
-  return "\r\n\r\n<html>\r\n	<head>\r\n		<title>Credential Input</title>\r\n		<script type=\"text/javascript\">\r\n			$(function(){\r\n				$('#submit').click(function(e){\r\n					e.preventDefault();\r\n					console.log('submit link clicked');\r\n\r\n					var data = {};\r\n					// data.\r\n					$.ajax({\r\n						type: 'POST',\r\n						data: JSON.stringify(data),\r\n						contentType: 'application/json',\r\n						url: 'http://localhost:3000/setCredentials',\r\n						success: function(data) {\r\n							console.log(success);\r\n							console.log(JSON.stringify(data));\r\n						}\r\n					});\r\n				});\r\n			});\r\n		</script>\r\n	</head>\r\n	<body>\r\n		<div class=\"slider\">\r\n			<form id=\"credentials\" action=\"/setCredentials\" method=\"post\">\r\n"
+  return "<html>\r\n	<head>\r\n		<title>Credential Input</title>\r\n		<script type=\"text/javascript\">\r\n		var response = '';\r\n			$(document).ready(function(){\r\n				$.get('/getAccount', function(data){\r\n					$(\"#div1\").append(data);\r\n				});\r\n			});\r\n				\r\n		</script>\r\n	</head>\r\n	<body>\r\n		<div class=\"slider\">\r\n			<form id=\"credentials\" action=\"/setCredentials\" method=\"post\">\r\n				<div>\r\n\r\n"
     + ((stack1 = helpers.each.call(depth0,(depth0 != null ? depth0.pages : depth0),{"name":"each","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
     + "				<br>\r\n				<hr>\r\n				<input type=\"submit\" value=\"Save\" onclick=\"showElements(this.form)\">\r\n			</form>\r\n		</div>\r\n	</body>\r\n</html>\r\n\r\n";
 },"useData":true});
@@ -145,7 +141,7 @@ templates['FooterView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":func
     return "";
 },"useData":true});
 templates['HeaderView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-    return "<div class=\"setting\"> </div>\r\n\r\n<div class=\"menu\"><i class=\"fa fa-bars fa-1x\"></i> Menu</div>";
+    return "<div class=\"setting\"><i class=\"fa fa-cogs fa-1x\"></i></div>\r\n\r\n<div class=\"menu\"><i class=\"fa fa-bars fa-1x\"></i></div>";
 },"useData":true});
 templates['IAMGroupsView'] = template({"1":function(depth0,helpers,partials,data) {
     var alias1=this.lambda, alias2=this.escapeExpression;

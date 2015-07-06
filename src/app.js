@@ -1,13 +1,9 @@
 var express = require('express');
 var app = express();
 port = process.env.PORT || 3000;
-var bodyParser= require('body-parser');
-// app.use(bodyParser.json());
-// app.use(bodyParser.urlencoded({
-//     extended : true
-// }));
 app.use(require(__dirname +'/server/CORS'));
 require(__dirname +'/server/config.js');
+
 // Front-end code
 app.use('/',express.static(__dirname + '/public'));
 
@@ -17,7 +13,6 @@ mongoose.connect(databaseUrl, function(error) {
         console.log(error);
     }
 });
-
 var db = mongoose.connection;
 db.on("open", function() {
     require(__dirname +'/server/model/ec2');
@@ -30,6 +25,8 @@ db.on("open", function() {
     });
 });
 
+app.post('/setCredentials', require(__dirname +'/server/route/CredentialsRoute').setCredentials);
+app.get('/getAccount', require(__dirname +'/server/route/CredentialsRoute').getAccountNumber);
 app.get('/api/ec2/instances', require(__dirname +'/server/route/ec2Route').instances);
 app.get('/api/ec2/metrics', require(__dirname +'/server/route/ec2Route').metrics);
 app.get('/api/ec2/operations', require(__dirname +'/server/route/ec2Route').operations);
@@ -40,13 +37,17 @@ app.get('/api/rds/operations', require(__dirname +'/server/route/rdsRoute').oper
 
 app.get('/api/billing/hourlyCostProduct', require(__dirname +'/server/route/billingRoute').hourlyCostProduct);
 app.get('/api/billing/instanceCostAll', require(__dirname +'/server/route/billingRoute').instanceCostAll);
-// app.get('/api/billing/calcFreeTierCost', require(__dirname +'/server/route/billingRoute').calcFreeTierCost);
 app.get('/api/billing/totalCostProduct',require(__dirname +'/server/route/billingRoute').totalCostProduct);
+
+app.get('/api/billing/groupByMonth',require(__dirname +'/server/route/billingRoute').groupByMonth);
+app.get('/api/billing/groupByMonthNF',require(__dirname +'/server/route/billingRoute').groupByMonthNF);
 
 app.get('/api/billing/calcTotalCost',require(__dirname +'/server/route/billingRoute').calcTotalCost);
 
 app.get('/api/billing/rds/instanceCostAll', require(__dirname +'/server/route/rdsBillingRoute').instanceCostAll);
 app.get('/api/billing/rds/hourlyCostProduct', require(__dirname +'/server/route/rdsBillingRoute').hourlyCostProduct);
+
+// app.get('/api/billing/ec2/operationCost', require(__dirname +'/server/route/billingRoute').operationCost);
 
 app.get('/api/NonFreeBilling/hourlyCostProduct', require(__dirname +'/server/route/NonFreeBillingRoute').hourlyCostProduct);
 app.get('/api/NonFreeBilling/instanceCostAll', require(__dirname +'/server/route/NonFreeBillingRoute').instanceCostAll);
@@ -59,7 +60,8 @@ app.get('/api/meter/rate',require(__dirname +'/server/route/meterRoute').rate);
 app.get('/api/meter/usage',require(__dirname +'/server/route/meterRoute').usage);
 app.get('/api/meter/balance',require(__dirname +'/server/route/meterRoute').balance);
 
-app.post('/setCredentials',require(__dirname +'/server/route/CredentialsRoute').setCredentials);
+app.get('/api/usage/groups',require(__dirname +'/server/route/iamRoute').groups);
+app.get('/api/usage/users',require(__dirname +'/server/route/iamRoute').users);
 
 function errorHandler(err, req, res, next) {
     console.error(err.message);

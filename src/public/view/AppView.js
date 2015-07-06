@@ -83,22 +83,13 @@ var AppView = Backbone.View.extend({
         this.$el.on('click', '[page-id="3"]', function(e) {
             this.navView.model.isOpen = false
             window.location.hash = '#/UsageMonitor';
-<<<<<<< HEAD:src/public/view/AppView.js
         }.bind(this));
 
         this.$el.on('click', '[subpage-id="0"]', function(e) {
             this.navView.model.isOpen = false
             window.location.hash = '#/EC2Instances';
         }.bind(this));
-=======
-        }.bind(this));
 
-        this.$el.on('click', '[subpage-id="0"]', function(e) {
-            this.navView.model.isOpen = false
-            window.location.hash = '#/EC2Instances';
-        }.bind(this));
->>>>>>> 440d7e1148728a9afd8c05f9c316737260f50c55:src/public/view/AppView.js
-        
         this.$el.on('click', '[subpage-id="1"]', function(e) {
             this.navView.model.isOpen = false
             window.location.hash = '#/RDSInstances';
@@ -114,14 +105,13 @@ var AppView = Backbone.View.extend({
             window.location.hash = '#/IAMUsers';
         }.bind(this));
 
-<<<<<<< HEAD:src/public/view/AppView.js
         this.$el.on("click", '.setting', function(e) {
             this.configurationView.model.openConfig = true;
             var length_calc = (this.$el.height() - 60);
             var length = length_calc + 'px';
             self.$('.ConfigurationView').css({
                 //altered this to fix runaway height issue
-                'configHeight': length
+                'height': length
             });
         }.bind(this));
         //workaround. not sure how I broke this
@@ -134,17 +124,14 @@ var AppView = Backbone.View.extend({
         this.$el.on("mouseleave", '.ConfigurationView', function(e) {
             this.configurationView.model.openConfig = false;
         }.bind(this));
-
-=======
->>>>>>> 440d7e1148728a9afd8c05f9c316737260f50c55:src/public/view/AppView.js
     },
 
     render: function() {
         this.$el.html(Handlebars.templates.AppView());
         this.$el.append(this.header.el);
+        this.$el.append(this.configurationView.el);
         this.$el.append(this.navView.el);
         this.$el.append(this.footer.el);
-        this.$el.append(this.configurationView.el);
 
         this.setView(this.router.get('view'));
     },
