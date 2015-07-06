@@ -9,7 +9,7 @@ var RDSInstancesView = Backbone.View.extend({
         this.model.getRDSInstances();
         this.rdsBillingActivity = new RDSBillingView();
         this.rdsMetricsActivity = new RDSMetricsView();
-        this.operationsActivity = new OperationsView();
+        this.operationsActivity = new RDSOperationsView();
         this.bindings();
     },
 

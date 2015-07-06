@@ -10,7 +10,7 @@ var EC2InstancesView = Backbone.View.extend({
         this.model.getEC2Instances();
         // child views
         this.billingActivity = new EC2BillingView();
-        this.operationsActivity = new OperationsView();
+        this.operationsActivity = new EC2OperationsView();
         this.metricsActivity = new EC2MetricsView();
         this.bindings();
     },

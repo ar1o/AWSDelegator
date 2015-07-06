@@ -12,9 +12,11 @@ var _params = {
 };
 
 exports.s3Connect = function(_callback) {
-    s3.s3Watch();    
+    printBanner(); 
+    s3.s3Watch();
     parseBills();
-    parseAWSServices();
+    AWS.config.credentials = awsCredentials.default;
+    parseAWSServices();    
 };
 
 var parseBills = function() {
@@ -32,17 +34,24 @@ var parseBills = function() {
     });
 }
 
+var printBanner = function() {
+    var currentTimeMilliseconds = (new Date).getTime();
+    var currentTimeIso = new Date(currentTimeMilliseconds).toISOString();
+    console.log("     ___      _____ ___      _               _           ");
+    console.log("    /_\\ \\    / / __|   \\ ___| |___ __ _ __ _| |_ ___ _ _ ");
+    console.log("   / _ \\ \\/\\/ /\\__ \\ |) / -_) / -_) _` / _` |  _/ _ \\ '_|");
+    console.log("  /_/ \\_\\_/\\_/ |___/___/\\___|_\\___\\__, \\__,_|\\__\\___/_|  ");
+    console.log("       "+currentTimeIso+"    |___/                  \n");
+}
+
 var parseAWSServices = function() {
     console.log('ParseAlert(ec2): parsing initiated');
-    AWS.config.credentials = awsCredentials.default;
     parseEC2(function() {
         console.log('ParseAlert(ec2): parsing completed');
         console.log('ParseAlert(rds): parsing initiated');
-        AWS.config.credentials = awsCredentials.dev2;
         parseRDS(function() {
             console.log('ParseAlert(rds): parsing completed');
             console.log('ParseAlert(iam): parsing initiated');
-            AWS.config.credentials = awsCredentials.dev2;
             parseIAM(function() {
                 console.log('ParseAlert(iam): parsing completed');
             });
@@ -51,7 +60,6 @@ var parseAWSServices = function() {
 }
 
 var deleteLatestBills = function(callback){
-    console.log(process.cwd());
     fs.readdir(process.cwd() +'/data/', function(err, files) {
         if (err) throw err;
         var latestBillsindex = files.indexOf('latestBills.csv');
@@ -133,7 +141,7 @@ var renameCSV = function(callback){
         if (err) throw err;
         fs.rename(process.cwd() + '/data/' + files[0], process.cwd() + '/data/latestBills.csv', function(err) {
             if (err) console.log('ERROR: ' + err);
-            console.log(files[0] + " renamed to latestBills.csv");
+            console.log('billingCsv:',files[0]);
             callback();
         });        
     });
@@ -149,7 +157,6 @@ var parseBillings = function(callback){
 var parseEC2 = function(callback) {
     //Parse 'metrics' before 'instances' as new instances 
     ec2Parser.parseMetrics('scheduler', function() {        
-        // AWS.config.credentials = awsCredentials.default;
         ec2Parser.parseInstances(function() {            
             callback();
         });
@@ -157,8 +164,8 @@ var parseEC2 = function(callback) {
 }
 
 var parseRDS = function(callback) {
-    rdsParser.parseMetrics('scheduler', function() { //Parse 'metrics' before 'instances' as new instances     
-        // AWS.config.credentials = awsCredentials.dev2;
+    //Parse 'metrics' before 'instances' as new instances    
+    rdsParser.parseMetrics('scheduler', function() {         
         rdsParser.parseInstances(function() {            
             callback();
         });
@@ -166,10 +173,11 @@ var parseRDS = function(callback) {
 }
 
 var parseIAM = function(callback){    
-    iamParser.parseGroups(function(){        
-        // AWS.config.credentials = awsCredentials.dev2;
-        iamParser.parseUsers(function(){            
-            callback();
+    iamParser.parseGroups(function(){
+        iamParser.parseUsers(function(){
+            iamParser.parseUserGroups(function(){
+                callback();
+            });    
         });
     });
 }
@@ -184,4 +192,4 @@ exports.updateAWSRegion = function(newRegion) {
         region: newRegion
     });
     console.log("new awsRegion " + AWS.config.region);
-}
+};

@@ -1,10 +1,12 @@
-var OperationsView = Backbone.View.extend({
+var RDSOperationsView = Backbone.View.extend({
     className: 'OperationsView',
 
     initialize: function(options) {
         if (!this.model) {
             this.model = new InstancesModel();
         }
+        self = this;
+        rdsBillingActivity = new RDSBillingView();
         this.bindings();
     },
 
@@ -23,8 +25,8 @@ var OperationsView = Backbone.View.extend({
                         plotShadow: false,
                         backgroundColor: '#f7f7f7'
                     },
-                    // colors: ['#50B432', '#ED561B', '#DDDF00', '#24CBE5', 
-                    //          '#64E572', '#FF9655', '#FFF263', '#6AF9C4'],
+                    colors: ['#50B432', '#ED561B', '#DDDF00', '#24CBE5', 
+                             '#64E572', '#FF9655', '#FFF263', '#6AF9C4'],
                     title: {
                         text: 'Operations'
                     },
@@ -36,7 +38,7 @@ var OperationsView = Backbone.View.extend({
                     },
                     plotOptions: {
                         pie: {
-                            allowPointSelect: true,
+                            allowPointSelect: false,
                             cursor: 'pointer',
                             dataLabels: {
                                 enabled: true,
@@ -53,7 +55,7 @@ var OperationsView = Backbone.View.extend({
                         point: {
                             events: {
                                 click: function(event) {
-                                    alert(this.name + " " + this.y+" "+this.color);
+                                    rdsBillingActivity.updateView([this.name,this.color]);
                                 }
                             }
                         }

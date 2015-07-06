@@ -56,6 +56,43 @@ exports.calcTotalCost = function(req, res) {
     });
 }
 
+exports.operationCost = function(req, res) {
+    var operation = req.query.operation;
+    var instance = req.query.instance;
+    var productName = req.query.productName;
+    mongoose.model('Billings').aggregate([
+        {
+            $match: {
+                Cost: {
+                    $gt: 0
+                },
+                ProductName: {
+                    $eq: productName
+                },
+                ResourceId: {
+                    $eq: instance
+                },
+                Operation: {
+                    $eq: operation
+                }
+            }
+        }, {
+            $project: {
+                _id: 0,
+                Cost: 1,
+                UsageStartDate: 1
+            }
+        }, {
+            $sort: {
+                UsageStartDate: 1
+            }
+        }
+    ]).exec(function(e,d){
+        if(e) throw e;
+        res.send(d);
+    });
+}
+
 exports.totalCostProduct = function(req, res) {
     mongoose.model('Billings').aggregate([{
         $match: {
