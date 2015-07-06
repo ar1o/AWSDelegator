@@ -15,5 +15,13 @@ iamUsersSchema = new mongoose.Schema({
     CreateDate: String,
     Amount: Number
 });
+
+iamUsersGroupsSchema = new mongoose.Schema({
+    UserGroup: String,
+    GroupName: String,
+    UserName: String
+});
+
 mongoose.model('iamGroups', iamGroupsSchema, 'iamGroups');
 mongoose.model('iamUsers', iamUsersSchema, 'iamUsers');
+mongoose.model('iamUsersGroups', iamUsersGroupsSchema, 'iamUsersGroups');

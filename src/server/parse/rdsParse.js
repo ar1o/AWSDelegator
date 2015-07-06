@@ -12,7 +12,8 @@ exports.parseInstances = function(callback) {
                         if (regionIteratorIndex < awsRegions.length) {
                             controller1();
                         } else {
-                            console.log("ParseAlert(rds): found ",newInstanceCount," new instance/s");
+                            if(newInstanceCount!=0)
+                                console.log("ParseAlert(rds): found ",newInstanceCount," new instance/s");
                             callback();
                         }
                     });

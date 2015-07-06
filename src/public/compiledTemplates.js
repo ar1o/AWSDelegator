@@ -46,7 +46,7 @@ templates['ConfigurationView'] = template({"1":function(depth0,helpers,partials,
 
   return "<html>\r\n	<head>\r\n		<title>Credential Input</title>\r\n		<script type=\"text/javascript\">\r\n		var response = '';\r\n			$(document).ready(function(){\r\n				$.get('/getAccount', function(data){\r\n					$(\"#div1\").append(data);\r\n				});\r\n			});\r\n				\r\n		</script>\r\n	</head>\r\n	<body>\r\n		<div class=\"slider\">\r\n			<form id=\"credentials\" action=\"/setCredentials\" method=\"post\">\r\n				<div>\r\n\r\n"
     + ((stack1 = helpers.each.call(depth0,(depth0 != null ? depth0.pages : depth0),{"name":"each","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
-    + "				<br>\r\n				<hr>\r\n				<input type=\"submit\" value=\"Save\" onclick=\"showElements(this.form)\">\r\n			</form>\r\n		</div>\r\n	</body>\r\n</html>\r\n\r\n";
+    + "				<br>\r\n				<hr>\r\n				<input type=\"submit\" value=\"Save\">\r\n			</form>\r\n		</div>\r\n	</body>\r\n</html>\r\n\r\n";
 },"useData":true});
 templates['EC2BillingView'] = template({"1":function(depth0,helpers,partials,data) {
     var alias1=this.lambda, alias2=this.escapeExpression;

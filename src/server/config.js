@@ -22,11 +22,14 @@ databaseUrl = 'mongodb://localhost:27017/awsdb'; //?
 credits = 0;
 
 awsCredentials = {
+    // default: new AWS.SharedIniFileCredentials({
+    //     profile: 'default'
+    // }),
+    // dev2: new AWS.SharedIniFileCredentials({
+    //     profile: 'dev2'
+    // }),
     default: new AWS.SharedIniFileCredentials({
-        profile: 'default'
-    }),
-    dev2: new AWS.SharedIniFileCredentials({
-        profile: 'dev2'
+    	profile: 'default'
     })
 };
 
