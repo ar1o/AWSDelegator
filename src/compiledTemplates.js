@@ -3,9 +3,6 @@
 templates['AppView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     return "<div class=\"content-view\"> </div>\r\n";
 },"useData":true});
-templates['AWSMonthlyCostView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-    return "<div id=\"awsmonthlycostcontainer\"> testtesttest</div>";
-},"useData":true});
 templates['AWSOperationsView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     return "<div id=\"awsoperationscontainer\"> </div>";
 },"useData":true});
@@ -15,38 +12,38 @@ templates['AWSView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":functio
 templates['ConfigurationView'] = template({"1":function(depth0,helpers,partials,data) {
     var stack1, alias1=helpers.helperMissing;
 
-  return ((stack1 = (helpers.ifCond || (depth0 && depth0.ifCond) || alias1).call(depth0,(depth0 != null ? depth0.title : depth0),"==","Account Number",{"name":"ifCond","hash":{},"fn":this.program(2, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
-    + ((stack1 = (helpers.ifCond || (depth0 && depth0.ifCond) || alias1).call(depth0,(depth0 != null ? depth0.title : depth0),"==","RDS Region",{"name":"ifCond","hash":{},"fn":this.program(4, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
-    + ((stack1 = (helpers.ifCond || (depth0 && depth0.ifCond) || alias1).call(depth0,(depth0 != null ? depth0.title : depth0),"==","S3 Region",{"name":"ifCond","hash":{},"fn":this.program(6, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
-    + ((stack1 = (helpers.ifCond || (depth0 && depth0.ifCond) || alias1).call(depth0,(depth0 != null ? depth0.title : depth0),"==","AWS Regions",{"name":"ifCond","hash":{},"fn":this.program(8, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
-    + ((stack1 = (helpers.ifCond || (depth0 && depth0.ifCond) || alias1).call(depth0,(depth0 != null ? depth0.title : depth0),"==","Credits",{"name":"ifCond","hash":{},"fn":this.program(10, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
-    + "\r\n";
+  return "<div></div>\r\n\r\n"
+    + ((stack1 = (helpers.ifCond || (depth0 && depth0.ifCond) || alias1).call(depth0,(depth0 != null ? depth0.title : depth0),"==","Account Number",{"name":"ifCond","hash":{},"fn":this.program(2, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
+    + "\r\n"
+    + ((stack1 = (helpers.ifCond || (depth0 && depth0.ifCond) || alias1).call(depth0,(depth0 != null ? depth0.title : depth0),"==","Credentials",{"name":"ifCond","hash":{},"fn":this.program(4, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
+    + "\r\n"
+    + ((stack1 = (helpers.ifCond || (depth0 && depth0.ifCond) || alias1).call(depth0,(depth0 != null ? depth0.title : depth0),"==","RDS Region",{"name":"ifCond","hash":{},"fn":this.program(6, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
+    + "\r\n"
+    + ((stack1 = (helpers.ifCond || (depth0 && depth0.ifCond) || alias1).call(depth0,(depth0 != null ? depth0.title : depth0),"==","S3 Region",{"name":"ifCond","hash":{},"fn":this.program(8, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
+    + "\r\n"
+    + ((stack1 = (helpers.ifCond || (depth0 && depth0.ifCond) || alias1).call(depth0,(depth0 != null ? depth0.title : depth0),"==","AWS Regions",{"name":"ifCond","hash":{},"fn":this.program(10, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
+    + "\r\n\r\n\r\n";
 },"2":function(depth0,helpers,partials,data) {
-    return "					<div type=\"text\" id=\"account\" value=\"\"></div>\r\n						"
-    + this.escapeExpression(this.lambda((depth0 != null ? depth0.title : depth0), depth0))
-    + ":\r\n						<h3><div id = \"div1\"></div></h3>\r\n						<hr>\r\n";
+    return this.escapeExpression(this.lambda((depth0 != null ? depth0.title : depth0), depth0))
+    + "<br> \r\n<input type=\"text\" name=\"Account_Number\"> \r\n<br>\r\n";
 },"4":function(depth0,helpers,partials,data) {
-    return "						"
-    + this.escapeExpression(this.lambda((depth0 != null ? depth0.title : depth0), depth0))
-    + "<br> \r\n						<input type=\"radio\" name='RDS_Region' value=\"us-west-1\">us-west-1\r\n						<input type=\"radio\" name='RDS_Region' value=\"us-west-2\">us-west-2\r\n						<input type=\"radio\" name='RDS_Region' value=\"us-east-1\">us-east-1<hr>\r\n";
+    return this.escapeExpression(this.lambda((depth0 != null ? depth0.title : depth0), depth0))
+    + "<br> \r\n<input type=\"test\" name=\"Credentials\">\r\n";
 },"6":function(depth0,helpers,partials,data) {
-    return "						"
-    + this.escapeExpression(this.lambda((depth0 != null ? depth0.title : depth0), depth0))
-    + "<br>\r\n						<input type=\"radio\" name='S3_Region' value=\"us-west-1\">us-west-1\r\n						<input type=\"radio\" name='S3_Region' value=\"us-west-2\">us-west-2\r\n						<input type=\"radio\" name='S3_Region' value=\"us-east-1\">us-east-1<hr>\r\n";
+    return this.escapeExpression(this.lambda((depth0 != null ? depth0.title : depth0), depth0))
+    + "<br> \r\n<input type=\"radio\" name='RDS_Region' value=\"us-west-1\">us-west-1\r\n<input type=\"radio\" name='RDS_Region' value=\"us-west-2\">us-west-2\r\n<input type=\"radio\" name='RDS_Region' value=\"us-east-1\">us-east-1<br>\r\n";
 },"8":function(depth0,helpers,partials,data) {
-    return "						"
-    + this.escapeExpression(this.lambda((depth0 != null ? depth0.title : depth0), depth0))
-    + "<br> \r\n						<input type=\"checkbox\" name='AWS_Regions' value=\"us-west-1\">us-west-1\r\n						<input type=\"checkbox\" name='AWS_Regions' value=\"us-west-2\">us-west-2\r\n						<input type=\"checkbox\" name='AWS_Regions' value=\"us-east-1\">us-east-1<hr>\r\n";
+    return this.escapeExpression(this.lambda((depth0 != null ? depth0.title : depth0), depth0))
+    + "<br>\r\n<input type=\"radio\" name='S3_Region' value=\"us-west-1\">us-west-1\r\n<input type=\"radio\" name='S3_Region' value=\"us-west-2\">us-west-2\r\n<input type=\"radio\" name='S3_Region' value=\"us-east-1\">us-east-1<br>\r\n";
 },"10":function(depth0,helpers,partials,data) {
-    return "						"
-    + this.escapeExpression(this.lambda((depth0 != null ? depth0.title : depth0), depth0))
-    + "<br> \r\n						<input type=\"text\" name=\"Credits\"> \r\n						<br>\r\n";
+    return this.escapeExpression(this.lambda((depth0 != null ? depth0.title : depth0), depth0))
+    + "<br> \r\n<input type=\"checkbox\" name='AWS_Regions' value=\"us-west-1\">us-west-1\r\n<input type=\"checkbox\" name='AWS_Regions' value=\"us-west-2\">us-west-1\r\n<input type=\"checkbox\" name='AWS_Regions' value=\"us-east-1\">us-east-1<br>\r\n\r\n";
 },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var stack1;
 
-  return "<html>\r\n	<head>\r\n		<title>Credential Input</title>\r\n		<script type=\"text/javascript\">\r\n		var response = '';\r\n			$(document).ready(function(){\r\n				$.get('/getAccount', function(data){\r\n					$(\"#div1\").append(data);\r\n				});\r\n			});\r\n				\r\n		</script>\r\n	</head>\r\n	<body>\r\n		<div class=\"slider\">\r\n			<form id=\"credentials\" action=\"/setCredentials\" method=\"post\">\r\n				<div>\r\n\r\n"
+  return "<div class=\"slider\">\r\n<form action='/setCredentials' method=\"post\">\r\n"
     + ((stack1 = helpers.each.call(depth0,(depth0 != null ? depth0.pages : depth0),{"name":"each","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
-    + "				<br>\r\n				<hr>\r\n				<input type=\"submit\" value=\"Save\">\r\n			</form>\r\n		</div>\r\n	</body>\r\n</html>\r\n\r\n";
+    + "<input type=\"submit\" value=\"Sign in\">\r\n</form>\r\n</div>";
 },"useData":true});
 templates['EC2BillingView'] = template({"1":function(depth0,helpers,partials,data) {
     var alias1=this.lambda, alias2=this.escapeExpression;
@@ -141,56 +138,20 @@ templates['FooterView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":func
     return "";
 },"useData":true});
 templates['HeaderView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-    return "<div class=\"setting\"><i class=\"fa fa-cogs fa-1x\"></i></div>\r\n\r\n<div class=\"menu\"><i class=\"fa fa-bars fa-1x\"></i></div>";
-},"useData":true});
-templates['IAMGroupsView'] = template({"1":function(depth0,helpers,partials,data) {
-    var alias1=this.lambda, alias2=this.escapeExpression;
-
-  return "		<tr>\r\n			<td >"
-    + alias2(alias1((depth0 != null ? depth0.groupName : depth0), depth0))
-    + "</td>\r\n			<td>"
-    + alias2(alias1((depth0 != null ? depth0.groupId : depth0), depth0))
-    + "</td>\r\n			<td>"
-    + alias2(alias1((depth0 != null ? depth0.arn : depth0), depth0))
-    + "</td>\r\n			<td>"
-    + alias2(alias1((depth0 != null ? depth0.createDate : depth0), depth0))
-    + "</td>\r\n		</tr>\r\n";
-},"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-    var stack1;
-
-  return "<table id=\"GroupsTable\" class=\"hover\">\r\n	<thead>\r\n		<tr class=\"dark-row\">\r\n			<th>GroupName</th>\r\n			<th>GroupId</th>\r\n			<th>Arn</th>\r\n			<th>CreateDate</th>\r\n		</tr>\r\n	</thead>\r\n	<tbody id=\"instanceData\">\r\n"
-    + ((stack1 = helpers.each.call(depth0,(depth0 != null ? depth0.instances : depth0),{"name":"each","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
-    + "	</tbody>	\r\n</table>\r\n";
-},"useData":true});
-templates['IAMUsersView'] = template({"1":function(depth0,helpers,partials,data) {
-    var alias1=this.lambda, alias2=this.escapeExpression;
-
-  return "		<tr>\r\n			<td >"
-    + alias2(alias1((depth0 != null ? depth0.userName : depth0), depth0))
-    + "</td>\r\n			<td>"
-    + alias2(alias1((depth0 != null ? depth0.userId : depth0), depth0))
-    + "</td>\r\n			<td>"
-    + alias2(alias1((depth0 != null ? depth0.arn : depth0), depth0))
-    + "</td>\r\n			<td>"
-    + alias2(alias1((depth0 != null ? depth0.createDate : depth0), depth0))
-    + "</td>\r\n		</tr>\r\n";
-},"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-    var stack1;
-
-  return "<table id=\"UsersTable\" class=\"hover\">\r\n	<thead>\r\n		<tr class=\"dark-row\">\r\n			<th>UserName</th>\r\n			<th>UserId</th>\r\n			<th>Arn</th>\r\n			<th>CreateDate</th>\r\n		</tr>\r\n	</thead>\r\n	<tbody id=\"instanceData\">\r\n"
-    + ((stack1 = helpers.each.call(depth0,(depth0 != null ? depth0.instances : depth0),{"name":"each","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
-    + "	</tbody>	\r\n</table>\r\n";
+    return "<div class=\"setting\"><i class=\"fa fa-cogs fa-1x\"></i> Config </div>\r\n\r\n<div class=\"menu\"><i class=\"fa fa-bars fa-1x\"></i> Menu</div>";
 },"useData":true});
 templates['MeterView'] = template({"1":function(depth0,helpers,partials,data) {
-    return "		$"
+    return "		"
     + this.escapeExpression(this.lambda((depth0 != null ? depth0.value : depth0), depth0))
-    + "/Hour\r\n";
+    + "\r\n";
 },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var stack1;
 
-  return "<div class=\"rate\">Rate: \r\n"
+  return "<div>usage rate \r\n"
     + ((stack1 = helpers.each.call(depth0,(depth0 != null ? depth0.rate : depth0),{"name":"each","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
-    + "</div>\r\n<div class=\"usage\">Usage:      N/A\r\n</div>\r\n\r\n<div class=\"balance\">Balance: N/A\r\n\r\n</div>";
+    + "</div>\r\n<div>usage \r\n"
+    + ((stack1 = helpers.each.call(depth0,(depth0 != null ? depth0.usage : depth0),{"name":"each","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
+    + "</div>";
 },"useData":true});
 templates['NavView'] = template({"1":function(depth0,helpers,partials,data) {
     var stack1, alias1=this.lambda, alias2=this.escapeExpression, alias3=helpers.helperMissing;
@@ -202,15 +163,11 @@ templates['NavView'] = template({"1":function(depth0,helpers,partials,data) {
     + "</div>\r\n\r\n"
     + ((stack1 = (helpers.ifCond || (depth0 && depth0.ifCond) || alias3).call(depth0,(depth0 != null ? depth0.title : depth0),"==","Amazon Elastic Compute Cloud",{"name":"ifCond","hash":{},"fn":this.program(2, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
     + "\r\n"
-    + ((stack1 = (helpers.ifCond || (depth0 && depth0.ifCond) || alias3).call(depth0,(depth0 != null ? depth0.title : depth0),"==","Amazon RDS Service",{"name":"ifCond","hash":{},"fn":this.program(4, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
-    + "\r\n"
-    + ((stack1 = (helpers.ifCond || (depth0 && depth0.ifCond) || alias3).call(depth0,(depth0 != null ? depth0.title : depth0),"==","Usage Monitor",{"name":"ifCond","hash":{},"fn":this.program(6, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "");
+    + ((stack1 = (helpers.ifCond || (depth0 && depth0.ifCond) || alias3).call(depth0,(depth0 != null ? depth0.title : depth0),"==","Amazon RDS Service",{"name":"ifCond","hash":{},"fn":this.program(4, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "");
 },"2":function(depth0,helpers,partials,data) {
-    return "<div class=\"subpage\" subpage-id=\"0\"> EC2 Instances</div>\r\n";
+    return "<div class=\"subpage\" subpage-id=\"0\"> >> EC2 Instances</div>\r\n";
 },"4":function(depth0,helpers,partials,data) {
-    return "<div class=\"subpage\" subpage-id=\"1\"> RDS Instances</div>\r\n";
-},"6":function(depth0,helpers,partials,data) {
-    return "<div class=\"subpage\" subpage-id=\"2\"> IAM Groups</div>\r\n<div class=\"subpage\" subpage-id=\"3\"> IAM Users</div>\r\n";
+    return "<div class=\"subpage\" subpage-id=\"1\"> >> RDS Instances</div>\r\n";
 },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var stack1;
 
@@ -310,28 +267,5 @@ templates['RDSInstancesView'] = template({"1":function(depth0,helpers,partials,d
 },"useData":true});
 templates['RDSMetricsView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     return "<div id=\"rdsCpuContainer\"></div>\r\n<div id=\"readWriteIopsContainer\"></div>\r\n<div id=\"queueDepthContainer\"></div>\r\n<div class=\"clear\"></div>";
-},"useData":true});
-templates['UsageMonitorView'] = template({"1":function(depth0,helpers,partials,data) {
-    var alias1=this.lambda, alias2=this.escapeExpression;
-
-  return "		<tr>\r\n			<td >"
-    + alias2(alias1((depth0 != null ? depth0.budgetName : depth0), depth0))
-    + "</td>\r\n			<td>"
-    + alias2(alias1((depth0 != null ? depth0.batchType : depth0), depth0))
-    + "</td>\r\n			<td>"
-    + alias2(alias1((depth0 != null ? depth0.batchName : depth0), depth0))
-    + "</td>\r\n			<td>"
-    + alias2(alias1((depth0 != null ? depth0.startDate : depth0), depth0))
-    + "</td>\r\n			<td>"
-    + alias2(alias1((depth0 != null ? depth0.endDate : depth0), depth0))
-    + "</td> \r\n			<td>"
-    + alias2(alias1((depth0 != null ? depth0.amount : depth0), depth0))
-    + "</td>\r\n		</tr>\r\n";
-},"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-    var stack1;
-
-  return "<table id=\"BudgetTable\" class=\"hover\">\r\n	<thead>\r\n		<tr class=\"dark-row\">\r\n			<th>BudgetName</th>\r\n			<th>BatchType</th>\r\n			<th>BatchName</th>\r\n			<th>StartDate</th>\r\n			<th>EndDate</th>\r\n			<th>Amount</th>\r\n		</tr>\r\n	</thead>\r\n	<tbody id=\"budgetData\">\r\n"
-    + ((stack1 = helpers.each.call(depth0,(depth0 != null ? depth0.budgets : depth0),{"name":"each","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
-    + "	</tbody>	\r\n</table>\r\n";
 },"useData":true});
 })();

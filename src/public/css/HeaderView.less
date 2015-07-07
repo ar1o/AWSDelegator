@@ -10,9 +10,11 @@
 
 }
 
-.setting:before{
-	font-family: FontAwesome;
-	content: "\f013";
+
+.setting {
+	top: 0;
+	margin-left: auto;
+	content: "Config \f013";
 	font-size: 20px;
 	float:right;
 	text-align:right;
@@ -21,9 +23,7 @@
 	margin-right: 30px;
 	line-height: 48px;
 	vertical-align: middle;
-}
-
-.setting {
+	position: relative;
 	&:hover {
 		color: orange;
     }
@@ -36,6 +36,7 @@
 	height: 48px;
 	border-right: 1px solid #ccc;
 	margin-left: 30px;
+	text-align: left;
 	line-height: 48px;
 	vertical-align: middle;
 

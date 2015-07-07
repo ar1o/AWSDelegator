@@ -25,6 +25,9 @@ db.on("open", function() {
     });
 });
 
+app.post('/setCredentials', require(__dirname +'/server/route/CredentialsRoute').setCredentials);
+app.get('/getAccount', require(__dirname +'/server/route/CredentialsRoute').getAccountNumber);
+// app.get('/api/meter/balance', require(__dirname +'/server/route/CredentialsRoute').getAccountBalance);
 app.get('/api/ec2/instances', require(__dirname +'/server/route/ec2Route').instances);
 app.get('/api/ec2/metrics', require(__dirname +'/server/route/ec2Route').metrics);
 app.get('/api/ec2/operations', require(__dirname +'/server/route/ec2Route').operations);
@@ -47,10 +50,12 @@ app.get('/api/billing/rds/hourlyCostProduct', require(__dirname +'/server/route/
 
 app.get('/api/billing/ec2/operationCost', require(__dirname +'/server/route/billingRoute').operationCost);
 
+
 app.get('/api/NonFreeBilling/hourlyCostProduct', require(__dirname +'/server/route/NonFreeBillingRoute').hourlyCostProduct);
 app.get('/api/NonFreeBilling/instanceCostAll', require(__dirname +'/server/route/NonFreeBillingRoute').instanceCostAll);
 app.get('/api/NonFreeBilling/calcFreeTierCost', require(__dirname +'/server/route/NonFreeBillingRoute').calcFreeTierCost);
 app.get('/api/NonFreeBilling/totalCostProduct',require(__dirname +'/server/route/NonFreeBillingRoute').totalCostProduct);
+
 
 app.get('/api/statistics/operations',require(__dirname +'/server/route/OperationsRoute').operations);
 
