@@ -186,11 +186,11 @@ templates['MeterView'] = template({"1":function(depth0,helpers,partials,data) {
     + this.escapeExpression(this.lambda((depth0 != null ? depth0.value : depth0), depth0))
     + "/Hour\r\n";
 },"3":function(depth0,helpers,partials,data) {
-    return "	 	<div id = \"div2\">$</div>\r\n";
+    return "	 	<div id = \"div2\"></div>\r\n";
 },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var stack1;
 
-  return "<script type=\"text/javascript\">\r\n		var response = '';\r\n			$(document).ready(function(){\r\n				$.get('/getAccountBalance', function(data){\r\n					$(\"#div2\").append(data);\r\n				});\r\n			});\r\n				\r\n		</script>\r\n\r\n<div class=\"rate\">Rate: \r\n"
+  return "<script type=\"text/javascript\">\r\n		var response = '';\r\n			$(document).ready(function(){\r\n				$.get('/getAccountBalance', function(data){\r\n						$(\"#div2\").append('$'+data);\r\n				});\r\n			});\r\n				\r\n		</script>\r\n\r\n<div class=\"rate\">Rate: \r\n"
     + ((stack1 = helpers.each.call(depth0,(depth0 != null ? depth0.rate : depth0),{"name":"each","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
     + "</div>\r\n<div class=\"usage\">Usage:      N/A\r\n</div>\r\n\r\n<div class=\"balance\">Balance:\r\n\r\n"
     + ((stack1 = helpers.each.call(depth0,(depth0 != null ? depth0.rate : depth0),{"name":"each","hash":{},"fn":this.program(3, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")

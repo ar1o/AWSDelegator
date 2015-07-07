@@ -2,7 +2,7 @@
 		var response = '';
 			$(document).ready(function(){
 				$.get('/getAccountBalance', function(data){
-					$("#div2").append(data);
+						$("#div2").append('$'+data);
 				});
 			});
 				
@@ -22,7 +22,7 @@
 <div class="balance">Balance:
 
 	{{#each rate}}
-	 	<div id = "div2">$</div>
+	 	<div id = "div2"></div>
 	{{/each}}
 
 </div>
