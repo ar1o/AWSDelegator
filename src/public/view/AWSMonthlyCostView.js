@@ -6,29 +6,85 @@ var AWSMonthlyCostView = Backbone.View.extend({
             this.model = new CostModel();
         }
         this.model.getAWSMonthlyCost();
-        this.model.getAWSMonthlyCostNonFree();
+        // this.model.getAWSMonthlyCostNonFree();
         this.bindings();
+    },
+
+    org_data: function(collection, stax) {
+        var hm = {};
+        var fseries = [];
+        var fdata = {};
+        var fdate;
+        console.log("stax", stax);
+        var colors = ['#50B432', '#ED561B', '#DDDF00', '#24CBE5',
+            '#64E572', '#FF9655', '#FFF263', '#6AF9C4'
+        ];
+        var productNames = {};
+        for (var i = 0; i < collection.length; ++i) {
+            var product = collection.at(i).get('product');
+            if (!(product in productNames)) {
+                productNames[collection.at(i).get('product')] = [{
+                    name: collection.at(i).get('product'),
+                    data: [],
+                    stack: stax,
+                    colors: colors[i]
+                }];
+
+                console.log("hello", productNames[collection.at(i).get('product')][0]);
+            }
+        }
+
+        for (var i = 0; i < collection.length; i++) {
+
+            var product = collection.at(i).get('product');
+            var cost = collection.at(i).get('cost');
+
+            productNames[collection.at(i).get('product')][0].data.push(cost)
+            hm[product] = {
+                name: product,
+                data: productNames[collection.at(i).get('product')][0].data,
+                stack: productNames[collection.at(i).get('product')][0].stack,
+                colors: productNames[collection.at(i).get('product')][0].colors
+            };
+        }
+        console.log(hm);
+
+        for (var i in hm) {
+            fdata = {
+                name: hm[i].name, //productName (ie; EC2)
+                data: hm[i].data, //the date per month
+                stack: hm[i].stack, // Free-tier or non-free-tier
+                color: hm[i].colors
+            };
+            fseries.push(fdata);
+        }
+        console.log("fseries", fseries);
+
+        return fseries;
     },
 
     bindings: function() {
         this.model.change('dataReady', function(model, val) {
             var month = [];
             for (var i = 0; i < AWSMonthlyCost.length; i++) {
+
                 var date = AWSMonthlyCost.at(i).get('date');
-                if(this.model.getMonth(date.substring(5,7)) in month) {
-                    console.log('skipping');
+                // console.log('month',month);
+                fdate = this.model.getMonth(date.substring(5, 7));
+                if (fdate == month[month.length - 1]) {
+                    // console.log('skip');
                 } else {
                     month.push(this.model.getMonth(date.substring(5, 7)));
                 }
-                // console.log(month);
 
-                for (var i = 0; i < AWSMonthlyCost.length; i++) {
-                    var date = AWSMonthlyCost.at(i).get('date');
-                    var product = AWSMonthlyCost.at(i).get('product');
-                    var cost = AWSMonthlyCost.at(i).get('cost');
-                    console.log(date +" "+ product +" "+ cost);
-                }
             }
+            var nfdata = this.org_data(AWSMonthlyCostNF, 'non-free-tier');
+            var fdata = this.org_data(AWSMonthlyCost, 'free-tier');
+            // console.log("nfdata", nfdata);
+            console.log("fdata", nfdata.concat(fdata));
+
+
+
             this.render();
             $(function() {
                 $('#awsmonthlycostcontainer').highcharts({
@@ -38,18 +94,23 @@ var AWSMonthlyCostView = Backbone.View.extend({
                     },
 
                     title: {
-                        text: 'Total fruit consumtion, grouped by gender'
+                        text: 'Monthly Data'
                     },
 
                     xAxis: {
-                        categories: ['Apples', 'Oranges', 'Pears', 'Grapes', 'Bananas']
+                        categories: month
                     },
-
+                    credits: {
+                        enabled: false
+                    },
+                    legend: {
+                        enabled: false
+                    },
                     yAxis: {
                         allowDecimals: false,
                         min: 0,
                         title: {
-                            text: 'Number of fruits'
+                            text: 'USD ($)'
                         }
                     },
 
@@ -57,7 +118,7 @@ var AWSMonthlyCostView = Backbone.View.extend({
                         formatter: function() {
                             return '<b>' + this.x + '</b><br/>' +
                                 this.series.name + ': ' + this.y + '<br/>' +
-                                'Total: ' + this.point.stackTotal;
+                                '<b>Total ('+this.series.options.stack+'):</b> ' + this.point.stackTotal;
                         }
                     },
 
@@ -67,76 +128,26 @@ var AWSMonthlyCostView = Backbone.View.extend({
                         }
                     },
 
-                    series: [{
-                        name: 'John',
-                        data: [5, 3, 4, 7, 2],
-                        stack: 'male'
-                    }, {
-                        name: 'Joe',
-                        data: [3, 4, 4, 2, 5],
-                        stack: 'male'
-                    }, {
-                        name: 'Jane',
-                        data: [2, 5, 6, 2, 1],
-                        stack: 'female'
-                    }, {
-                        name: 'Janet',
-                        data: [3, 0, 4, 4, 3],
-                        stack: 'female'
-                    }]
+                    series: nfdata.concat(fdata)
+                        // [{
+                        //     name: 'John', //productName (ie; EC2)
+                        //     data: [5, 3, 4, 7, 2], //the date per month
+                        //     stack: 'male' // Free-tier or non-free-tier
+                        // }, {
+                        //     name: 'Joe',
+                        //     data: [3, 4, 4, 2, 5],
+                        //     stack: 'male'
+                        // }, {
+                        //     name: 'Jane',
+                        //     data: [2, 5, 6, 2, 1],
+                        //     stack: 'female'
+                        // }, {
+                        //     name: 'Janet',
+                        //     data: [3, 0, 4, 4, 3],
+                        //     stack: 'female'
+                        // }]
                 });
             });
-            // $(function() {
-            //     $('#awsmonthlycostcontainer').highcharts({
-            //         chart: {
-            //             type: 'column',
-            //             backgroundColor: '#f7f7f7'
-            //         },
-            //         title: {
-            //             text: 'AWS Monthly Cost'
-            //         },
-            //         xAxis: {
-            //             categories: month,
-            //             crosshair: true
-            //         },
-            //         yAxis: {
-            //             // min: 0,
-            //             title: {
-            //                 text: 'USD ($)'
-            //             }
-            //         },
-            //         tooltip: {
-            //             // headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-            //             // pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-            //             //     '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
-            //             // footerFormat: '</table>',
-            //             // shared: true,
-            //             // useHTML: true
-            //             pointFormat: '{series.name}: <b>USD{point.y:.4f}</b>'
-
-            //         },
-            //         credits: {
-            //             enabled: false
-            //         },
-            //         legend: {
-            //             enabled: false
-            //         },
-            //         plotOptions: {
-            //             column: {
-            //                 pointPadding: 0.2,
-            //                 borderWidth: 0
-            //             }
-            //         },
-            //         series: [{
-            //             name: 'Amazon Web Service with Free-tier',
-            //             data: AWSMonthlyCost.pluck('cost')
-            //         }, {
-            //             name: 'Amazon Web Service without Free-tier',
-            //             data: AWSMonthlyCostNF.pluck('cost')
-            //         }]
-            //     });
-            // });
-
         }.bind(this));
     },
 

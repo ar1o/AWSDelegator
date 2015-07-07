@@ -1,13 +1,13 @@
 exports.rate = function(req,res) {
-	mongoose.model('latest').find().exec(function(e,d) {
-		if(e) throw e;
-		var latestDate = new Date(d[0].time);
+    mongoose.model('latest').find().exec(function(e,d) {
+        if(e) throw e;
+        var latestDate = new Date(d[0].time);
         var lastHour = latestDate.getTime();
         var lastHourTime = new Date(lastHour);
         var lastHourDate = lastHourTime.getFullYear()+'-'+checkDate((lastHourTime.getMonth()+1))+'-'+
                 checkDate(lastHourTime.getDate())+' '+checkDate(lastHourTime.getHours())+':'+
                 checkDate(lastHourTime.getMinutes())+':'+checkDate(lastHourTime.getSeconds());
-		mongoose.model('Billings').aggregate([{
+        mongoose.model('Billings').aggregate([{
             $match: {
                 UsageStartDate: {
                     $eq: lastHourDate
@@ -17,30 +17,19 @@ exports.rate = function(req,res) {
             $project: {
                 _id: 1,
                 UsageStartDate: 1,
-                Cost: 1,
-                NonFreeCost: 1
+                Cost: 1
             }
         }, {
             $group: {
                 _id: "$UsageStartDate",
                 total: {
                     $sum: "$Cost"
-                },
-                TNonFreeCost: {
-                    $sum: "$NonFreeCost"
-                }
-            }        
-        }, {
-            $project: {
-                _id: 1,
-                total: {
-                    $add: ['$TNonFreeCost', '$total']
                 }
             }
         }]).exec(function(e, d) {
-        	res.send(d);
+            res.send(d);
         });
-	});
+    });
 }
 
 exports.usage = function(req,res) {

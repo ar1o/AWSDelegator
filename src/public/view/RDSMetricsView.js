@@ -22,7 +22,9 @@ var RDSMetricsView = Backbone.View.extend({
                 dataWriteIops.push([MetricsCollection.at(i).get('time'),MetricsCollection.at(i).get('writeIOPS')]);
                 dataQueueDepth.push([MetricsCollection.at(i).get('time'),MetricsCollection.at(i).get('diskQueueDepth')]);
                 dataCpuUtilization.push([MetricsCollection.at(i).get('time'),MetricsCollection.at(i).get('cpuUtilization')]);       
-            }               
+            }
+
+            console.log(dataCpuUtilization);               
             this.render();
 
             $(function () {

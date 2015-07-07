@@ -58,7 +58,8 @@ var CostModel = Backbone.Model.extend({
 					});
 					AWSMonthlyCost.add(data);
 				}
-				self.set('dataReady', Date.now());
+				self.getAWSMonthlyCostNonFree();
+				// self.set('dataReady', Date.now());
 				console.log(AWSMonthlyCost);
 			});
 		})();
@@ -70,8 +71,9 @@ var CostModel = Backbone.Model.extend({
 			$.get(host + '/api/billing/groupByMonthNF', function(result) {
 				for (var i in result) {
 					var data = new Cost({
-						date: result[i]._id,
-						cost: result[i].Total
+						date: result[i]._id.UsageStartDate,
+						cost: result[i].Total,
+						product: result[i]._id.ProductName
 					});
 					AWSMonthlyCostNF.add(data);
 				}
