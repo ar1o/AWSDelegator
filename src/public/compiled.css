@@ -167,6 +167,10 @@ div#productcostcontainer {
   min-height: 350px;
   padding-top: 20px;
 }
+.UsageMonitorView {
+  min-height: 350px;
+  padding-top: 20px;
+}
 #InstanceTable_wrapper {
   background-color: #f7f7f7;
   margin-top: 20px;
@@ -207,6 +211,19 @@ div#productcostcontainer {
   /*border: 1px solid gray;*/
 }
 #UsersTable_wrapper {
+  background-color: #f7f7f7;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  margin-right: 20px;
+  margin-left: 20px;
+  padding: 5px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #aaa;
+  border-top: 1px solid #aaa;
+  /*border: 1px solid gray;*/
+}
+#BudgetTable_wrapper {
   background-color: #f7f7f7;
   margin-top: 20px;
   margin-bottom: 20px;

@@ -65,6 +65,7 @@ app.get('/api/meter/balance',require(__dirname +'/server/route/meterRoute').bala
 
 app.get('/api/usage/groups',require(__dirname +'/server/route/iamRoute').groups);
 app.get('/api/usage/users',require(__dirname +'/server/route/iamRoute').users);
+app.get('/api/usage/budget',require(__dirname +'/server/route/budgetRoute').budgets);
 
 function errorHandler(err, req, res, next) {
     console.error(err.message);
