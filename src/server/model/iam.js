@@ -3,8 +3,7 @@ iamGroupsSchema = new mongoose.Schema({
     GroupName: String,
     GroupId: String,
     Arn: String,
-    CreateDate: String,
-    Amount: Number
+    CreateDate: String
 });
 
 iamUsersSchema = new mongoose.Schema({
@@ -12,8 +11,7 @@ iamUsersSchema = new mongoose.Schema({
     UserName: String,
     UserId: String,
     Arn: String,
-    CreateDate: String,
-    Amount: Number
+    CreateDate: String
 });
 
 iamUsersGroupsSchema = new mongoose.Schema({

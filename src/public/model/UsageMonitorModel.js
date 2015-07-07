@@ -3,6 +3,7 @@ var UsageMonitorModel = Backbone.Model.extend({
 		var data = {};
 		var result;
 		this.change('dataReady');
+		this.change('budgetDataReady');
 	},
 	groups_result: function() {
 		var self = this;
@@ -23,6 +24,19 @@ var UsageMonitorModel = Backbone.Model.extend({
 			data: self.data,
 			contentType: 'plain/text',
 			url: host + '/api/usage/users',
+			success: function(data) {
+				result = data;
+			}
+		});
+	},
+
+	budget_result: function() {
+		var self = this;
+		return $.ajax({
+			type: 'GET',
+			data: self.data,
+			contentType: 'plain/text',
+			url: host + '/api/usage/budget',
 			success: function(data) {
 				result = data;
 			}
@@ -67,6 +81,28 @@ var UsageMonitorModel = Backbone.Model.extend({
 		}).fail(function() {
 			console.log('FAILED');
 		});
+	},
+
+	getBudgets: function() {
+		console.log('here')
+		var self = this;
+		budgetCollection.reset();
+		this.budget_result().done(function(result) {
+			for (var r in result) {
+				var data = new budgetModel({
+					budgetName: result[r].BudgetName,
+					batchType: result[r].BatchType,
+					batchName: result[r].BatchName,
+					startDate: result[r].StartDate,
+					endDate: result[r].EndDate,
+					amount: result[r].Amount
+				});
+				budgetCollection.add(data);
+			}
+			self.set('budgetDataReady', Date.now());
+		}).fail(function() {
+			console.log('FAILED');
+		});
 	}
 });
 
@@ -106,5 +142,25 @@ var UsersCollection = Backbone.Collection.extend({
 	}
 });
 
+var budgetModel = Backbone.Model.extend({
+	defaults: {
+		budgetName: null,
+		batchType: null,
+		batchName: null,
+		startDate: null,
+		endDate: null,
+		amount: 0
+	}
+});
+
+var BudgetCollection = Backbone.Collection.extend({
+	model: budgetModel,
+	initialize: function() {
+		// This will be called when an item is added. pushed or unshifted
+		this.on('add', function(model) {});
+	}
+});
+
+var budgetCollection = new BudgetCollection();
 var GroupCollection = new GroupsCollection();
 var UserCollection = new UsersCollection();
