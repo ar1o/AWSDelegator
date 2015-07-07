@@ -3,11 +3,16 @@
 <div class="page" page-id="{{this.page_id}}">{{this.title}}</div>
 
 {{#ifCond this.title '==' "Amazon Elastic Compute Cloud"}}
-<div class="subpage" subpage-id="0"> >> EC2 Instances</div>
+<div class="subpage" subpage-id="0"> EC2 Instances</div>
 {{/ifCond}}
 
 {{#ifCond this.title '==' "Amazon RDS Service"}}
-<div class="subpage" subpage-id="1"> >> RDS Instances</div>
+<div class="subpage" subpage-id="1"> RDS Instances</div>
+{{/ifCond}}
+
+{{#ifCond this.title '==' "Usage Monitor"}}
+<div class="subpage" subpage-id="2"> IAM Groups</div>
+<div class="subpage" subpage-id="3"> IAM Users</div>
 {{/ifCond}}
 {{/each}}
 

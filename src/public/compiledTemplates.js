@@ -202,11 +202,15 @@ templates['NavView'] = template({"1":function(depth0,helpers,partials,data) {
     + "</div>\r\n\r\n"
     + ((stack1 = (helpers.ifCond || (depth0 && depth0.ifCond) || alias3).call(depth0,(depth0 != null ? depth0.title : depth0),"==","Amazon Elastic Compute Cloud",{"name":"ifCond","hash":{},"fn":this.program(2, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
     + "\r\n"
-    + ((stack1 = (helpers.ifCond || (depth0 && depth0.ifCond) || alias3).call(depth0,(depth0 != null ? depth0.title : depth0),"==","Amazon RDS Service",{"name":"ifCond","hash":{},"fn":this.program(4, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "");
+    + ((stack1 = (helpers.ifCond || (depth0 && depth0.ifCond) || alias3).call(depth0,(depth0 != null ? depth0.title : depth0),"==","Amazon RDS Service",{"name":"ifCond","hash":{},"fn":this.program(4, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
+    + "\r\n"
+    + ((stack1 = (helpers.ifCond || (depth0 && depth0.ifCond) || alias3).call(depth0,(depth0 != null ? depth0.title : depth0),"==","Usage Monitor",{"name":"ifCond","hash":{},"fn":this.program(6, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "");
 },"2":function(depth0,helpers,partials,data) {
-    return "<div class=\"subpage\" subpage-id=\"0\"> >> EC2 Instances</div>\r\n";
+    return "<div class=\"subpage\" subpage-id=\"0\"> EC2 Instances</div>\r\n";
 },"4":function(depth0,helpers,partials,data) {
-    return "<div class=\"subpage\" subpage-id=\"1\"> >> RDS Instances</div>\r\n";
+    return "<div class=\"subpage\" subpage-id=\"1\"> RDS Instances</div>\r\n";
+},"6":function(depth0,helpers,partials,data) {
+    return "<div class=\"subpage\" subpage-id=\"2\"> IAM Groups</div>\r\n<div class=\"subpage\" subpage-id=\"3\"> IAM Users</div>\r\n";
 },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var stack1;
 
