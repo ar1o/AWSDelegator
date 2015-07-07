@@ -158,18 +158,21 @@ exports.hourlyCostProduct = function(req, res) {
 exports.groupByMonth = function(req, res) {
     mongoose.model('Billings').aggregate([{
         $match: {
-
+             Cost: {
+                $gt: 0
+            }
         }
     }, {
         $project: {
             _id: 1,
             Cost: 1,
+            ProductName: 1,
             UsageStartDate: 1
         }
     }, {
         $group: {
             _id: {
-                $substr: ['$UsageStartDate', 0, 7]
+                "UsageStartDate":{$substr: ['$UsageStartDate', 0, 7]}, "ProductName":"$ProductName" 
             },
             Total: {
                 $sum: "$Cost"
@@ -180,6 +183,11 @@ exports.groupByMonth = function(req, res) {
             _id: 1
         }
     }]).exec(function(e, d) {
+        var result = {};
+        result = {
+            data: d,
+            stack: "Free-tier"
+        }
         res.send(d);
     });
 };
@@ -187,19 +195,22 @@ exports.groupByMonth = function(req, res) {
 exports.groupByMonthNF = function(req, res) {
     mongoose.model('Billings').aggregate([{
         $match: {
-
+            $or: [{Cost: {
+                $gt: 0
+            }},{NonFreeCost: {$gt: 0}}]
         }
     }, {
         $project: {
             _id: 1,
             Cost: 1,
             NonFreeCost: 1,
+            ProductName: 1,
             UsageStartDate: 1
         }
     }, {
         $group: {
             _id: {
-                $substr: ['$UsageStartDate', 0, 7]
+                  "UsageStartDate":{$substr: ['$UsageStartDate', 0, 7]}, "ProductName":"$ProductName"
             },
             TCost: {
                 $sum: "$Cost"
@@ -220,6 +231,11 @@ exports.groupByMonthNF = function(req, res) {
             _id: 1
         }
     }]).exec(function(e, d) {
+        var result = {};
+        result = {
+            data: d,
+            stack: "Non-free-tier"
+        }
         res.send(d);
     });
 };
