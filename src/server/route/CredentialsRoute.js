@@ -5,6 +5,7 @@ exports.setCredentials = function(req, res) {
 		var value,
 			key,
 			oldIndex;
+    var data;
 		var credentials = [];
 		var regions = [];
 		var i = 0;
@@ -47,6 +48,7 @@ exports.setCredentials = function(req, res) {
 	    	console.log("Credits entered is not a number.\nPlease try again.");
 	    	return;
 	    }
+
       
       console.log("credits before",credits);
       credits = credentials["Credits"];
@@ -63,7 +65,9 @@ exports.setCredentials = function(req, res) {
       console.log("after",awsRegions);
 		 
       console.log("Credentials successfully updated");
+
     });
+
 	//verify account number is numeric
 	
     ///Before setting the input values to the actual config variables, do error checking
@@ -78,8 +82,9 @@ exports.setCredentials = function(req, res) {
 	// databaseUrl = 'mongodb://localhost:27017/awsdb';//?
     req.on('end', function() {
       // empty 200 OK response for now
-      res.writeHead(200, "OK", {'Content-Type': 'text/html'});
+      res.redirect(302, '../');
       res.end();
+      console.log("Values Updated.\nReturning to parent page.");
     });
 
 }

@@ -28,23 +28,23 @@ templates['ConfigurationView'] = template({"1":function(depth0,helpers,partials,
 },"4":function(depth0,helpers,partials,data) {
     return "						"
     + this.escapeExpression(this.lambda((depth0 != null ? depth0.title : depth0), depth0))
-    + "<br> \r\n						<input type=\"radio\" name='RDS_Region' value=\"us-west-1\">us-west-1\r\n						<input type=\"radio\" name='RDS_Region' value=\"us-west-2\">us-west-2\r\n						<input type=\"radio\" name='RDS_Region' value=\"us-east-1\">us-east-1<hr>\r\n";
+    + "<br> \r\n						<input type=\"radio\" id = \"rdsWest1\" name='RDS_Region' value=\"us-west-1\">us-west-1\r\n						<input type=\"radio\" id = \"rdsWest2\" name='RDS_Region' value=\"us-west-2\">us-west-2\r\n						<input type=\"radio\" id = \"rdsEast1\" name='RDS_Region' value=\"us-east-1\">us-east-1<hr>\r\n";
 },"6":function(depth0,helpers,partials,data) {
     return "						"
     + this.escapeExpression(this.lambda((depth0 != null ? depth0.title : depth0), depth0))
-    + "<br>\r\n						<input type=\"radio\" name='S3_Region' value=\"us-west-1\">us-west-1\r\n						<input type=\"radio\" name='S3_Region' value=\"us-west-2\">us-west-2\r\n						<input type=\"radio\" name='S3_Region' value=\"us-east-1\">us-east-1<hr>\r\n";
+    + "<br>\r\n						<input type=\"radio\" id=\"s3West1\" name='S3_Region' value=\"us-west-1\">us-west-1\r\n						<input type=\"radio\" id=\"s3West2\" name='S3_Region' value=\"us-west-2\">us-west-2\r\n						<input type=\"radio\" id=\"s3East1\" name='S3_Region' value=\"us-east-1\">us-east-1<hr>\r\n";
 },"8":function(depth0,helpers,partials,data) {
     return "						"
     + this.escapeExpression(this.lambda((depth0 != null ? depth0.title : depth0), depth0))
-    + "<br> \r\n						<input type=\"checkbox\" name='AWS_Regions' value=\"us-west-1\">us-west-1\r\n						<input type=\"checkbox\" name='AWS_Regions' value=\"us-west-2\">us-west-2\r\n						<input type=\"checkbox\" name='AWS_Regions' value=\"us-east-1\">us-east-1<hr>\r\n";
+    + "<br> \r\n						<input type=\"checkbox\" id = \"awsWest1\" name='AWS_Regions' value=\"us-west-1\">us-west-1\r\n						<input type=\"checkbox\" id = \"awsWest2\" name='AWS_Regions' value=\"us-west-2\">us-west-2\r\n						<input type=\"checkbox\" id = \"awsEast1\" name='AWS_Regions' value=\"us-east-1\">us-east-1<hr>\r\n";
 },"10":function(depth0,helpers,partials,data) {
     return "						"
     + this.escapeExpression(this.lambda((depth0 != null ? depth0.title : depth0), depth0))
-    + "<br> \r\n						<input type=\"text\" name=\"Credits\"> \r\n						<br>\r\n";
+    + "<br> \r\n						<input type=\"text\" name=\"Credits\" onclick=\"\"> \r\n						<br>\r\n";
 },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var stack1;
 
-  return "<html>\r\n	<head>\r\n		<title>Credential Input</title>\r\n		<script type=\"text/javascript\">\r\n		var response = '';\r\n			$(document).ready(function(){\r\n				$.get('/getAccount', function(data){\r\n					$(\"#div1\").append(data);\r\n				});\r\n			});\r\n				\r\n		</script>\r\n	</head>\r\n	<body>\r\n		<div class=\"slider\">\r\n			<form id=\"credentials\" action=\"/setCredentials\" method=\"post\">\r\n				<div>\r\n\r\n"
+  return "<html>\r\n	<head>\r\n		<title>Credential Input</title>\r\n		<script type=\"text/javascript\">\r\n		var response = '';\r\n			$(document).ready(function(){\r\n				$.get('/getAccount', function(data){\r\n					$(\"#div1\").append(data);\r\n				});\r\n			});\r\n				\r\n		</script>\r\n	\r\n	</head>\r\n	<body>\r\n		<div class=\"slider\">\r\n			<form id=\"credentials\" action=\"/setCredentials\" method=\"post\">\r\n				<div>\r\n"
     + ((stack1 = helpers.each.call(depth0,(depth0 != null ? depth0.pages : depth0),{"name":"each","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
     + "				<br>\r\n				<hr>\r\n				<input type=\"submit\" value=\"Save\">\r\n			</form>\r\n		</div>\r\n	</body>\r\n</html>\r\n\r\n";
 },"useData":true});
@@ -185,12 +185,16 @@ templates['MeterView'] = template({"1":function(depth0,helpers,partials,data) {
     return "		$"
     + this.escapeExpression(this.lambda((depth0 != null ? depth0.value : depth0), depth0))
     + "/Hour\r\n";
+},"3":function(depth0,helpers,partials,data) {
+    return "	 	<div id = \"div2\">$</div>\r\n";
 },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var stack1;
 
-  return "<div class=\"rate\">Rate: \r\n"
+  return "<script type=\"text/javascript\">\r\n		var response = '';\r\n			$(document).ready(function(){\r\n				$.get('/getAccountBalance', function(data){\r\n					$(\"#div2\").append(data);\r\n				});\r\n			});\r\n				\r\n		</script>\r\n\r\n<div class=\"rate\">Rate: \r\n"
     + ((stack1 = helpers.each.call(depth0,(depth0 != null ? depth0.rate : depth0),{"name":"each","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
-    + "</div>\r\n<div class=\"usage\">Usage:      N/A\r\n</div>\r\n\r\n<div class=\"balance\">Balance: N/A\r\n\r\n</div>";
+    + "</div>\r\n<div class=\"usage\">Usage:      N/A\r\n</div>\r\n\r\n<div class=\"balance\">Balance:\r\n\r\n"
+    + ((stack1 = helpers.each.call(depth0,(depth0 != null ? depth0.rate : depth0),{"name":"each","hash":{},"fn":this.program(3, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
+    + "\r\n</div>";
 },"useData":true});
 templates['NavView'] = template({"1":function(depth0,helpers,partials,data) {
     var stack1, alias1=this.lambda, alias2=this.escapeExpression, alias3=helpers.helperMissing;

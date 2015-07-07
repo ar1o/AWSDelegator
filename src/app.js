@@ -27,7 +27,8 @@ db.on("open", function() {
 
 app.post('/setCredentials', require(__dirname +'/server/route/CredentialsRoute').setCredentials);
 app.get('/getAccount', require(__dirname +'/server/route/CredentialsRoute').getAccountNumber);
-// app.get('/api/meter/balance', require(__dirname +'/server/route/CredentialsRoute').getAccountBalance);
+app.get('/getAccountBalance', require(__dirname +'/server/route/CredentialsRoute').getAccountBalance); 
+
 app.get('/api/ec2/instances', require(__dirname +'/server/route/ec2Route').instances);
 app.get('/api/ec2/metrics', require(__dirname +'/server/route/ec2Route').metrics);
 app.get('/api/ec2/operations', require(__dirname +'/server/route/ec2Route').operations);

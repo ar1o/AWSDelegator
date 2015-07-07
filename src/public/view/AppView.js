@@ -53,6 +53,14 @@ var AppView = Backbone.View.extend({
             });
         }.bind(this));
 
+        // this.$el.on("mouseenter", '.menu', function(e) {
+        //     this.navView.model.isOpen = true;
+        // }.bind(this));
+
+        // this.$el.on("mouseenter", '.setting', function(e) {
+        //     this.configurationView.model.openConfig = true;
+        // }.bind(this));
+        
         this.$el.on("click", '.setting', function(e) {
             this.configurationView.model.openConfig = !(this.configurationView.model.openConfig);
             var length_calc = (this.$el.height() - 60);
