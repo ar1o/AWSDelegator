@@ -27,6 +27,7 @@ db.on("open", function() {
 
 app.post('/setCredentials', require(__dirname +'/server/route/CredentialsRoute').setCredentials);
 app.get('/getAccount', require(__dirname +'/server/route/CredentialsRoute').getAccountNumber);
+// app.get('/api/meter/balance', require(__dirname +'/server/route/CredentialsRoute').getAccountBalance);
 app.get('/api/ec2/instances', require(__dirname +'/server/route/ec2Route').instances);
 app.get('/api/ec2/metrics', require(__dirname +'/server/route/ec2Route').metrics);
 app.get('/api/ec2/operations', require(__dirname +'/server/route/ec2Route').operations);
@@ -55,7 +56,8 @@ app.get('/api/NonFreeBilling/instanceCostAll', require(__dirname +'/server/route
 app.get('/api/NonFreeBilling/calcFreeTierCost', require(__dirname +'/server/route/NonFreeBillingRoute').calcFreeTierCost);
 app.get('/api/NonFreeBilling/totalCostProduct',require(__dirname +'/server/route/NonFreeBillingRoute').totalCostProduct);
 
-// app.get('/api/statistics/operations',require(__dirname +'/server/route/OperationsRoute').operations);
+
+app.get('/api/statistics/operations',require(__dirname +'/server/route/OperationsRoute').operations);
 
 app.get('/api/meter/rate',require(__dirname +'/server/route/meterRoute').rate);
 app.get('/api/meter/usage',require(__dirname +'/server/route/meterRoute').usage);

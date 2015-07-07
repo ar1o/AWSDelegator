@@ -83,7 +83,19 @@ exports.setCredentials = function(req, res) {
     });
 
 }
-//Assumes an rds lineItem...
+
 exports.getAccountNumber = function(req, res) {
       res.send(awsAccountNumber);
+}
+exports.getAccountBalance = function(req, res) {
+    res.send(credits);
+}
+exports.getRDSRegion = function(req, res) {
+    res.send(rdsRegion); 
+}
+exports.getS3Region = function (req, res) {
+  res.send(s3Region);
+}
+exports.getAWSRegion = function (req, res) {
+  res.send(awsRegions);
 }

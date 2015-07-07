@@ -12,7 +12,7 @@ require('./model/latest');
 require('./model/pricing');
 require('./model/billing');
 require('./model/usageMeter');
-//From here down, input this data th
+//Default data
 awsAccountNumber = '092841396837';
 rdsRegion = 'us-east-1';
 s3Region = 'us-east-1';
