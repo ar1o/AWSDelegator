@@ -28,8 +28,7 @@ exports.parseGroups = function(callback){
 								GroupName: iamGroups.Groups[index1].GroupName,
 								GroupId: iamGroups.Groups[index1].GroupId,
 								Arn: iamGroups.Groups[index1].Arn,
-								CreateDate: iamGroups.Groups[index1].CreateDate,
-								Credits: 0
+								CreateDate: iamGroups.Groups[index1].CreateDate
 							};
 							newGroups += 1;
 							db.collection('iamGroups').insert(doc,function(e){
@@ -77,8 +76,7 @@ exports.parseUsers = function(callback){
 								UserName: iamUsers.Users[index1].UserName,
 								UserId: iamUsers.Users[index1].UserId,
 								Arn: iamUsers.Users[index1].Arn,
-								CreateDate: iamUsers.Users[index1].CreateDate,
-								Credits: 0
+								CreateDate: iamUsers.Users[index1].CreateDate
 							};
 							newUsers += 1;
 							db.collection('iamUsers').insert(doc,function(e){

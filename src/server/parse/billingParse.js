@@ -49,6 +49,7 @@ exports.parseBillingCSV = function(callback) {
                     bill[0] = bill[0].replace(/"/g, "");
                     //remove trailing '"'
                     bill[bill.length - 1] = bill[bill.length - 1].substring(0, bill[bill.length - 1].length - 1);
+                    // console.log(bill);
                     if (bill[propertiesIndex[billingAttributes.indexOf('UsageQuantity')]] != "null") {
                         if (bill[propertiesIndex[billingAttributes.indexOf('UsageStartDate')]] > latest.time) {
                             ++newDocCount;
@@ -101,12 +102,17 @@ exports.parseBillingCSV = function(callback) {
                                 }, {
                                     time: bill[propertiesIndex[billingAttributes.indexOf('UsageStartDate')]]
                                 }, function() {
-                                    callback1();
+                                    setTimeout(function() {
+                                        callback1();
+                                    }, 0);                                    
                                 });
                             });
                         } else {
                             //bills are always in increasing order of date
-                            callback();
+                            // console.log(bill[propertiesIndex[billingAttributes.indexOf('UsageStartDate')]] , latest.time)
+                            setTimeout(function() {
+                                callback1();
+                            }, 0);
                         }
                     } else callback1();
                 };

@@ -8,6 +8,7 @@ require('./model/iam');
 require('./model/latest');
 require('./model/pricing');
 require('./model/billing');
+require('./model/budget');
 require('./model/usageMeter');
 
 awsAccountNumber = '092841396837';
@@ -30,7 +31,7 @@ awsCredentials = {
 databaseUrl = 'mongodb://localhost:27017/awsdb';
 
 billingAttributes = ['RateId', 'ProductName', 'UsageType', 'Operation', 'AvailabilityZone', 'ItemDescription',
-    'UsageStartDate', 'UsageQuantity', 'Rate', 'Cost', 'user:Volume Id', 'user:Name', 'user:Email', 'ResourceId'];
+    'UsageStartDate', 'UsageQuantity', 'Rate', 'Cost', 'user:Name', 'user:Group', 'user:Email' , 'ResourceId'];
 numericAttirbutes = ['RateId', 'UsageQuantity', 'Rate', 'Cost'];
 ec2Metric = ['NetworkIn','NetworkOut','CPUUtilization'];
 ec2MetricUnit = ['Bytes','Bytes','Percent'];

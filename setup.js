@@ -193,8 +193,7 @@ var parseGroups = function(callback){
                     GroupName: iamGroups.Groups[i].GroupName,
                     GroupId: iamGroups.Groups[i].GroupId,
                     Arn: iamGroups.Groups[i].Arn,
-                    CreateDate: iamGroups.Groups[i].CreateDate,
-                    Amount: 0
+                    CreateDate: iamGroups.Groups[i].CreateDate
                 };
                 db.collection('iamGroups').insert(doc);            
             }
@@ -215,8 +214,7 @@ var parseUsers = function(callback){
                     UserName: iamUsers.Users[i].UserName,
                     UserId: iamUsers.Users[i].UserId,
                     Arn: iamUsers.Users[i].Arn,
-                    CreateDate: iamUsers.Users[i].CreateDate,
-                    Amount: 0                    
+                    CreateDate: iamUsers.Users[i].CreateDate
                 };
                 db.collection('iamUsers').insert(doc);            
             }
