@@ -6,6 +6,7 @@ var AppView = Backbone.View.extend({
         this.header = new HeaderView();
         this.footer = new FooterView();
         this.navView = new NavView();
+        this.budgetView = new BudgetView();
 
         this.router = new AppRouter({
             defaultView: 'AWSView'
@@ -104,6 +105,11 @@ var AppView = Backbone.View.extend({
             window.location.hash = '#/IAMUsers';
         }.bind(this));
 
+        this.$el.on('click', '[page-id="4"]', function(e) {
+            this.navView.model.isOpen = false
+            window.location.hash = '#/Budget';
+        }.bind(this));
+
     },
 
     render: function() {
@@ -111,6 +117,7 @@ var AppView = Backbone.View.extend({
         this.$el.append(this.header.el);
         this.$el.append(this.navView.el);
         this.$el.append(this.footer.el);
+        this.$el.append(this.budgetView.el);
 
         this.setView(this.router.get('view'));
     },
