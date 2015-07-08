@@ -19,7 +19,6 @@ var AppView = Backbone.View.extend({
     },
 
     setListeners: function() {
-
         // url changes drive location within the app
         var self = this;
         this.router.on("change:view", function(a, view) {
@@ -48,7 +47,7 @@ var AppView = Backbone.View.extend({
             this.navView.model.isOpen = true;
             var length_calc = (this.$el.height() - 20);
             var length = length_calc + 'px';
-            self.$('.NavView').css({
+            this.$('.NavView').css({
                 'height': length
             });
         }.bind(this));
@@ -105,10 +104,10 @@ var AppView = Backbone.View.extend({
             window.location.hash = '#/IAMUsers';
         }.bind(this));
 
-        this.$el.on('click', '[page-id="4"]', function(e) {
-            this.navView.model.isOpen = false
-            window.location.hash = '#/Budget';
-        }.bind(this));
+        // this.$el.on('click', '[page-id="4"]', function(e) {
+        //     this.navView.model.isOpen = false
+        //     window.location.hash = '#/Budget';
+        // }.bind(this));
 
     },
 

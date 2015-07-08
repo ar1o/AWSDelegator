@@ -351,7 +351,6 @@ div#awsoperationscontainer {
   float: right;
 }
 .MeterView {
-  border: 1px black solid;
   font-family: 'Roboto', sans-serif;
   font-size: 14px;
   position: absolute;
@@ -359,7 +358,7 @@ div#awsoperationscontainer {
   padding-top: 8px;
 }
 .rate {
-  padding-left: 10px;
+  padding-right: 15px;
   float: left;
   width: 75px;
 }
