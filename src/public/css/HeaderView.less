@@ -10,32 +10,36 @@
 
 }
 
-.setting:before{
-	font-family: FontAwesome;
-	content: "\f013";
-	font-size: 20px;
-	float:right;
-	text-align:right;
-	margin-top: 0;
-	height: 48px;
-	margin-right: 30px;
-	line-height: 48px;
-	vertical-align: middle;
-}
 
 .setting {
+	// border: 1px solid black;
+	position: relative;
+	top: 0;
+	margin-top: 0;
+	width: 60px;
+	height: 48px;
+	font-size: 20px;
+	padding-right: 30px;
+	vertical-align: middle;
+	text-align:right;
+	line-height: 48px;
+	margin-left: auto;
+	float:right;
+	
 	&:hover {
 		color: orange;
     }
 }
 .menu {
+	float: left;
 	position: absolute;
 	top:0;
-    font-size: 16px;
 	width: 90px;
 	height: 48px;
+	font-size: 20px;
 	border-right: 1px solid #ccc;
-	margin-left: 30px;
+	padding-left: 30px;
+	text-align: left;
 	line-height: 48px;
 	vertical-align: middle;
 
@@ -45,6 +49,7 @@
 }
 
 .budget:before{
+	// border: 1px solid black;
 	font-family: FontAwesome;
 	content: "\f155";
 	font-size: 20px;

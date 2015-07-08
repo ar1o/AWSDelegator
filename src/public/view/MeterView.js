@@ -28,9 +28,9 @@ var MeterView = Backbone.View.extend({
 
     render: function() {
         var html = Handlebars.templates.MeterView({
-        	rate: usageRateCollection.toJSON(),
-        	usage: usageCollection.toJSON()
-        	// balance: creditBalanceCollection.toJSON()
+            rate: usageRateCollection.toJSON(),
+            usage: usageCollection.toJSON()
+            // balance: creditBalanceCollection.toJSON()
         });
         // var html = Handlebars.templates.MeterView;
         this.$el.html(html);
