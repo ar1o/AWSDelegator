@@ -4,13 +4,16 @@ templates['AppView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":functio
     return "<div class=\"content-view\"> </div>\r\n";
 },"useData":true});
 templates['AWSMonthlyCostView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-    return "<div id=\"awsmonthlycostcontainer\"> testtesttest</div>";
+    return "<div id=\"awsmonthlycostcontainer\"> testtesttest</div>\r\n\r\n";
 },"useData":true});
 templates['AWSOperationsView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     return "<div id=\"awsoperationscontainer\"> </div>";
 },"useData":true});
 templates['AWSView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     return "";
+},"useData":true});
+templates['BudgetView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+    return "\r\n<!-- Modal -->\r\n<div class=\"modal fade\" id=\"myModal\" role=\"dialog\">\r\n	<div class=\"modal-dialog\">\r\n\r\n		<!-- Modal content-->\r\n		<div class=\"modal-content\">\r\n			<div class=\"modal-header\">\r\n				<button type=\"button\" class=\"close\" data-dismiss=\"modal\">&times;</button>\r\n				<h4 class=\"modal-title\">Create Budget Profile</h4>\r\n			</div>\r\n			<div class=\"modal-body\">\r\n				<div class=\"insetting\"> \r\n					<div class=\"incontainer\">\r\n						<label class=\"budget-label\">Name </label>\r\n						<input type=\"text\" id=\"\" value=\"e.g., 'Monthly EC2 Budget'\">\r\n					</div>\r\n				</div>\r\n\r\n\r\n				<div class=\"insetting\"> \r\n					<div class=\"incontainer\">\r\n						<label class=\"budget-label\">Include costs related to </label>\r\n						<select>\r\n							<option value=\"\" disabled selected>Select</option>\r\n							<option value=\"1\">Option 1</option>\r\n							<option value=\"2\">Option 2</option>\r\n							<option value=\"3\">Option 3</option>\r\n						</select>\r\n					</div>\r\n				</div>\r\n\r\n				<div class=\"insetting\"> \r\n					<div class=\"incontainer\">\r\n						<label class=\"budget-label\">Start date </label>\r\n						<input type=\"text\" id=\"\" value=\"2015-10-31\">\r\n					</div>\r\n				</div>\r\n\r\n				<div class=\"insetting\"> \r\n					<div class=\"incontainer\">\r\n						<label class=\"budget-label\">End date </label>\r\n						<input type=\"text\" id=\"\" value=\"2015-10-31\">\r\n					</div>\r\n				</div>\r\n\r\n				<div class=\"insetting\"> \r\n					<div class=\"incontainer\">\r\n						<label class=\"budget-label\">Monthly Amount </label>\r\n						<input type=\"text\" id=\"\" value=\"USD\">\r\n					</div>\r\n				</div>\r\n\r\n\r\n				<div class=\"insetting\"> \r\n					<div class=\"incontainer\">\r\n						<label class=\"budget-label\">Stop resource(s) when quota reached </label>\r\n						<div class=\"onoffswitch\">\r\n							<input type=\"checkbox\" name=\"onoffswitch\" class=\"onoffswitch-checkbox\" id=\"myonoffswitch\" checked>\r\n							<label class=\"onoffswitch-label\" for=\"myonoffswitch\">\r\n								<span class=\"onoffswitch-inner\"></span>\r\n								<span class=\"onoffswitch-switch\"></span>\r\n							</label>\r\n						</div>\r\n					</div>\r\n				</div>\r\n			</div>\r\n			<div class=\"modal-footer\">\r\n				<button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Save</button>\r\n				<button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Close</button>\r\n			</div>\r\n		</div>\r\n\r\n	</div>\r\n</div>\r\n\r\n\r\n\r\n";
 },"useData":true});
 templates['ConfigurationView'] = template({"1":function(depth0,helpers,partials,data) {
     var stack1, alias1=helpers.helperMissing;
@@ -139,7 +142,7 @@ templates['FooterView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":func
     return "";
 },"useData":true});
 templates['HeaderView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-    return "<div class=\"setting\"><i class=\"fa fa-cogs fa-1x\"></i></div>\r\n\r\n<div class=\"menu\"><i class=\"fa fa-bars fa-1x\"></i></div>";
+    return "<div class=\"setting\"><i class=\"fa fa-cogs fa-1x\"></i></div>\r\n\r\n<div class=\"budget\" data-toggle=\"modal\" data-target=\"#myModal\"> </div>\r\n<div class=\"menu\"><i class=\"fa fa-bars fa-1x\"></i></div>\r\n";
 },"useData":true});
 templates['IAMGroupsView'] = template({"1":function(depth0,helpers,partials,data) {
     var alias1=this.lambda, alias2=this.escapeExpression;
@@ -190,9 +193,9 @@ templates['MeterView'] = template({"1":function(depth0,helpers,partials,data) {
 
   return "<script type=\"text/javascript\">\r\n		var response = '';\r\n			$(document).ready(function(){\r\n				$.get('/getAccountBalance', function(data){\r\n						$(\"#div2\").append('$'+data);\r\n				});\r\n			});\r\n				\r\n		</script>\r\n\r\n<div class=\"rate\">Rate: \r\n"
     + ((stack1 = helpers.each.call(depth0,(depth0 != null ? depth0.rate : depth0),{"name":"each","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
-    + "</div>\r\n<div class=\"usage\">Usage:      N/A\r\n</div>\r\n\r\n<div class=\"balance\">Balance:\r\n\r\n"
+    + "</div>\r\n\r\n\r\n<div class=\"usage\">Usage:      N/A\r\n</div>\r\n\r\n<div class=\"balance\">Balance:\r\n\r\n"
     + ((stack1 = helpers.each.call(depth0,(depth0 != null ? depth0.rate : depth0),{"name":"each","hash":{},"fn":this.program(3, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
-    + "\r\n</div>";
+    + "\r\n</div>\r\n";
 },"useData":true});
 templates['NavView'] = template({"1":function(depth0,helpers,partials,data) {
     var stack1, alias1=this.lambda, alias2=this.escapeExpression, alias3=helpers.helperMissing;

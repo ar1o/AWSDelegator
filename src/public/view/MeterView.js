@@ -3,13 +3,16 @@ var MeterView = Backbone.View.extend({
     className: 'MeterView',
 
     initialize: function(options) {
-        if(!this.model) this.model = new MeterModel();
-        setInterval(this.model.getMeterValues(), 1000*20);
-        this.bindings();       
+    	if(!this.model) this.model = new MeterModel();
+    	setInterval(this.model.getMeterValues(), 1000*20);
+        this.bindings();
+        this.render();  
+
     },
 
-    bindings: function() {      
-        this.model.change('rateDataReady', function(model, val) {
+    bindings: function() {    	
+
+    	this.model.change('rateDataReady', function(model, val) {
             this.render();
             
         }.bind(this));
@@ -29,6 +32,7 @@ var MeterView = Backbone.View.extend({
             usage: usageCollection.toJSON()
             // balance: creditBalanceCollection.toJSON()
         });
+        // var html = Handlebars.templates.MeterView;
         this.$el.html(html);
     }
 });

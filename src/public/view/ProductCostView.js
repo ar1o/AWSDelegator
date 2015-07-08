@@ -11,8 +11,6 @@ var ProductCostView = Backbone.View.extend({
     },
 
     bindings: function() {
-            var self = this;
-
         this.model.change('dataReady', function(model, val) {
             this.render();
             var month = this.model.getMonth(productCostCollection.at(0).get('month'));
@@ -23,8 +21,6 @@ var ProductCostView = Backbone.View.extend({
                 fdata.push([productCostCollection.at(i).get('productName'), productCostCollection.at(i).get('cost')]);
             }
             $(function() {
-                var t = this;
-
                 $('#productcostcontainer').highcharts({
                     chart: {
                         plotBackgroundColor: null,
@@ -57,54 +53,15 @@ var ProductCostView = Backbone.View.extend({
                     series: [{
                         type: 'pie',
                         name: 'Cost',
-                        data: fdata,
-                        point: {
-                            events: {
-                                click: function(event) {
-                                    var thisthis = this;
-                                    if (this.name == "Amazon Elastic Compute Cloud") {
-
-                                        // self.EC2Cost.model.getCost(function() {
-                                        //     self.EC2Instances.model.getEC2Instances(function() {
-                                        //     });
-
-                                        // });
-                                        
-                                    } else if (this.name == "Amazon RDS Service") {
-                                        // self.RDSCost.model.getRDSCost();
-                                        // self.RDSInstances.model.getRDSInstances();
-                                    }
-                                }
-                            }
-                        }
+                        data: fdata
                     }]
                 });
             });
         }.bind(this));
 
     },
-
-    destroy_view: function() {
-        // console.log("remove el");
-        // COMPLETELY UNBIND THE VIEW
-        this.undelegateEvents();
-
-        this.$el.removeData().unbind();
-
-        // Remove view from DOM
-        this.remove();
-        Backbone.View.prototype.remove.call(this);
-    },
-    destroy: function() {
-        this.remove();
-        this.unbind();
-        this.model.unbind("change", this.modelChanged);
-    },
-
     render: function() {
-        var html = Handlebars.templates.ProductCostView({
-            product: productCostCollection.toJSON()
-        });
+        var html = Handlebars.templates.ProductCostView;
         this.$el.html(html);
 
     }

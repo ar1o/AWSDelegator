@@ -6,7 +6,11 @@ var AppView = Backbone.View.extend({
         this.header = new HeaderView();
         this.footer = new FooterView();
         this.navView = new NavView();
+
+        this.budgetView = new BudgetView();
+
         this.configurationView = new ConfigurationView();
+
 
         this.router = new AppRouter({
             defaultView: 'AWSView'
@@ -19,7 +23,6 @@ var AppView = Backbone.View.extend({
     },
 
     setListeners: function() {
-
         // url changes drive location within the app
         var self = this;
         this.router.on("change:view", function(a, view) {
@@ -48,7 +51,7 @@ var AppView = Backbone.View.extend({
             this.navView.model.isOpen = !(this.navView.model.isOpen);
             var length_calc = (this.$el.height() - 20);
             var length = length_calc + 'px';
-            self.$('.NavView').css({
+            this.$('.NavView').css({
                 'height': length
             });
         }.bind(this));
@@ -110,6 +113,7 @@ var AppView = Backbone.View.extend({
             this.navView.model.isOpen = false
             window.location.hash = '#/IAMUsers';
         }.bind(this));
+
     },
 
     render: function() {
@@ -118,6 +122,7 @@ var AppView = Backbone.View.extend({
         this.$el.append(this.configurationView.el);
         this.$el.append(this.navView.el);
         this.$el.append(this.footer.el);
+        this.$el.append(this.budgetView.el);
 
         this.setView(this.router.get('view'));
     },
