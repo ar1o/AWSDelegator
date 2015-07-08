@@ -11,7 +11,7 @@ exports.setCredentials = function(req, res) {
 		var i = 0;
         var input = chunk.toString();
         var index = 0;
-        //while input continues to have key:value.
+        //PARSE workaround. It works, but it ain't pretty.
         do{
       		key = input.substring(index, input.indexOf('=', index));
       		value = input.substring(input.indexOf('=', index)+1, input.indexOf('&', index));
