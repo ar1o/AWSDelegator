@@ -54,10 +54,10 @@ templates['ConfigurationView'] = template({"1":function(depth0,helpers,partials,
     + escapeExpression(lambda((depth0 != null ? depth0.title : depth0), depth0))
     + "<br> \n						<input type=\"text\" name=\"Credits\" id=\"myCredits\">\n							<script type = \"text/javascript\">\n								$(document).ready(function(){\n									$.get('/getAccountBalance', function(data){\n										var elem = document.getElementById(\"myCredits\");\n										elem.value =data; \n									});\n								});\n							</script>\n						<br>\n";
 },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  var stack1, buffer = "<html>\n	<head>\n		<title>Credential Input</title>\n		<script type=\"text/javascript\">\n			$(document).ready(function(){\n				$.get('/getAccount', function(data){\n					$(\"#div1\").append(data);\n				});\n			});\n			// $(document).ready(function(){\n			// 	$.get('/getAccount', function(data){\n		// var rds= /getRDSRegion\n		// var s3 = getS3Region\n		// var regions= getAWSRegion\n		</script>\n	\n	</head>\n	<body>\n		<div class=\"slider\">\n			<form id=\"credentials\" action=\"/setCredentials\" method=\"post\">\n				<div>\n";
+  var stack1, buffer = "<!-- Modal -->\n<div id=\"myModal2\" class=\"modal fade\" role=\"dialog\">\n  <div class=\"modal-dialog\">\n\n    <!-- Modal content-->\n    <div class=\"modal-content\">\n      <div class=\"modal-header\">\n        <button type=\"button\" class=\"close\" data-dismiss=\"modal\">&times;</button>\n        <h4 class=\"modal-title\">Modal Header</h4>\n      </div>\n      <div class=\"modal-body\">\n        <p>Some text in the modal.</p>\n        <form id=\"credentials\" action=\"/setCredentials\" method=\"post\">\n				<div>\n";
   stack1 = helpers.each.call(depth0, (depth0 != null ? depth0.pages : depth0), {"name":"each","hash":{},"fn":this.program(1, data),"inverse":this.noop,"data":data});
   if (stack1 != null) { buffer += stack1; }
-  return buffer + "				<br>\n				<hr>\n				<input type=\"submit\" value=\"Save\">\n			</form>\n		</div>\n\n	</body>\n</html>\n\n";
+  return buffer + "				<br>\n				<hr>\n				<input type=\"submit\" value=\"Save\">\n			</form>\n      </div>\n      <div class=\"modal-footer\">\n        <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Close</button>\n      </div>\n    </div>\n\n  </div>\n</div>\n\n\n";
 },"useData":true});
 templates['EC2BillingView'] = template({"1":function(depth0,helpers,partials,data) {
   var lambda=this.lambda, escapeExpression=this.escapeExpression;
@@ -144,8 +144,8 @@ templates['FooterView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":func
   return "";
 },"useData":true});
 templates['HeaderView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  return "<div class=\"setting\"><i class=\"fa fa-cogs fa-1x\"></i></div>\n\n<div class=\"budget\" data-toggle=\"modal\" data-target=\"#myModal\"> </div>\n<div class=\"menu\"><i class=\"fa fa-bars fa-1x\"></i></div>\n";
-},"useData":true});
+  return "<div class=\"setting\" data-toggle=\"modal\" data-target=\"#myModal2\"><i class=\"fa fa-cogs fa-1x\"></i></div>\n\n<div class=\"budget\" data-toggle=\"modal\" data-target=\"#myModal\"> </div>\n\n<div class=\"menu\"><i class=\"fa fa-bars fa-1x\"></i></div>\n\n";
+  },"useData":true});
 templates['IAMGroupsView'] = template({"1":function(depth0,helpers,partials,data) {
   var lambda=this.lambda, escapeExpression=this.escapeExpression;
   return "		<tr>\n			<td >"

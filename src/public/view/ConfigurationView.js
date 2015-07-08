@@ -3,10 +3,10 @@ var ConfigurationView = Backbone.View.extend({
     className: 'ConfigurationView',
 
     initialize: function(options) {
-        if (!this.model) {
-            this.model = new ConfigurationModel();
-        }
-        this.bindings();
+        // if (!this.model) {
+        //     this.model = new ConfigurationModel();
+        // }
+        // this.bindings();
         this.render();
 
     },
