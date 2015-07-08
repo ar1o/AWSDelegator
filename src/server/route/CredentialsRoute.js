@@ -5,12 +5,13 @@ exports.setCredentials = function(req, res) {
 		var value,
 			key,
 			oldIndex;
+    var data;
 		var credentials = [];
 		var regions = [];
 		var i = 0;
         var input = chunk.toString();
         var index = 0;
-        //while input continues to have key:value.
+        //PARSE workaround. It works, but it ain't pretty.
         do{
       		key = input.substring(index, input.indexOf('=', index));
       		value = input.substring(input.indexOf('=', index)+1, input.indexOf('&', index));
@@ -35,35 +36,35 @@ exports.setCredentials = function(req, res) {
 // Account_Number=123456789&RDS_Region=us-west-1&S3_Region=us-west-1&AWS_Regions=us-west-1&AWS_Regions=us-west-2&AWS_Regions=us-east-1&Credentials=111&Credits=111
         while(input.indexOf('=', index)!=-1&& index!=0);
         // console.log(dict['Account_Number']);
-      if(credentials["RDS_Region"] == undefined){
-        console.log("Please input a RDS Region");
+      if(credentials["RDS_Region"] == undefined || credentials["RDS_Region"] == [] ){
+        console.log("Please input a RDS Region.\nFailed to update values.");
         return;
       }
-      if(credentials["S3_Region"] == undefined){
-        console.log("Please input a S3 Region");
+      if(credentials["S3_Region"] == undefined || credentials["S3_Region"] == [] ){
+        console.log("Please input a S3 Region.\nFailed to update values.");
         return;
       }
 	    if(isNaN(credentials["Credits"])){
-	    	console.log("Credits entered is not a number.\nPlease try again.");
+	    	console.log("Credits entered is not a number.\nFailed to update values.");
 	    	return;
-	    }
-      
-      console.log("credits before",credits);
+	    }      
+    //   console.log("credits before",credits);
       credits = credentials["Credits"];
-      console.log("credits after",credits);
-      console.log("RDS REGION", rdsRegion);
+    //   console.log("credits after",credits);
+    //   console.log("RDS REGION", rdsRegion);
 		  rdsRegion = credentials['RDS_Region'];
-      console.log("RDS REGION",rdsRegion);
-      console.log("S3 REGION",s3Region);
+    //   console.log("RDS REGION",rdsRegion);
+    //   console.log("S3 REGION",s3Region);
 		  s3Region = credentials['S3_Region'];
-      console.log("S3 REGION",s3Region);
-		  // s3Bucket = 'csvcontainer'; //Bucket Name??
-      console.log("before",awsRegions);
+    //   console.log("S3 REGION",s3Region);
+		  // // s3Bucket = 'csvcontainer'; //Bucket Name??
+    //   console.log("before",awsRegions);
 		  awsRegions = regions;
-      console.log("after",awsRegions);
-		 
+    //   console.log("after",awsRegions);
       console.log("Credentials successfully updated");
+
     });
+
 	//verify account number is numeric
 	
     ///Before setting the input values to the actual config variables, do error checking
@@ -78,8 +79,9 @@ exports.setCredentials = function(req, res) {
 	// databaseUrl = 'mongodb://localhost:27017/awsdb';//?
     req.on('end', function() {
       // empty 200 OK response for now
-      res.writeHead(200, "OK", {'Content-Type': 'text/html'});
+      res.redirect(302, '../');
       res.end();
+      console.log("Returning to parent page.");
     });
 
 }
