@@ -63,7 +63,7 @@ var AppView = Backbone.View.extend({
         
         this.$el.on("click", '.setting', function(e) {
             this.configurationView.model.openConfig = !(this.configurationView.model.openConfig);
-            var length_calc = (this.$el.height() - 60);
+            var length_calc = (this.$el.height() - 20);
             var length = length_calc + 'px';
             self.$('.ConfigurationView').css({
                 //altered this to fix runaway height issue

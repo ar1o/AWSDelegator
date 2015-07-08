@@ -1,3 +1,5 @@
+
+
 <html>
 	<head>
 		<title>Credential Input</title>
@@ -22,20 +24,29 @@
 				{{#each pages}}
 					{{#ifCond this.title '==' "Account Number"}}
 					<div type="text" id="account" value=""></div>
-						{{this.title}}:
-						<h3><div id = "div1"></div></h3>
-						<hr>
+						<h5>{{this.title}}:</h5>
+						<b><div id = "div1"></div></b>
+						
 					{{/ifCond}}
 					{{#ifCond this.title '==' "RDS Region"}}
-						{{this.title}}
-						<br> 
-						<input type="radio" id = "rdsWest1" name='RDS_Region' value="us-west-1"/><label for="rdsWest1">us-west-1</label>
-						<input type="radio" id = "rdsWest2" name='RDS_Region' value="us-west-2"/><label for="rdsWest2">us-west-2</label>
-						<input type="radio" id = "rdsEast1" name='RDS_Region' value="us-east-1"/><label for="rdsEast1">us-east-1</label>
+						<h5>{{this.title}}</h5>
+						<label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="rdsWest1">
+						  <input type="radio" id="rdsWest1" class="mdl-radio__button" name="S3_Region" value="us-west-1" />
+						  <span class="mdl-radio__label">us-west-1</span>
+						</label>
+						<br>
+						<label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="rdsWest2">
+						  <input type="radio" id="rdsWest2" class="mdl-radio__button" name="S3_Region" value="us-west-2" />
+						  <span class="mdl-radio__label">us-west-2</span>
+						</label>
+						<br>
+						<label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="rdsEast1">
+						  <input type="radio" id="rdsEast1" class="mdl-radio__button" name="S3_Region" value="us-east-1" />
+						  <span class="mdl-radio__label">us-east-1</span>
+						</label>
 						<script type = "text/javascript">
 							$(document).ready(function(){
 									$.get('/getRDSRegion', function(data){
-										console.log("RDS",data);
 										if("us-west-1" == data|| "rdsWest1"==data){
 											document.getElementById("rdsWest1").checked = true;
 										}
@@ -48,18 +59,28 @@
 									});
 								});
 						</script>
-						<hr>
+						<br>
+						
 					{{/ifCond}}
 					{{#ifCond this.title '==' "S3 Region"}}
-						{{this.title}}
+						<h5>{{this.title}}</h5>
+						<label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="s3West1">
+						  <input type="radio" id="s3West1" class="mdl-radio__button" name="RDS_Region" value="us-west-1" />
+						  <span class="mdl-radio__label">us-west-1</span>
+						</label>
 						<br>
-						<input type="radio" id="s3West1" name='S3_Region' value="us-west-1"/><label for="s3West1">us-west-1</label>
-						<input type="radio" id="s3West2" name='S3_Region' value="us-west-2"/><label for="s3West2">us-west-2</label>
-						<input type="radio" id="s3East1" name='S3_Region' value="us-east-1"/><label for="s3East1">us-east-1</label>
+						<label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="s3West2">
+						  <input type="radio" id="s3West2" class="mdl-radio__button" name="RDS_Region" value="us-west-2" />
+						  <span class="mdl-radio__label">us-west-2</span>
+						</label>
+						<br>
+						<label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="s3East1">
+						  <input type="radio" id="s3East1" class="mdl-radio__button" name="RDS_Region" value="us-east-1" />
+						  <span class="mdl-radio__label">us-east-1</span>
+						</label>
 						<script type = "text/javascript">
 							$(document).ready(function(){
 									$.get('/getS3Region', function(data){
-										console.log("S3",data);
 										if("us-west-1" == data|| "s3West1" == data){
 											document.getElementById("s3West1").checked = true;
 										}
@@ -72,18 +93,28 @@
 									});
 								});
 						</script>
-						<hr>
+						<br>
+						
 					{{/ifCond}}
 					{{#ifCond this.title '==' "AWS Regions"}}
-						{{this.title}}
-						<br> 
-						<input type="checkbox" id = "awsWest1" name='AWS_Regions' value="us-west-1"/><label for="awsWest1">us-west-1</label>
-						<input type="checkbox" id = "awsWest2" name='AWS_Regions' value="us-west-2"/><label for="awsWest2">us-west-2</label>
-						<input type="checkbox" id = "awsEast1" name='AWS_Regions' value="us-east-1"/><label for="awsEast1">us-east-1</label>
+						<h5>{{this.title}}</h5>
+						<div id= "aws_Regions">
+						<label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="awsWest1">
+						  <input type="checkbox" id = "awsWest1" name='AWS_Regions' value="us-west-1" class="mdl-checkbox__input"/>
+						  <span class="mdl-checkbox__label">us-west-1</span>
+						</label>
+						<label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="awsWest2">
+						  <input type="checkbox" id = "awsWest2" name='AWS_Regions' value="us-west-2" class="mdl-checkbox__input"/>
+						  <span class="mdl-checkbox__label">us-west-2</span>
+						</label>
+						<label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="awsEast1">
+						  <input type="checkbox" id = "awsEast1" name='AWS_Regions' value="us-east-1" class="mdl-checkbox__input"/>
+						  <span class="mdl-checkbox__label">us-east-1</span>
+						</label>
+						</div>
 						<script type = "text/javascript">
 							$(document).ready(function(){
 									$.get('/getAWSRegion', function(data){
-										console.log("AWS",data);
 										if(data.indexOf('us-west-1')!=-1){
 											document.getElementById('awsWest1').checked = true;
 										}
@@ -96,26 +127,25 @@
 									});
 								});
 						</script>
-						<hr>
+						<br>
+						<br>
+						
 					{{/ifCond}}
 					{{#ifCond this.title '==' "Credits"}}
-						{{this.title}}<br> 
-						<input type="text" name="Credits" id="myCredits">
-							<script type = "text/javascript">
-								$(document).ready(function(){
-									$.get('/getAccountBalance', function(data){
-										var elem = document.getElementById("myCredits");
-										elem.value =data; 
-									});
-								});
-							</script>
+						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label textfield-demo">
+						    <input class="mdl-textfield__input" type="text" name ="Credits" pattern="-?[0-9]*(\.[0-9]+)?" id="myCredits" />
+						    <label class="mdl-textfield__label" for="myCredits">Credits...</label>
+						    <span class="mdl-textfield__error">Input is not a number!</span>
+						</div>
 						<br>
 					{{/ifCond}}
 
 				{{/each}}
 				<br>
-				<hr>
-				<input type="submit" value="Save">
+				
+				<button input type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect">
+  				Save
+				</button>
 			</form>
 		</div>
 

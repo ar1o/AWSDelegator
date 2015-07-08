@@ -315,11 +315,11 @@ div#awsoperationscontainer {
 }
 .ConfigurationView {
   margin-right: 0;
-  margin-left: 80%;
+  margin-left: 81%;
   overflow: hidden;
   position: fixed;
-  left: 20%;
-  width: 20%;
+  left: 19%;
+  width: 19%;
   top: 48px;
   background-color: #f7f7f7;
 }
@@ -360,6 +360,46 @@ div#awsoperationscontainer {
 }
 .subpage:hover {
   color: orange;
+}
+a.tooltip {
+  outline: none;
+}
+a.tooltip strong {
+  line-height: 30px;
+}
+a.tooltip:hover {
+  text-decoration: none;
+}
+a.tooltip span {
+  z-index: 10;
+  display: none;
+  padding: 14px 14px;
+  margin-top: 30px;
+  width: 300px;
+  line-height: 16px;
+}
+a.tooltip:hover span {
+  text-align: center;
+  display: inline;
+  position: inherit;
+  color: #111;
+  overflow: hidden;
+  border: 1px solid #DCA;
+  background: #fffAF0;
+}
+.callout {
+  z-index: 20;
+  top: 20px;
+  border: 0;
+}
+/*CSS3 extras*/
+a.tooltip span {
+  border-radius: 4px;
+  box-shadow: 5px 5px 8px #CCC;
+}
+input {
+  verticle-align: center;
+  text-align: center;
 }
 .MeterView {
   font-family: 'Roboto', sans-serif;
