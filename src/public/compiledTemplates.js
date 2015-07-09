@@ -159,12 +159,12 @@ templates['IAMGroupsView'] = template({"1":function(depth0,helpers,partials,data
     + "</td>\n			<td>"
     + alias2(alias1((depth0 != null ? depth0.createDate : depth0), depth0))
     + "</td>\n			<td>"
-    + alias2(alias1((depth0 != null ? depth0.budgetName : depth0), depth0))
+    + alias2(alias1((depth0 != null ? depth0.budgetNames : depth0), depth0))
     + "</td>\n		</tr>\n";
 },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var stack1;
 
-  return "<table id=\"GroupsTable\" class=\"hover\">\n	<thead>\n		<tr class=\"dark-row\">\n			<th>GroupName</th>\n			<th>Arn</th>\n			<th>CreateDate</th>\n			<th>BudgetName</th>\n		</tr>\n	</thead>\n	<tbody id=\"instanceData\">\n"
+  return "<table id=\"GroupsTable\" class=\"hover\">\n	<thead>\n		<tr class=\"dark-row\">\n			<th>GroupName</th>\n			<th>Arn</th>\n			<th>CreateDate</th>\n			<th>BudgetName/s</th>\n		</tr>\n	</thead>\n	<tbody id=\"instanceData\">\n"
     + ((stack1 = helpers.each.call(depth0,(depth0 != null ? depth0.instances : depth0),{"name":"each","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
     + "	</tbody>	\n</table>\n";
 },"useData":true});
@@ -184,12 +184,12 @@ templates['IAMUsersView'] = template({"1":function(depth0,helpers,partials,data)
     + "</td>\n			<td>"
     + alias2(alias1((depth0 != null ? depth0.createDate : depth0), depth0))
     + "</td>\n			<td>"
-    + alias2(alias1((depth0 != null ? depth0.budgetName : depth0), depth0))
+    + alias2(alias1((depth0 != null ? depth0.budgetNames : depth0), depth0))
     + "</td>\n		</tr>\n";
 },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var stack1;
 
-  return "<table id=\"UsersTable\" class=\"hover\">\n	<thead>\n		<tr class=\"dark-row\">\n			<th>UserName</th>\n			<th>Arn</th>\n			<th>CreateDate</th>\n			<th>BudgetName</th>\n		</tr>\n	</thead>\n	<tbody id=\"instanceData\">\n"
+  return "<table id=\"UsersTable\" class=\"hover\">\n	<thead>\n		<tr class=\"dark-row\">\n			<th>UserName</th>\n			<th>Arn</th>\n			<th>CreateDate</th>\n			<th>BudgetName/s</th>\n		</tr>\n	</thead>\n	<tbody id=\"instanceData\">\n"
     + ((stack1 = helpers.each.call(depth0,(depth0 != null ? depth0.instances : depth0),{"name":"each","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
     + "	</tbody>	\n</table>";
 },"useData":true});

@@ -32,6 +32,8 @@ exports.cost = function(req, res) {
 					}
 				},{
 					'user:Name' : batchName
+				},{
+					'user:Group' : 'null'
 				}]				
 			}
 		},{
@@ -153,6 +155,8 @@ exports.usage = function(req, res) {
 					}
 				},{
 					'user:Name' : batchName
+				},{
+					'user:Group' : 'null'
 				}]				
 			}
 		},{
