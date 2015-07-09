@@ -6,6 +6,7 @@ var rdsParser = require('./src/server/parse/rdsParse');
 var iamParser = require('./src/server/parse/iamParse');
 var billingParser = require('./src/server/parse/billingParse');
 require('./src/server/config');
+var batch = [], groups = [], users = [];
 
 billingAttributes = ['RateId', 'ProductName', 'UsageType', 'Operation', 'AvailabilityZone', 'ItemDescription',
     'UsageStartDate', 'UsageQuantity', 'Rate', 'Cost', 'user:Volume Id', 'user:Name', 'user:Email', 'ResourceId'];
@@ -169,6 +170,7 @@ var parseBills = function(callback){
                                 if (err) console.log('ERROR: ' + err);
                                 console.log(files[0] + " renamed to latestBills.csv");
                             });
+                            // parseBillingCSVUsersGroups(function() {
                             billingParser.parseBillingCSV(function() {
                                 _callback();
                             }); 
@@ -180,6 +182,165 @@ var parseBills = function(callback){
         controller();
     });          
 };
+
+//temporary method to add random group and users to bills
+var parseBillingCSVUsersGroups = function(callback) {
+    MongoClient.connect(databaseUrl, function(err, db) {
+        if (err) throw err;
+        db.collection('latest').findOne(function(err, latest) {
+            mongoose.model('iamUsers').find(function(err, du) {
+                users = du;
+                mongoose.model('iamGroups').find(function(err, dg) {
+                    groups = dg; 
+                    fs.readFile(process.cwd() + '/data/latestBills.csv', "utf8", function(error, text) {
+                        if (error) throw error;
+                        var lines = text.split("\n");
+                        lines.pop();
+                        var header = lines[0].split('\",\"');
+                        header[0] = header[0].replace(/"/g, "");
+                        header[header.length - 1] = header[header.length - 1].replace(/"/g, "");
+                        var numericPropertiesIndex = [];
+                        var propertiesIndex = [];
+                        var newDocCount = 0;
+                        for (var i = 0; i < header.length; ++i) header[i] = header[i];
+                        for (var i = 0; i < billingAttributes.length; ++i) propertiesIndex.push(header.indexOf(billingAttributes[i]));
+                        for (var i = 0; i < numericAttirbutes.length; ++i) numericPropertiesIndex.push(billingAttributes.indexOf(numericAttirbutes[i]));
+                        //excluding header
+                        var index1 = 1;
+                        var controller1 = function() {
+                            iterator1(function() {
+                                index1++;
+                                if (index1 < lines.length) {
+                                    controller1();
+                                } else {
+                                    if (newDocCount > 0)
+                                        console.log("Database Alert: " + newDocCount + " documents added to 'lineItems'");
+                                    callback();
+                                }
+                            });
+                        };
+                        var iterator1 = function(callback1) {
+                            getRandomBatch(function(e) {
+                                //replaces ',,' with ',"null",'
+                                lines[index1] = lines[index1].replace(/,,/g, ",\"null\",");
+                                //replaces remaining ',,' with ',"null",'
+                                lines[index1] = lines[index1].replace(/,,/g, ",\"null\",");
+                                //replaces ending ',' with ',"null"'
+                                if (lines[index1].match(/,$/)) lines[index1] += "\"null\"";
+                                //replaces '""' with '"null"'
+                                lines[index1] = lines[index1].replace(/""/g, "\"null\"");
+                                //split lines by '","'
+                                bill = lines[index1].split("\",\"");
+                                //remove leading '"'
+                                bill[0] = bill[0].replace(/"/g, "");
+                                //remove trailing '"'
+                                bill[bill.length - 1] = bill[bill.length - 1].substring(0, bill[bill.length - 1].length - 1);
+                                if (bill[propertiesIndex[billingAttributes.indexOf('UsageQuantity')]] != "null") {
+                                    if (bill[propertiesIndex[billingAttributes.indexOf('UsageStartDate')]] > latest.time) {
+                                        ++newDocCount;
+                                        var doc = {};
+                                        for (var j = 0; j < billingAttributes.length; ++j) {
+                                            if (numericPropertiesIndex.indexOf(j) == -1) {
+                                                doc[billingAttributes[j]] = bill[propertiesIndex[j]];
+                                            } else {
+                                                doc[billingAttributes[j]] = parseFloat(bill[propertiesIndex[j]]);
+                                            }
+                                        }
+                                        //handles free tier rate and cost
+                                        if (doc['ItemDescription'].match(/free tier/g)) {
+                                            if (/BoxUsage:t2.micro/.test(doc['UsageType'])) {
+                                                var zone = doc['AvailabilityZone'];
+                                                if (/[a-z]$/.test(zone)) zone = zone.substring(0, zone.length - 1);
+                                                if (/Windows/.test(doc['ItemDescription'])) {
+                                                    doc['NonFreeRate'] = pricing['BoxUsage:t2.micro']['Windows'][zone];
+                                                } else if (/SUSE/.test(doc['ItemDescription'])) {
+                                                    doc['NonFreeRate'] = pricing['BoxUsage:t2.micro']['SUSE'][zone];
+                                                } else if (/Linux/.test(doc['ItemDescription'])) {
+                                                    doc['NonFreeRate'] = pricing['BoxUsage:t2.micro']['Linux'][zone];
+                                                } else if (/RHEL/.test(doc['ItemDescription'])) {
+                                                    doc['NonFreeRate'] = pricing['BoxUsage:t2.micro']['RHEL'][zone];
+                                                }
+                                            } else if (/AWS-Out-Bytes/.test(doc['UsageType'])) {
+                                                doc['NonFreeRate'] = pricing['AWS-Out-Bytes'].Price;
+                                            } else if (/EBS:VolumeUsage.gp2/.test(doc['UsageType'])) {
+                                                doc['NonFreeRate'] = pricing['EBS:VolumeUsage.gp2'].Price;
+                                            } else if (/DataTransfer-Out-Bytes/.test(doc['UsageType'])) {
+                                                doc['NonFreeRate'] = pricing['DataTransfer-Out-Bytes'].Price;
+                                            } else if (/TimedStorage-ByteHrs/.test(doc['UsageType'])) {
+                                                doc['NonFreeRate'] = pricing['TimedStorage-ByteHrs'].Price;
+                                            } else if (/CloudFront-Out-Bytes/.test(doc['UsageType'])) {
+                                                doc['NonFreeRate'] = pricing['CloudFront-Out-Bytes'].Price;
+                                            } else if (/DataTransfer-Regional-Bytes/.test(doc['UsageType'])) {
+                                                doc['NonFreeRate'] = pricing['DataTransfer-Regional-Bytes'].Price;
+                                            } else if (/Requests-Tier1/.test(doc['UsageType'])) {
+                                                doc['NonFreeRate'] = pricing['Requests-Tier1'].Price;
+                                            } else if (/Requests-Tier2/.test(doc['UsageType'])) {
+                                                doc['NonFreeRate'] = pricing['Requests-Tier2'].Price;
+                                            } else {
+                                                doc['NonFreeRate'] = pricing[doc['UsageType']].Price;
+                                            }
+                                            doc['NonFreeCost'] = doc['UsageQuantity'] * doc['NonFreeRate'];                               
+                                        }                                        
+                                        if(batch[0]==0){
+                                            doc['user:Group'] = 'null';
+                                            doc['user:Name'] = batch[1];
+                                        }else{
+                                            doc['user:Group'] = batch[1];
+                                            doc['user:Name'] = batch[2];
+                                        }
+                                        db.collection('lineItems').insert(doc, function() {
+                                            db.collection('latest').update({
+                                                _id: latest._id
+                                            }, {
+                                                time: bill[propertiesIndex[billingAttributes.indexOf('UsageStartDate')]]
+                                            }, function() {
+                                                setTimeout(function() {
+                                                    callback1();
+                                                }, 0);
+                                            });
+                                        });
+                                    } else {
+                                        //bills are always in increasing order of date
+                                        // console.log(bill[propertiesIndex[billingAttributes.indexOf('UsageStartDate')]] , latest.time)
+                                        setTimeout(function() {
+                                            callback1();
+                                        }, 0);
+                                    }
+                                } else callback1();
+                            });
+                        };
+                        controller1();
+                    });
+                });
+            });
+        });
+    });
+};
+
+var getRandomBatch = function(callback) {
+    batch = [];
+    var mrand = parseInt((Math.random() * 10));
+    if (mrand % 2 == 0) {
+        var rand = parseInt((Math.random() * 100) % users.length);
+        var uname = users[rand].UserName;
+        batch.push(0);
+        batch.push(uname);
+        callback();
+    } else {
+        var rand = parseInt((Math.random() * 100) % groups.length);
+        var gname = groups[rand].GroupName;
+        mongoose.model('iamUsersGroups').find({
+            GroupName: gname
+        }).exec(function(e, d) {
+            var grand = parseInt((Math.random() * 100) % d.length);
+            var guname = d[grand].UserName;
+            batch.push(1);
+            batch.push(gname);
+            batch.push(guname);
+            callback();
+        });
+    }
+}
 
 var parseGroups = function(callback){    
     MongoClient.connect(databaseUrl, function(err, db) {

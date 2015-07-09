@@ -4,6 +4,8 @@ var UsageMonitorView = Backbone.View.extend({
         if (!this.model) {
             this.model = new UsageMonitorModel();
         }
+        this.userActivity = new IAMUsersView();
+        this.groupActivity = new IAMGroupsView();
         this.model.getBudgets();
         this.bindings();
     },
@@ -14,7 +16,8 @@ var UsageMonitorView = Backbone.View.extend({
         this.model.change('budgetDataReady', function(model, val) {
             this.render();
             $('#BudgetTable').DataTable({
-                "iDisplayLength": 15
+                "iDisplayLength": 15,
+                "bSort": false
                 // "paging":   false,
                 // "info":     false,
                 // "bFilter": false
@@ -22,11 +25,13 @@ var UsageMonitorView = Backbone.View.extend({
         }.bind(this));
 
         this.$el.on('click', '#BudgetTable tr', function() {
-            console.log($('td', this).eq(0).text())
-            var name = $('td', this).eq(0).text();
-            var vname = $('td', this).eq(8).text();
-            if (name != "") {
-                // self.updateViews(name, vname);
+            var rowIndex = this.rowIndex - 1; 
+            if(budgetCollection.at(rowIndex).get('batchType')=='user'){
+                self.userActivity.updateViews(rowIndex);
+                window.location.hash = '#/IAMUsers';
+            }else{
+                self.groupActivity.updateViews(rowIndex);
+                window.location.hash = '#/IAMGroups';
             }
         });
     },
