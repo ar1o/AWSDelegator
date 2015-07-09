@@ -345,3 +345,22 @@ div#awsoperationscontainer {
   padding-left: 10px;
   width: 75px;
 }
+.IAMUsersView {
+  margin-left: 20px;
+}
+.IAMGroupsView {
+  /*width: 47%;*/
+  margin-left: 20px;
+}
+div#budgetUsageContainer {
+  /*width: 32%;*/
+  height: 300px;
+  /*float: left;*/
+}
+div#budgetCostContainer {
+  /*float: left;*/
+}
+div#serviceContainer {
+  /*width: 62%;*/
+  /*float: right*/
+}
