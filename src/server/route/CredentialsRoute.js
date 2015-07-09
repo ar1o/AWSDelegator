@@ -87,17 +87,17 @@ exports.setCredentials = function(req, res) {
 }
 
 exports.getAccountNumber = function(req, res) {
-      res.send(awsAccountNumber);
+      res.sendStatus(awsAccountNumber);
 }
 exports.getAccountBalance = function(req, res) {
-    res.send(credits);
+    res.sendStatus(credits);
 }
 exports.getRDSRegion = function(req, res) {
-    res.send(rdsRegion); 
+    res.sendStatus(rdsRegion); 
 }
 exports.getS3Region = function (req, res) {
-  res.send(s3Region);
+  res.sendStatus(s3Region);
 }
 exports.getAWSRegion = function (req, res) {
-  res.send(awsRegions);
+  res.sendStatus(awsRegions);
 }

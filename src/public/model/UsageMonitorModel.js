@@ -53,11 +53,15 @@ var UsageMonitorModel = Backbone.Model.extend({
 		GroupCollection.reset();
 		this.groups_result().done(function(result) {
 			for (var r in result) {
-				var data = new ec2InstanceModel({
+				var budgetNames = result[r].BudgetName[0];
+				for(var i=1;i<result[r].BudgetName.length;++i){
+					budgetNames+=", "+result[r].BudgetName[i];
+				}
+				var data = new iamGroupsModel({
 					groupName: result[r].GroupName,
 					arn: result[r].Arn,
 					createDate: result[r].CreateDate,
-					budgetName: result[r].BudgetName
+					budgetNames: budgetNames
 				});
 				GroupCollection.add(data);
 			}
@@ -72,11 +76,15 @@ var UsageMonitorModel = Backbone.Model.extend({
 		UserCollection.reset();
 		this.users_result().done(function(result) {
 			for (var r in result) {
-				var data = new ec2InstanceModel({
+				var budgetNames = result[r].BudgetName[0];
+				for(var i=1;i<result[r].BudgetName.length;++i){
+					budgetNames+=", "+result[r].BudgetName[i];
+				}
+				var data = new iamUsersModel({
 					userName: result[r].UserName,
 					arn: result[r].Arn,
 					createDate: result[r].CreateDate,
-					budgetName: result[r].BudgetName
+					budgetNames: budgetNames
 				});
 				UserCollection.add(data);
 			}
@@ -260,7 +268,7 @@ var iamGroupsModel = Backbone.Model.extend({
 		GroupName: null,
 		Arn: null,
 		CreateDate: null,
-		BudgetName: null
+		BudgetNames: null
 	}
 });
 
@@ -277,7 +285,7 @@ var iamUsersModel = Backbone.Model.extend({
 		UserName: null,
 		Arn: null,
 		CreateDate: null,
-		BudgetName: null
+		BudgetNames: null
 	}
 });
 
