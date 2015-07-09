@@ -133,7 +133,6 @@ exports.userCost = function(req, res) {
 			_id: 1
 		}
 	}]).exec(function(e, d) {
-		console.log(d)
 		res.send(d);
 	});
 }
