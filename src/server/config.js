@@ -1,6 +1,9 @@
 MongoClient = require('mongodb').MongoClient;
 AWS = require('aws-sdk');
+
 mongoose = require('mongoose');
+require('express');
+// var $ = require('jQuery');
 Schema = mongoose.Schema;
 require('./model/ec2');
 require('./model/rds');
@@ -10,12 +13,15 @@ require('./model/pricing');
 require('./model/billing');
 require('./model/budget');
 require('./model/usageMeter');
-
+//Default data
 awsAccountNumber = '092841396837';
 rdsRegion = 'us-east-1';
 s3Region = 'us-east-1';
 s3Bucket = 'csvcontainer';
 awsRegions = ['us-west-1', 'us-west-2', 'us-east-1'];
+databaseUrl = 'mongodb://localhost:27017/awsdb'; //?
+credits = 0;
+
 awsCredentials = {
     // default: new AWS.SharedIniFileCredentials({
     //     profile: 'default'
@@ -27,8 +33,6 @@ awsCredentials = {
     	profile: 'default'
     })
 };
-
-databaseUrl = 'mongodb://localhost:27017/awsdb';
 
 billingAttributes = ['RateId', 'ProductName', 'UsageType', 'Operation', 'AvailabilityZone', 'ItemDescription',
     'UsageStartDate', 'UsageQuantity', 'Rate', 'Cost', 'user:Name', 'user:Group', 'user:Email' , 'ResourceId'];

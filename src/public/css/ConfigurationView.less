@@ -1,52 +1,50 @@
-    @width: 318px;
-
-.NavView {
+.ConfigurationView {
+    @width:  20%;
+    margin-right: 0;
+    margin-left: 80%;
+    overflow: hidden;
     position: fixed;
-    left: -@width;
+    left: @width;
     width: @width;
     top: 48px;
     background-color: #f7f7f7;
-    overflow: hidden;
-    transition-delay: .3s;
-        border-right: 1px solid #ccc;
-        border-top: 1px solid #ccc;
-        border-bottom: 1px solid #ccc;
-
     &.visible {
-        left: 0; 
+        left: 0;
+        text-align: center;
         transition: left 0.2s;
-        border-right: 1px solid #ccc;
+        border-left: 1px solid #ccc;
         border-top: 1px solid #ccc;
         border-bottom: 1px solid #ccc;
+        height: ~"calc(45%)";
     }
 
 
     .page {
-    	padding: 5px;
-    	/*border: 1px dashed black;*/
-    	font-family: 'Roboto', sans-serif;
-    	font-size: 14px;
-    	margin-left: 22px;
-		vertical-align: middle;
-		line-height: 30px;  
+        padding: 5px;
+        /*border: 1px dashed black;*/
+        font-family: 'Roboto', sans-serif;
+        font-size: 14px;
+        margin-left: auto;
+        margin-right: 30px;
+        vertical-align: middle;
+        line-height: 30px;  
 
-    	&:hover {
-    		color: orange;
-    	}
+        &:hover {
+            color: orange;
+        }
     }
 }
 
 .highcharts-container {
     position: static !important;
 }
-
 .subpage {
         padding: 10px;
         padding-top: 0;
         /*border: 1px dashed black;*/
         font-family: 'Roboto', sans-serif;
         font-size: 12px;
-        margin-left: 42px;
+        margin-right: 42px;
         vertical-align: middle;
         line-height: 30px;  
 

@@ -1,0 +1,245 @@
+<!-- Modal -->
+<div id="myModal2" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Modal Header</h4>
+      </div>
+      <div class="modal-body">
+        <p>Some text in the modal.</p>
+        <form id="credentials" action="/setCredentials" method="post">
+				<div>
+				{{#each pages}}
+					{{#ifCond this.title '==' "Account Number"}}
+					<div type="text" id="account" value=""></div>
+						{{this.title}}:
+						<h3><div id = "div1"></div></h3>
+						<hr>
+					{{/ifCond}}
+					{{#ifCond this.title '==' "RDS Region"}}
+						{{this.title}}
+						<br> 
+						<input type="radio" id = "rdsWest1" name='RDS_Region' value="us-west-1"/><label for="rdsWest1">us-west-1</label>
+						<input type="radio" id = "rdsWest2" name='RDS_Region' value="us-west-2"/><label for="rdsWest2">us-west-2</label>
+						<input type="radio" id = "rdsEast1" name='RDS_Region' value="us-east-1"/><label for="rdsEast1">us-east-1</label>
+						<script type = "text/javascript">
+							$(document).ready(function(){
+									$.get('/getRDSRegion', function(data){
+										console.log("RDS",data);
+										if("us-west-1" == data|| "rdsWest1"==data){
+											document.getElementById("rdsWest1").checked = true;
+										}
+										else if("us-west-2" == data|| "rdsWest2"==data){
+											document.getElementById("rdsWest2").checked = true;
+										}
+										else if("us-east-1" == data|| "rdsEast1"==data){
+											document.getElementById("rdsEast1").checked = true;
+										}
+									});
+								});
+						</script>
+						<hr>
+					{{/ifCond}}
+					{{#ifCond this.title '==' "S3 Region"}}
+						{{this.title}}
+						<br>
+						<input type="radio" id="s3West1" name='S3_Region' value="us-west-1"/><label for="s3West1">us-west-1</label>
+						<input type="radio" id="s3West2" name='S3_Region' value="us-west-2"/><label for="s3West2">us-west-2</label>
+						<input type="radio" id="s3East1" name='S3_Region' value="us-east-1"/><label for="s3East1">us-east-1</label>
+						<script type = "text/javascript">
+							$(document).ready(function(){
+									$.get('/getS3Region', function(data){
+										console.log("S3",data);
+										if("us-west-1" == data|| "s3West1" == data){
+											document.getElementById("s3West1").checked = true;
+										}
+										else if("us-west-2" == data || "s3West2" == data){
+											document.getElementById("s3West2").checked = true;
+										}
+										else if("us-east-1" == data || "s3East1" == data){
+											document.getElementById("s3East1").checked = true;
+										}
+									});
+								});
+						</script>
+						<hr>
+					{{/ifCond}}
+					{{#ifCond this.title '==' "AWS Regions"}}
+						{{this.title}}
+						<br> 
+						<input type="checkbox" id = "awsWest1" name='AWS_Regions' value="us-west-1"/><label for="awsWest1">us-west-1</label>
+						<input type="checkbox" id = "awsWest2" name='AWS_Regions' value="us-west-2"/><label for="awsWest2">us-west-2</label>
+						<input type="checkbox" id = "awsEast1" name='AWS_Regions' value="us-east-1"/><label for="awsEast1">us-east-1</label>
+						<script type = "text/javascript">
+							$(document).ready(function(){
+									$.get('/getAWSRegion', function(data){
+										console.log("AWS",data);
+										if(data.indexOf('us-west-1')!=-1){
+											document.getElementById('awsWest1').checked = true;
+										}
+										if(data.indexOf('us-west-2')!=-1){
+											document.getElementById('awsWest2').checked = true;
+										}
+										if(data.indexOf('us-east-1')!=-1){
+											document.getElementById('awsEast1').checked = true;
+										}
+									});
+								});
+						</script>
+						<hr>
+					{{/ifCond}}
+					{{#ifCond this.title '==' "Credits"}}
+						{{this.title}}<br> 
+						<input type="text" name="Credits" id="myCredits">
+							<script type = "text/javascript">
+								$(document).ready(function(){
+									$.get('/getAccountBalance', function(data){
+										var elem = document.getElementById("myCredits");
+										elem.value =data; 
+									});
+								});
+							</script>
+						<br>
+					{{/ifCond}}
+
+				{{/each}}
+				<br>
+				<hr>
+				<input type="submit" value="Save">
+			</form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{{!-- <html>
+	<head>
+		<title>Credential Input</title>
+		<script type="text/javascript">
+			$(document).ready(function(){
+				$.get('/getAccount', function(data){
+					$("#div1").append(data);
+				});
+			});
+			// $(document).ready(function(){
+			// 	$.get('/getAccount', function(data){
+		// var rds= /getRDSRegion
+		// var s3 = getS3Region
+		// var regions= getAWSRegion
+		</script>
+	
+	</head>
+	<body>
+		<div class="slider">
+			<form id="credentials" action="/setCredentials" method="post">
+				<div>
+				{{#each pages}}
+					{{#ifCond this.title '==' "Account Number"}}
+					<div type="text" id="account" value=""></div>
+						{{this.title}}:
+						<h3><div id = "div1"></div></h3>
+						<hr>
+					{{/ifCond}}
+					{{#ifCond this.title '==' "RDS Region"}}
+						{{this.title}}
+						<br> 
+						<input type="radio" id = "rdsWest1" name='RDS_Region' value="us-west-1"/><label for="rdsWest1">us-west-1</label>
+						<input type="radio" id = "rdsWest2" name='RDS_Region' value="us-west-2"/><label for="rdsWest2">us-west-2</label>
+						<input type="radio" id = "rdsEast1" name='RDS_Region' value="us-east-1"/><label for="rdsEast1">us-east-1</label>
+						<script type = "text/javascript">
+							$(document).ready(function(){
+									$.get('/getRDSRegion', function(data){
+										console.log("RDS",data);
+										if("us-west-1" == data|| "rdsWest1"==data){
+											document.getElementById("rdsWest1").checked = true;
+										}
+										else if("us-west-2" == data|| "rdsWest2"==data){
+											document.getElementById("rdsWest2").checked = true;
+										}
+										else if("us-east-1" == data|| "rdsEast1"==data){
+											document.getElementById("rdsEast1").checked = true;
+										}
+									});
+								});
+						</script>
+						<hr>
+					{{/ifCond}}
+					{{#ifCond this.title '==' "S3 Region"}}
+						{{this.title}}
+						<br>
+						<input type="radio" id="s3West1" name='S3_Region' value="us-west-1"/><label for="s3West1">us-west-1</label>
+						<input type="radio" id="s3West2" name='S3_Region' value="us-west-2"/><label for="s3West2">us-west-2</label>
+						<input type="radio" id="s3East1" name='S3_Region' value="us-east-1"/><label for="s3East1">us-east-1</label>
+						<script type = "text/javascript">
+							$(document).ready(function(){
+									$.get('/getS3Region', function(data){
+										console.log("S3",data);
+										if("us-west-1" == data|| "s3West1" == data){
+											document.getElementById("s3West1").checked = true;
+										}
+										else if("us-west-2" == data || "s3West2" == data){
+											document.getElementById("s3West2").checked = true;
+										}
+										else if("us-east-1" == data || "s3East1" == data){
+											document.getElementById("s3East1").checked = true;
+										}
+									});
+								});
+						</script>
+						<hr>
+					{{/ifCond}}
+					{{#ifCond this.title '==' "AWS Regions"}}
+						{{this.title}}
+						<br> 
+						<input type="checkbox" id = "awsWest1" name='AWS_Regions' value="us-west-1"/><label for="awsWest1">us-west-1</label>
+						<input type="checkbox" id = "awsWest2" name='AWS_Regions' value="us-west-2"/><label for="awsWest2">us-west-2</label>
+						<input type="checkbox" id = "awsEast1" name='AWS_Regions' value="us-east-1"/><label for="awsEast1">us-east-1</label>
+						<script type = "text/javascript">
+							$(document).ready(function(){
+									$.get('/getAWSRegion', function(data){
+										console.log("AWS",data);
+										if(data.indexOf('us-west-1')!=-1){
+											document.getElementById('awsWest1').checked = true;
+										}
+										if(data.indexOf('us-west-2')!=-1){
+											document.getElementById('awsWest2').checked = true;
+										}
+										if(data.indexOf('us-east-1')!=-1){
+											document.getElementById('awsEast1').checked = true;
+										}
+									});
+								});
+						</script>
+						<hr>
+					{{/ifCond}}
+					{{#ifCond this.title '==' "Credits"}}
+						{{this.title}}<br> 
+						<input type="text" name="Credits" id="myCredits">
+							<script type = "text/javascript">
+								$(document).ready(function(){
+									$.get('/getAccountBalance', function(data){
+										var elem = document.getElementById("myCredits");
+										elem.value =data; 
+									});
+								});
+							</script>
+						<br>
+					{{/ifCond}}
+
+				{{/each}}
+				<br>
+				<hr>
+				<input type="submit" value="Save">
+			</form>
+		</div>
+
+	</body>
+</html> --}}
+

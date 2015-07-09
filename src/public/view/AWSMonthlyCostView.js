@@ -42,7 +42,7 @@ var AWSMonthlyCostView = Backbone.View.extend({
                         enabled: false
                     },
                     legend: {
-                        enabled: false
+                        enabled: true
                     },
                     yAxis: {
                         allowDecimals: false,

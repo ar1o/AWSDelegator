@@ -10,9 +10,48 @@
 
 }
 
-.setting:before{
+
+.setting {
+	// border: 1px solid black;
+	position: relative;
+	top: 0;
+	margin-top: 0;
+	width: 60px;
+	height: 48px;
+	font-size: 20px;
+	padding-right: 30px;
+	vertical-align: middle;
+	text-align:right;
+	line-height: 48px;
+	margin-left: auto;
+	float:right;
+	
+	&:hover {
+		color: orange;
+    }
+}
+.menu {
+	float: left;
+	position: absolute;
+	top:0;
+	width: 90px;
+	height: 48px;
+	font-size: 20px;
+	border-right: 1px solid #ccc;
+	padding-left: 30px;
+	text-align: left;
+	line-height: 48px;
+	vertical-align: middle;
+
+	&:hover {
+		color: orange;
+    }
+}
+
+.budget:before{
+	// border: 1px solid black;
 	font-family: FontAwesome;
-	content: "\f013";
+	content: "\f155";
 	font-size: 20px;
 	float:right;
 	text-align:right;
@@ -23,22 +62,7 @@
 	vertical-align: middle;
 }
 
-.setting {
-	&:hover {
-		color: orange;
-    }
-}
-.menu {
-	position: absolute;
-	top:0;
-    font-size: 16px;
-	width: 90px;
-	height: 48px;
-	border-right: 1px solid #ccc;
-	margin-left: 30px;
-	line-height: 48px;
-	vertical-align: middle;
-
+.budget {
 	&:hover {
 		color: orange;
     }

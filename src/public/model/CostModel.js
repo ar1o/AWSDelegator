@@ -3,11 +3,10 @@ var CostModel = Backbone.Model.extend({
 		var self = this;
 		this.change('dataReady');
 	},
-	
+
 	getEC2Cost: function(product) {
 		hourlyCostCollection.reset();
 		var self = this;
-		var count = 0;
 		var params = {
 			productName: product
 		};
@@ -28,7 +27,6 @@ var CostModel = Backbone.Model.extend({
 	getRDSCost: function(product) {
 		hourlyCostCollection.reset();
 		var self = this;
-		var count = 0;
 		var params = {
 			productName: product
 		};
@@ -121,16 +119,25 @@ var CostModel = Backbone.Model.extend({
 		}
 		//create the series
 		for (var i in hm) {
-			var fdata = {
-				name: hm[i].name, //productName (ie; EC2)
-				data: hm[i].data, //the date per month
-				stack: hm[i].stack, // Free-tier or non-free-tier
-				color: hm[i].colors
-			};
+			if (stax == 'non-free-tier') {
+				var fdata = {
+					name: hm[i].name, //productName (ie; EC2)
+					data: hm[i].data, //the date per month
+					stack: hm[i].stack, // Free-tier or non-free-tier
+					color: hm[i].colors,
+					id: hm[i].name
+				};
+			} else {
+				var fdata = {
+					name: hm[i].name, //productName (ie; EC2)
+					data: hm[i].data, //the date per month
+					stack: hm[i].stack, // Free-tier or non-free-tier
+					color: hm[i].colors,
+					linkedTo: hm[i].name
+				};
+			}
 			fseries.push(fdata);
 		}
-		// console.log("fseries", fseries);
-
 		return fseries;
 	}
 

@@ -7,6 +7,11 @@ var AppView = Backbone.View.extend({
         this.footer = new FooterView();
         this.navView = new NavView();
 
+        this.budgetView = new BudgetView();
+
+        this.configurationView = new ConfigurationView();
+
+
         this.router = new AppRouter({
             defaultView: 'AWSView'
         });
@@ -18,7 +23,6 @@ var AppView = Backbone.View.extend({
     },
 
     setListeners: function() {
-
         // url changes drive location within the app
         var self = this;
         this.router.on("change:view", function(a, view) {
@@ -43,17 +47,27 @@ var AppView = Backbone.View.extend({
 
     bindings: function() {
 
+        this.$el.on("click", '.menu', function(e) {
+            if (this.navView.model.isOpen == true) {
+                this.navView.model.isOpen = false;
+            } else {
+                this.navView.model.isOpen = true;
+                var length_calc = (this.$el.height() - 20);
+                var length = length_calc + 'px';
+                this.$('.NavView').css({
+                    'height': length
+                });
+            }
+        }.bind(this));
+
+
         this.$el.on("mouseenter", '.menu', function(e) {
             this.navView.model.isOpen = true;
             var length_calc = (this.$el.height() - 20);
             var length = length_calc + 'px';
-            self.$('.NavView').css({
+            this.$('.NavView').css({
                 'height': length
             });
-        }.bind(this));
-
-        this.$el.on("mouseleave", '.menu', function(e) {
-            this.navView.model.isOpen = false;
         }.bind(this));
 
         this.$el.on("mouseenter", '.NavView', function(e) {
@@ -62,6 +76,20 @@ var AppView = Backbone.View.extend({
 
         this.$el.on("mouseleave", '.NavView', function(e) {
             this.navView.model.isOpen = false;
+        }.bind(this));
+
+        this.$el.on("mouseleave", '.menu', function(e) {
+            this.navView.model.isOpen = false;
+        }.bind(this));
+
+        this.$el.on("click", '.setting', function(e) {
+            // this.configurationView.model.openConfig = !(this.configurationView.model.openConfig);
+            // var length_calc = (this.$el.height() - 60);
+            // var length = length_calc + 'px';
+            // self.$('.ConfigurationView').css({
+            //     //altered this to fix runaway height issue
+            //     'height': length
+            // });
         }.bind(this));
 
         this.$el.on('click', '[page-id="0"]', function(e) {
@@ -88,7 +116,7 @@ var AppView = Backbone.View.extend({
             this.navView.model.isOpen = false
             window.location.hash = '#/EC2Instances';
         }.bind(this));
-        
+
         this.$el.on('click', '[subpage-id="1"]', function(e) {
             this.navView.model.isOpen = false
             window.location.hash = '#/RDSInstances';
@@ -110,7 +138,10 @@ var AppView = Backbone.View.extend({
         this.$el.html(Handlebars.templates.AppView());
         this.$el.append(this.header.el);
         this.$el.append(this.navView.el);
+        this.$el.append(this.configurationView.el);
+
         this.$el.append(this.footer.el);
+        this.$el.append(this.budgetView.el);
 
         this.setView(this.router.get('view'));
     },
