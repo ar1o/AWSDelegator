@@ -108,8 +108,6 @@ exports.parseBillingCSV = function(callback) {
                                 });
                             });
                         } else {
-                            //bills are always in increasing order of date
-                            // console.log(bill[propertiesIndex[billingAttributes.indexOf('UsageStartDate')]] , latest.time)
                             setTimeout(function() {
                                 callback1();
                             }, 0);

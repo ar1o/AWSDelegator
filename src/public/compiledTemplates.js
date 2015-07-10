@@ -32,7 +32,7 @@ templates['ConfigurationView'] = template({"1":function(depth0,helpers,partials,
 
   return "<!-- Modal -->\r\n<div id=\"myModal2\" class=\"modal fade\" role=\"dialog\">\r\n	<div class=\"modal-dialog\">\r\n		<!-- Modal content-->\r\n		<div class=\"modal-content\">\r\n			<div class=\"modal-header\">\r\n				<button type=\"button\" class=\"close\" data-dismiss=\"modal\">&times;</button>\r\n				<h4 class=\"modal-title\"> AWS Account Settings</h4>\r\n			</div>\r\n			<div class=\"modal-body\">\r\n"
     + ((stack1 = helpers.each.call(depth0,(depth0 != null ? depth0.pages : depth0),{"name":"each","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
-    + "			</div>\r\n			<div class=\"modal-footer\">\r\n				<p>To modify account settings, go to \\AWSDelegator\\src\\server\\config.js</p>\r\n				<button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\" id=\"saveConfig\">Save</button>\r\n				<button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Close</button>\r\n			</div>\r\n		</div>\r\n	</div>\r\n</div>";
+    + "			</div>\r\n			<div class=\"modal-footer\">\r\n				<p>To modify account settings, go to \\AWSDelegator\\src\\server\\config.js</p>\r\n				<button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\" id=\"saveConfig\">Save</button>\r\n				<button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Close</button>\r\n			</div>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
 },"useData":true});
 templates['EC2BillingView'] = template({"1":function(depth0,helpers,partials,data) {
     var alias1=this.lambda, alias2=this.escapeExpression;
@@ -127,7 +127,7 @@ templates['FooterView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":func
     return "";
 },"useData":true});
 templates['HeaderView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-    return "<div class=\"setting\" data-toggle=\"modal\" data-target=\"#myModal2\"><i class=\"fa fa-cogs fa-1x\"></i></div>\r\n\r\n<div class=\"budget\" data-toggle=\"modal\" data-target=\"#myModal\"> </div>\r\n\r\n<div class=\"menu\"><i class=\"fa fa-bars fa-1x\"></i></div>\r\n\r\n";
+    return "\r\n<div class=\"setting\" data-toggle=\"modal\" data-target=\"#myModal2\"><i class=\"fa fa-cogs fa-1x\"></i></div>\r\n\r\n<div class=\"budget\" data-toggle=\"modal\" data-target=\"#myModal\"> </div>\r\n\r\n<div class=\"menu\"><i class=\"fa fa-bars fa-1x\"></i></div>\r\n";
 },"useData":true});
 templates['IAMCostView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     return "<div id=\"budgetCostContainer\"></div>\r\n";

@@ -11,6 +11,7 @@ require('./model/latest');
 require('./model/pricing');
 require('./model/billing');
 require('./model/budget');
+require('./model/notification');
 require('./model/usageMeter');
 billingAttributes = ['RateId', 'ProductName', 'UsageType', 'Operation', 'AvailabilityZone', 'ItemDescription',
     'UsageStartDate', 'UsageQuantity', 'Rate', 'Cost', 'user:Name', 'user:Group', 'user:Email' , 'ResourceId'];

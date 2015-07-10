@@ -4,6 +4,7 @@ var billingParser = require('./billingParse');
 var ec2Parser = require('./ec2Parse');
 var rdsParser = require('./rdsParse');
 var iamParser = require('./iamParse');
+var timeOutHandler = require('../BudgetTimeOutHandler');
 var self = this;
 var okey,next_okey;
 var s3 = new AWS.S3();
@@ -16,7 +17,6 @@ exports.s3Connect = function(_callback) {
     s3.s3Watch();
     // parseBills();
     AWS.config.credentials = awsCredentials.default;
-    // parseAWSServices();    
 };
 
 var parseBills = function() {
