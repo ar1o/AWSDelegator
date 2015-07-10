@@ -7,7 +7,9 @@ exports.budgets = function(req, res) {
 			BatchName: 1,
 			StartDate: 1,
 			EndDate: 1,
-			Amount: 1
+			Amount: 1,
+			State: 1,
+			TimeOut: 1
 		}
 	}]).exec(function(e, d) {
 		res.send(d);
@@ -316,7 +318,7 @@ exports.userServiceUsage = function(req, res) {
 					$lte: endDate
 				}
 			}, {
-				'user:Name': batchName
+				'user:Name': batchName 
 			}, {
 				'user:Group': 'null'
 			}]
@@ -324,7 +326,7 @@ exports.userServiceUsage = function(req, res) {
 	}, {
 		$project: {
 			_id: 0,
-			'ProductName': 1,
+			ProductName: 1,
 			Cost: 1
 		}
 	}, {
@@ -336,7 +338,6 @@ exports.userServiceUsage = function(req, res) {
 		}
 	}]).exec(function(e, d) {
 		var result = {};
-		console.log(d);
 		for(var i=0 in d){
 			result[d[i]._id]={};
 			result[d[i]._id]['total']=d[i].Total;

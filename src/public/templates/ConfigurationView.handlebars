@@ -19,30 +19,6 @@
 						<h3><div id = "div1"></div></h3>
 						<hr>
 					{{/ifCond}}
-					{{#ifCond this.title '==' "RDS Region"}}
-						{{this.title}}
-						<br> 
-						<input type="radio" id = "rdsWest1" name='RDS_Region' value="us-west-1"/><label for="rdsWest1">us-west-1</label>
-						<input type="radio" id = "rdsWest2" name='RDS_Region' value="us-west-2"/><label for="rdsWest2">us-west-2</label>
-						<input type="radio" id = "rdsEast1" name='RDS_Region' value="us-east-1"/><label for="rdsEast1">us-east-1</label>
-						<script type = "text/javascript">
-							$(document).ready(function(){
-									$.get('/getRDSRegion', function(data){
-										console.log("RDS",data);
-										if("us-west-1" == data|| "rdsWest1"==data){
-											document.getElementById("rdsWest1").checked = true;
-										}
-										else if("us-west-2" == data|| "rdsWest2"==data){
-											document.getElementById("rdsWest2").checked = true;
-										}
-										else if("us-east-1" == data|| "rdsEast1"==data){
-											document.getElementById("rdsEast1").checked = true;
-										}
-									});
-								});
-						</script>
-						<hr>
-					{{/ifCond}}
 					{{#ifCond this.title '==' "S3 Region"}}
 						{{this.title}}
 						<br>

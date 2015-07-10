@@ -4,15 +4,21 @@ AWSDelegator
 
 
 ## Code Layout
- 
-     css/        contains styling data
-     js/         helper javascript files and boot.js which is what runs at startup
-     lib/        contains backbone, handlebar, jquery, and underscore dependencies
-     server/     contains server, CORS, Expressjs, and mongo/mongoose schema data
-     model/      contains backbone models
-     templates/  contains handlebars templates
-     view/       contains backbone views
-     
+     src/
+     | -- setup.js (initial run to setup the application)
+     | -- app.js (main file)
+     | -- public/ (Backbone/Handlebars, LESS)
+          | -- css/
+          | -- js/ (contains helper functions)
+          | -- model/ 
+          | -- templates/ (contains handlebars templates)
+          | -- view/
+     | -- server/ (Nodejs, Expressjs, Mongo/Mongoose)
+          | -- config.js (contains configuration items for setting up the server)
+          | -- model/ (Mongoose schemas)
+          | -- parse/ (processes AWS related data)
+          | -- route/ (reads and routes processed information to various endpoints)
+
 
 ## Getting Started
  
@@ -26,8 +32,6 @@ AWSDelegator
  
      1. $ mongod 
      2. $ grunt watch
-     3. $ grunt connect
-     4. $ grunt express
-     5. go to http://localhost:4000 for client
-     6. go to http://localhost:3000 for nodejs
+     3. $ node app.js
+     5. go to http://localhost:3000
 

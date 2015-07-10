@@ -8,7 +8,8 @@ var BudgetView = Backbone.View.extend({
         }
         this.data = {
             budgetName: null,
-            batch: null,
+            batchName: null,
+            batchType: null,
             startDate: null,
             endDate: null,
             amount: 0,
@@ -38,7 +39,7 @@ var BudgetView = Backbone.View.extend({
             var selected = $('.costfilter').val();
             console.log(selected);
             $('#filter-details').removeClass('hidden');
-            if (selected == 'Groups') {
+            if (selected == 'group') {
                 this.render_collection('Groups')
             } else {
                 this.render_collection('Users')
@@ -62,7 +63,13 @@ var BudgetView = Backbone.View.extend({
         this.$el.on("change", '.sub-costfilter', function(e) {
             var selected = $('.sub-costfilter').val();
             console.log(selected);
-            this.data.batch = selected;
+            this.data.batchName = selected;
+        }.bind(this));
+
+        this.$el.on("change", '.costfilter', function(e) {
+            var selected = $('.costfilter').val();
+            console.log(selected);
+            this.data.batchType = selected;
         }.bind(this));
 
         this.$el.on('focusin', '#startdate', function(e) {

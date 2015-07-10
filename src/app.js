@@ -23,20 +23,21 @@ mongoose.connect(databaseUrl, function(error) {
 });
 var db = mongoose.connection;
 db.on("open", function() {
-    require(__dirname + '/server/model/ec2');
-    require(__dirname + '/server/model/rds');
-    require(__dirname + '/server/model/latest');
-    require(__dirname + '/server/model/pricing');
-    require(__dirname + '/server/model/billing');
-    require(__dirname + '/server/BoxPricingCheck').getPricing(function() {
-        require(__dirname + '/server/parse/scheduler').s3Connect();
+
+    require(__dirname +'/server/model/ec2');
+    require(__dirname +'/server/model/rds');
+    require(__dirname +'/server/model/latest');
+    require(__dirname +'/server/model/pricing');
+    require(__dirname +'/server/model/billing');
+    require(__dirname +'/server/parse/boxPricingParse').getPricing(function(){
+        require(__dirname +'/server/parse/scheduler').s3Connect();
     });
 });
 
 app.post('/setCredentials', require(__dirname + '/server/route/CredentialsRoute').setCredentials);
 app.get('/getAccount', require(__dirname + '/server/route/CredentialsRoute').getAccountNumber);
 app.get('/getAccountBalance', require(__dirname + '/server/route/CredentialsRoute').getAccountBalance);
-app.get('/getRDSRegion', require(__dirname + '/server/route/CredentialsRoute').getRDSRegion);
+// app.get('/getRDSRegion', require(__dirname + '/server/route/CredentialsRoute').getRDSRegion);
 app.get('/getS3Region', require(__dirname + '/server/route/CredentialsRoute').getS3Region);
 app.get('/getAWSRegion', require(__dirname + '/server/route/CredentialsRoute').getAWSRegion);
 
@@ -94,13 +95,14 @@ var MongoClient = mongodb.MongoClient;
 
 app.post('/budget', jsonParser, function(req, res) {
     var r = req.body;
-    console.log('body' + r);
-    console.log(r.budgetName);
-    console.log(r.batch);
-    console.log(r.startDate);
-    console.log(r.endDate);
-    console.log(r.amount);
-    console.log(r.option);
+    // console.log('body' + r);
+    // console.log(r.budgetName);
+    // console.log(r.batchName);
+    // console.log(r.batchType);
+    // console.log(r.startDate);
+    // console.log(r.endDate);
+    // console.log(r.amount);
+    // console.log(r.option);
     var startDate = r.startDate.split('/');
     var endDate = r.endDate.split('/');
     MongoClient.connect(databaseUrl, function(err, db) {
@@ -108,8 +110,8 @@ app.post('/budget', jsonParser, function(req, res) {
 
         db.collection('budgets').insert({
             BudgetName: r.budgetName,
-            BatchType: 'user',
-            BatchName: r.batch,
+            BatchType: r.batchType,
+            BatchName: r.batchName,
             StartDate: startDate[2]+'-'+startDate[0]+'-'+startDate[1]+' '+'00:00:00',
             EndDate: endDate[2]+'-'+endDate[0]+'-'+endDate[1]+' '+'23:00:00',
             Amount: r.amount,

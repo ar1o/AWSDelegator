@@ -6,7 +6,9 @@ budgetSchema = new mongoose.Schema({
 	BatchName: String,
 	StartDate: String,
 	EndDate: String,
-	Amount: Number
+	Amount: Number,
+	TimeOut: String,
+	State: String
 });
 
 mongoose.model('Budgets', budgetSchema, 'budgets');

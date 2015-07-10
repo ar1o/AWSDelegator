@@ -12,10 +12,10 @@ require('./model/latest');
 require('./model/pricing');
 require('./model/billing');
 require('./model/budget');
+require('./model/notification');
 require('./model/usageMeter');
 //Default data
 awsAccountNumber = '092841396837';
-rdsRegion = 'us-east-1';
 s3Region = 'us-east-1';
 s3Bucket = 'csvcontainer';
 awsRegions = ['us-west-1', 'us-west-2', 'us-east-1'];

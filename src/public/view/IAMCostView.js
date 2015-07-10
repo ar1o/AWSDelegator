@@ -85,7 +85,7 @@ var IAMCostView = Backbone.View.extend({
                     tooltip: {
                         formatter: function() {
                             return '<b>' + this.series.name + '</b><br/>' +
-                                new Date(this.x) + ', ' + this.y;
+                                new Date(this.x) + ', ' + this.y+' USD';
                         }
                     },
                     legend: {
@@ -149,6 +149,34 @@ var IAMCostView = Backbone.View.extend({
             var month = parseInt(date1[1]);
             date1[1] = month - 1;
             var startDate = Date.UTC(date1[0], date1[1], date1[2], date2[0], date2[1], date2[2]);
+
+            var costData = [];
+            for (var i = 0; i < budgetCostCollection.length - 1; ++i) {
+                var date = budgetCostCollection.at(i).get('date').split(' ');
+                //date1=[year,month,date]
+                var date1 = date[0].split(/-/);
+                //date2=[hour,minute,second]                
+                var date2 = date[1].split(':');
+                //correction for JS viewing JAN as '00'
+                var month = parseInt(date1[1]);
+                date1[1] = month - 1;
+                var utcDate = Date.UTC(date1[0], date1[1], date1[2], date2[0], date2[1], date2[2]);
+                costData.push([utcDate,budgetCostCollection.at(i).get('cost')]);
+            }
+
+            var userCostData = [];
+            for (var i = 0; i < userBudgetCostCollection.length - 1; ++i) {
+                var date = userBudgetCostCollection.at(i).get('date').split(' ');
+                //date1=[year,month,date]
+                var date1 = date[0].split(/-/);
+                //date2=[hour,minute,second]                
+                var date2 = date[1].split(':');
+                //correction for JS viewing JAN as '00'
+                var month = parseInt(date1[1]);
+                date1[1] = month - 1;
+                var utcDate = Date.UTC(date1[0], date1[1], date1[2], date2[0], date2[1], date2[2]);
+                userCostData.push([utcDate,userBudgetCostCollection.at(i).get('cost')]);
+            }
             $(function() {
                 $('#budgetCostContainer').highcharts({
                     chart: {
@@ -187,23 +215,23 @@ var IAMCostView = Backbone.View.extend({
                     tooltip: {
                         formatter: function() {
                             return '<b>' + this.series.name + '</b><br/>' +
-                                new Date(this.x) + ', ' + this.y;
+                                new Date(this.x) + ', ' + this.y+' USD';
                         }
                     },
                     legend: {
-                        enabled: false
+                        enabled: true
                     },
                     series: [{
-                        name: 'Cost',
+                        name: budgetCollection.at(self.budgetIndex).get('batchName'),
                         pointInterval: 3600 * 1000,
                         pointStart: startDate,
-                        data: budgetCostCollection.pluck('cost')
+                        data: costData
                     },{
-                        name: 'Cost',
+                        name: self.userName,
                         pointInterval: 3600 * 1000,
                         pointStart: startDate,
                         color: self.userColor,
-                        data: userBudgetCostCollection.pluck('cost')
+                        data: userCostData
                     }],
                     navigation: {
                         menuItemStyle: {
