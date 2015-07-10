@@ -47,9 +47,19 @@ var ConfigurationModel = Backbone.Model.extend({
 			console.log('FAILED');
 		});
 	},
-	setBalance: function(setBalance) {
+	setBalance: function(data) {
+		console.log('wtf',data);
 		var self = this;
-		console.log("ConfigureationModel",this);
+		return $.ajax({
+			type: 'POST',
+			data: JSON.stringify(data),
+			contentType: 'application/json',
+			url: 'http://localhost:3000/setBalance',
+			success: function(data) {
+				console.log('success');
+				console.log(JSON.stringify(data));
+			}
+		});
 	}
 });
 

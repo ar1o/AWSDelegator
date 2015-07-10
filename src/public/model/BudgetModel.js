@@ -18,10 +18,6 @@ var BudgetModel = Backbone.Model.extend({
 				console.log(JSON.stringify(data));
 			}
 		});
-<<<<<<< HEAD
-	},
-=======
->>>>>>> ddea5fe343e7830dbd4374ad55f3c116520b630a
 
 	}
 
