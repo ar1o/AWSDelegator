@@ -20,7 +20,7 @@ db.on("open", function() {
     require(__dirname +'/server/model/latest');
     require(__dirname +'/server/model/pricing');
     require(__dirname +'/server/model/billing');
-    require(__dirname +'/server/BoxPricingCheck').getPricing(function(){
+    require(__dirname +'/server/parse/boxPricingParse').getPricing(function(){
         require(__dirname +'/server/parse/scheduler').s3Connect();
     });
 });
