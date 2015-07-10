@@ -46,8 +46,8 @@ var IAMUsageView = Backbone.View.extend({
                     tooltip: {
                         formatter: function() {
                             return '<b>' + this.series.name + '</b><br/>' +
-                                'Total Cost: '+ budgetUsageCollection.at(0).get('total').toFixed(2) + ', '+
-                                'Usage Percentage: ' + this.y.toFixed(2);
+                                'Total Cost: '+ budgetUsageCollection.at(0).get('total').toFixed(2) + ' USD , '+
+                                'Usage Percentage: ' + this.y.toFixed(2) + '%';
                         }
                     },
                     legend: {

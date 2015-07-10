@@ -5,6 +5,7 @@ var ec2Parser = require('./src/server/parse/ec2Parse');
 var rdsParser = require('./src/server/parse/rdsParse');
 var iamParser = require('./src/server/parse/iamParse');
 var billingParser = require('./src/server/parse/billingParse');
+var boxPricingParser = require('./src/server/parse/boxPricingParse');
 require('./src/server/config');
 var batch = [], groups = [], users = [];
 
@@ -23,24 +24,24 @@ mongoose.connect(databaseUrl, function(error) {
     }
 });
 
-var setupServer = function(){
+var setupServer = function() {
     console.log('SetupAlert: setting up database');
-    setupDatabase(function(){
+    setupDatabase(function() {
         console.log('SetupAlert: parsing instances');
         AWS.config.credentials = awsCredentials.default;
-        parseInstances(function(){
+        parseInstances(function() {
             console.log('SetupAlert: parsing metrics');
-            parseMetrics(function(){
-                console.log('SetupAlert: parsing bills');
-                parseBills(function(){
-                    console.log('SetupAlert: parsing groups');
-                    parseGroups(function(){
-                        console.log('SetupAlert: parsing users');
-                        parseUsers(function(){
-                            console.log("Setup script completed, You may now start the server");
+            parseMetrics(function() {
+                console.log('SetupAlert: parsing groups and users');
+                parseUsersGroups(function(){               
+                    console.log('SetupAlert: parsing box pricing');
+                    parseBoxPricing(function(){
+                        console.log('SetupAlert: parsing bills');
+                        parseBills(function() {
+                            console.log('Setup script completed, You may now start the server');
                             process.exit(0);
-                        });                        
-                    });                    
+                        });
+                    })
                 });
             });
         });
@@ -104,13 +105,27 @@ var parseMetrics = function(callback){
         console.log('ParseAlert(rds): Metrics parsing completed');
         ec2Parser.parseMetrics('setup', function(err) {
             if(err) throw err;
-            require('./src/server/BoxPricingCheck').getPricing(function() {
-                console.log('ParseAlert(ec2): Metrics parsing completed');
-                console.log('ParseAlert(BoxPricingCheck): BoxPricing parsing completed');
-                callback();
-            });                
+            console.log('ParseAlert(ec2): Metrics parsing completed');
+            callback();                
         });
     });
+}
+
+var parseUsersGroups = function(callback) {
+    iamParser.parseGroups(function() {
+        iamParser.parseUsers(function() {
+            iamParser.parseUserGroups(function() {
+                console.log('ParseAlert(iam): Users and Groups parsing completed');
+                callback();
+            });
+        });
+    });
+}
+
+var parseBoxPricing = function(callback){
+    boxPricingParser.getPricing(function(){
+        callback();
+    })
 }
 
 var parseBills = function(callback){
@@ -170,8 +185,9 @@ var parseBills = function(callback){
                                 if (err) console.log('ERROR: ' + err);
                                 console.log(files[0] + " renamed to latestBills.csv");
                             });
-                            // parseBillingCSVUsersGroups(function() {
-                            billingParser.parseBillingCSV(function() {
+
+                            parseBillingCSVUsersGroups(function() {
+                            // billingParser.parseBillingCSV(function() {
                                 _callback();
                             }); 
                         });
@@ -220,7 +236,7 @@ var parseBillingCSVUsersGroups = function(callback) {
                             });
                         };
                         var iterator1 = function(callback1) {
-                            getRandomBatch(function(e) {
+                            getRandomBatch(function() {
                                 //replaces ',,' with ',"null",'
                                 lines[index1] = lines[index1].replace(/,,/g, ",\"null\",");
                                 //replaces remaining ',,' with ',"null",'
@@ -300,8 +316,6 @@ var parseBillingCSVUsersGroups = function(callback) {
                                             });
                                         });
                                     } else {
-                                        //bills are always in increasing order of date
-                                        // console.log(bill[propertiesIndex[billingAttributes.indexOf('UsageStartDate')]] , latest.time)
                                         setTimeout(function() {
                                             callback1();
                                         }, 0);
@@ -321,18 +335,18 @@ var getRandomBatch = function(callback) {
     batch = [];
     var mrand = parseInt((Math.random() * 10));
     if (mrand % 2 == 0) {
-        var rand = parseInt((Math.random() * 100) % users.length);
+        var rand = parseInt((Math.random() * 100)) % users.length;
         var uname = users[rand].UserName;
         batch.push(0);
         batch.push(uname);
         callback();
     } else {
-        var rand = parseInt((Math.random() * 100) % groups.length);
+        var rand = parseInt((Math.random() * 100)) % groups.length;
         var gname = groups[rand].GroupName;
         mongoose.model('iamUsersGroups').find({
             GroupName: gname
         }).exec(function(e, d) {
-            var grand = parseInt((Math.random() * 100) % d.length);
+            var grand = parseInt((Math.random() * 100)) % d.length;
             var guname = d[grand].UserName;
             batch.push(1);
             batch.push(gname);
@@ -340,48 +354,6 @@ var getRandomBatch = function(callback) {
             callback();
         });
     }
-}
-
-var parseGroups = function(callback){    
-    MongoClient.connect(databaseUrl, function(err, db) {
-        if (err) throw err;
-        var iam = new AWS.IAM();
-        iam.listGroups({}, function(err, iamGroups) {
-            if (err) throw err;
-            for (var i=0 in iamGroups.Groups) {
-                var doc = {
-                    Path: iamGroups.Groups[i].Path,
-                    GroupName: iamGroups.Groups[i].GroupName,
-                    GroupId: iamGroups.Groups[i].GroupId,
-                    Arn: iamGroups.Groups[i].Arn,
-                    CreateDate: iamGroups.Groups[i].CreateDate
-                };
-                db.collection('iamGroups').insert(doc);            
-            }
-            callback();
-        });
-    });
-}
-
-var parseUsers = function(callback){
-    MongoClient.connect(databaseUrl, function(err, db) {
-        if (err) throw err;
-        var iam = new AWS.IAM();
-        iam.listUsers({}, function(err, iamUsers) {
-            if (err) throw err;
-            for (var i=0 in iamUsers.Users) {
-                var doc = {
-                    Path: iamUsers.Users[i].Path,
-                    UserName: iamUsers.Users[i].UserName,
-                    UserId: iamUsers.Users[i].UserId,
-                    Arn: iamUsers.Users[i].Arn,
-                    CreateDate: iamUsers.Users[i].CreateDate
-                };
-                db.collection('iamUsers').insert(doc);            
-            }
-            callback();
-        });
-    });
 }
 
 setupServer();

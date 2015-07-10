@@ -90,7 +90,7 @@ var IAMOperationsView = Backbone.View.extend({
                         type: 'pie'
                     },
                     title: {
-                        text: 'Services Cost Chart - '+serviceCollection.at(0).get('batchName')
+                        text: 'Services Cost Chart - '+budgetCollection.at(self.budgetIndex).get('budgetName')
                     },
                     yAxis: {
                         title: {
@@ -108,7 +108,7 @@ var IAMOperationsView = Backbone.View.extend({
                         valueSuffix: '%'
                     },
                     series: [{
-                        name: 'Browsers',
+                        name: 'AWS Service',
                         data: browserData,
                         size: '60%',
                         dataLabels: {
@@ -119,7 +119,7 @@ var IAMOperationsView = Backbone.View.extend({
                             distance: -30
                         }
                     }, {
-                        name: 'Versions',
+                        name: 'Operation',
                         data: versionsData,
                         size: '80%',
                         innerSize: '60%',

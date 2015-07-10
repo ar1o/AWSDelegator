@@ -186,6 +186,7 @@ var UsageMonitorModel = Backbone.Model.extend({
 		(function(params) {
 			$.get(host+'/api/usage/userBudgetCost', params, function(result) {
 				for (var i in result) {
+
 					var data = new budgetCostModel({
 						date: result[i]._id,
 						cost: Math.round(result[i].Cost*10000)/10000
