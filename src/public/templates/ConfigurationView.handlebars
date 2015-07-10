@@ -1,68 +1,62 @@
 <!-- Modal -->
 <div id="myModal2" class="modal fade" role="dialog">
 	<div class="modal-dialog">
-	<!-- Modal content-->
+		<!-- Modal content-->
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal">&times;</button>
-
 				<h4 class="modal-title"> AWS Account Settings</h4>
 			</div>
 			<div class="modal-body">
 				{{#each pages}}
-				<p>To modify account number and configuration settings, go to .\AWSDelegator\src\server\config.js.</p>
-				<div class="incontainer">
-					<label class="config-label"><h4>Account Number</h4></label>
-					<div type="text" class="account" value=""></div>
-					<b>{{this.number}}</b>
-				</div>
-				<br>
-				<div class="incontainer">
-					<label class="config-label"><h4>S3 Bucket Region</h4></label>
-					<div type="text" class="account" value=""></div>
-					<b>{{this.s3}}</b>
-				</div>
-				<br>
-				<div class="incontainer">
-					<label class="config-label"><h4>S3 Bucket Name</h4></label>
-					<div type="text" class="account" value=""></div>
-					<b>{{this.bucketName}}</b>
-				</div>
-				<br>
-				<div class="incontainer">
-					<label class="config-label"><h4>DB URL</h4></label>
-					<div type="text" class="account" value=""></div>
-					<b>{{this.URL}}</b>
-				</div>
-				<br>
-				<div class="incontainer">
-					<label class="config-label"><h4>AWS Credit Expiration Data</h4></label>
-					<div type="text" class="account" value=""></div>
-					<b>{{this.balanceExp}}</b>
-				</div>
-				{{/each}}
-				<br>
-			
-				<div class="incontainer">
-					<div class="mdl-textfield mdl-js-textfield mdl-textfield-floating-label textfield-demo">
-						<input class="mdl-textfield__input" type="text" name ="Credits" pattern="-?[0-9]*(\.[0-9]+)?" id="myCredits" />
-						<label class="mdl-textfield__label" for="myCredits">Credits...</label>
-						<span class="mdl-textfield__error">Input is not a number!</span>
+				<div class="insetting"> 
+					<div class="incontainer">
+						<label class="config-label">Account Number</label>
+						<div type="text" class="account" value="012345678910"></div>
+						{{this.number}}
 					</div>
 				</div>
-				<script type="text/javascript">
-				$(document).ready(function(){
-					$("#myCredits").focusout(function() {
-						var balance = $("#myCredits").val();
-						console.log(balance);
-					});
-				})
-				</script>
+				<div class="insetting"> 
+					<div class="incontainer">
+						<label class="config-label">S3 Bucket Region</label>
+						<div type="text" class="account" value="">{{this.s3}}</div>
+					</div>
+				</div>
+				<div class="insetting"> 
+					<div class="incontainer">
+						<label class="config-label">S3 Bucket Name</label>
+						<div type="text" class="account" value="">{{this.bucketName}}</div>
+					</div>
+				</div>
+				<div class="insetting"> 
+					<div class="incontainer">
+						<label class="config-label">DB URL</label>
+						<div type="text" class="account" value="" disabled>{{this.URL}}</div>
+					</div>
+				</div>
+				<div class="insetting"> 
+					<div class="incontainer">
+						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label textfield-demo">
+							<input class="mdl-textfield__input" type="text" pattern="^(19|20)\d\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$" id='expDate'/>
+							<label class="mdl-textfield__label" for="expiration">Credit Expiration (YYYY/MM/DD)</label>
+							<span class="mdl-textfield__error">Input is not a date!</span>
+						</div>
+					</div>
+					<div class="incontainer">
+						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label textfield-demo">
+							<input class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="myCredits" />
+						    <label class="mdl-textfield__label" for="myCredits">Credits</label>
+						    <span class="mdl-textfield__error">Input is not a number!</span>
+						</div>
+					</div>
+				</div>
+				{{/each}}
 			</div>
 			<div class="modal-footer">
-				<button input type="submit" class="mdl-button mdl-js-button mdl-button-raised mdl-button-accent mdl-js-ripple-effect">Save</button>
+				<p>To modify account settings, go to \AWSDelegator\src\server\config.js</p>
+				<button type="button" class="btn btn-default" data-dismiss="modal" id="saveConfig">Save</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 			</div>
 		</div>
-
 	</div>
 </div>

@@ -6,7 +6,7 @@ require(__dirname +'/server/config.js');
 
 // Front-end code
 app.use('/',express.static(__dirname + '/public'));
-
+// app.use(body-parser());
 // Start mongoose and mongo
 mongoose.connect(databaseUrl, function(error) {
     if (error) {
@@ -26,6 +26,7 @@ db.on("open", function() {
 });
 
 app.post('/setConfiguration', require(__dirname +'/server/route/CredentialsRoute').setConfiguration);
+app.post('/setBalance' , require(__dirname +'/server/route/CredentialsRoute').setBalance);
 app.get('/getAccountBalance', require(__dirname +'/server/route/CredentialsRoute').getAccountBalance); 
 app.get('/getConfiguration', require(__dirname +'/server/route/CredentialsRoute').getConfiguration); 
 

@@ -83,14 +83,28 @@ var AppView = Backbone.View.extend({
         }.bind(this));
 
         this.$el.on("click", '.setting', function(e) {
-            // this.configurationView.model.openConfig = !(this.configurationView.model.openConfig);
-            // var length_calc = (this.$el.height() - 60);
-            // var length = length_calc + 'px';
-            // self.$('.ConfigurationView').css({
-            //     //altered this to fix runaway height issue
-            //     'height': length
-            // });
         }.bind(this));
+
+        this.$el.on("click", '#saveConfig', function(e){
+            //set credit value
+            var bal = $('#myCredits').val();
+            console.log("Credits",bal);
+            var exp = $('#expDate').val();
+            console.log("Expiration",exp);
+            var self = this;
+            $.ajax({
+                type: "POST",
+                url: 'http://localhost:3000/setBalance',
+                data: {
+                    balance: bal
+                },
+                success: function(data) {
+                    console.log('success');
+                    console.log(JSON.stringify(data));
+                },
+                dataType: 'text'   
+            });
+        });
 
         this.$el.on('click', '[page-id="0"]', function(e) {
             this.navView.model.isOpen = false;

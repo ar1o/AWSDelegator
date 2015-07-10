@@ -79,6 +79,10 @@ exports.setConfiguration = function(req, res) {
     });
 
 }
+exports.setBalance = function(req,res){
+  console.log("setBalance",req.data);
+  // credits = req.
+}
 exports.getConfiguration = function(req, res) {
   var data = {account:[{"Number" : awsAccountNumber, "Balance" : credits, "S3BucketRegion" : s3Region, "Regions" : awsRegions, "S3BucketName"  : s3Bucket, "DB_URL" : databaseUrl, "BalanceExp" : creditExp}]};
   res.send(data);

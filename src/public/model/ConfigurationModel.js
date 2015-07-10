@@ -28,7 +28,6 @@ var ConfigurationModel = Backbone.Model.extend({
 	getConfiguration: function() {
 		var self = this;
 		ConfigurationCollection.reset();
-		console.log();
 		this.configuration_result().done(function(result) {
 			console.log('result',result)
 			for (var r in result) {
@@ -47,6 +46,10 @@ var ConfigurationModel = Backbone.Model.extend({
 		}).fail(function() {
 			console.log('FAILED');
 		});
+	},
+	setBalance: function(setBalance) {
+		var self = this;
+		console.log("ConfigureationModel",this);
 	}
 });
 

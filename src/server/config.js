@@ -29,8 +29,7 @@ awsCredentials = {
 awsAccountNumber = '092841396837';
 s3Region = 'us-east-1';
 s3Bucket = 'csvcontainer';
-awsRegions = ['us-west-1', 
-    // 'us-west-2',
+awsRegions = ['us-west-1', 'us-west-2',
      'us-east-1'];
 databaseUrl = 'mongodb://localhost:27017/awsdb'; //?
 credits = 0;
