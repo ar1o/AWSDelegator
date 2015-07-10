@@ -30,7 +30,7 @@
   "dependencies": {
     "adm-zip": "~0.4.7",
     "aws-sdk": "~2.1.26",
-    "body-parser": "^1.13.1",
+    "body-parser": "^1.13.2",
     "express": "~4.12.3",
     "mongodb": "~2.0.33",
     "mongoose": "~4.0.3",

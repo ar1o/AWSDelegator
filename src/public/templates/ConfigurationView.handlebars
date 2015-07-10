@@ -1,221 +1,62 @@
 <!-- Modal -->
 <div id="myModal2" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-
-    <!-- Modal content-->
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Modal Header</h4>
-      </div>
-      <div class="modal-body">
-        <p>Some text in the modal.</p>
-        <form id="credentials" action="/setCredentials" method="post">
-				<div>
+	<div class="modal-dialog">
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title"> AWS Account Settings</h4>
+			</div>
+			<div class="modal-body">
 				{{#each pages}}
-					{{#ifCond this.title '==' "Account Number"}}
-					<div type="text" id="account" value=""></div>
-						{{this.title}}:
-						<h3><div id = "div1"></div></h3>
-						<hr>
-					{{/ifCond}}
-					{{#ifCond this.title '==' "S3 Region"}}
-						{{this.title}}
-						<br>
-						<input type="radio" id="s3West1" name='S3_Region' value="us-west-1"/><label for="s3West1">us-west-1</label>
-						<input type="radio" id="s3West2" name='S3_Region' value="us-west-2"/><label for="s3West2">us-west-2</label>
-						<input type="radio" id="s3East1" name='S3_Region' value="us-east-1"/><label for="s3East1">us-east-1</label>
-						<script type = "text/javascript">
-							$(document).ready(function(){
-									$.get('/getS3Region', function(data){
-										console.log("S3",data);
-										if("us-west-1" == data|| "s3West1" == data){
-											document.getElementById("s3West1").checked = true;
-										}
-										else if("us-west-2" == data || "s3West2" == data){
-											document.getElementById("s3West2").checked = true;
-										}
-										else if("us-east-1" == data || "s3East1" == data){
-											document.getElementById("s3East1").checked = true;
-										}
-									});
-								});
-						</script>
-						<hr>
-					{{/ifCond}}
-					{{#ifCond this.title '==' "AWS Regions"}}
-						{{this.title}}
-						<br> 
-						<input type="checkbox" id = "awsWest1" name='AWS_Regions' value="us-west-1"/><label for="awsWest1">us-west-1</label>
-						<input type="checkbox" id = "awsWest2" name='AWS_Regions' value="us-west-2"/><label for="awsWest2">us-west-2</label>
-						<input type="checkbox" id = "awsEast1" name='AWS_Regions' value="us-east-1"/><label for="awsEast1">us-east-1</label>
-						<script type = "text/javascript">
-							$(document).ready(function(){
-									$.get('/getAWSRegion', function(data){
-										console.log("AWS",data);
-										if(data.indexOf('us-west-1')!=-1){
-											document.getElementById('awsWest1').checked = true;
-										}
-										if(data.indexOf('us-west-2')!=-1){
-											document.getElementById('awsWest2').checked = true;
-										}
-										if(data.indexOf('us-east-1')!=-1){
-											document.getElementById('awsEast1').checked = true;
-										}
-									});
-								});
-						</script>
-						<hr>
-					{{/ifCond}}
-					{{#ifCond this.title '==' "Credits"}}
-						{{this.title}}<br> 
-						<input type="text" name="Credits" id="myCredits">
-							<script type = "text/javascript">
-								$(document).ready(function(){
-									$.get('/getAccountBalance', function(data){
-										var elem = document.getElementById("myCredits");
-										elem.value =data; 
-									});
-								});
-							</script>
-						<br>
-					{{/ifCond}}
-
+				<div class="insetting"> 
+					<div class="incontainer">
+						<label class="config-label">Account Number</label>
+						<div type="text" class="account" value="012345678910"></div>
+						{{this.number}}
+					</div>
+				</div>
+				<div class="insetting"> 
+					<div class="incontainer">
+						<label class="config-label">S3 Bucket Region</label>
+						<div type="text" class="account" value="">{{this.s3}}</div>
+					</div>
+				</div>
+				<div class="insetting"> 
+					<div class="incontainer">
+						<label class="config-label">S3 Bucket Name</label>
+						<div type="text" class="account" value="">{{this.bucketName}}</div>
+					</div>
+				</div>
+				<div class="insetting"> 
+					<div class="incontainer">
+						<label class="config-label">DB URL</label>
+						<div type="text" class="account" value="" disabled>{{this.URL}}</div>
+					</div>
+				</div>
+				<div class="insetting"> 
+					<div class="incontainer">
+						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label textfield-demo">
+							<input class="mdl-textfield__input" type="text" pattern="^(19|20)\d\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$" id='expDate'/>
+							<label class="mdl-textfield__label" for="expiration">Credit Expiration (YYYY/MM/DD)</label>
+							<span class="mdl-textfield__error">Input is not a date!</span>
+						</div>
+					</div>
+					<div class="incontainer">
+						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label textfield-demo">
+							<input class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="myCredits" />
+						    <label class="mdl-textfield__label" for="myCredits">Credits</label>
+						    <span class="mdl-textfield__error">Input is not a number!</span>
+						</div>
+					</div>
+				</div>
 				{{/each}}
-				<br>
-				<hr>
-				<input type="submit" value="Save">
-			</form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-
-  </div>
-</div>
-
-{{!-- <html>
-	<head>
-		<title>Credential Input</title>
-		<script type="text/javascript">
-			$(document).ready(function(){
-				$.get('/getAccount', function(data){
-					$("#div1").append(data);
-				});
-			});
-			// $(document).ready(function(){
-			// 	$.get('/getAccount', function(data){
-		// var rds= /getRDSRegion
-		// var s3 = getS3Region
-		// var regions= getAWSRegion
-		</script>
-	
-	</head>
-	<body>
-		<div class="slider">
-			<form id="credentials" action="/setCredentials" method="post">
-				<div>
-				{{#each pages}}
-					{{#ifCond this.title '==' "Account Number"}}
-					<div type="text" id="account" value=""></div>
-						{{this.title}}:
-						<h3><div id = "div1"></div></h3>
-						<hr>
-					{{/ifCond}}
-					{{#ifCond this.title '==' "RDS Region"}}
-						{{this.title}}
-						<br> 
-						<input type="radio" id = "rdsWest1" name='RDS_Region' value="us-west-1"/><label for="rdsWest1">us-west-1</label>
-						<input type="radio" id = "rdsWest2" name='RDS_Region' value="us-west-2"/><label for="rdsWest2">us-west-2</label>
-						<input type="radio" id = "rdsEast1" name='RDS_Region' value="us-east-1"/><label for="rdsEast1">us-east-1</label>
-						<script type = "text/javascript">
-							$(document).ready(function(){
-									$.get('/getRDSRegion', function(data){
-										console.log("RDS",data);
-										if("us-west-1" == data|| "rdsWest1"==data){
-											document.getElementById("rdsWest1").checked = true;
-										}
-										else if("us-west-2" == data|| "rdsWest2"==data){
-											document.getElementById("rdsWest2").checked = true;
-										}
-										else if("us-east-1" == data|| "rdsEast1"==data){
-											document.getElementById("rdsEast1").checked = true;
-										}
-									});
-								});
-						</script>
-						<hr>
-					{{/ifCond}}
-					{{#ifCond this.title '==' "S3 Region"}}
-						{{this.title}}
-						<br>
-						<input type="radio" id="s3West1" name='S3_Region' value="us-west-1"/><label for="s3West1">us-west-1</label>
-						<input type="radio" id="s3West2" name='S3_Region' value="us-west-2"/><label for="s3West2">us-west-2</label>
-						<input type="radio" id="s3East1" name='S3_Region' value="us-east-1"/><label for="s3East1">us-east-1</label>
-						<script type = "text/javascript">
-							$(document).ready(function(){
-									$.get('/getS3Region', function(data){
-										console.log("S3",data);
-										if("us-west-1" == data|| "s3West1" == data){
-											document.getElementById("s3West1").checked = true;
-										}
-										else if("us-west-2" == data || "s3West2" == data){
-											document.getElementById("s3West2").checked = true;
-										}
-										else if("us-east-1" == data || "s3East1" == data){
-											document.getElementById("s3East1").checked = true;
-										}
-									});
-								});
-						</script>
-						<hr>
-					{{/ifCond}}
-					{{#ifCond this.title '==' "AWS Regions"}}
-						{{this.title}}
-						<br> 
-						<input type="checkbox" id = "awsWest1" name='AWS_Regions' value="us-west-1"/><label for="awsWest1">us-west-1</label>
-						<input type="checkbox" id = "awsWest2" name='AWS_Regions' value="us-west-2"/><label for="awsWest2">us-west-2</label>
-						<input type="checkbox" id = "awsEast1" name='AWS_Regions' value="us-east-1"/><label for="awsEast1">us-east-1</label>
-						<script type = "text/javascript">
-							$(document).ready(function(){
-									$.get('/getAWSRegion', function(data){
-										console.log("AWS",data);
-										if(data.indexOf('us-west-1')!=-1){
-											document.getElementById('awsWest1').checked = true;
-										}
-										if(data.indexOf('us-west-2')!=-1){
-											document.getElementById('awsWest2').checked = true;
-										}
-										if(data.indexOf('us-east-1')!=-1){
-											document.getElementById('awsEast1').checked = true;
-										}
-									});
-								});
-						</script>
-						<hr>
-					{{/ifCond}}
-					{{#ifCond this.title '==' "Credits"}}
-						{{this.title}}<br> 
-						<input type="text" name="Credits" id="myCredits">
-							<script type = "text/javascript">
-								$(document).ready(function(){
-									$.get('/getAccountBalance', function(data){
-										var elem = document.getElementById("myCredits");
-										elem.value =data; 
-									});
-								});
-							</script>
-						<br>
-					{{/ifCond}}
-
-				{{/each}}
-				<br>
-				<hr>
-				<input type="submit" value="Save">
-			</form>
+			</div>
+			<div class="modal-footer">
+				<p>To modify account settings, go to \AWSDelegator\src\server\config.js</p>
+				<button type="button" class="btn btn-default" data-dismiss="modal" id="saveConfig">Save</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			</div>
 		</div>
-
-	</body>
-</html> --}}
-
+	</div>
+</div>

@@ -17,8 +17,6 @@ exports.s3Connect = function(_callback) {
     s3.s3Watch();
     // parseBills();
     AWS.config.credentials = awsCredentials.default;
-    // parseAWSServices();
-    // timeOutHandler.checkBudgets();
 };
 
 var parseBills = function() {

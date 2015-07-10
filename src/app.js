@@ -34,8 +34,11 @@ db.on("open", function() {
     });
 });
 
-app.post('/setCredentials', require(__dirname + '/server/route/CredentialsRoute').setCredentials);
+
+app.post('/setBalance' , require(__dirname +'/server/route/CredentialsRoute').setBalance);
+// app.post('/setCredentials', require(__dirname + '/server/route/CredentialsRoute').setCredentials);
 app.get('/getAccount', require(__dirname + '/server/route/CredentialsRoute').getAccountNumber);
+app.get('/getConfiguration', require(__dirname + '/server/route/CredentialsRoute').getConfiguration);
 app.get('/getAccountBalance', require(__dirname + '/server/route/CredentialsRoute').getAccountBalance);
 // app.get('/getRDSRegion', require(__dirname + '/server/route/CredentialsRoute').getRDSRegion);
 app.get('/getS3Region', require(__dirname + '/server/route/CredentialsRoute').getS3Region);
@@ -90,19 +93,12 @@ app.get('/api/usage/groupServiceUsage', require(__dirname + '/server/route/budge
 app.get('/api/usage/userServiceUsage', require(__dirname + '/server/route/budgetRoute').userServiceUsage);
 
 
+
 var mongodb = require('mongodb');
 var MongoClient = mongodb.MongoClient;
 
 app.post('/budget', jsonParser, function(req, res) {
     var r = req.body;
-    // console.log('body' + r);
-    // console.log(r.budgetName);
-    // console.log(r.batchName);
-    // console.log(r.batchType);
-    // console.log(r.startDate);
-    // console.log(r.endDate);
-    // console.log(r.amount);
-    // console.log(r.option);
     var startDate = r.startDate.split('/');
     var endDate = r.endDate.split('/');
     MongoClient.connect(databaseUrl, function(err, db) {
