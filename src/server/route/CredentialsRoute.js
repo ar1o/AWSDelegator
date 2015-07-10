@@ -36,6 +36,13 @@ exports.setConfiguration = function(req, res) {
 // Account_Number=123456789&RDS_Region=us-west-1&S3_Region=us-west-1&AWS_Regions=us-west-1&AWS_Regions=us-west-2&AWS_Regions=us-east-1&Credentials=111&Credits=111
         while(input.indexOf('=', index)!=-1&& index!=0);
         // console.log(dict['Account_Number']);
+<<<<<<< HEAD
+=======
+      // if(credentials["RDS_Region"] == undefined || credentials["RDS_Region"] == [] ){
+      //   console.log("Please input a RDS Region.\nFailed to update values.");
+      //   return;
+      // }
+>>>>>>> ddea5fe343e7830dbd4374ad55f3c116520b630a
       if(credentials["S3_Region"] == undefined || credentials["S3_Region"] == [] ){
         console.log("Please input a S3 Region.\nFailed to update values.");
         return;
@@ -46,7 +53,13 @@ exports.setConfiguration = function(req, res) {
 	    }      
     //   console.log("credits before",credits);
       credits = credentials["Credits"];
+<<<<<<< HEAD
 
+=======
+    //   console.log("credits after",credits);
+    //   console.log("RDS REGION", rdsRegion);
+		  // rdsRegion = credentials['RDS_Region'];
+>>>>>>> ddea5fe343e7830dbd4374ad55f3c116520b630a
     //   console.log("RDS REGION",rdsRegion);
     //   console.log("S3 REGION",s3Region);
 		  s3Region = credentials['S3_Region'];
@@ -93,9 +106,9 @@ exports.getAccountNumber = function(req, res) {
 exports.getAccountBalance = function(req, res) {
     res.sendStatus(credits);
 }
-exports.getRDSRegion = function(req, res) {
-    res.sendStatus(rdsRegion); 
-}
+// exports.getRDSRegion = function(req, res) {
+//     res.sendStatus(rdsRegion); 
+// }
 exports.getS3Region = function (req, res) {
   res.sendStatus(s3Region);
 }

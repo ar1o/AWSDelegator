@@ -5,10 +5,16 @@ var UsageMonitorModel = Backbone.Model.extend({
 		this.change('dataReady');
 		this.change('groupDataReady');
 		this.change('budgetDataReady');
+
+		this.change('groupDataReady');
+		this.change('userDataReady');
+		this.change('postDataReady');
+
 		this.change('budgetCostDataReady');
 		this.change('budgetUsageDataReady');
 		this.change('userBudgetCostDataReady');
 		this.change('serviceDataReady');
+
 	},
 	groups_result: function() {
 		var self = this;
@@ -58,7 +64,7 @@ var UsageMonitorModel = Backbone.Model.extend({
 					budgetNames+=", "+result[r].BudgetName[i];
 				}
 				var data = new iamGroupsModel({
-					groupName: result[r].GroupName,
+					name: result[r].GroupName,
 					arn: result[r].Arn,
 					createDate: result[r].CreateDate,
 					budgetNames: budgetNames
@@ -76,19 +82,20 @@ var UsageMonitorModel = Backbone.Model.extend({
 		UserCollection.reset();
 		this.users_result().done(function(result) {
 			for (var r in result) {
+
 				var budgetNames = result[r].BudgetName[0];
 				for(var i=1;i<result[r].BudgetName.length;++i){
 					budgetNames+=", "+result[r].BudgetName[i];
 				}
 				var data = new iamUsersModel({
-					userName: result[r].UserName,
+					name: result[r].UserName,
 					arn: result[r].Arn,
 					createDate: result[r].CreateDate,
 					budgetNames: budgetNames
 				});
 				UserCollection.add(data);
 			}
-			self.set('dataReady', Date.now());
+			self.set('userDataReady', Date.now());
 		}).fail(function() {
 			console.log('FAILED');
 		});
@@ -112,6 +119,22 @@ var UsageMonitorModel = Backbone.Model.extend({
 			self.set('budgetDataReady', Date.now());
 		}).fail(function() {
 			console.log('FAILED');
+		});
+	},
+
+	post_budget_result: function(data) {
+		console.log('wtf', data);
+		var self = this;
+		return $.ajax({
+			type: 'POST',
+			data: JSON.stringify(data),
+			contentType: 'application/json',
+			url: 'http://localhost:3000/budget',
+			success: function(data) {
+				console.log(data);
+				self.set('postDataReady', Date.now());
+
+			}
 		});
 	},
 

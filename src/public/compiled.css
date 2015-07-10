@@ -16,10 +16,15 @@ body {
   margin-top: 70px;
 }
 .AWSView {
-  margin: 0 auto;
+  min-height: 350px;
   padding-top: 20px;
 }
 .RDSView {
+  min-height: 350px;
+  padding-top: 20px;
+}
+.EC2View {
+  min-height: 350px;
   padding-top: 20px;
 }
 .NavView {

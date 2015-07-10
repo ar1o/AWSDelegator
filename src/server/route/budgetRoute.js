@@ -318,7 +318,7 @@ exports.userServiceUsage = function(req, res) {
 					$lte: endDate
 				}
 			}, {
-				'user:Name': batchName
+				'user:Name': batchName 
 			}, {
 				'user:Group': 'null'
 			}]
@@ -326,7 +326,7 @@ exports.userServiceUsage = function(req, res) {
 	}, {
 		$project: {
 			_id: 0,
-			'ProductName': 1,
+			ProductName: 1,
 			Cost: 1
 		}
 	}, {

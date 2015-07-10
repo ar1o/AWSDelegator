@@ -20,7 +20,9 @@ var IAMUsersView = Backbone.View.extend({
 
     bindings: function() {
         var self = this;
-        this.model.change('dataReady', function(model, val) {
+
+        this.render();
+        this.model.change('userDataReady', function(model, val) {
             this.render();
             $('#UsersTable').DataTable({
                 "iDisplayLength": 15

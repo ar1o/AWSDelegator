@@ -12,8 +12,20 @@ templates['AWSOperationsView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"mai
 templates['AWSView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     return "";
 },"useData":true});
-templates['BudgetView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-    return "\r\n<!-- Modal -->\r\n<div class=\"modal fade\" id=\"myModal\" role=\"dialog\">\r\n	<div class=\"modal-dialog\">\r\n\r\n		<!-- Modal content-->\r\n		<div class=\"modal-content\">\r\n			<div class=\"modal-header\">\r\n				<button type=\"button\" class=\"close\" data-dismiss=\"modal\">&times;</button>\r\n				<h4 class=\"modal-title\">Create Budget Profile</h4>\r\n			</div>\r\n			<div class=\"modal-body\">\r\n				<div class=\"insetting\"> \r\n					<div class=\"incontainer\">\r\n						<label class=\"budget-label\">Name </label>\r\n						<input type=\"text\" id=\"\" value=\"e.g., 'Monthly EC2 Budget'\">\r\n					</div>\r\n				</div>\r\n\r\n\r\n				<div class=\"insetting\"> \r\n					<div class=\"incontainer\">\r\n						<label class=\"budget-label\">Include costs related to </label>\r\n						<select>\r\n							<option value=\"\" disabled selected>Select</option>\r\n							<option value=\"1\">Option 1</option>\r\n							<option value=\"2\">Option 2</option>\r\n							<option value=\"3\">Option 3</option>\r\n						</select>\r\n					</div>\r\n				</div>\r\n\r\n				<div class=\"insetting\"> \r\n					<div class=\"incontainer\">\r\n						<label class=\"budget-label\">Start date </label>\r\n						<input type=\"text\" id=\"\" value=\"2015-10-31\">\r\n					</div>\r\n				</div>\r\n\r\n				<div class=\"insetting\"> \r\n					<div class=\"incontainer\">\r\n						<label class=\"budget-label\">End date </label>\r\n						<input type=\"text\" id=\"\" value=\"2015-10-31\">\r\n					</div>\r\n				</div>\r\n\r\n				<div class=\"insetting\"> \r\n					<div class=\"incontainer\">\r\n						<label class=\"budget-label\">Monthly Amount </label>\r\n						<input type=\"text\" id=\"\" value=\"USD\">\r\n					</div>\r\n				</div>\r\n\r\n\r\n				<div class=\"insetting\"> \r\n					<div class=\"incontainer\">\r\n						<label class=\"budget-label\">Stop resource(s) when quota reached </label>\r\n						<div class=\"onoffswitch\">\r\n							<input type=\"checkbox\" name=\"onoffswitch\" class=\"onoffswitch-checkbox\" id=\"myonoffswitch\" checked>\r\n							<label class=\"onoffswitch-label\" for=\"myonoffswitch\">\r\n								<span class=\"onoffswitch-inner\"></span>\r\n								<span class=\"onoffswitch-switch\"></span>\r\n							</label>\r\n						</div>\r\n					</div>\r\n				</div>\r\n			</div>\r\n			<div class=\"modal-footer\">\r\n				<button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Save</button>\r\n				<button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Close</button>\r\n			</div>\r\n		</div>\r\n\r\n	</div>\r\n</div>\r\n\r\n\r\n\r\n";
+templates['BudgetView'] = template({"1":function(depth0,helpers,partials,data) {
+    var alias1=this.lambda, alias2=this.escapeExpression;
+
+  return "								<option value="
+    + alias2(alias1((depth0 != null ? depth0.name : depth0), depth0))
+    + ">"
+    + alias2(alias1((depth0 != null ? depth0.name : depth0), depth0))
+    + "</option>\r\n";
+},"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+    var stack1;
+
+  return "\r\n<!-- Modal -->\r\n<div class=\"modal fade\" id=\"myModal\" role=\"dialog\">\r\n	<div class=\"modal-dialog\">\r\n\r\n		<!-- Modal content-->\r\n		<div class=\"modal-content\">\r\n			<div class=\"modal-header\">\r\n				<button type=\"button\" class=\"close\" data-dismiss=\"modal\">&times;</button>\r\n				<h4 class=\"modal-title\">Create Budget Profile</h4>\r\n			</div>\r\n			<div class=\"modal-body\">\r\n				<div class=\"insetting\"> \r\n					<div class=\"incontainer\">\r\n						<label class=\"budget-label\">Name </label>\r\n						<input type=\"text\" id=\"budgetname\" placeholder=\"e.g., 'Monthly EC2 Budget'\">\r\n					</div>\r\n				</div>\r\n\r\n\r\n				<div class=\"insetting\"> \r\n					<div class=\"incontainer\">\r\n						<label class=\"budget-label\">Include costs related to </label>\r\n						<select class=\"costfilter\">\r\n							<option value=\"\" disabled selected>Select</option>\r\n							<option value=\"user\">User</option>\r\n							<option value=\"group\">Groups</option>\r\n						</select>\r\n					</div>\r\n				</div>\r\n\r\n				<div class=\"sub-insetting\"> \r\n					<div class=\"sub-incontainer\">\r\n						<div class=\"hidden\" id=\"filter-details\">\r\n							<select class=\"sub-costfilter\">\r\n								<option value=\"\" disabled selected>Select</option>\r\n		\r\n"
+    + ((stack1 = helpers.each.call(depth0,(depth0 != null ? depth0.col : depth0),{"name":"each","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
+    + "\r\n\r\n							</select>\r\n						</div>\r\n					</div>\r\n				</div>\r\n\r\n\r\n				<div class=\"insetting\"> \r\n					<div class=\"incontainer\">\r\n						<label class=\"budget-label\">Start date </label>\r\n						<input type=\"text\" id=\"startdate\" placeholder=\"2015-10-31\">\r\n					</div>\r\n				</div>\r\n\r\n				<div class=\"insetting\"> \r\n					<div class=\"incontainer\">\r\n						<label class=\"budget-label\">End date </label>\r\n						<input type=\"text\" id=\"enddate\" placeholder=\"2015-10-31\">\r\n					</div>\r\n				</div>\r\n\r\n				<div class=\"insetting\"> \r\n					<div class=\"incontainer\">\r\n						<label class=\"budget-label\">Monthly Amount </label>\r\n						<input type=\"text\" id=\"amount\" placeholder=\"USD\">\r\n					</div>\r\n				</div>\r\n\r\n\r\n				<div class=\"insetting\"> \r\n					<div class=\"incontainer\">\r\n						<label class=\"budget-label\">Stop resource(s) when quota reached </label>\r\n						<div class=\"onoffswitch\">\r\n							<input type=\"checkbox\" name=\"onoffswitch\" class=\"onoffswitch-checkbox\" id=\"myonoffswitch\" checked>\r\n							<label class=\"onoffswitch-label\" for=\"myonoffswitch\">\r\n								<span class=\"onoffswitch-inner\"></span>\r\n								<span class=\"onoffswitch-switch\"></span>\r\n							</label>\r\n						</div>\r\n					</div>\r\n				</div>\r\n			</div>\r\n			<div class=\"modal-footer\">\r\n				<button type=\"button\" class=\"btn btn-default\" id=\"savebtn\">Save</button>\r\n				<button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Close</button>\r\n			</div>\r\n		</div>\r\n\r\n	</div>\r\n</div>\r\n\r\n\r\n\r\n";
 },"useData":true});
 templates['ConfigurationView'] = template({"1":function(depth0,helpers,partials,data) {
     var alias1=this.lambda, alias2=this.escapeExpression;
@@ -136,7 +148,7 @@ templates['IAMGroupsView'] = template({"1":function(depth0,helpers,partials,data
     var alias1=this.lambda, alias2=this.escapeExpression;
 
   return "		<tr>\r\n			<td >"
-    + alias2(alias1((depth0 != null ? depth0.groupName : depth0), depth0))
+    + alias2(alias1((depth0 != null ? depth0.name : depth0), depth0))
     + "</td>\r\n			<td>"
     + alias2(alias1((depth0 != null ? depth0.arn : depth0), depth0))
     + "</td>\r\n			<td>"
@@ -161,7 +173,7 @@ templates['IAMUsersView'] = template({"1":function(depth0,helpers,partials,data)
     var alias1=this.lambda, alias2=this.escapeExpression;
 
   return "		<tr>\r\n			<td >"
-    + alias2(alias1((depth0 != null ? depth0.userName : depth0), depth0))
+    + alias2(alias1((depth0 != null ? depth0.name : depth0), depth0))
     + "</td>\r\n			<td>"
     + alias2(alias1((depth0 != null ? depth0.arn : depth0), depth0))
     + "</td>\r\n			<td>"
