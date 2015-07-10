@@ -4,19 +4,18 @@ var IAMGroupsView = Backbone.View.extend({
         if (!this.model) {
             this.model = new UsageMonitorModel();
         }
-        //render own view
         this.model.getGroups();
-        // child views
-        // this.billingActivity = new EC2BillingView();
-        // this.operationsActivity = new OperationsView();
-        // this.metricsActivity = new EC2MetricsView();
+        this.usageActivity = new IAMUsageView();
+        this.costActivity = new IAMCostView();
+        this.operationsActivity = new IAMOperationsView();
         this.bindings();
+        this.render();
     },
 
-    updateViews: function(selected, vselected) {
-        // this.billingActivity.model.calcTotalCost(selected, vselected);
-        // this.metricsActivity.model.getEC2Metrics(selected);
-        // this.operationsActivity.model.getEC2Operations(selected);
+    updateViews: function(budgetIndex) {
+        this.usageActivity.updateViews(budgetIndex);
+        this.costActivity.updateViews(budgetIndex);
+        this.operationsActivity.updateGroupView(budgetIndex);
     },
 
     bindings: function() {
@@ -31,16 +30,6 @@ var IAMGroupsView = Backbone.View.extend({
                 // "bFilter": false
             });
         }.bind(this));
-
-        // this.$el.on('click', '#GroupsTable tr', function() {
-        //     var name = $('td', this).eq(0).text();
-        //  var vname = $('td', this).eq(8).text();
-
-        //     // console.log('You! clicked on ' + vname + '\'s row');
-        //     if (name != "") {
-        //         self.updateViews(name, vname);
-        //     }
-        // });
     },
 
     render: function() {
@@ -48,8 +37,8 @@ var IAMGroupsView = Backbone.View.extend({
             instances: GroupCollection.toJSON()
         });
         this.$el.html(html);
-        // this.$el.append(this.operationsActivity.el);
-        // this.$el.append(this.billingActivity.el);
-        // this.$el.append(this.metricsActivity.el);
+        this.$el.append(this.usageActivity.el);
+        this.$el.append(this.costActivity.el);
+        this.$el.append(this.operationsActivity.el);   
     }
 });

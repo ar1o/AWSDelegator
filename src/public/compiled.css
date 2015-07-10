@@ -16,10 +16,15 @@ body {
   margin-top: 70px;
 }
 .AWSView {
-  margin: 0 auto;
+  min-height: 350px;
   padding-top: 20px;
 }
 .RDSView {
+  min-height: 350px;
+  padding-top: 20px;
+}
+.EC2View {
+  min-height: 350px;
   padding-top: 20px;
 }
 .NavView {
@@ -295,10 +300,9 @@ td {
   float: left;
   position: absolute;
   top: 0;
-  width: 90px;
+  width: 48px;
   height: 48px;
   font-size: 20px;
-  border-right: 1px solid #ccc;
   padding-left: 30px;
   text-align: left;
   line-height: 48px;
@@ -350,22 +354,50 @@ div#awsoperationscontainer {
   font-size: 14px;
   position: absolute;
   right: 150px;
-  padding-top: 8px;
+  padding-top: 4px;
 }
 .rate {
   padding-right: 15px;
   float: left;
   width: 75px;
 }
+.rate:hover {
+  color: orange;
+}
 .usage {
   float: left;
   padding-left: 10px;
   width: 70px;
 }
+.usage:hover {
+  color: orange;
+}
 .balance {
   float: left;
   padding-left: 10px;
   width: 75px;
+}
+.balance:hover {
+  color: orange;
+}
+.IAMUsersView {
+  margin-left: 20px;
+}
+.IAMGroupsView {
+  /*width: 47%;*/
+  margin-left: 20px;
+}
+div#budgetUsageContainer {
+  /*width: 32%;*/
+  height: 300px;
+  /*float: left;*/
+}
+div#budgetCostContainer {
+  /*float: left;*/
+}
+div#serviceContainer {
+  /*width: 62%;*/
+  /*float: right*/
 }
 #filter-details {
   border: 1px solid #f2f2f2;

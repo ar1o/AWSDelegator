@@ -79,6 +79,19 @@ app.get('/api/usage/groups', require(__dirname + '/server/route/iamRoute').group
 app.get('/api/usage/users', require(__dirname + '/server/route/iamRoute').users);
 app.get('/api/usage/budget', require(__dirname + '/server/route/budgetRoute').budgets);
 
+app.get('/api/usage/groups', require(__dirname + '/server/route/iamRoute').groups);
+app.get('/api/usage/users', require(__dirname + '/server/route/iamRoute').users);
+app.get('/api/usage/budget', require(__dirname + '/server/route/budgetRoute').budgets);
+app.get('/api/usage/budgetCost', require(__dirname + '/server/route/budgetRoute').cost);
+app.get('/api/usage/budgetUsage', require(__dirname + '/server/route/budgetRoute').usage);
+app.get('/api/usage/userBudgetCost', require(__dirname + '/server/route/budgetRoute').userCost);
+app.get('/api/usage/groupServiceUsage', require(__dirname + '/server/route/budgetRoute').groupServiceUsage);
+app.get('/api/usage/userServiceUsage', require(__dirname + '/server/route/budgetRoute').userServiceUsage);
+
+
+var mongodb = require('mongodb');
+var MongoClient = mongodb.MongoClient;
+
 app.post('/budget', jsonParser, function(req, res) {
     var r = req.body;
     console.log('body' + r);
@@ -88,9 +101,28 @@ app.post('/budget', jsonParser, function(req, res) {
     console.log(r.endDate);
     console.log(r.amount);
     console.log(r.option);
+    var startDate = r.startDate.split('/');
+    var endDate = r.endDate.split('/');
+    MongoClient.connect(databaseUrl, function(err, db) {
+        if (err) throw err;
 
-    res.send('Complete!');
-})
+        db.collection('budgets').insert({
+            BudgetName: r.budgetName,
+            BatchType: 'user',
+            BatchName: r.batch,
+            StartDate: startDate[2]+'-'+startDate[0]+'-'+startDate[1]+' '+'00:00:00',
+            EndDate: endDate[2]+'-'+endDate[0]+'-'+endDate[1]+' '+'23:00:00',
+            Amount: r.amount,
+            Timeout: r.option,
+            Status: 'valid'
+        }, function(err) {
+            if(err) throw err;
+            console.log('budget insert done')
+            res.send('Complete!');
+        });
+    });
+});
+
 
 function errorHandler(err, req, res, next) {
     console.error(err.message);

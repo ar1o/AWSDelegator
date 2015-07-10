@@ -12,7 +12,7 @@ var BudgetView = Backbone.View.extend({
             startDate: null,
             endDate: null,
             amount: 0,
-            option: 'on'
+            option: 'true'
         };
         var collection;
         this.bindings();
@@ -102,17 +102,17 @@ var BudgetView = Backbone.View.extend({
 
         this.$el.on('click', '#myonoffswitch', function(e) {
             if ($('#myonoffswitch').val() == 'null') {
-                $('#myonoffswitch').val('on');
-            } else if ($('#myonoffswitch').val() == 'on') {
+                $('#myonoffswitch').val('true');
+            } else if ($('#myonoffswitch').val() == 'true') {
                 console.log("it was", $('#myonoffswitch').val());
                 var value = $('#myonoffswitch').val();
-                $('#myonoffswitch').val('off');
+                $('#myonoffswitch').val('false');
                 console.log("it is now", $('#myonoffswitch').val());
                 this.data.option = $('#myonoffswitch').val();
             } else {
                 console.log("it was", $('#myonoffswitch').val());
                 var value = $('#myonoffswitch').val();
-                $('#myonoffswitch').val('on');
+                $('#myonoffswitch').val('true');
                 console.log("it is now", $('#myonoffswitch').val());
                 this.data.option = $('#myonoffswitch').val();
             }

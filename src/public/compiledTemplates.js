@@ -156,39 +156,48 @@ templates['FooterView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":func
 templates['HeaderView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   return "<div class=\"setting\" data-toggle=\"modal\" data-target=\"#myModal2\"><i class=\"fa fa-cogs fa-1x\"></i></div>\n\n<div class=\"budget\" data-toggle=\"modal\" data-target=\"#myModal\"> </div>\n\n<div class=\"menu\"><i class=\"fa fa-bars fa-1x\"></i></div>\n\n";
   },"useData":true});
+templates['IAMCostView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  return "<div id=\"budgetCostContainer\"></div>\n";
+  },"useData":true});
 templates['IAMGroupsView'] = template({"1":function(depth0,helpers,partials,data) {
   var lambda=this.lambda, escapeExpression=this.escapeExpression;
   return "		<tr>\n			<td >"
     + escapeExpression(lambda((depth0 != null ? depth0.name : depth0), depth0))
     + "</td>\n			<td>"
-    + escapeExpression(lambda((depth0 != null ? depth0.groupId : depth0), depth0))
-    + "</td>\n			<td>"
     + escapeExpression(lambda((depth0 != null ? depth0.arn : depth0), depth0))
     + "</td>\n			<td>"
     + escapeExpression(lambda((depth0 != null ? depth0.createDate : depth0), depth0))
+    + "</td>\n			<td>"
+    + escapeExpression(lambda((depth0 != null ? depth0.budgetNames : depth0), depth0))
     + "</td>\n		</tr>\n";
 },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  var stack1, buffer = "<table id=\"GroupsTable\" class=\"hover\">\n	<thead>\n		<tr class=\"dark-row\">\n			<th>GroupName</th>\n			<th>GroupId</th>\n			<th>Arn</th>\n			<th>CreateDate</th>\n		</tr>\n	</thead>\n	<tbody id=\"instanceData\">\n";
+  var stack1, buffer = "<table id=\"GroupsTable\" class=\"hover\">\n	<thead>\n		<tr class=\"dark-row\">\n			<th>GroupName</th>\n			<th>Arn</th>\n			<th>CreateDate</th>\n			<th>BudgetName/s</th>\n		</tr>\n	</thead>\n	<tbody id=\"instanceData\">\n";
   stack1 = helpers.each.call(depth0, (depth0 != null ? depth0.instances : depth0), {"name":"each","hash":{},"fn":this.program(1, data),"inverse":this.noop,"data":data});
   if (stack1 != null) { buffer += stack1; }
   return buffer + "	</tbody>	\n</table>\n";
 },"useData":true});
+templates['IAMOperationsView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  return "<div id=\"serviceContainer\"></div>\n";
+  },"useData":true});
+templates['IAMUsageView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  return "<div id=\"budgetUsageContainer\"></div>\n";
+  },"useData":true});
 templates['IAMUsersView'] = template({"1":function(depth0,helpers,partials,data) {
   var lambda=this.lambda, escapeExpression=this.escapeExpression;
   return "		<tr>\n			<td >"
     + escapeExpression(lambda((depth0 != null ? depth0.name : depth0), depth0))
     + "</td>\n			<td>"
-    + escapeExpression(lambda((depth0 != null ? depth0.userId : depth0), depth0))
-    + "</td>\n			<td>"
     + escapeExpression(lambda((depth0 != null ? depth0.arn : depth0), depth0))
     + "</td>\n			<td>"
     + escapeExpression(lambda((depth0 != null ? depth0.createDate : depth0), depth0))
+    + "</td>\n			<td>"
+    + escapeExpression(lambda((depth0 != null ? depth0.budgetNames : depth0), depth0))
     + "</td>\n		</tr>\n";
 },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  var stack1, buffer = "<table id=\"UsersTable\" class=\"hover\">\n	<thead>\n		<tr class=\"dark-row\">\n			<th>UserName</th>\n			<th>UserId</th>\n			<th>Arn</th>\n			<th>CreateDate</th>\n		</tr>\n	</thead>\n	<tbody id=\"instanceData\">\n";
+  var stack1, buffer = "<table id=\"UsersTable\" class=\"hover\">\n	<thead>\n		<tr class=\"dark-row\">\n			<th>UserName</th>\n			<th>Arn</th>\n			<th>CreateDate</th>\n			<th>BudgetName/s</th>\n		</tr>\n	</thead>\n	<tbody id=\"instanceData\">\n";
   stack1 = helpers.each.call(depth0, (depth0 != null ? depth0.instances : depth0), {"name":"each","hash":{},"fn":this.program(1, data),"inverse":this.noop,"data":data});
   if (stack1 != null) { buffer += stack1; }
-  return buffer + "	</tbody>	\n</table>\n";
+  return buffer + "	</tbody>	\n</table>";
 },"useData":true});
 templates['MeterView'] = template({"1":function(depth0,helpers,partials,data) {
   var lambda=this.lambda, escapeExpression=this.escapeExpression;
