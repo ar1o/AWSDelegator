@@ -16,7 +16,7 @@ var BudgetModel = Backbone.Model.extend({
 				result = data;
 			}
 		});
-	}
+	},
 
 	getBudgets: function() {
 		var self = this;

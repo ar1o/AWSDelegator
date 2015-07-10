@@ -6,32 +6,72 @@ var ConfigurationModel = Backbone.Model.extend({
 	},
 
 	initialize: function() {
+		var data = {};
+		var result;
 		this.change('openConfig');
+		this.getConfiguration();
+	},
+	configuration_result: function() {
+		result = '';
+		var self = this;
+		return $.ajax({
+			type: 'GET',
+			data: self.data,
+			contentType: 'plain/text',
+			url: host + '/getConfiguration',
+			success: function(data) {
+				result = data;
+			}
+
+		});
+	},
+	getConfiguration: function() {
+		var self = this;
+		ConfigurationCollection.reset();
+		console.log();
+		this.configuration_result().done(function(result) {
+			console.log('result',result)
+			for (var r in result) {
+				var data = new ConfigurationViewModel({
+					number: result["account"][0]["Number"],
+					balance : result["account"][0]["Balance"],
+					s3 : result["account"][0]["S3BucketRegion"],
+					regions : result["account"][0]["Regions"],
+					bucketName : result["account"][0]["S3BucketName"],
+					URL : result["account"][0]["DB_URL"],
+					balanceExp : result["account"][0]["BalanceExp"]
+				});
+				ConfigurationCollection.add(data);
+			}
+			self.set('openConfig', Date.now());
+		}).fail(function() {
+			console.log('FAILED');
+		});
+	}
+});
+
+var ConfigurationViewModel = Backbone.Model.extend({
+	defaults: {
+		account: null,
+		balance : 0,
+		s3 : null,
+		regions : null,
+		bucketName : null,
+		URL: null,
+		balanceExp: null
 	}
 
 });
-// var accountNumber = $.get('/getAccount');
-// console.log(accountNumber);
-var ConfigurationViewModel = Backbone.Model.extend({
-});
+
 
 var ConfigurationViewCollection = Backbone.Collection.extend({
 	model: ConfigurationViewModel,
 	initialize: function() {
 		this.on('add', function(model) {
-			// console.log('someting got added');
+			// console.log('someting got added', model);
 		});
 	}
 });
 
-var ConfigurationViewCollection = new ConfigurationViewCollection();
-var page0 = new ConfigurationViewModel({title: 'Account Number' , page_id: 0});
-var page1 = new ConfigurationViewModel({title: 'RDS Region', page_id: 1});
-var page2 = new ConfigurationViewModel({title: 'S3 Region', page_id: 2});
-var page3 = new ConfigurationViewModel({title: 'AWS Regions', page_id: 3});
-// var page4 = new ConfigurationViewModel({title: 'Credentials', page_id: 4});
-// var page5 = new ConfigurationViewModel({title: 'Database URL', page_id: 5});
-var page6 = new ConfigurationViewModel({title: 'Credits', page_id: 6});
-var pages = [page0, page1, page2, page3, page6];
 
-ConfigurationViewCollection.add(pages);
+var ConfigurationCollection = new ConfigurationViewCollection();

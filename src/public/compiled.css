@@ -28,6 +28,11 @@ body {
   width: 318px;
   top: 48px;
   background-color: #f7f7f7;
+  overflow: hidden;
+  transition-delay: .3s;
+  border-right: 1px solid #ccc;
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
 }
 .NavView.visible {
   left: 0;
@@ -339,94 +344,6 @@ div#awsoperationscontainer {
   width: 47%;
   margin-right: 20px;
   float: right;
-}
-.ConfigurationView {
-  margin-right: 0;
-  margin-left: 81%;
-  overflow: hidden;
-  position: fixed;
-  left: 19%;
-  width: 19%;
-  top: 48px;
-  background-color: #f7f7f7;
-}
-.ConfigurationView.visible {
-  left: 0;
-  text-align: center;
-  transition: left 0.2s;
-  border-left: 1px solid #ccc;
-  border-top: 1px solid #ccc;
-  border-bottom: 1px solid #ccc;
-  height: calc(45%);
-}
-.ConfigurationView .page {
-  padding: 5px;
-  /*border: 1px dashed black;*/
-  font-family: 'Roboto', sans-serif;
-  font-size: 14px;
-  margin-left: auto;
-  margin-right: 30px;
-  vertical-align: middle;
-  line-height: 30px;
-}
-.ConfigurationView .page:hover {
-  color: orange;
-}
-.highcharts-container {
-  position: static !important;
-}
-.subpage {
-  padding: 10px;
-  padding-top: 0;
-  /*border: 1px dashed black;*/
-  font-family: 'Roboto', sans-serif;
-  font-size: 12px;
-  margin-right: 42px;
-  vertical-align: middle;
-  line-height: 30px;
-}
-.subpage:hover {
-  color: orange;
-}
-a.tooltip {
-  outline: none;
-}
-a.tooltip strong {
-  line-height: 30px;
-}
-a.tooltip:hover {
-  text-decoration: none;
-}
-a.tooltip span {
-  z-index: 10;
-  display: none;
-  padding: 14px 14px;
-  margin-top: 30px;
-  width: 300px;
-  line-height: 16px;
-}
-a.tooltip:hover span {
-  text-align: center;
-  display: inline;
-  position: inherit;
-  color: #111;
-  overflow: hidden;
-  border: 1px solid #DCA;
-  background: #fffAF0;
-}
-.callout {
-  z-index: 20;
-  top: 20px;
-  border: 0;
-}
-/*CSS3 extras*/
-a.tooltip span {
-  border-radius: 4px;
-  box-shadow: 5px 5px 8px #CCC;
-}
-input {
-  verticle-align: center;
-  text-align: center;
 }
 .MeterView {
   font-family: 'Roboto', sans-serif;

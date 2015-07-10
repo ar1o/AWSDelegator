@@ -1,5 +1,5 @@
 //Should add some sort of verification to make sure that account number and credentials are known to be good
-exports.setCredentials = function(req, res) {
+exports.setConfiguration = function(req, res) {
 	req.on('data', function(chunk) {
 		console.log("Received body data:");
 		var value,
@@ -36,10 +36,6 @@ exports.setCredentials = function(req, res) {
 // Account_Number=123456789&RDS_Region=us-west-1&S3_Region=us-west-1&AWS_Regions=us-west-1&AWS_Regions=us-west-2&AWS_Regions=us-east-1&Credentials=111&Credits=111
         while(input.indexOf('=', index)!=-1&& index!=0);
         // console.log(dict['Account_Number']);
-      if(credentials["RDS_Region"] == undefined || credentials["RDS_Region"] == [] ){
-        console.log("Please input a RDS Region.\nFailed to update values.");
-        return;
-      }
       if(credentials["S3_Region"] == undefined || credentials["S3_Region"] == [] ){
         console.log("Please input a S3 Region.\nFailed to update values.");
         return;
@@ -50,9 +46,7 @@ exports.setCredentials = function(req, res) {
 	    }      
     //   console.log("credits before",credits);
       credits = credentials["Credits"];
-    //   console.log("credits after",credits);
-    //   console.log("RDS REGION", rdsRegion);
-		  rdsRegion = credentials['RDS_Region'];
+
     //   console.log("RDS REGION",rdsRegion);
     //   console.log("S3 REGION",s3Region);
 		  s3Region = credentials['S3_Region'];
@@ -85,7 +79,10 @@ exports.setCredentials = function(req, res) {
     });
 
 }
-
+exports.getConfiguration = function(req, res) {
+  var data = {account:[{"Number" : awsAccountNumber, "Balance" : credits, "S3BucketRegion" : s3Region, "Regions" : awsRegions, "S3BucketName"  : s3Bucket, "DB_URL" : databaseUrl, "BalanceExp" : creditExp}]};
+  res.send(data);
+}
 exports.getAccountNumber = function(req, res) {
       res.send(awsAccountNumber);
 }

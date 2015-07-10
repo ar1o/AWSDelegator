@@ -1,154 +1,68 @@
+<!-- Modal -->
+<div id="myModal2" class="modal fade" role="dialog">
+	<div class="modal-dialog">
+	<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
 
-
-<html>
-	<head>
-		<title>Credential Input</title>
-		<script type="text/javascript">
-			$(document).ready(function(){
-				$.get('/getAccount', function(data){
-					$("#div1").append(data);
-				});
-			});
-			// $(document).ready(function(){
-			// 	$.get('/getAccount', function(data){
-		// var rds= /getRDSRegion
-		// var s3 = getS3Region
-		// var regions= getAWSRegion
-		</script>
-	
-	</head>
-	<body>
-		<div class="slider">
-			<form id="credentials" action="/setCredentials" method="post">
-				<div>
+				<h4 class="modal-title"> AWS Account Settings</h4>
+			</div>
+			<div class="modal-body">
 				{{#each pages}}
-					{{#ifCond this.title '==' "Account Number"}}
-					<div type="text" id="account" value=""></div>
-						<h5>{{this.title}}:</h5>
-						<b><div id = "div1"></div></b>
-						
-					{{/ifCond}}
-					{{#ifCond this.title '==' "RDS Region"}}
-						<h5>{{this.title}}</h5>
-						<label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="rdsWest1">
-						  <input type="radio" id="rdsWest1" class="mdl-radio__button" name="S3_Region" value="us-west-1" />
-						  <span class="mdl-radio__label">us-west-1</span>
-						</label>
-						<br>
-						<label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="rdsWest2">
-						  <input type="radio" id="rdsWest2" class="mdl-radio__button" name="S3_Region" value="us-west-2" />
-						  <span class="mdl-radio__label">us-west-2</span>
-						</label>
-						<br>
-						<label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="rdsEast1">
-						  <input type="radio" id="rdsEast1" class="mdl-radio__button" name="S3_Region" value="us-east-1" />
-						  <span class="mdl-radio__label">us-east-1</span>
-						</label>
-						<script type = "text/javascript">
-							$(document).ready(function(){
-									$.get('/getRDSRegion', function(data){
-										if("us-west-1" == data|| "rdsWest1"==data){
-											document.getElementById("rdsWest1").checked = true;
-										}
-										else if("us-west-2" == data|| "rdsWest2"==data){
-											document.getElementById("rdsWest2").checked = true;
-										}
-										else if("us-east-1" == data|| "rdsEast1"==data){
-											document.getElementById("rdsEast1").checked = true;
-										}
-									});
-								});
-						</script>
-						<br>
-						
-					{{/ifCond}}
-					{{#ifCond this.title '==' "S3 Region"}}
-						<h5>{{this.title}}</h5>
-						<label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="s3West1">
-						  <input type="radio" id="s3West1" class="mdl-radio__button" name="RDS_Region" value="us-west-1" />
-						  <span class="mdl-radio__label">us-west-1</span>
-						</label>
-						<br>
-						<label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="s3West2">
-						  <input type="radio" id="s3West2" class="mdl-radio__button" name="RDS_Region" value="us-west-2" />
-						  <span class="mdl-radio__label">us-west-2</span>
-						</label>
-						<br>
-						<label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="s3East1">
-						  <input type="radio" id="s3East1" class="mdl-radio__button" name="RDS_Region" value="us-east-1" />
-						  <span class="mdl-radio__label">us-east-1</span>
-						</label>
-						<script type = "text/javascript">
-							$(document).ready(function(){
-									$.get('/getS3Region', function(data){
-										if("us-west-1" == data|| "s3West1" == data){
-											document.getElementById("s3West1").checked = true;
-										}
-										else if("us-west-2" == data || "s3West2" == data){
-											document.getElementById("s3West2").checked = true;
-										}
-										else if("us-east-1" == data || "s3East1" == data){
-											document.getElementById("s3East1").checked = true;
-										}
-									});
-								});
-						</script>
-						<br>
-						
-					{{/ifCond}}
-					{{#ifCond this.title '==' "AWS Regions"}}
-						<h5>{{this.title}}</h5>
-						<div id= "aws_Regions">
-						<label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="awsWest1">
-						  <input type="checkbox" id = "awsWest1" name='AWS_Regions' value="us-west-1" class="mdl-checkbox__input"/>
-						  <span class="mdl-checkbox__label">us-west-1</span>
-						</label>
-						<label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="awsWest2">
-						  <input type="checkbox" id = "awsWest2" name='AWS_Regions' value="us-west-2" class="mdl-checkbox__input"/>
-						  <span class="mdl-checkbox__label">us-west-2</span>
-						</label>
-						<label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="awsEast1">
-						  <input type="checkbox" id = "awsEast1" name='AWS_Regions' value="us-east-1" class="mdl-checkbox__input"/>
-						  <span class="mdl-checkbox__label">us-east-1</span>
-						</label>
-						</div>
-						<script type = "text/javascript">
-							$(document).ready(function(){
-									$.get('/getAWSRegion', function(data){
-										if(data.indexOf('us-west-1')!=-1){
-											document.getElementById('awsWest1').checked = true;
-										}
-										if(data.indexOf('us-west-2')!=-1){
-											document.getElementById('awsWest2').checked = true;
-										}
-										if(data.indexOf('us-east-1')!=-1){
-											document.getElementById('awsEast1').checked = true;
-										}
-									});
-								});
-						</script>
-						<br>
-						<br>
-						
-					{{/ifCond}}
-					{{#ifCond this.title '==' "Credits"}}
-						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label textfield-demo">
-						    <input class="mdl-textfield__input" type="text" name ="Credits" pattern="-?[0-9]*(\.[0-9]+)?" id="myCredits" />
-						    <label class="mdl-textfield__label" for="myCredits">Credits...</label>
-						    <span class="mdl-textfield__error">Input is not a number!</span>
-						</div>
-						<br>
-					{{/ifCond}}
-
+				<p>To modify account number and configuration settings, go to .\AWSDelegator\src\server\config.js.</p>
+				<div class="incontainer">
+					<label class="config-label"><h4>Account Number</h4></label>
+					<div type="text" class="account" value=""></div>
+					<b>{{this.number}}</b>
+				</div>
+				<br>
+				<div class="incontainer">
+					<label class="config-label"><h4>S3 Bucket Region</h4></label>
+					<div type="text" class="account" value=""></div>
+					<b>{{this.s3}}</b>
+				</div>
+				<br>
+				<div class="incontainer">
+					<label class="config-label"><h4>S3 Bucket Name</h4></label>
+					<div type="text" class="account" value=""></div>
+					<b>{{this.bucketName}}</b>
+				</div>
+				<br>
+				<div class="incontainer">
+					<label class="config-label"><h4>DB URL</h4></label>
+					<div type="text" class="account" value=""></div>
+					<b>{{this.URL}}</b>
+				</div>
+				<br>
+				<div class="incontainer">
+					<label class="config-label"><h4>AWS Credit Expiration Data</h4></label>
+					<div type="text" class="account" value=""></div>
+					<b>{{this.balanceExp}}</b>
+				</div>
 				{{/each}}
 				<br>
-				
-				<button input type="submit" class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent mdl-js-ripple-effect">
-  				Save
-				</button>
-			</form>
+			
+				<div class="incontainer">
+					<div class="mdl-textfield mdl-js-textfield mdl-textfield-floating-label textfield-demo">
+						<input class="mdl-textfield__input" type="text" name ="Credits" pattern="-?[0-9]*(\.[0-9]+)?" id="myCredits" />
+						<label class="mdl-textfield__label" for="myCredits">Credits...</label>
+						<span class="mdl-textfield__error">Input is not a number!</span>
+					</div>
+				</div>
+				<script type="text/javascript">
+				$(document).ready(function(){
+					$("#myCredits").focusout(function() {
+						var balance = $("#myCredits").val();
+						console.log(balance);
+					});
+				})
+				</script>
+			</div>
+			<div class="modal-footer">
+				<button input type="submit" class="mdl-button mdl-js-button mdl-button-raised mdl-button-accent mdl-js-ripple-effect">Save</button>
+			</div>
 		</div>
 
-	</body>
-</html>
-
+	</div>
+</div>

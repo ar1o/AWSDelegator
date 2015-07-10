@@ -14,9 +14,9 @@ var _params = {
 exports.s3Connect = function(_callback) {
     printBanner(); 
     s3.s3Watch();
-    parseBills();
+    // parseBills();
     AWS.config.credentials = awsCredentials.default;
-    parseAWSServices();    
+    // parseAWSServices();    
 };
 
 var parseBills = function() {
