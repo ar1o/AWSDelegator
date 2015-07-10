@@ -22,7 +22,7 @@ var IAMGroupsView = Backbone.View.extend({
     bindings: function() {
         var self = this;
         this.render();
-        this.model.change('dataReady', function(model, val) {
+        this.model.change('groupDataReady', function(model, val) {
             this.render();
             $('#GroupsTable').DataTable({
                 "iDisplayLength": 15

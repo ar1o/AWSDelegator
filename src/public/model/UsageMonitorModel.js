@@ -4,6 +4,9 @@ var UsageMonitorModel = Backbone.Model.extend({
 		var result;
 		this.change('dataReady');
 		this.change('budgetDataReady');
+		this.change('groupDataReady');
+		this.change('userDataReady');
+		this.change('postDataReady');
 	},
 	groups_result: function() {
 		var self = this;
@@ -49,7 +52,7 @@ var UsageMonitorModel = Backbone.Model.extend({
 		this.groups_result().done(function(result) {
 			for (var r in result) {
 				var data = new ec2InstanceModel({
-					groupName: result[r].GroupName,
+					name: result[r].GroupName,
 					groupId: result[r].GroupId,
 					arn: result[r].Arn,
 					createDate: result[r].CreateDate,
@@ -57,7 +60,7 @@ var UsageMonitorModel = Backbone.Model.extend({
 				});
 				GroupCollection.add(data);
 			}
-			self.set('dataReady', Date.now());
+			self.set('groupDataReady', Date.now());
 		}).fail(function() {
 			console.log('FAILED');
 		});
@@ -69,7 +72,7 @@ var UsageMonitorModel = Backbone.Model.extend({
 		this.users_result().done(function(result) {
 			for (var r in result) {
 				var data = new ec2InstanceModel({
-					userName: result[r].UserName,
+					name: result[r].UserName,
 					userId: result[r].UserId,
 					arn: result[r].Arn,
 					createDate: result[r].CreateDate,
@@ -77,7 +80,7 @@ var UsageMonitorModel = Backbone.Model.extend({
 				});
 				UserCollection.add(data);
 			}
-			self.set('dataReady', Date.now());
+			self.set('userDataReady', Date.now());
 		}).fail(function() {
 			console.log('FAILED');
 		});
@@ -103,6 +106,22 @@ var UsageMonitorModel = Backbone.Model.extend({
 		}).fail(function() {
 			console.log('FAILED');
 		});
+	},
+	post_budget_result: function(data) {
+		console.log('wtf', data);
+		var self = this;
+		return $.ajax({
+			type: 'POST',
+			data: JSON.stringify(data),
+			contentType: 'application/json',
+			url: 'http://localhost:3000/budget',
+			success: function(data) {
+				console.log(data);
+				self.set('postDataReady', Date.now());
+
+			}
+		});
+
 	}
 });
 

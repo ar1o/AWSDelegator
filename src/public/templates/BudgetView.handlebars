@@ -1,4 +1,3 @@
-{{!-- <div class="container"> --}}
 
 <!-- Modal -->
 <div class="modal fade" id="myModal" role="dialog">
@@ -14,7 +13,7 @@
 				<div class="insetting"> 
 					<div class="incontainer">
 						<label class="budget-label">Name </label>
-						<input type="text" id="" value="e.g., 'Monthly EC2 Budget'">
+						<input type="text" id="budgetname" placeholder="e.g., 'Monthly EC2 Budget'">
 					</div>
 				</div>
 
@@ -22,33 +21,49 @@
 				<div class="insetting"> 
 					<div class="incontainer">
 						<label class="budget-label">Include costs related to </label>
-						<select>
+						<select class="costfilter">
 							<option value="" disabled selected>Select</option>
-							<option value="1">Option 1</option>
-							<option value="2">Option 2</option>
-							<option value="3">Option 3</option>
+							<option value="User">User</option>
+							<option value="Groups">Groups</option>
 						</select>
 					</div>
 				</div>
 
+				<div class="sub-insetting"> 
+					<div class="sub-incontainer">
+						<div class="hidden" id="filter-details">
+							<select class="sub-costfilter">
+								<option value="" disabled selected>Select</option>
+		
+								{{#each col}}
+								<option value={{this.name}}>{{this.name}}</option>
+								{{/each}}
+
+
+							</select>
+						</div>
+					</div>
+				</div>
+
+
 				<div class="insetting"> 
 					<div class="incontainer">
 						<label class="budget-label">Start date </label>
-						<input type="text" id="" value="2015-10-31">
+						<input type="text" id="startdate" placeholder="2015-10-31">
 					</div>
 				</div>
 
 				<div class="insetting"> 
 					<div class="incontainer">
 						<label class="budget-label">End date </label>
-						<input type="text" id="" value="2015-10-31">
+						<input type="text" id="enddate" placeholder="2015-10-31">
 					</div>
 				</div>
 
 				<div class="insetting"> 
 					<div class="incontainer">
 						<label class="budget-label">Monthly Amount </label>
-						<input type="text" id="" value="USD">
+						<input type="text" id="amount" placeholder="USD">
 					</div>
 				</div>
 
@@ -67,7 +82,7 @@
 				</div>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">Save</button>
+				<button type="button" class="btn btn-default" id="savebtn">Save</button>
 				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 			</div>
 		</div>
@@ -75,6 +90,5 @@
 	</div>
 </div>
 
-{{!-- </div> --}}
 
 

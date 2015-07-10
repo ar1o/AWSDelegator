@@ -12,8 +12,18 @@ templates['AWSView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":functio
 templates['AppView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   return "<div class=\"content-view\"> </div>\n";
   },"useData":true});
-templates['BudgetView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  return "\n<!-- Modal -->\n<div class=\"modal fade\" id=\"myModal\" role=\"dialog\">\n	<div class=\"modal-dialog\">\n\n		<!-- Modal content-->\n		<div class=\"modal-content\">\n			<div class=\"modal-header\">\n				<button type=\"button\" class=\"close\" data-dismiss=\"modal\">&times;</button>\n				<h4 class=\"modal-title\">Create Budget Profile</h4>\n			</div>\n			<div class=\"modal-body\">\n				<div class=\"insetting\"> \n					<div class=\"incontainer\">\n						<label class=\"budget-label\">Name </label>\n						<input type=\"text\" id=\"\" value=\"e.g., 'Monthly EC2 Budget'\">\n					</div>\n				</div>\n\n\n				<div class=\"insetting\"> \n					<div class=\"incontainer\">\n						<label class=\"budget-label\">Include costs related to </label>\n						<select>\n							<option value=\"\" disabled selected>Select</option>\n							<option value=\"1\">Option 1</option>\n							<option value=\"2\">Option 2</option>\n							<option value=\"3\">Option 3</option>\n						</select>\n					</div>\n				</div>\n\n				<div class=\"insetting\"> \n					<div class=\"incontainer\">\n						<label class=\"budget-label\">Start date </label>\n						<input type=\"text\" id=\"\" value=\"2015-10-31\">\n					</div>\n				</div>\n\n				<div class=\"insetting\"> \n					<div class=\"incontainer\">\n						<label class=\"budget-label\">End date </label>\n						<input type=\"text\" id=\"\" value=\"2015-10-31\">\n					</div>\n				</div>\n\n				<div class=\"insetting\"> \n					<div class=\"incontainer\">\n						<label class=\"budget-label\">Monthly Amount </label>\n						<input type=\"text\" id=\"\" value=\"USD\">\n					</div>\n				</div>\n\n\n				<div class=\"insetting\"> \n					<div class=\"incontainer\">\n						<label class=\"budget-label\">Stop resource(s) when quota reached </label>\n						<div class=\"onoffswitch\">\n							<input type=\"checkbox\" name=\"onoffswitch\" class=\"onoffswitch-checkbox\" id=\"myonoffswitch\" checked>\n							<label class=\"onoffswitch-label\" for=\"myonoffswitch\">\n								<span class=\"onoffswitch-inner\"></span>\n								<span class=\"onoffswitch-switch\"></span>\n							</label>\n						</div>\n					</div>\n				</div>\n			</div>\n			<div class=\"modal-footer\">\n				<button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Save</button>\n				<button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Close</button>\n			</div>\n		</div>\n\n	</div>\n</div>\n\n\n\n";
+templates['BudgetView'] = template({"1":function(depth0,helpers,partials,data) {
+  var lambda=this.lambda, escapeExpression=this.escapeExpression;
+  return "								<option value="
+    + escapeExpression(lambda((depth0 != null ? depth0.name : depth0), depth0))
+    + ">"
+    + escapeExpression(lambda((depth0 != null ? depth0.name : depth0), depth0))
+    + "</option>\n";
+},"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  var stack1, buffer = "\n<!-- Modal -->\n<div class=\"modal fade\" id=\"myModal\" role=\"dialog\">\n	<div class=\"modal-dialog\">\n\n		<!-- Modal content-->\n		<div class=\"modal-content\">\n			<div class=\"modal-header\">\n				<button type=\"button\" class=\"close\" data-dismiss=\"modal\">&times;</button>\n				<h4 class=\"modal-title\">Create Budget Profile</h4>\n			</div>\n			<div class=\"modal-body\">\n				<div class=\"insetting\"> \n					<div class=\"incontainer\">\n						<label class=\"budget-label\">Name </label>\n						<input type=\"text\" id=\"budgetname\" placeholder=\"e.g., 'Monthly EC2 Budget'\">\n					</div>\n				</div>\n\n\n				<div class=\"insetting\"> \n					<div class=\"incontainer\">\n						<label class=\"budget-label\">Include costs related to </label>\n						<select class=\"costfilter\">\n							<option value=\"\" disabled selected>Select</option>\n							<option value=\"User\">User</option>\n							<option value=\"Groups\">Groups</option>\n						</select>\n					</div>\n				</div>\n\n				<div class=\"sub-insetting\"> \n					<div class=\"sub-incontainer\">\n						<div class=\"hidden\" id=\"filter-details\">\n							<select class=\"sub-costfilter\">\n								<option value=\"\" disabled selected>Select</option>\n		\n";
+  stack1 = helpers.each.call(depth0, (depth0 != null ? depth0.col : depth0), {"name":"each","hash":{},"fn":this.program(1, data),"inverse":this.noop,"data":data});
+  if (stack1 != null) { buffer += stack1; }
+  return buffer + "\n\n							</select>\n						</div>\n					</div>\n				</div>\n\n\n				<div class=\"insetting\"> \n					<div class=\"incontainer\">\n						<label class=\"budget-label\">Start date </label>\n						<input type=\"text\" id=\"startdate\" placeholder=\"2015-10-31\">\n					</div>\n				</div>\n\n				<div class=\"insetting\"> \n					<div class=\"incontainer\">\n						<label class=\"budget-label\">End date </label>\n						<input type=\"text\" id=\"enddate\" placeholder=\"2015-10-31\">\n					</div>\n				</div>\n\n				<div class=\"insetting\"> \n					<div class=\"incontainer\">\n						<label class=\"budget-label\">Monthly Amount </label>\n						<input type=\"text\" id=\"amount\" placeholder=\"USD\">\n					</div>\n				</div>\n\n\n				<div class=\"insetting\"> \n					<div class=\"incontainer\">\n						<label class=\"budget-label\">Stop resource(s) when quota reached </label>\n						<div class=\"onoffswitch\">\n							<input type=\"checkbox\" name=\"onoffswitch\" class=\"onoffswitch-checkbox\" id=\"myonoffswitch\" checked>\n							<label class=\"onoffswitch-label\" for=\"myonoffswitch\">\n								<span class=\"onoffswitch-inner\"></span>\n								<span class=\"onoffswitch-switch\"></span>\n							</label>\n						</div>\n					</div>\n				</div>\n			</div>\n			<div class=\"modal-footer\">\n				<button type=\"button\" class=\"btn btn-default\" id=\"savebtn\">Save</button>\n				<button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Close</button>\n			</div>\n		</div>\n\n	</div>\n</div>\n\n\n\n";
 },"useData":true});
 templates['ConfigurationView'] = template({"1":function(depth0,helpers,partials,data) {
   var stack1, helperMissing=helpers.helperMissing, buffer = "";
@@ -149,7 +159,7 @@ templates['HeaderView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":func
 templates['IAMGroupsView'] = template({"1":function(depth0,helpers,partials,data) {
   var lambda=this.lambda, escapeExpression=this.escapeExpression;
   return "		<tr>\n			<td >"
-    + escapeExpression(lambda((depth0 != null ? depth0.groupName : depth0), depth0))
+    + escapeExpression(lambda((depth0 != null ? depth0.name : depth0), depth0))
     + "</td>\n			<td>"
     + escapeExpression(lambda((depth0 != null ? depth0.groupId : depth0), depth0))
     + "</td>\n			<td>"
@@ -166,7 +176,7 @@ templates['IAMGroupsView'] = template({"1":function(depth0,helpers,partials,data
 templates['IAMUsersView'] = template({"1":function(depth0,helpers,partials,data) {
   var lambda=this.lambda, escapeExpression=this.escapeExpression;
   return "		<tr>\n			<td >"
-    + escapeExpression(lambda((depth0 != null ? depth0.userName : depth0), depth0))
+    + escapeExpression(lambda((depth0 != null ? depth0.name : depth0), depth0))
     + "</td>\n			<td>"
     + escapeExpression(lambda((depth0 != null ? depth0.userId : depth0), depth0))
     + "</td>\n			<td>"
