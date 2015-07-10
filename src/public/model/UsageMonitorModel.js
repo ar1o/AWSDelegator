@@ -3,7 +3,12 @@ var UsageMonitorModel = Backbone.Model.extend({
 		var data = {};
 		var result;
 		this.change('dataReady');
+		this.change('groupDataReady');
 		this.change('budgetDataReady');
+		this.change('budgetCostDataReady');
+		this.change('budgetUsageDataReady');
+		this.change('userBudgetCostDataReady');
+		this.change('serviceDataReady');
 	},
 	groups_result: function() {
 		var self = this;
@@ -48,16 +53,19 @@ var UsageMonitorModel = Backbone.Model.extend({
 		GroupCollection.reset();
 		this.groups_result().done(function(result) {
 			for (var r in result) {
-				var data = new ec2InstanceModel({
+				var budgetNames = result[r].BudgetName[0];
+				for(var i=1;i<result[r].BudgetName.length;++i){
+					budgetNames+=", "+result[r].BudgetName[i];
+				}
+				var data = new iamGroupsModel({
 					groupName: result[r].GroupName,
-					groupId: result[r].GroupId,
 					arn: result[r].Arn,
 					createDate: result[r].CreateDate,
-					amount: result[r].Amount
+					budgetNames: budgetNames
 				});
 				GroupCollection.add(data);
 			}
-			self.set('dataReady', Date.now());
+			self.set('groupDataReady', Date.now());
 		}).fail(function() {
 			console.log('FAILED');
 		});
@@ -68,12 +76,15 @@ var UsageMonitorModel = Backbone.Model.extend({
 		UserCollection.reset();
 		this.users_result().done(function(result) {
 			for (var r in result) {
-				var data = new ec2InstanceModel({
+				var budgetNames = result[r].BudgetName[0];
+				for(var i=1;i<result[r].BudgetName.length;++i){
+					budgetNames+=", "+result[r].BudgetName[i];
+				}
+				var data = new iamUsersModel({
 					userName: result[r].UserName,
-					userId: result[r].UserId,
 					arn: result[r].Arn,
 					createDate: result[r].CreateDate,
-					amount: result[r].Amount
+					budgetNames: budgetNames
 				});
 				UserCollection.add(data);
 			}
@@ -84,7 +95,6 @@ var UsageMonitorModel = Backbone.Model.extend({
 	},
 
 	getBudgets: function() {
-		console.log('here')
 		var self = this;
 		budgetCollection.reset();
 		this.budget_result().done(function(result) {
@@ -103,16 +113,162 @@ var UsageMonitorModel = Backbone.Model.extend({
 		}).fail(function() {
 			console.log('FAILED');
 		});
+	},
+
+	getBudgetCostChart: function(budgetIndex){
+		var self = this;
+		budgetCostCollection.reset();
+		var params = {
+			batchType: budgetCollection.at(budgetIndex).get('batchType'),
+			batchName: budgetCollection.at(budgetIndex).get('batchName'),
+			startDate: budgetCollection.at(budgetIndex).get('startDate'),
+			endDate: budgetCollection.at(budgetIndex).get('endDate')
+		};
+		//add endDate into collection
+		(function(params) {
+			$.get(host+'/api/usage/budgetCost', params, function(result) {
+				for (var i in result) {
+					var data = new budgetCostModel({
+						date: result[i]._id,
+						cost: Math.round(result[i].Cost*10000)/10000
+					});
+					budgetCostCollection.add(data);
+				}
+				var data = new budgetCostModel({
+					date: budgetCollection.at(budgetIndex).get('endDate'),
+					cost: 0
+				});
+				budgetCostCollection.add(data);
+				self.set('budgetCostDataReady', Date.now());
+			});
+		})(params);
+	},
+
+	getBudgetUsageChart: function(budgetIndex){
+		var self = this;
+		budgetUsageCollection.reset();
+		var params = {
+			batchType: budgetCollection.at(budgetIndex).get('batchType'),
+			batchName: budgetCollection.at(budgetIndex).get('batchName'),
+			startDate: budgetCollection.at(budgetIndex).get('startDate'),
+			endDate: budgetCollection.at(budgetIndex).get('endDate')
+		};
+		var budgetAmount = budgetCollection.at(budgetIndex).get('amount');
+		(function(params) {
+			$.get(host+'/api/usage/budgetUsage', params, function(result) {
+				var total = 0;
+				for(var i in result){
+					total += result[i].Total;
+				}
+				for (var i in result) {
+					var data = new budgetUsageModel({
+						batchName: result[i]._id,
+						usage: (result[i].Total*100)/budgetAmount,
+						total: total
+					});
+					budgetUsageCollection.add(data);
+				}
+				self.set('budgetUsageDataReady', Date.now());
+			});
+		})(params);
+	},
+
+	getUserCostBudget: function(budgetIndex,user){
+		var self = this;
+		userBudgetCostCollection.reset();
+		var params = {
+			userName: user,
+			batchName: budgetCollection.at(budgetIndex).get('batchName'),
+			startDate: budgetCollection.at(budgetIndex).get('startDate'),
+			endDate: budgetCollection.at(budgetIndex).get('endDate')
+		};
+		//add endDate into collection
+		(function(params) {
+			$.get(host+'/api/usage/userBudgetCost', params, function(result) {
+				for (var i in result) {
+					var data = new budgetCostModel({
+						date: result[i]._id,
+						cost: Math.round(result[i].Cost*10000)/10000
+					});
+					userBudgetCostCollection.add(data);
+				}
+				var data = new budgetCostModel({
+					date: budgetCollection.at(budgetIndex).get('endDate'),
+					cost: 0
+				});
+				userBudgetCostCollection.add(data);
+				self.set('userBudgetCostDataReady', Date.now());
+			});
+		})(params);
+	},
+
+	getGroupServiceUsageChart: function(budgetIndex){
+		var self = this;
+		serviceCollection.reset();
+		var params = {
+			batchName: budgetCollection.at(budgetIndex).get('batchName'),
+			startDate: budgetCollection.at(budgetIndex).get('startDate'),
+			endDate: budgetCollection.at(budgetIndex).get('endDate')
+		};
+		(function(params) {
+			$.get(host+'/api/usage/groupServiceUsage', params, function(result) {
+				var total = 0;
+				for(var i in result){
+					total += result[i].total;
+				}
+				for(var i in result){
+					result[i]['percentage'] = (result[i].total/total)*100;
+					for(var j in result[i].operation){
+						result[i].operation[j]['percentage'] = (result[i].operation[j].total/total)*100;
+					}
+				}
+				var data = new serviceModel({
+					batchName: params.batchName,
+					services: result
+				});
+				serviceCollection.add(data);
+				self.set('serviceDataReady', Date.now());
+			});
+		})(params);
+	},
+
+	getUserServiceUsageChart: function(budgetIndex){
+		var self = this;
+		serviceCollection.reset();
+		var params = {
+			batchName: budgetCollection.at(budgetIndex).get('batchName'),
+			startDate: budgetCollection.at(budgetIndex).get('startDate'),
+			endDate: budgetCollection.at(budgetIndex).get('endDate')
+		};
+		(function(params) {
+			$.get(host+'/api/usage/userServiceUsage', params, function(result) {
+				var total = 0;
+				for(var i in result){
+					total += result[i].total;
+				}
+				for(var i in result){
+					result[i]['percentage'] = (result[i].total/total)*100;
+					for(var j in result[i].operation){
+						result[i].operation[j]['percentage'] = (result[i].operation[j].total/total)*100;
+					}
+				}
+				var data = new serviceModel({
+					batchName: params.batchName,
+					services: result
+				});
+				serviceCollection.add(data);
+				self.set('serviceDataReady', Date.now());
+			});
+		})(params);
 	}
 });
 
 var iamGroupsModel = Backbone.Model.extend({
 	defaults: {
 		GroupName: null,
-		GroupId: null,
 		Arn: null,
 		CreateDate: null,
-		Amount: 0
+		BudgetNames: null
 	}
 });
 
@@ -127,10 +283,9 @@ var GroupsCollection = Backbone.Collection.extend({
 var iamUsersModel = Backbone.Model.extend({
 	defaults: {
 		UserName: null,
-		UserId: null,
 		Arn: null,
 		CreateDate: null,
-		Amount: 0
+		BudgetNames: null
 	}
 });
 
@@ -161,6 +316,56 @@ var BudgetCollection = Backbone.Collection.extend({
 	}
 });
 
+var budgetCostModel = Backbone.Model.extend({
+	defaults: {
+		date: null,
+		cost: null,
+	}
+});
+
+var BudgetCostCollection = Backbone.Collection.extend({
+	model: budgetCostModel,
+	initialize: function() {
+		this.on('add', function(model) {
+		});
+	}
+});
+
+var budgetUsageModel = Backbone.Model.extend({
+	defaults: {
+		batchName: null,
+		usage: null,
+		total: null
+	}
+});
+
+var BudgetUsageCollection = Backbone.Collection.extend({
+	model: budgetUsageModel,
+	initialize: function() {
+		this.on('add', function(model) {
+		});
+	}
+});
+
+var serviceModel = Backbone.Model.extend({
+	defaults: {
+		batchName: null,
+		services: null
+	}
+});
+
+var ServiceCollection = Backbone.Collection.extend({
+	model: serviceModel,
+	initialize: function() {
+		this.on('add', function(model) {
+		});
+	}
+});
+
+var serviceCollection = new ServiceCollection();
+var budgetUsageCollection = new BudgetUsageCollection();
+var userBudgetCostCollection = new BudgetUsageCollection();
+var budgetCostCollection = new BudgetCostCollection();
 var budgetCollection = new BudgetCollection();
 var GroupCollection = new GroupsCollection();
 var UserCollection = new UsersCollection();

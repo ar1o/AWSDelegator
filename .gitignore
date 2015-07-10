@@ -52,4 +52,5 @@ optimized/
 
 *.json
 
-
+/src/public/compiled.css
+/src/public/compiledTemplates.js

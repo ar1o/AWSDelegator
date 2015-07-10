@@ -2,18 +2,18 @@
 	<thead>
 		<tr class="dark-row">
 			<th>GroupName</th>
-			<th>GroupId</th>
 			<th>Arn</th>
 			<th>CreateDate</th>
+			<th>BudgetName/s</th>
 		</tr>
 	</thead>
 	<tbody id="instanceData">
 	{{#each instances}}
 		<tr>
 			<td >{{this.groupName}}</td>
-			<td>{{this.groupId}}</td>
 			<td>{{this.arn}}</td>
 			<td>{{this.createDate}}</td>
+			<td>{{this.budgetNames}}</td>
 		</tr>
 	{{/each}}
 	</tbody>	
