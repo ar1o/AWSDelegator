@@ -14,7 +14,7 @@ var UsageMonitorModel = Backbone.Model.extend({
 		this.change('budgetUsageDataReady');
 		this.change('userBudgetCostDataReady');
 		this.change('serviceDataReady');
-
+		this.change('groupUserServiceDataReady');
 	},
 	groups_result: function() {
 		var self = this;
@@ -123,7 +123,6 @@ var UsageMonitorModel = Backbone.Model.extend({
 	},
 
 	post_budget_result: function(data) {
-		console.log('wtf', data);
 		var self = this;
 		return $.ajax({
 			type: 'POST',
@@ -284,6 +283,77 @@ var UsageMonitorModel = Backbone.Model.extend({
 				self.set('serviceDataReady', Date.now());
 			});
 		})(params);
+	},
+
+	getGroupUserServiceUsageChart: function(user, budgetIndex) {
+		var self = this;
+		groupUserServiceCollection.reset();
+		var params = {
+			userName: user,
+			groupName: budgetCollection.at(budgetIndex).get('batchName'),
+			startDate: budgetCollection.at(budgetIndex).get('startDate'),
+			endDate: budgetCollection.at(budgetIndex).get('endDate'),
+		};
+
+		(function(params) {
+			$.get(host+'/api/usage/groupUserService', params, function(result) {
+				var total = 0;
+				for (var i in result) {
+					total += result[i].total;
+				}
+				for (var i in result) {
+					result[i]['percentage'] = (result[i].total / total) * 100;
+					for (var j in result[i].resourceId) {
+						result[i].resourceId[j]['percentage'] = (result[i].resourceId[j].total / total) * 100;
+					}
+				}
+				var data = new serviceModel({
+					batchName: params.userName,
+					services: result
+				});
+				groupUserServiceCollection.add(data);
+				self.set('groupUserServiceDataReady', Date.now());
+			});
+		})(params);
+	},
+
+	getUserServiceUsageChart: function(budgetIndex) {
+		var self = this;
+		groupUserServiceCollection.reset();
+		var params = {
+			userName: budgetCollection.at(budgetIndex).get('batchName'),
+			startDate: budgetCollection.at(budgetIndex).get('startDate'),
+			endDate: budgetCollection.at(budgetIndex).get('endDate'),
+		};
+
+		(function(params) {
+			$.get(host+'/api/usage/userService', params, function(result) {
+				var total = 0;
+				for (var i in result) {
+					total += result[i].total;
+				}
+				for (var i in result) {
+					result[i]['percentage'] = (result[i].total / total) * 100;
+					for (var j in result[i].resourceId) {
+						result[i].resourceId[j]['percentage'] = (result[i].resourceId[j].total / total) * 100;
+					}
+				}
+				var data = new serviceModel({
+					batchName: params.userName,
+					services: result
+				});
+				groupUserServiceCollection.add(data);
+				self.set('groupUserServiceDataReady', Date.now());
+			});
+		})(params);
+	},
+
+	setBudgetIndex: function(budgetIndex){
+		budgetIndexCollection.reset();
+		var data = new budgetIndexModel({
+			index: budgetIndex
+		});
+		budgetIndexCollection.add(data);
 	}
 });
 
@@ -386,7 +456,23 @@ var ServiceCollection = Backbone.Collection.extend({
 	}
 });
 
+var budgetIndexModel = Backbone.Model.extend({
+	defaults:{
+		index: null
+	}
+});
+
+var BudgetIndexCollection = Backbone.Collection.extend({
+	model: budgetIndexModel,
+	initialize: function() {
+		this.on('add', function(model) {
+		});
+	}
+})
+
+var budgetIndexCollection = new BudgetIndexCollection();
 var serviceCollection = new ServiceCollection();
+var groupUserServiceCollection = new ServiceCollection();
 var budgetUsageCollection = new BudgetUsageCollection();
 var userBudgetCostCollection = new BudgetUsageCollection();
 var budgetCostCollection = new BudgetCostCollection();

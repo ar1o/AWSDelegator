@@ -23,6 +23,7 @@ var NotificationView = Backbone.View.extend({
 
             if(this.model.isOpen == true) {
                 console.log('the budget is open');
+                
             }
 
         }.bind(this));

@@ -11,20 +11,20 @@ var RDSMetricsView = Backbone.View.extend({
     },
 
     bindings: function() {
-        this.model.change('dataReady', function(model, val) {
-            var date = new Date(MetricsCollection.at(0).get('time'));
+        this.model.change('metricsDataReady', function(model, val) {
+            var date = new Date(rdsMetricsCollection.at(0).get('time'));
             var dataReadIops = [];
             var dataWriteIops = [];
             var dataQueueDepth = [];
             var dataCpuUtilization = [];
-            for(var i=0;i<MetricsCollection.length;++i){                               
-                dataReadIops.push([MetricsCollection.at(i).get('time'),MetricsCollection.at(i).get('readIOPS')]);  
-                dataWriteIops.push([MetricsCollection.at(i).get('time'),MetricsCollection.at(i).get('writeIOPS')]);
-                dataQueueDepth.push([MetricsCollection.at(i).get('time'),MetricsCollection.at(i).get('diskQueueDepth')]);
-                dataCpuUtilization.push([MetricsCollection.at(i).get('time'),MetricsCollection.at(i).get('cpuUtilization')]);       
-            }
-
-            console.log(dataCpuUtilization);               
+            var dataDbConnections = [];
+            for(var i=0;i<rdsMetricsCollection.length;++i){                               
+                dataReadIops.push([rdsMetricsCollection.at(i).get('time'),rdsMetricsCollection.at(i).get('readIOPS')]);  
+                dataWriteIops.push([rdsMetricsCollection.at(i).get('time'),rdsMetricsCollection.at(i).get('writeIOPS')]);
+                dataQueueDepth.push([rdsMetricsCollection.at(i).get('time'),rdsMetricsCollection.at(i).get('diskQueueDepth')]);
+                dataCpuUtilization.push([rdsMetricsCollection.at(i).get('time'),rdsMetricsCollection.at(i).get('cpuUtilization')]); 
+                dataDbConnections.push([rdsMetricsCollection.at(i).get('time'),rdsMetricsCollection.at(i).get('dbConnections')]);       
+            }   
             this.render();
 
             $(function () {
@@ -37,7 +37,7 @@ var RDSMetricsView = Backbone.View.extend({
                         enabled: false
                     },
                     title: {
-                        text: MetricsCollection.at(0).get('instance')+' Disk Operations/s'
+                        text: selectedInstanceCollection.at(0).get('instance')+' Disk Operations'
                     },
                     xAxis: {
                         title : {text : "Time"},
@@ -88,7 +88,7 @@ var RDSMetricsView = Backbone.View.extend({
                         backgroundColor: '#f7f7f7'
                     },
                     title: {
-                        text: MetricsCollection.at(0).get('instance')+' Disk Queue Depth'
+                        text: selectedInstanceCollection.at(0).get('instance')+' Disk Queue Depth'
                     },
                     credits: {
                         enabled: false
@@ -138,7 +138,7 @@ var RDSMetricsView = Backbone.View.extend({
                         backgroundColor: '#f7f7f7'
                     },
                     title: {
-                        text: MetricsCollection.at(0).get('instance')+' CPU-Usage'
+                        text: selectedInstanceCollection.at(0).get('instance')+' CPU Usage'
                     },
                     credits: {
                         enabled: false
@@ -180,12 +180,64 @@ var RDSMetricsView = Backbone.View.extend({
                     }
                 });
             });
+
+            $(function() {
+                $('#dbConnectionsContainer').highcharts({
+                    chart: {
+                        zoomType: 'x',
+                        backgroundColor: '#f7f7f7'
+                    },
+                    title: {
+                        text: selectedInstanceCollection.at(0).get('instance') + ' Database Conenctions'
+                    },
+                    credits: {
+                        enabled: false
+                    },
+                    xAxis: {
+                        title: {
+                            text: "Time"
+                        },
+                        type: 'datetime',
+                        labels: {
+                            overflow: 'justify'
+                        }
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'Count'
+                        },
+                        min: 0,
+                        minorGridLineWidth: 0.5,
+                        gridLineWidth: 0.5,
+                        alternateGridColor: null
+
+                    },
+                    tooltip: {
+                        formatter: function() {
+                            return '<b>' + this.series.name + '</b><br/>' +
+                                new Date(this.x) + ', ' + this.y;
+                        }
+                    },
+                    legend: {
+                        enabled: false
+                    },
+                    series: [{
+                        name: 'Db Connections',
+                        data: dataDbConnections
+                    }],
+                    navigation: {
+                        menuItemStyle: {
+                            fontSize: '10px'
+                        }
+                    }
+                });
+            });
         }.bind(this));
     },
 
     render: function() {
         var html = Handlebars.templates.RDSMetricsView({
-            metrics: MetricsCollection.toJSON()
+            metrics: rdsMetricsCollection.toJSON()
         });
         this.$el.html(html);
     }

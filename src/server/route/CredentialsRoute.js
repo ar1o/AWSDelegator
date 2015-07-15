@@ -1,5 +1,5 @@
 //Should add some sort of verification to make sure that account number and credentials are known to be good
-exports.setCredentials = function(req, res) {
+exports.setConfiguration = function(req, res) {
 	req.on('data', function(chunk) {
 		console.log("Received body data:");
 		var value,
@@ -33,13 +33,8 @@ exports.setCredentials = function(req, res) {
       			credentials[key]=value;
       		}
       	}
-// Account_Number=123456789&RDS_Region=us-west-1&S3_Region=us-west-1&AWS_Regions=us-west-1&AWS_Regions=us-west-2&AWS_Regions=us-east-1&Credentials=111&Credits=111
         while(input.indexOf('=', index)!=-1&& index!=0);
-        // console.log(dict['Account_Number']);
-      // if(credentials["RDS_Region"] == undefined || credentials["RDS_Region"] == [] ){
-      //   console.log("Please input a RDS Region.\nFailed to update values.");
-      //   return;
-      // }
+
       if(credentials["S3_Region"] == undefined || credentials["S3_Region"] == [] ){
         console.log("Please input a S3 Region.\nFailed to update values.");
         return;
@@ -48,35 +43,15 @@ exports.setCredentials = function(req, res) {
 	    	console.log("Credits entered is not a number.\nFailed to update values.");
 	    	return;
 	    }      
-    //   console.log("credits before",credits);
       credits = credentials["Credits"];
-    //   console.log("credits after",credits);
-    //   console.log("RDS REGION", rdsRegion);
-		  // rdsRegion = credentials['RDS_Region'];
-    //   console.log("RDS REGION",rdsRegion);
-    //   console.log("S3 REGION",s3Region);
+
 		  s3Region = credentials['S3_Region'];
-    //   console.log("S3 REGION",s3Region);
-		  // // s3Bucket = 'csvcontainer'; //Bucket Name??
-    //   console.log("before",awsRegions);
+
 		  awsRegions = regions;
-    //   console.log("after",awsRegions);
       console.log("Credentials successfully updated");
 
     });
 
-	//verify account number is numeric
-	
-    ///Before setting the input values to the actual config variables, do error checking
-    /*ACCOunt number == all numbers, length of 12
-    RDS and S3 Regions are checkboxes, so there's limited variation. Make sure there is one selected though
-
-    credits. Its a number...
-    AWS_Regions >=1
-    */
-    //Account# check
-
-	// databaseUrl = 'mongodb://localhost:27017/awsdb';//?
     req.on('end', function() {
       // empty 200 OK response for now
       res.redirect(302, '../');
@@ -85,7 +60,14 @@ exports.setCredentials = function(req, res) {
     });
 
 }
-
+exports.setBalance = function(req,res){
+  console.log("setBalance",req.data);
+  // credits = req.
+}
+exports.getConfiguration = function(req, res) {
+  var data = {account:[{"Number" : awsAccountNumber, "Balance" : credits, "S3BucketRegion" : s3Region, "Regions" : awsRegions, "S3BucketName"  : s3Bucket, "DB_URL" : databaseUrl, "BalanceExp" : creditExp}]};
+  res.send(data);
+}
 exports.getAccountNumber = function(req, res) {
       res.sendStatus(awsAccountNumber);
 }

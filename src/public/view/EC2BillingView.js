@@ -4,14 +4,18 @@ var EC2BillingView = Backbone.View.extend({
         if (!this.model) {
             this.model = new BillingsModel();
         }
-        self = this;
-        this.render();
+        this.opName;
+        this.opColor;
         this.bindings();
+        this.render();
     },
-    updateView: function(selected){
-        this.model.calculateOperationCost(selected,totalCostInstancesCollection.at(0).get('resourceId'),'Amazon Elastic Compute Cloud');
+    updateView: function(name,color){
+        this.opName = name;
+        this.opColor = color;
+        this.model.calculateOperationCost(name, totalCostInstancesCollection.at(0).get('resourceId'),'Amazon Elastic Compute Cloud');
     },
     bindings: function() {
+        var self = this;
         this.model.change('operationDataReady', function(model, val) {
             self.render();
             var date = totalCostInstancesCollection.at(0).get('date').split(' ');
@@ -23,6 +27,7 @@ var EC2BillingView = Backbone.View.extend({
             var month = parseInt(date1[1]);
             date1[1] = month - 1;
             
+            console.log(operationCostCollection)
             var opDate = operationCostCollection.at(0).get('date').split(' ');
             var opDate1 = opDate[0].split(/-/);
             var opDate2 = opDate[1].split(':');
@@ -49,7 +54,7 @@ var EC2BillingView = Backbone.View.extend({
                         enabled: false
                     },
                     title: {
-                        text: totalCostInstancesCollection.at(0).get('resourceId') + ' Cost'
+                        text: selectedInstanceCollection.at(0).get('instance') + ' Cost'
                     },
                     xAxis: {
                         title: {
@@ -79,7 +84,7 @@ var EC2BillingView = Backbone.View.extend({
                         }
                     },
                     legend: {
-                        enabled: false
+                        enabled: true
                     },
                     series: [{
                         name: 'Cost',
@@ -93,8 +98,8 @@ var EC2BillingView = Backbone.View.extend({
                         data: TCost.pluck('cost')
                     }, 
                     {
-                        name: operationCostCollection.at(0).get('operation'),
-                        color: operationCostCollection.at(0).get('color'),
+                        name: self.opName,
+                        color: self.opColor,
                         pointInterval: 3600 * 1000,
                         pointStart: opData[0][0],
                         data: opData                   
@@ -110,7 +115,7 @@ var EC2BillingView = Backbone.View.extend({
 
         }.bind(this));
 
-        this.model.change('dataReady', function(model, val) {
+        this.model.change('billingDataReady', function(model, val) {
             this.render();
             var date = totalCostInstancesCollection.at(0).get('date').split(' ');
             date1 = date[1].substring(0, date[1].length - 1);
@@ -161,7 +166,7 @@ var EC2BillingView = Backbone.View.extend({
                         }
                     },
                     legend: {
-                        enabled: false
+                        enabled: true
                     },
                     series: [{
                         name: 'Cost',

@@ -23,19 +23,21 @@ mongoose.connect(databaseUrl, function(error) {
 });
 var db = mongoose.connection;
 db.on("open", function() {
-
-    require(__dirname + '/server/model/ec2');
-    require(__dirname + '/server/model/rds');
-    require(__dirname + '/server/model/latest');
-    require(__dirname + '/server/model/pricing');
-    require(__dirname + '/server/model/billing');
-    require(__dirname + '/server/parse/boxPricingParse').getPricing(function() {
-        require(__dirname + '/server/parse/scheduler').s3Connect();
+    require(__dirname +'/server/model/ec2');
+    require(__dirname +'/server/model/rds');
+    require(__dirname +'/server/model/latest');
+    require(__dirname +'/server/model/pricing');
+    require(__dirname +'/server/model/billing');
+    require(__dirname +'/server/parse/boxPricingParse').getPricing(function(){
+        require(__dirname +'/server/parse/scheduler').s3Connect();
     });
 });
 
-app.post('/setCredentials', require(__dirname + '/server/route/CredentialsRoute').setCredentials);
+
+app.post('/setBalance' , require(__dirname +'/server/route/CredentialsRoute').setBalance);
+// app.post('/setCredentials', require(__dirname + '/server/route/CredentialsRoute').setCredentials);
 app.get('/getAccount', require(__dirname + '/server/route/CredentialsRoute').getAccountNumber);
+app.get('/getConfiguration', require(__dirname + '/server/route/CredentialsRoute').getConfiguration);
 app.get('/getAccountBalance', require(__dirname + '/server/route/CredentialsRoute').getAccountBalance);
 // app.get('/getRDSRegion', require(__dirname + '/server/route/CredentialsRoute').getRDSRegion);
 app.get('/getS3Region', require(__dirname + '/server/route/CredentialsRoute').getS3Region);
@@ -84,6 +86,8 @@ app.get('/api/usage/groups', require(__dirname + '/server/route/iamRoute').group
 app.get('/api/usage/users', require(__dirname + '/server/route/iamRoute').users);
 app.get('/api/usage/budget', require(__dirname + '/server/route/budgetRoute').budgets);
 app.get('/api/usage/budgetCost', require(__dirname + '/server/route/budgetRoute').cost);
+app.get('/api/usage/groupUserService', require(__dirname + '/server/route/budgetRoute').groupUserService);
+app.get('/api/usage/userService', require(__dirname + '/server/route/budgetRoute').userService);
 app.get('/api/usage/budgetUsage', require(__dirname + '/server/route/budgetRoute').usage);
 app.get('/api/usage/userBudgetCost', require(__dirname + '/server/route/budgetRoute').userCost);
 app.get('/api/usage/groupServiceUsage', require(__dirname + '/server/route/budgetRoute').groupServiceUsage);
@@ -91,20 +95,11 @@ app.get('/api/usage/userServiceUsage', require(__dirname + '/server/route/budget
 
 app.get('/api/notifications', require(__dirname + '/server/route/notificationRoute').notifications);
 
-
 var mongodb = require('mongodb');
 var MongoClient = mongodb.MongoClient;
 
 app.post('/budget', jsonParser, function(req, res) {
     var r = req.body;
-    // console.log('body' + r);
-    // console.log(r.budgetName);
-    // console.log(r.batchName);
-    // console.log(r.batchType);
-    // console.log(r.startDate);
-    // console.log(r.endDate);
-    // console.log(r.amount);
-    // console.log(r.option);
     var startDate = r.startDate.split('/');
     var endDate = r.endDate.split('/');
     MongoClient.connect(databaseUrl, function(err, db) {

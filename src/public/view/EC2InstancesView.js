@@ -1,33 +1,30 @@
-// Here is where the EC2 Instances are renders the instanceCollection JSON object
-// by the handlebars template called InstancesView.handlebars
 var EC2InstancesView = Backbone.View.extend({
     className: 'EC2InstancesView',
     initialize: function(options) {
         if (!this.model) {
             this.model = new InstancesModel();
         }
-        //render own view
         this.model.getEC2Instances();
-        // child views
         this.billingActivity = new EC2BillingView();
         this.operationsActivity = new EC2OperationsView();
         this.metricsActivity = new EC2MetricsView();
         this.bindings();
+        this.render();
     },
 
-    updateViews: function(selected, vselected) {
-        this.billingActivity.model.calcTotalCost(selected, vselected);
+    updateViews: function(selected) {
+        this.billingActivity.model.calcTotalCost(selected);
         this.metricsActivity.model.getEC2Metrics(selected);
         this.operationsActivity.model.getEC2Operations(selected);
     },
 
     bindings: function() {
         var self = this;
-        this.render();
-        this.model.change('dataReady', function(model, val) {
+        this.model.change('instancesDataReady', function(model, val) {
             this.render();
             $('#InstanceTable').DataTable({
-                "iDisplayLength": 15
+                "iDisplayLength": 15,
+                "bSort": false
                 // "paging":   false,
                 // "info":     false,
                 // "bFilter": false
@@ -36,18 +33,17 @@ var EC2InstancesView = Backbone.View.extend({
 
         this.$el.on('click', '#InstanceTable tr', function() {
             var name = $('td', this).eq(0).text();
-         var vname = $('td', this).eq(8).text();
-
-            // console.log('You! clicked on ' + vname + '\'s row');
-            if (name != "") {
-                self.updateViews(name, vname);
+            var state = $('td', this).eq(1).text();
+            if (name != "" && state == 'running') {
+                self.model.setEC2SelectedInstance(this.rowIndex - 1);
+                self.updateViews(name);
             }
         });
     },
 
     render: function() {
         var html = Handlebars.templates.EC2InstancesView({
-            instances: InstanceCollection.toJSON()
+            instances: ec2InstancesCollection.toJSON()
         });
         this.$el.html(html);
         this.$el.append(this.operationsActivity.el);

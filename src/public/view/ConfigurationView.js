@@ -3,19 +3,33 @@ var ConfigurationView = Backbone.View.extend({
     className: 'ConfigurationView',
 
     initialize: function(options) {
-        // if (!this.model) {
-        //     this.model = new ConfigurationModel();
-        // }
-        // this.bindings();
+        if (!this.model) {
+            this.model = new ConfigurationModel();
+        }
+        this.bindings();
         this.render();
+        this.data = {
+            number : null,
+            balance: 0,
+            regions : [],
+            s3BucketRegion: null,
+            bucketName : null,
+            URL: null,
+            balanceExp: null
+        };
 
     },
 
     bindings: function() {
         this.model.change('openConfig', function(model, val) {
-            var toggle = val ? 'addClass' : 'removeClass';
-            this.$el[toggle]('visible');
+            console.log(ConfigurationCollection)
+            this.render();
         }.bind(this));
+
+        // this.$el.on('focusout', '#myCredits', function(e){
+        //  var self = this;
+        //      console.log($(input:mdl-textfield[id=myCredits]).val());            
+        // }).bind(this);
 
 
 
@@ -23,35 +37,12 @@ var ConfigurationView = Backbone.View.extend({
 
     render: function() {
         var html = Handlebars.templates.ConfigurationView({
-            pages: ConfigurationViewCollection.toJSON()
+            pages: ConfigurationCollection.toJSON(),
+            aws: JSON.stringify(ConfigurationCollection.pluck('aws'))
+
         });
         this.$el.html(html);
 
 
-    }
-});
-
-//Handlebars helper method for logic cases
-Handlebars.registerHelper('ifCond', function (v1, operator, v2, options) {
-
-    switch (operator) {
-        case '==':
-            return (v1 == v2) ? options.fn(this) : options.inverse(this);
-        case '===':
-            return (v1 === v2) ? options.fn(this) : options.inverse(this);
-        case '<':
-            return (v1 < v2) ? options.fn(this) : options.inverse(this);
-        case '<=':
-            return (v1 <= v2) ? options.fn(this) : options.inverse(this);
-        case '>':
-            return (v1 > v2) ? options.fn(this) : options.inverse(this);
-        case '>=':
-            return (v1 >= v2) ? options.fn(this) : options.inverse(this);
-        case '&&':
-            return (v1 && v2) ? options.fn(this) : options.inverse(this);
-        case '||':
-            return (v1 || v2) ? options.fn(this) : options.inverse(this);
-        default:
-            return options.inverse(this);
     }
 });

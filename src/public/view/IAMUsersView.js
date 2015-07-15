@@ -5,9 +5,9 @@ var IAMUsersView = Backbone.View.extend({
             this.model = new UsageMonitorModel();
         }
         this.model.getUsers();
-        this.usageActivity = new IAMUsageView();
-        this.costActivity = new IAMCostView();
-        this.operationsActivity = new IAMOperationsView();
+        this.usageActivity = new UMUsageView();
+        this.costActivity = new UMCostView();
+        this.operationsActivity = new UMOperationsView();
         this.bindings();
         this.render();
     },

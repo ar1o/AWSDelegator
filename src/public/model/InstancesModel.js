@@ -3,7 +3,8 @@ var InstancesModel = Backbone.Model.extend({
 	initialize: function() {
 		var data = {};
 		var result;
-		this.change('dataReady');
+		this.change('instancesDataReady');
+		this.change('operationsDataReady');
 	},
 	ec2_result: function() {
 		var self = this;
@@ -32,7 +33,7 @@ var InstancesModel = Backbone.Model.extend({
 
 	getEC2Instances: function() {
 		var self = this;
-		InstanceCollection.reset();
+		ec2InstancesCollection.reset();
 		this.ec2_result().done(function(result) {
 			for (var r in result) {
 				var data = new ec2InstanceModel({
@@ -48,9 +49,9 @@ var InstancesModel = Backbone.Model.extend({
 					volumeid: result[r].VolumeId,
 					lastActiveTime: result[r].LastActiveTime
 				});
-				InstanceCollection.add(data);
+				ec2InstancesCollection.add(data);
 			}
-			self.set('dataReady', Date.now());
+			self.set('instancesDataReady', Date.now());
 		}).fail(function() {
 			console.log('FAILED');
 		});
@@ -72,14 +73,14 @@ var InstancesModel = Backbone.Model.extend({
 					});
 					operationsCollection.add(data);
 				}
-				self.set('dataReady', Date.now());
+				self.set('operationsDataReady', Date.now());
 			});
 		})(params);
 	},
 
 	getRDSInstances: function() {
 		var self = this;
-		InstanceCollection.reset();
+		rdsInstancesCollection.reset();
 		this.rds_result().done(function(result) {
 			for (var r in result) {
 				var data = new rdsInstanceModel({
@@ -96,9 +97,9 @@ var InstancesModel = Backbone.Model.extend({
 					multiAz: result[r].MultiAZ,
 					type: result[r].StorageType
 				});
-				InstanceCollection.add(data);
+				rdsInstancesCollection.add(data);
 			}
-			self.set('dataReady', Date.now());
+			self.set('instancesDataReady', Date.now());
 		}).fail(function() {
 			console.log('FAILED');
 		});
@@ -120,10 +121,38 @@ var InstancesModel = Backbone.Model.extend({
 					});
 					operationsCollection.add(data);
 				}
-				self.set('dataReady', Date.now());
+				self.set('operationsDataReady', Date.now());
 			});
 		})(params);
 	},
+
+	setEC2SelectedInstance: function(_instance, formUsageMonitorView) {
+		selectedInstanceCollection.reset();
+		var instanceId;
+		if(formUsageMonitorView == true){
+			instanceId = _instance;
+		}else{
+			instanceId = ec2InstancesCollection.at(_instance).get('instance');
+		}
+		var data = new selectedInstanceModel({
+			instance: instanceId 
+		});
+		selectedInstanceCollection.add(data);
+	},
+
+	setRDSSelectedInstance: function(_instance, formUsageMonitorView) {
+		selectedInstanceCollection.reset();
+		var instanceId;
+		if(formUsageMonitorView){
+			instanceId = _instance;
+		}else{
+			instanceId = rdsInstancesCollection.at(_instance).get('dbIdentifier');
+		}
+		var data = new selectedInstanceModel({
+			instance: instanceId 
+		});
+		selectedInstanceCollection.add(data);
+	}
 });
 
 var ec2InstanceModel = Backbone.Model.extend({
@@ -142,7 +171,7 @@ var ec2InstanceModel = Backbone.Model.extend({
 	}
 });
 
-var InstancesCollection = Backbone.Collection.extend({
+var EC2InstancesCollection = Backbone.Collection.extend({
 	model: ec2InstanceModel,
 	initialize: function() {
 		// This will be called when an item is added. pushed or unshifted
@@ -167,4 +196,28 @@ var rdsInstanceModel = Backbone.Model.extend({
 	}
 });
 
-var InstanceCollection = new InstancesCollection();
+var RDSInstancesCollection = Backbone.Collection.extend({
+	model: rdsInstanceModel,
+	initialize: function() {
+		// This will be called when an item is added. pushed or unshifted
+		this.on('add', function(model) {});
+	}
+});
+
+var selectedInstanceModel = Backbone.Model.extend({
+	defaults: {
+		instance: null
+	}
+});
+
+var SelectedInstanceCollection = Backbone.Collection.extend({
+	model: selectedInstanceModel,
+	initialize: function() {
+		// This will be called when an item is added. pushed or unshifted
+		this.on('add', function(model) {});
+	}
+});
+
+var ec2InstancesCollection = new EC2InstancesCollection();
+var rdsInstancesCollection = new RDSInstancesCollection();
+var selectedInstanceCollection = new SelectedInstanceCollection();

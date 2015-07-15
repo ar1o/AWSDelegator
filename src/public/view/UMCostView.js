@@ -1,12 +1,10 @@
-var IAMCostView = Backbone.View.extend({
-    className: 'IAMCostView',
+var UMCostView = Backbone.View.extend({
+    className: 'UMCostView',
 
     initialize: function(options) {
         if (!this.model) {
             this.model = new UsageMonitorModel();
         }
-        var self = this;
-        this.budgetIndex = -1;
         this.userColor = '';
         this.userName = '';
         this.bindings();
@@ -14,17 +12,16 @@ var IAMCostView = Backbone.View.extend({
     },
 
     updateViews: function(budgetIndex){
-        self.budgetIndex = budgetIndex;
-        this.model.getBudgetCostChart(self.budgetIndex);
+        this.model.getBudgetCostChart(budgetIndex);
     },
 
     updateUserAttributes: function(_name, _color){
-        self.userName = _name;
-        self.userColor = _color;
-        this.model.getUserCostBudget(self.budgetIndex,self.userName);
+        this.userName = _name;
+        this.userColor = _color;
     },
 
     bindings: function() {
+        var self = this;
         this.model.change('budgetCostDataReady', function(model, val) {
             this.render();
             var date = budgetCostCollection.at(budgetCostCollection.length-1).get('date').split(' ');
@@ -46,7 +43,7 @@ var IAMCostView = Backbone.View.extend({
             var month = parseInt(date1[1]);
             date1[1] = month - 1;
             var startDate = Date.UTC(date1[0], date1[1], date1[2], date2[0], date2[1], date2[2]);
-
+            var budgetIndex = budgetIndexCollection.at(0).get('index');
             $(function() {
                 $('#budgetCostContainer').highcharts({
                     chart: {
@@ -57,7 +54,7 @@ var IAMCostView = Backbone.View.extend({
                         enabled: false
                     },
                     title: {
-                        text: 'Group Cost Chart - '+budgetCollection.at(self.budgetIndex).get('budgetName')
+                        text: 'Group Cost Chart - '+budgetCollection.at(budgetIndex).get('budgetName')
                     },
                     xAxis: {
                         max: endDate,
@@ -110,26 +107,6 @@ var IAMCostView = Backbone.View.extend({
 
         this.model.change('userBudgetCostDataReady', function(model, val) {
             this.render();
-            var date = budgetCostCollection.at(budgetCostCollection.length-1).get('date').split(' ');
-            //date1=[year,month,date]
-            var date1 = date[0].split(/-/);
-            //date2=[hour,minute,second]                
-            var date2 = date[1].split(':');
-            //correction for JS viewing JAN as '00'
-            var month = parseInt(date1[1]);
-            date1[1] = month - 1;
-            var endDate = Date.UTC(date1[0], date1[1], date1[2], date2[0], date2[1], date2[2]);
-            
-            var date = budgetCostCollection.at(0).get('date').split(' ');
-            //date1=[year,month,date]
-            var date1 = date[0].split(/-/);
-            //date2=[hour,minute,second]                
-            var date2 = date[1].split(':');
-            //correction for JS viewing JAN as '00'
-            var month = parseInt(date1[1]);
-            date1[1] = month - 1;
-            var startDate = Date.UTC(date1[0], date1[1], date1[2], date2[0], date2[1], date2[2]);
-            
             var date = userBudgetCostCollection.at(userBudgetCostCollection.length-1).get('date').split(' ');
             //date1=[year,month,date]
             var date1 = date[0].split(/-/);
@@ -177,6 +154,7 @@ var IAMCostView = Backbone.View.extend({
                 var utcDate = Date.UTC(date1[0], date1[1], date1[2], date2[0], date2[1], date2[2]);
                 userCostData.push([utcDate,userBudgetCostCollection.at(i).get('cost')]);
             }
+            var budgetIndex = budgetIndexCollection.at(0).get('index');
             $(function() {
                 $('#budgetCostContainer').highcharts({
                     chart: {
@@ -187,7 +165,7 @@ var IAMCostView = Backbone.View.extend({
                         enabled: false
                     },
                     title: {
-                        text: 'Group Cost Chart - '+budgetCollection.at(self.budgetIndex).get('budgetName')
+                        text: 'Group Cost Chart - '+budgetCollection.at(budgetIndex).get('budgetName')
                     },
                     xAxis: {
                         max: endDate,
@@ -222,7 +200,7 @@ var IAMCostView = Backbone.View.extend({
                         enabled: true
                     },
                     series: [{
-                        name: budgetCollection.at(self.budgetIndex).get('batchName'),
+                        name: budgetCollection.at(budgetIndex).get('batchName'),
                         pointInterval: 3600 * 1000,
                         pointStart: startDate,
                         data: costData
@@ -241,12 +219,11 @@ var IAMCostView = Backbone.View.extend({
                     }
                 });
             });
-
         }.bind(this));
     },
 
     render: function() {
-        var html = Handlebars.templates.IAMCostView;
+        var html = Handlebars.templates.UMCostView;
         this.$el.html(html);
     }
 });
