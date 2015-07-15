@@ -1,16 +1,15 @@
 var BillingsModel = Backbone.Model.extend({
 	initialize: function() {
-		this.change('dataReady');
+		this.change('billingDataReady');
 		this.change('operationDataReady');
 	},
 
-	getBilling: function(instanceid, volumeId) {
+	getBilling: function(instanceid) {
 		totalCostInstancesCollection.reset();
 		var self = this;
 		var count = 0;
 		var params = {
 			instance: instanceid,
-			volume: volumeId
 		};
 
 		(function(params) {
@@ -23,12 +22,34 @@ var BillingsModel = Backbone.Model.extend({
 					});
 					totalCostInstancesCollection.add(data);
 				}
-				self.set('dataReady', Date.now());
+				self.set('billingDataReady', Date.now());
 			});
 		})(params);
 	},
 
-	calcTotalCost: function(instanceid, volumeId) {
+	calcTotalCost: function(instanceid) {
+		TCost.reset();
+		var self = this;
+		var params = {
+			instance: instanceid
+		};
+
+		(function(params) {
+			$.get(host + '/api/billing/calcTotalCost', params, function(result) {
+				for (var i in result) {
+					var data = new BillingModel({
+						resourceId: params.instance,
+						cost: result[i].Total,
+						date: result[i]._id
+					});
+					TCost.add(data);
+				}
+				self.getBilling(instanceid);
+			});
+		})(params);
+	},
+
+	calcTotalCostForInstance: function(instanceid) {
 		TCost.reset();
 		//First check for the number of attached volumes
 		var volumeArray = volumeId.split(',');
@@ -52,11 +73,12 @@ var BillingsModel = Backbone.Model.extend({
 			});
 		})(params);
 	},
-	calculateOperationCost: function(selected, resourceId, product){
+
+	calculateOperationCost: function(opName, resourceId, product){
 		operationCostCollection.reset();
 		var self = this;
 		var params = {
-			operation: selected[0],
+			operation: opName,
 			instance: resourceId,
 			productName: product
 		};
@@ -65,10 +87,8 @@ var BillingsModel = Backbone.Model.extend({
 				for (var i in result) {
 					var data = new operationCostModel({
 						resourceId: resourceId,
-						operation: selected[0],
-						color: selected[1],
-						cost: result[i].Cost,
-						date: result[i].UsageStartDate
+						date: result[i].UsageStartDate,
+						cost: result[i].Cost
 					});
 					operationCostCollection.add(data);
 				}
@@ -92,7 +112,7 @@ var BillingsModel = Backbone.Model.extend({
 					});
 					totalCostInstancesCollection.add(data);
 				}
-				self.set('dataReady', Date.now());
+				self.set('billingDataReady', Date.now());
 			});
 		})(params);
 	}

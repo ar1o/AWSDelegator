@@ -99,7 +99,6 @@ body {
 #rdsCpuContainer {
   width: 47%;
   margin-right: 20px;
-  margin-left: 20px;
   margin-top: 20px;
   float: right;
 }
@@ -111,7 +110,13 @@ body {
 }
 #readWriteIopsContainer {
   width: 47%;
-  margin-left: 20px;
+  margin-right: 20px;
+  margin-top: 20px;
+  float: right;
+}
+#dbConnectionsContainer {
+  width: 47%;
+  margin-right: 20px;
   margin-top: 20px;
   float: right;
 }
@@ -345,6 +350,11 @@ div#awsoperationscontainer {
   margin-top: 20px;
 }
 .OperationsView {
+  width: 47%;
+  margin-right: 20px;
+  float: right;
+}
+.EC2OperationsView {
   width: 47%;
   margin-right: 20px;
   float: right;

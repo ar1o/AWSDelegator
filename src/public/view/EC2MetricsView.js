@@ -11,16 +11,16 @@ var EC2MetricsView = Backbone.View.extend({
     },
 
     bindings: function() {
-        this.model.change('dataReady', function(model, val) {
-            var date = new Date(MetricsCollection.at(0).get('time'));
+        this.model.change('metricsDataReady', function(model, val) {
+            var date = new Date(ec2MetricsCollection.at(0).get('time'));
             var dataNetworkIn = []
             var dataNetworkOut = []
             var dataCpuUtilization = []
             var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sept','Oct','Nov','Dec'];
-            for(var i=0;i<MetricsCollection.length;++i){        
-                dataNetworkIn.push([MetricsCollection.at(i).get('time'),MetricsCollection.at(i).get('networkIn')]);  
-                dataNetworkOut.push([MetricsCollection.at(i).get('time'),MetricsCollection.at(i).get('networkOut')]);
-                dataCpuUtilization.push([MetricsCollection.at(i).get('time'),MetricsCollection.at(i).get('cpuUtilization')]);
+            for(var i=0;i<ec2MetricsCollection.length;++i){        
+                dataNetworkIn.push([ec2MetricsCollection.at(i).get('time'),ec2MetricsCollection.at(i).get('networkIn')]);  
+                dataNetworkOut.push([ec2MetricsCollection.at(i).get('time'),ec2MetricsCollection.at(i).get('networkOut')]);
+                dataCpuUtilization.push([ec2MetricsCollection.at(i).get('time'),ec2MetricsCollection.at(i).get('cpuUtilization')]);
             } 
             this.render();
 
@@ -31,7 +31,7 @@ var EC2MetricsView = Backbone.View.extend({
                         backgroundColor: '#f7f7f7'
                     },
                     title: {
-                        text: MetricsCollection.at(0).get('instance')+' Network-Usage'
+                        text: selectedInstanceCollection.at(0).get('instance')+' Network-Usage'
                     },
                     credits: {
                         enabled: false
@@ -56,7 +56,7 @@ var EC2MetricsView = Backbone.View.extend({
                     tooltip: {
                         formatter: function() {
                             return '<b>'+ this.series.name +'</b><br/>'+
-                                new Date(this.x) +', '+ this.y;
+                                new Date(this.x) +', '+ this.y.toFixed(4);
                         }
                     },
                     legend: {
@@ -85,7 +85,7 @@ var EC2MetricsView = Backbone.View.extend({
                         backgroundColor: '#f7f7f7'
                     },
                     title: {
-                        text: MetricsCollection.at(0).get('instance')+' CPU-Usage'
+                        text: selectedInstanceCollection.at(0).get('instance')+' CPU-Usage'
                     },
                     credits: {
                         enabled: false
@@ -110,7 +110,7 @@ var EC2MetricsView = Backbone.View.extend({
                     tooltip: {
                         formatter: function() {
                             return '<b>'+ this.series.name +'</b><br/>'+
-                                new Date(this.x) +', '+ this.y;
+                                new Date(this.x) +', '+ this.y.toFixed(4);
                         }
                     },
                     legend: {
@@ -131,7 +131,7 @@ var EC2MetricsView = Backbone.View.extend({
 
     render: function() {
         var html = Handlebars.templates.EC2MetricsView({
-            metrics: MetricsCollection.toJSON()
+            metrics: ec2MetricsCollection.toJSON()
         });
         this.$el.html(html);
     }

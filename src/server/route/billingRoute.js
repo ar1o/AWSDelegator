@@ -1,59 +1,61 @@
 //function/query to take a instance RID value, and sum both nonfree cost, and cost for per hour, then add theses values per hour
 exports.calcTotalCost = function(req, res) {
     var rid = req.query.instance;
-    var vid =req.query.volume;
-    vid = vid.split(',');
-    mongoose.model('Billings').aggregate([
-        {
-            $match: {
-                $or: [{ResourceId: {$eq: rid}},{ ResourceId: {$in : vid}}]
-            }
-        },{
-
-            $project: {
-                _id: 1,
-                UsageStartDate: 1,
-                ResourceId: 1,
-                Cost: 1,
-                NonFreeCost: 1
-            }
-        },{
-            $group: {
-                _id: "$UsageStartDate",
-                ResourceId: {
-                    $addToSet: "$ResourceId"
-                },
-                Cost: {
-                    $addToSet: "$Cost"
-                },
-                TCost: {
-                    $sum: "$Cost"
-                },
-                NonFreeCost: {
-                    $addToSet: "$NonFreeCost"
-                },
-                TNonFreeCost: {
-                    $sum: "$NonFreeCost"
+    mongoose.model('ec2Instances').findOne({
+        Id: rid
+    }).exec(function(e,d1){
+        if(e) throw e;
+        mongoose.model('Billings').aggregate([
+            {
+                $match: {
+                    $or: [{ResourceId: {$eq: rid}},{ ResourceId: {$in : d1.VolumeId}}]
                 }
-            }
-        },{
-            $project: {
-                _id: 1,
-                VolumeId: 1,
-                ResourceId: 1,
-                Total: {
-                    $add: ['$TNonFreeCost', '$TCost']
+            },{
+                $project: {
+                    _id: 1,
+                    UsageStartDate: 1,
+                    ResourceId: 1,
+                    Cost: 1,
+                    NonFreeCost: 1
                 }
+            },{
+                $group: {
+                    _id: "$UsageStartDate",
+                    ResourceId: {
+                        $addToSet: "$ResourceId"
+                    },
+                    Cost: {
+                        $addToSet: "$Cost"
+                    },
+                    TCost: {
+                        $sum: "$Cost"
+                    },
+                    NonFreeCost: {
+                        $addToSet: "$NonFreeCost"
+                    },
+                    TNonFreeCost: {
+                        $sum: "$NonFreeCost"
+                    }
+                }
+            },{
+                $project: {
+                    _id: 1,
+                    VolumeId: 1,
+                    ResourceId: 1,
+                    Total: {
+                        $add: ['$TNonFreeCost', '$TCost']
+                    }
+                }
+            },{
+                $sort: {
+                    _id: 1
+                }
+            
             }
-        },{
-            $sort: {
-                _id: 1
-            }
-        
-        }
-    ]).exec(function(e, d) {
-        res.send(d);
-    });
+        ]).exec(function(e, d) {
+            res.send(d);
+        });
+    })        
 }
 
 exports.operationCost = function(req, res) {
@@ -245,14 +247,14 @@ exports.groupByMonthNF = function(req, res) {
  */
 exports.instanceCostAll = function(req, res) {
     var instanceId = req.query.instance;
-    var volumeId = req.query.volume;
-    volumeId = volumeId.split(',');
-
-
+    mongoose.model('ec2Instances').findOne({
+        Id: instanceId
+    }).exec(function(e,d1){
+        if(e) throw e;
         mongoose.model('Billings').aggregate([
         {
             $match: {
-                $or: [{ResourceId: {$eq: instanceId}},{ ResourceId: {$in : volumeId}}]
+                $or: [{ResourceId: {$eq: instanceId}},{ ResourceId: {$in : d1.VolumeId}}]
             }
         },{
 
@@ -281,7 +283,8 @@ exports.instanceCostAll = function(req, res) {
             }
         
         }
-    ]).exec(function(e, d) {
-        res.send(d);
+        ]).exec(function(e, d) {
+            res.send(d);
+        });
     });
 };
