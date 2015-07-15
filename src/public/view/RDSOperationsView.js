@@ -5,13 +5,14 @@ var RDSOperationsView = Backbone.View.extend({
         if (!this.model) {
             this.model = new InstancesModel();
         }
-        self = this;
-        rdsBillingActivity = new RDSBillingView();
+        this.rdsBillingActivity = new RDSBillingView();
         this.bindings();
+        this.render();
     },
 
     bindings: function() {
-        this.model.change('dataReady', function(model, val) {
+        var self = this;
+        this.model.change('operationsDataReady', function(model, val) {
             this.render();
             var dataOperations = [];
             for (var i = 0; i < operationsCollection.length; i++) {
@@ -28,13 +29,13 @@ var RDSOperationsView = Backbone.View.extend({
                     colors: ['#50B432', '#ED561B', '#DDDF00', '#24CBE5', 
                              '#64E572', '#FF9655', '#FFF263', '#6AF9C4'],
                     title: {
-                        text: 'Operations'
+                        text: selectedInstanceCollection.at(0).get('instance')+' Operations'
                     },
                     credits: {
                         enabled: false
                     },
                     tooltip: {
-                        pointFormat: '{series.name}: <b>USD{point.y:.4f}</b>'
+                        pointFormat: '{series.name}: <b>USD {point.y:.4f}</b>'
                     },
                     plotOptions: {
                         pie: {
@@ -55,7 +56,7 @@ var RDSOperationsView = Backbone.View.extend({
                         point: {
                             events: {
                                 click: function(event) {
-                                    rdsBillingActivity.updateView([this.name,this.color]);
+                                    self.rdsBillingActivity.updateView(this.name,this.color);
                                 }
                             }
                         }

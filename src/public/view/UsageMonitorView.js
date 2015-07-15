@@ -4,10 +4,26 @@ var UsageMonitorView = Backbone.View.extend({
         if (!this.model) {
             this.model = new UsageMonitorModel();
         }
-        this.userActivity = new IAMUsersView();
-        this.groupActivity = new IAMGroupsView();
         this.model.getBudgets();
+        this.operationsActivity = new UMOperationsView();
+        this.usageActivity = new UMUsageView();
+        this.costActivity = new UMCostView();
+        this.groupUserServiceView = new UMGroupUserServiceView();
         this.bindings();
+    },
+
+    updateUserViews: function(rowIndex) {
+        this.operationsActivity.model.getUserServiceUsageChart(rowIndex);
+        this.usageActivity.model.getBudgetUsageChart(rowIndex);
+        this.groupUserServiceView.setUser(budgetCollection.at(rowIndex).get('batchName'));
+        this.groupUserServiceView.model.getUserServiceUsageChart(rowIndex);
+        this.costActivity.model.getBudgetCostChart(rowIndex);
+    },
+
+    updateGroupViews: function(rowIndex) {
+        this.operationsActivity.model.getGroupServiceUsageChart(rowIndex);
+        this.usageActivity.model.getBudgetUsageChart(rowIndex);
+        this.costActivity.model.getBudgetCostChart(rowIndex);
     },
 
     bindings: function() {
@@ -26,12 +42,13 @@ var UsageMonitorView = Backbone.View.extend({
 
         this.$el.on('click', '#BudgetTable tr', function() {
             var rowIndex = this.rowIndex - 1; 
+            self.model.setBudgetIndex(rowIndex);
             if(budgetCollection.at(rowIndex).get('batchType')=='user'){
-                self.userActivity.updateViews(rowIndex);
-                window.location.hash = '#/IAMUsers';
+                $("#serviceContainer").remove();
+                self.updateUserViews(rowIndex);
             }else{
-                self.groupActivity.updateViews(rowIndex);
-                window.location.hash = '#/IAMGroups';
+                $("#groupUserServiceContainer").remove();
+                self.updateGroupViews(rowIndex);
             }
         });
     },
@@ -41,5 +58,9 @@ var UsageMonitorView = Backbone.View.extend({
             budgets: budgetCollection.toJSON()
         });
         this.$el.html(html);
+        this.$el.append(this.operationsActivity.el);
+        this.$el.append(this.usageActivity.el);
+        this.$el.append(this.groupUserServiceView.el);
+        this.$el.append(this.costActivity.el);
     }
 });

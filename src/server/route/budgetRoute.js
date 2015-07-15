@@ -279,7 +279,7 @@ exports.groupServiceUsage = function(req, res) {
 			}, {
 				$project: {
 					_id: 0,
-					'Operation': 1,
+					Operation: 1,
 					Cost: 1
 				}
 			}, {
@@ -374,7 +374,7 @@ exports.userServiceUsage = function(req, res) {
 			}, {
 				$project: {
 					_id: 0,
-					'Operation': 1,
+					Operation: 1,
 					Cost: 1
 				}
 			}, {
@@ -391,6 +391,197 @@ exports.userServiceUsage = function(req, res) {
 					_res[d2[i]._id]['total']=d2[i].Total;
 				}
 				result[d[index1]._id]['operation']=_res;
+				callback1();
+			});
+		};
+		controller1();
+	});
+}
+
+exports.groupUserService = function(req,res){
+	var	userName=req.query.userName;
+	var	groupName=req.query.groupName;
+	var startDate = req.query.startDate;
+	var endDate = req.query.endDate;
+	mongoose.model('Billings').aggregate([{
+		$match: {
+			$and: [{
+				UsageStartDate: {
+					$gte: startDate
+				}
+			}, {
+				UsageStartDate: {
+					$lte: endDate
+				}
+			}, {
+				'user:Name': userName 
+			}, {
+				'user:Group': groupName
+			}]
+		}
+	}, {
+		$project: {
+			_id: 0,
+			ProductName: 1,
+			Cost: 1
+		}
+	}, {
+		$group: {
+			_id: '$ProductName',
+			Total: {
+				$sum: "$Cost"
+			}
+		}
+	}]).exec(function(e, d) {
+		var result = {};
+		for(var i=0 in d){
+			result[d[i]._id]={};
+			result[d[i]._id]['total']=d[i].Total;
+		}
+		var index1 = 0;
+		var controller1 = function() {
+			iterator1(function() {
+				index1++;
+				if (index1 < d.length) controller1();
+				else {
+					res.send(result);
+				}
+			});
+		};
+		var iterator1 = function(callback1) {
+			mongoose.model('Billings').aggregate([{
+				$match: {
+					$and: [{
+						UsageStartDate: {
+							$gte: startDate
+						}
+					}, {
+						UsageStartDate: {
+							$lte: endDate
+						}
+					}, {
+						'user:Name': userName
+					}, {
+						'user:Group': groupName
+					}, {
+						'ProductName': d[index1]._id
+					}]
+				}
+			}, {
+				$project: {
+					_id: 0,
+					ResourceId: 1,
+					Cost: 1
+				}
+			}, {
+				$group: {
+					_id: '$ResourceId',
+					Total: {
+						$sum: "$Cost"
+					}
+				}
+			}]).exec(function(e, d2) {
+				var _res = {}
+				for(var i=0 in d2){
+					_res[d2[i]._id]={};
+					_res[d2[i]._id]['total']=d2[i].Total;
+				}
+				result[d[index1]._id]['resourceId']=_res;
+				callback1();
+			});
+		};
+		controller1();
+	});
+}
+
+exports.userService = function(req,res){
+	var	userName=req.query.userName;
+	var startDate = req.query.startDate;
+	var endDate = req.query.endDate;
+	mongoose.model('Billings').aggregate([{
+		$match: {
+			$and: [{
+				UsageStartDate: {
+					$gte: startDate
+				}
+			}, {
+				UsageStartDate: {
+					$lte: endDate
+				}
+			}, {
+				'user:Name': userName 
+			}, {
+				'user:Group': 'null'
+			}]
+		}
+	}, {
+		$project: {
+			_id: 0,
+			ProductName: 1,
+			Cost: 1
+		}
+	}, {
+		$group: {
+			_id: '$ProductName',
+			Total: {
+				$sum: "$Cost"
+			}
+		}
+	}]).exec(function(e, d) {
+		var result = {};
+		for(var i=0 in d){
+			result[d[i]._id]={};
+			result[d[i]._id]['total']=d[i].Total;
+		}
+		var index1 = 0;
+		var controller1 = function() {
+			iterator1(function() {
+				index1++;
+				if (index1 < d.length) controller1();
+				else {
+					res.send(result);
+				}
+			});
+		};
+		var iterator1 = function(callback1) {
+			mongoose.model('Billings').aggregate([{
+				$match: {
+					$and: [{
+						UsageStartDate: {
+							$gte: startDate
+						}
+					}, {
+						UsageStartDate: {
+							$lte: endDate
+						}
+					}, {
+						'user:Name': userName
+					}, {
+						'user:Group': 'null'
+					}, {
+						'ProductName': d[index1]._id
+					}]
+				}
+			}, {
+				$project: {
+					_id: 0,
+					ResourceId: 1,
+					Cost: 1
+				}
+			}, {
+				$group: {
+					_id: '$ResourceId',
+					Total: {
+						$sum: "$Cost"
+					}
+				}
+			}]).exec(function(e, d2) {
+				var _res = {}
+				for(var i=0 in d2){
+					_res[d2[i]._id]={};
+					_res[d2[i]._id]['total']=d2[i].Total;
+				}
+				result[d[index1]._id]['resourceId']=_res;
 				callback1();
 			});
 		};

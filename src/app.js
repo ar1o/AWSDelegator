@@ -23,7 +23,6 @@ mongoose.connect(databaseUrl, function(error) {
 });
 var db = mongoose.connection;
 db.on("open", function() {
-
     require(__dirname +'/server/model/ec2');
     require(__dirname +'/server/model/rds');
     require(__dirname +'/server/model/latest');
@@ -87,12 +86,12 @@ app.get('/api/usage/groups', require(__dirname + '/server/route/iamRoute').group
 app.get('/api/usage/users', require(__dirname + '/server/route/iamRoute').users);
 app.get('/api/usage/budget', require(__dirname + '/server/route/budgetRoute').budgets);
 app.get('/api/usage/budgetCost', require(__dirname + '/server/route/budgetRoute').cost);
+app.get('/api/usage/groupUserService', require(__dirname + '/server/route/budgetRoute').groupUserService);
+app.get('/api/usage/userService', require(__dirname + '/server/route/budgetRoute').userService);
 app.get('/api/usage/budgetUsage', require(__dirname + '/server/route/budgetRoute').usage);
 app.get('/api/usage/userBudgetCost', require(__dirname + '/server/route/budgetRoute').userCost);
 app.get('/api/usage/groupServiceUsage', require(__dirname + '/server/route/budgetRoute').groupServiceUsage);
 app.get('/api/usage/userServiceUsage', require(__dirname + '/server/route/budgetRoute').userServiceUsage);
-
-
 
 var mongodb = require('mongodb');
 var MongoClient = mongodb.MongoClient;

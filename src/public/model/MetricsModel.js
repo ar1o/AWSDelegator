@@ -1,21 +1,12 @@
-var MetricsCollection = Backbone.Collection.extend({
-	initialize: function() {
-		// This will be called when an item is added. pushed or unshifted
-		this.on('add', function(model) {
-			// console.log('something got added');
-		});
-	}
-});
-
 // The instances model where we manipulate the data from AWS
 var MetricsModel = Backbone.Model.extend({
 	initialize: function() {
 		var self = this;
-		this.change('dataReady');
+		this.change('metricsDataReady');
 	},
 
 	getEC2Metrics: function(instanceid) {
-		MetricsCollection.reset();
+		ec2MetricsCollection.reset();
 		var self = this;
 		var count = 0;
 		var params = {
@@ -32,40 +23,15 @@ var MetricsModel = Backbone.Model.extend({
 						cpuUtilization: result[i].CPUUtilization,
 						time: result[i].Time
 					});
-					MetricsCollection.add(data);
+					ec2MetricsCollection.add(data);
 				}
-				self.set('dataReady', Date.now());
+				self.set('metricsDataReady', Date.now());
 			});
 		})(params);
 	},
 
 	getRDSMetrics: function(instanceid) {
-		MetricsCollection.reset();
-		var self = this;
-		var count = 0;
-		var params = {
-			instance: instanceid
-		};
-
-		(function(params) {
-			$.get(host + '/api/ec2/metrics', params, function(result) {
-				for (var i in result) {
-					var data = new ec2MetricModel({
-						instance: result[i].InstanceId,
-						networkIn: result[i].NetworkIn,
-						networkOut: result[i].NetworkOut,
-						cpuUtilization: result[i].CPUUtilization,
-						time: result[i].Time
-					});
-					metricsCollection.add(data);
-				}
-				self.set('dataReady', Date.now());
-			});
-		})(params);
-	},
-
-	getRDSMetrics: function(instanceid) {
-		MetricsCollection.reset();
+		rdsMetricsCollection.reset();
 		var self = this;
 		var count = 0;
 		var params = {
@@ -78,17 +44,26 @@ var MetricsModel = Backbone.Model.extend({
 					var data = new rdsMetricModel({
 						instance: result[i].DBInstanceIdentifier,
 						cpuUtilization: result[i].CPUUtilization,
-						// dbConnections: result[i].DatabaseConnections,
+						dbConnections: result[i].DatabaseConnections,
 						diskQueueDepth: result[i].DiskQueueDepth,
 						readIOPS: result[i].ReadIOPS,
 						writeIOPS: result[i].WriteIOPS,
 						time: result[i].Time
 					});
-					MetricsCollection.add(data);
+					rdsMetricsCollection.add(data);
 				}
-				self.set('dataReady', Date.now());
+				self.set('metricsDataReady', Date.now());
 			});
 		})(params);
+	}
+});
+
+var MetricsCollection = Backbone.Collection.extend({
+	initialize: function() {
+		// This will be called when an item is added. pushed or unshifted
+		this.on('add', function(model) {
+			// console.log('something got added');
+		});
 	}
 });
 
@@ -103,11 +78,22 @@ var ec2MetricModel = Backbone.Model.extend({
 	}
 });
 
+var EC2MetricsCollection = Backbone.Collection.extend({
+	model: ec2MetricModel,
+	initialize: function() {
+		// This will be called when an item is added. pushed or unshifted
+		this.on('add', function(model) {
+			// console.log('something got added');
+		});
+	}
+});
+
+
 var rdsMetricModel = Backbone.Model.extend({
 	defaults: {
 		instance: String,
 		cpuUtilization: Number,
-		// dbConnections: Number,
+		dbConnections: Number,
 		diskQueueDepth: Number,
 		readIOPS: Number,
 		writeIOPS: Number,
@@ -115,5 +101,17 @@ var rdsMetricModel = Backbone.Model.extend({
 	}
 });
 
+var RDSMetricsCollection = Backbone.Collection.extend({
+	model: rdsMetricModel,
+	initialize: function() {
+		// This will be called when an item is added. pushed or unshifted
+		this.on('add', function(model) {
+			// console.log('something got added');
+		});
+	}
+});
+
+
 // Create the collection
-var MetricsCollection = new MetricsCollection();
+var ec2MetricsCollection = new EC2MetricsCollection();
+var rdsMetricsCollection = new RDSMetricsCollection();

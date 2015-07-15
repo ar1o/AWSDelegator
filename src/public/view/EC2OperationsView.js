@@ -1,24 +1,25 @@
 var EC2OperationsView = Backbone.View.extend({
-    className: 'OperationsView',
+    className: 'EC2OperationsView',
 
     initialize: function(options) {
         if (!this.model) {
             this.model = new InstancesModel();
         }
-        self = this;
-        ec2BillingActivity = new EC2BillingView();
+        this.ec2BillingActivity = new EC2BillingView();
         this.bindings();
+        this.render();
     },
 
     bindings: function() {
-        this.model.change('dataReady', function(model, val) {
+        var self = this;
+        this.model.change('operationsDataReady', function(model, val) {
             this.render();
             var dataOperations = [];
             for (var i = 0; i < operationsCollection.length; i++) {
                 dataOperations.push({name: operationsCollection.at(i).get('operation'), y:operationsCollection.at(i).get('percentage'), id: i});
             }
             $(function() {
-                $('#operationscontainer').highcharts({
+                $('#ec2operationscontainer').highcharts({
                     chart: {
                         plotBackgroundColor: null,
                         plotBorderWidth: null,
@@ -28,13 +29,13 @@ var EC2OperationsView = Backbone.View.extend({
                     colors: ['#50B432', '#ED561B', '#DDDF00', '#24CBE5', 
                              '#64E572', '#FF9655', '#FFF263', '#6AF9C4'],
                     title: {
-                        text: 'Operations'
+                        text: selectedInstanceCollection.at(0).get('instance')+' Operations'
                     },
                     credits: {
                         enabled: false
                     },
                     tooltip: {
-                        pointFormat: '{series.name}: <b>USD{point.y:.4f}</b>'
+                        pointFormat: '{series.name}: <b>USD {point.y:.4f}</b>'
                     },
                     plotOptions: {
                         pie: {
@@ -55,7 +56,7 @@ var EC2OperationsView = Backbone.View.extend({
                         point: {
                             events: {
                                 click: function(event) {
-                                    ec2BillingActivity.updateView([this.name,this.color]);
+                                    self.ec2BillingActivity.updateView(this.name,this.color);
                                 }
                             }
                         }
@@ -66,7 +67,7 @@ var EC2OperationsView = Backbone.View.extend({
     },
 
     render: function() {
-        var html = Handlebars.templates.OperationsView;
+        var html = Handlebars.templates.EC2OperationsView;
         this.$el.html(html);
     }
 });

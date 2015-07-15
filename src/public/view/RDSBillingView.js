@@ -4,14 +4,18 @@ var RDSBillingView = Backbone.View.extend({
         if (!this.model) {
             this.model = new BillingsModel();
         }
-
-        this.render();
+        this.opName;
+        this.opColor;
         this.bindings();
+        this.render();
     },
-    updateView: function(selected){
-        this.model.calculateOperationCost(selected,totalCostInstancesCollection.at(0).get('resourceId'),'Amazon RDS Service');
+    updateView: function(name,color){
+        this.opName = name;
+        this.opColor = color;
+        this.model.calculateOperationCost(name,totalCostInstancesCollection.at(0).get('resourceId'),'Amazon RDS Service');
     },
     bindings: function() {
+        var self = this;
         this.model.change('operationDataReady', function(model, val) {
             this.render();
             var date = totalCostInstancesCollection.at(0).get('date').split(' ');
@@ -21,8 +25,6 @@ var RDSBillingView = Backbone.View.extend({
             date1[1]= date1[1]-1;             
             //date2=[hour,minute,second]                
             var date2 = date[1].split(':');
-            var resId = totalCostInstancesCollection.at(0).get('resourceId');
-            resId = resId.substring(resId.lastIndexOf(':') + 1, resId.length);
             if (operationCostCollection.length != 0) {
                 var opDate = operationCostCollection.at(0).get('date').split(' ');
                 var opDate1 = opDate[0].split(/-/);
@@ -47,7 +49,7 @@ var RDSBillingView = Backbone.View.extend({
                             backgroundColor: '#f7f7f7'
                         },
                         title: {
-                            text: resId + ' Cost'
+                            text: selectedInstanceCollection.at(0).get('instance') + ' Cost'
                         },
                         credits: {
                             enabled: false
@@ -77,7 +79,7 @@ var RDSBillingView = Backbone.View.extend({
                             }
                         },
                         legend: {
-                            enabled: false
+                            enabled: true
                         },
                         series: [{
                             name: 'Cost',
@@ -86,8 +88,8 @@ var RDSBillingView = Backbone.View.extend({
                             data: totalCostInstancesCollection.pluck('cost')
 
                         }, {
-                            name: operationCostCollection.at(0).get('operation'),
-                            color: operationCostCollection.at(0).get('color'),
+                            name: self.opName,
+                            color: self.opColor,
                             pointInterval: 3600 * 1000,
                             pointStart: opData[0][0],
                             data: opData
@@ -103,7 +105,7 @@ var RDSBillingView = Backbone.View.extend({
             }
         }.bind(this));
 
-        this.model.change('dataReady', function(model, val) {
+        this.model.change('billingDataReady', function(model, val) {
             this.render();
             var date = totalCostInstancesCollection.at(0).get('date').split(' ');
             date1=date[1].substring(0,date[1].length-1);

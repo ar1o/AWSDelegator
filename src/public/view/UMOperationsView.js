@@ -1,28 +1,15 @@
-var IAMOperationsView = Backbone.View.extend({
-    className: 'IAMOperationsView',
+var UMOperationsView = Backbone.View.extend({
+    className: 'UMOperationsView',
 
     initialize: function(options) {
         if (!this.model) {
             this.model = new UsageMonitorModel();
         }
-        this.budgetIndex = -1;
-        this.userColor = '';
-        this.userName = '';
         this.bindings();
-        this.render();
-    },
-
-    updateGroupView: function(budgetIndex){
-        this.budgetIndex = budgetIndex;
-        this.model.getGroupServiceUsageChart(budgetIndex);
-    },
-
-    updateUserView: function(budgetIndex){
-        this.budgetIndex = budgetIndex;
-        this.model.getUserServiceUsageChart(budgetIndex);
     },
 
     bindings: function() {
+        var self = this;
         this.model.change('serviceDataReady', function(model, val) {
             this.render();
             $(function() {
@@ -83,14 +70,14 @@ var IAMOperationsView = Backbone.View.extend({
                         });
                     }
                 }
-
+                var budgetIndex = budgetIndexCollection.at(0).get('index');
                 // Create the chart
                 $('#serviceContainer').highcharts({
                     chart: {
                         type: 'pie'
                     },
                     title: {
-                        text: 'Services Cost Chart - '+budgetCollection.at(self.budgetIndex).get('budgetName')
+                        text: 'Services Cost Chart - '+budgetCollection.at(budgetIndex).get('budgetName')
                     },
                     yAxis: {
                         title: {
@@ -136,7 +123,7 @@ var IAMOperationsView = Backbone.View.extend({
     },
 
     render: function() {
-        var html = Handlebars.templates.IAMOperationsView;
+        var html = Handlebars.templates.UMOperationsView;
         this.$el.html(html);
     }
 });
