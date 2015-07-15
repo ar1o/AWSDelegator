@@ -9,7 +9,6 @@ exports.calcTotalCost = function(req, res) {
                 $or: [{ResourceId: {$eq: rid}},{ ResourceId: {$in : vid}}]
             }
         },{
-
             $project: {
                 _id: 1,
                 UsageStartDate: 1,
@@ -49,7 +48,6 @@ exports.calcTotalCost = function(req, res) {
             $sort: {
                 _id: 1
             }
-        
         }
     ]).exec(function(e, d) {
         res.send(d);

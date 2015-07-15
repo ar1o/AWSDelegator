@@ -18,7 +18,8 @@ exports.s3Connect = function(_callback) {
     // parseBills();
     AWS.config.credentials = awsCredentials.default;
     // parseAWSServices();
-    // timeOutHandler.checkBudgets();
+    timeOutHandler.checkBudgets();
+    // timeOutHandler.notification();
 };
 
 var parseBills = function() {
@@ -186,6 +187,8 @@ var parseIAM = function(callback){
 s3.s3Watch = function() {
     console.log("Watching s3 bucket on timer of 60 minutes");
     setTimeout(self.s3Connect.bind(self), 1000 * 60 * 60);
+        // setTimeout(self.s3Connect.bind(self), 1000 * 6);
+
 };
 
 exports.updateAWSRegion = function(newRegion) {

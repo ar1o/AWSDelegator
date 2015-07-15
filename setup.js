@@ -7,10 +7,13 @@ var iamParser = require('./src/server/parse/iamParse');
 var billingParser = require('./src/server/parse/billingParse');
 var boxPricingParser = require('./src/server/parse/boxPricingParse');
 require('./src/server/config');
-var batch = [], groups = [], users = [];
+var batch = [],
+    groups = [],
+    users = [];
 
 billingAttributes = ['RateId', 'ProductName', 'UsageType', 'Operation', 'AvailabilityZone', 'ItemDescription',
-    'UsageStartDate', 'UsageQuantity', 'Rate', 'Cost', 'user:Volume Id', 'user:Name', 'user:Email', 'ResourceId'];
+    'UsageStartDate', 'UsageQuantity', 'Rate', 'Cost', 'user:Volume Id', 'user:Name', 'user:Email', 'ResourceId'
+];
 numericAttirbutes = ['RateId', 'UsageQuantity', 'Rate', 'Cost'];
 
 //create /data directory
@@ -33,9 +36,9 @@ var setupServer = function() {
             console.log('SetupAlert: parsing metrics');
             parseMetrics(function() {
                 console.log('SetupAlert: parsing groups and users');
-                parseUsersGroups(function(){               
+                parseUsersGroups(function() {
                     console.log('SetupAlert: parsing box pricing');
-                    parseBoxPricing(function(){
+                    parseBoxPricing(function() {
                         console.log('SetupAlert: parsing bills');
                         parseBills(function() {
                             console.log('Setup script completed, You may now start the server');
@@ -48,7 +51,7 @@ var setupServer = function() {
     });
 };
 
-var setupDatabase = function(callback){
+var setupDatabase = function(callback) {
     MongoClient.connect(databaseUrl, function(err, db) {
         if (err) throw err;
         console.log("DatabaseAlert: connected to ", databaseUrl);
@@ -58,7 +61,7 @@ var setupDatabase = function(callback){
         var currentTimeIso = new Date(currentTimeMilliseconds).toISOString();
         var _time = currentTimeIso.split('T');
         _time[1] = _time[1].substring(0, _time[1].indexOf('.'));
-        _time = _time[0] + ' ' + _time[1];        
+        _time = _time[0] + ' ' + _time[1];
         db.collection('latest').save({
             _id: '1',
             time: '2015-01-01 00:00:00'
@@ -68,7 +71,7 @@ var setupDatabase = function(callback){
             time: _time
         });
         require('./src/server/model/ec2');
-        require('./src/server/model/rds');        
+        require('./src/server/model/rds');
         db.createCollection('ec2Instances', function(err, collection) {
             if (err) throw err;
             console.log("DatabaseAlert: 'ec2Instances' collection created");
@@ -81,7 +84,11 @@ var setupDatabase = function(callback){
                     db.createCollection('iamUsers', function(err, collection) {
                         if (err) throw err;
                         console.log("DatabaseAlert: 'iamUsers' collection created");
-                        callback();
+                        db.createCollection('notifications', function(err, collection) {
+                            if (err) throw err;
+                            console.log("DatabaseAlert: 'notifications' collection created");
+                            callback();
+                        });
                     });
                 });
             });
@@ -89,7 +96,7 @@ var setupDatabase = function(callback){
     });
 }
 
-var parseInstances = function(callback){
+var parseInstances = function(callback) {
     rdsParser.parseInstances(function() {
         console.log('ParseAlert(rds): Instance parsing completed');
         ec2Parser.parseInstances(function() {
@@ -99,14 +106,14 @@ var parseInstances = function(callback){
     });
 };
 
-var parseMetrics = function(callback){
+var parseMetrics = function(callback) {
     rdsParser.parseMetrics('setup', function(err) {
         if (err) throw err;
         console.log('ParseAlert(rds): Metrics parsing completed');
         ec2Parser.parseMetrics('setup', function(err) {
-            if(err) throw err;
+            if (err) throw err;
             console.log('ParseAlert(ec2): Metrics parsing completed');
-            callback();                
+            callback();
         });
     });
 }
@@ -122,13 +129,13 @@ var parseUsersGroups = function(callback) {
     });
 }
 
-var parseBoxPricing = function(callback){
-    boxPricingParser.getPricing(function(){
+var parseBoxPricing = function(callback) {
+    boxPricingParser.getPricing(function() {
         callback();
     })
 }
 
-var parseBills = function(callback){
+var parseBills = function(callback) {
     var _params = {
         Bucket: s3Bucket
     };
@@ -137,23 +144,23 @@ var parseBills = function(callback){
     s3.listObjects(_params, function(err, data) {
         if (err) throw err;
         var billDataSheetIndex = [];
-        for(var i=0 in data.Contents){
-            if(/aws-billing-detailed-line-items-with-resources-and-tags/.test(data.Contents[i].Key))
+        for (var i = 0 in data.Contents) {
+            if (/aws-billing-detailed-line-items-with-resources-and-tags/.test(data.Contents[i].Key))
                 billDataSheetIndex.push(i);
-        }        
+        }
         var index = 0;
         var controller = function() {
             iterator(function() {
                 index++;
                 if (index < billDataSheetIndex.length) controller();
-                else {                    
+                else {
                     callback();
-                }                
+                }
             });
         };
-        var iterator = function(_callback) {            
+        var iterator = function(_callback) {
             s3.listObjects(_params, function(err, data) {
-                if (err) throw err;            
+                if (err) throw err;
                 fs.readdir(process.cwd() + '/data/', function(err, files) {
                     if (err) throw err;
                     var latestBillsindex = files.indexOf('latestBills.csv');
@@ -187,16 +194,16 @@ var parseBills = function(callback){
                             });
 
                             parseBillingCSVUsersGroups(function() {
-                            // billingParser.parseBillingCSV(function() {
+                                // billingParser.parseBillingCSV(function() {
                                 _callback();
-                            }); 
+                            });
                         });
                     });
                 });
             });
         };
         controller();
-    });          
+    });
 };
 
 //temporary method to add random group and users to bills
@@ -207,7 +214,7 @@ var parseBillingCSVUsersGroups = function(callback) {
             mongoose.model('iamUsers').find(function(err, du) {
                 users = du;
                 mongoose.model('iamGroups').find(function(err, dg) {
-                    groups = dg; 
+                    groups = dg;
                     fs.readFile(process.cwd() + '/data/latestBills.csv', "utf8", function(error, text) {
                         if (error) throw error;
                         var lines = text.split("\n");
@@ -295,12 +302,12 @@ var parseBillingCSVUsersGroups = function(callback) {
                                             } else {
                                                 doc['NonFreeRate'] = pricing[doc['UsageType']].Price;
                                             }
-                                            doc['NonFreeCost'] = doc['UsageQuantity'] * doc['NonFreeRate'];                               
-                                        }                                        
-                                        if(batch[0]==0){
+                                            doc['NonFreeCost'] = doc['UsageQuantity'] * doc['NonFreeRate'];
+                                        }
+                                        if (batch[0] == 0) {
                                             doc['user:Group'] = 'null';
                                             doc['user:Name'] = batch[1];
-                                        }else{
+                                        } else {
                                             doc['user:Group'] = batch[1];
                                             doc['user:Name'] = batch[2];
                                         }

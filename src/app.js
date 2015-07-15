@@ -24,13 +24,13 @@ mongoose.connect(databaseUrl, function(error) {
 var db = mongoose.connection;
 db.on("open", function() {
 
-    require(__dirname +'/server/model/ec2');
-    require(__dirname +'/server/model/rds');
-    require(__dirname +'/server/model/latest');
-    require(__dirname +'/server/model/pricing');
-    require(__dirname +'/server/model/billing');
-    require(__dirname +'/server/parse/boxPricingParse').getPricing(function(){
-        require(__dirname +'/server/parse/scheduler').s3Connect();
+    require(__dirname + '/server/model/ec2');
+    require(__dirname + '/server/model/rds');
+    require(__dirname + '/server/model/latest');
+    require(__dirname + '/server/model/pricing');
+    require(__dirname + '/server/model/billing');
+    require(__dirname + '/server/parse/boxPricingParse').getPricing(function() {
+        require(__dirname + '/server/parse/scheduler').s3Connect();
     });
 });
 
@@ -89,6 +89,8 @@ app.get('/api/usage/userBudgetCost', require(__dirname + '/server/route/budgetRo
 app.get('/api/usage/groupServiceUsage', require(__dirname + '/server/route/budgetRoute').groupServiceUsage);
 app.get('/api/usage/userServiceUsage', require(__dirname + '/server/route/budgetRoute').userServiceUsage);
 
+app.get('/api/notifications', require(__dirname + '/server/route/notificationRoute').notifications);
+
 
 var mongodb = require('mongodb');
 var MongoClient = mongodb.MongoClient;
@@ -112,18 +114,19 @@ app.post('/budget', jsonParser, function(req, res) {
             BudgetName: r.budgetName,
             BatchType: r.batchType,
             BatchName: r.batchName,
-            StartDate: startDate[2]+'-'+startDate[0]+'-'+startDate[1]+' '+'00:00:00',
-            EndDate: endDate[2]+'-'+endDate[0]+'-'+endDate[1]+' '+'23:00:00',
+            StartDate: startDate[2] + '-' + startDate[0] + '-' + startDate[1] + ' ' + '00:00:00',
+            EndDate: endDate[2] + '-' + endDate[0] + '-' + endDate[1] + ' ' + '23:00:00',
             Amount: r.amount,
-            Timeout: r.option,
-            Status: 'valid'
+            TimeOut: r.option,
+            State: 'valid'
         }, function(err) {
-            if(err) throw err;
+            if (err) throw err;
             console.log('budget insert done')
             res.send('Complete!');
         });
     });
 });
+
 
 
 function errorHandler(err, req, res, next) {

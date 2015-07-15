@@ -8,29 +8,38 @@ body {
   margin: 0px auto;
   padding: 0px;
   height: 100%;
+  overflow: hidden;
 }
 .content-view {
+  position: relative;
   display: block;
-  width: 1060px;
+  top: 48px;
   margin: 0 auto;
-  margin-top: 70px;
+  overflow-y: scroll;
 }
 .AWSView {
+  margin: 0 auto;
   min-height: 350px;
-  padding-top: 20px;
+  width: 1060px;
+  margin-top: 70px;
+  margin-bottom: 70px;
 }
 .RDSView {
   min-height: 350px;
   padding-top: 20px;
+  width: 1060px;
+  margin: 0 auto;
 }
 .EC2View {
   min-height: 350px;
   padding-top: 20px;
+  width: 1060px;
+  margin: 0 auto;
 }
 .NavView {
   position: fixed;
-  left: -318px;
-  width: 318px;
+  left: -250px;
+  width: 250px;
   top: 48px;
   background-color: #f7f7f7;
   overflow: hidden;
@@ -164,22 +173,32 @@ div#productcostcontainer {
 .EC2InstancesView {
   min-height: 350px;
   padding-top: 20px;
+  width: 1060px;
+  margin: 0 auto;
 }
 .RDSInstancesView {
   min-height: 350px;
   padding-top: 20px;
+  width: 1060px;
+  margin: 0 auto;
 }
 .IAMGroupsView {
   min-height: 350px;
   padding-top: 20px;
+  width: 1060px;
+  margin: 0 auto;
 }
 .IAMUsersView {
   min-height: 350px;
   padding-top: 20px;
+  width: 1060px;
+  margin: 0 auto;
 }
 .UsageMonitorView {
   min-height: 350px;
   padding-top: 20px;
+  width: 1060px;
+  margin: 0 auto;
 }
 #InstanceTable_wrapper {
   background-color: #f7f7f7;
@@ -280,17 +299,13 @@ td {
   box-shadow: #e6e6e6 0 1px 3px;
 }
 .setting {
-  position: relative;
   top: 0;
-  margin-top: 0;
-  width: 60px;
   height: 48px;
   font-size: 20px;
-  padding-right: 30px;
+  width: 60px;
   vertical-align: middle;
-  text-align: right;
+  text-align: center;
   line-height: 48px;
-  margin-left: auto;
   float: right;
 }
 .setting:hover {
@@ -303,7 +318,7 @@ td {
   width: 48px;
   height: 48px;
   font-size: 20px;
-  padding-left: 30px;
+  padding-left: 25px;
   text-align: left;
   line-height: 48px;
   vertical-align: middle;
@@ -316,15 +331,34 @@ td {
   content: "\f155";
   font-size: 20px;
   float: right;
-  text-align: right;
+  text-align: center;
   margin-top: 0;
   height: 48px;
-  margin-right: 30px;
+  width: 60px;
   line-height: 48px;
   vertical-align: middle;
 }
 .budget:hover {
   color: orange;
+}
+.notify {
+  float: right;
+  vertical-align: middle;
+  text-align: center;
+  line-height: 48px;
+  width: 60px;
+  font-size: 20px;
+  height: 48px;
+}
+.notify:hover {
+  color: orange;
+}
+.mdl-badge {
+  top: 2.9em;
+  right: 0.9em;
+  font-size: 5px;
+  float: right;
+  z-index: 5;
 }
 .FooterView {
   position: relative;
@@ -353,7 +387,7 @@ div#awsoperationscontainer {
   font-family: 'Roboto', sans-serif;
   font-size: 14px;
   position: absolute;
-  right: 150px;
+  right: 200px;
   padding-top: 4px;
 }
 .rate {
@@ -382,10 +416,14 @@ div#awsoperationscontainer {
 }
 .IAMUsersView {
   margin-left: 20px;
+  width: 1060px;
+  margin: 0 auto;
 }
 .IAMGroupsView {
   /*width: 47%;*/
   margin-left: 20px;
+  width: 1060px;
+  margin: 0 auto;
 }
 div#budgetUsageContainer {
   /*width: 32%;*/
@@ -542,4 +580,54 @@ div#serviceContainer {
 }
 .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
   right: 0px;
+}
+.NotificationView {
+  right: -9999px;
+  position: fixed;
+}
+.NotificationView.visible .notify {
+  padding: 5px;
+  top: 0;
+  font-family: 'Roboto', sans-serif;
+  font-size: 10px;
+  line-height: 13px;
+  text-align: left;
+  width: 100%;
+  border-bottom: 1px solid black;
+  float: left;
+}
+.NotificationView.visible .notify:hover {
+  color: orange;
+}
+.NotificationView.visible .notification-content {
+  position: fixed;
+  background: #f7f7f7;
+  border: 1px solid #ccc;
+  top: 65px;
+  right: 90px;
+  width: 200px;
+  height: 500px;
+}
+.NotificationView.visible .notification-content:after,
+.NotificationView.visible .notification-content:before {
+  bottom: 100%;
+  left: 70%;
+  border: solid transparent;
+  content: " ";
+  height: 0;
+  width: 0;
+  position: absolute;
+  pointer-events: none;
+}
+.NotificationView.visible .notification-content:after {
+  border-color: rgba(247, 247, 247, 0);
+  border-bottom-color: #f7f7f7;
+  border-width: 15px;
+  margin-left: -15px;
+}
+.NotificationView.visible .notification-content:before {
+  border-color: rgba(204, 204, 204, 0);
+  border-bottom-color: #ccc;
+  border-width: 16px;
+  margin-left: -16px;
 }

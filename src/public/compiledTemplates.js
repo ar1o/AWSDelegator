@@ -147,7 +147,7 @@ templates['FooterView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":func
   return "";
 },"useData":true});
 templates['HeaderView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  return "\n<div class=\"setting\" data-toggle=\"modal\" data-target=\"#myModal2\"><i class=\"fa fa-cogs fa-1x\"></i></div>\n\n<div class=\"budget\" data-toggle=\"modal\" data-target=\"#myModal\"> </div>\n\n<div class=\"menu\"><i class=\"fa fa-bars fa-1x\"></i></div>\n";
+  return "\n<div id=\"settings\" class=\"setting\" data-toggle=\"modal\" data-target=\"#myModal2\"><i class=\"fa fa-cog fa-1x\"></i></div>\n\n<div id=\"budgets\" class=\"budget\" data-toggle=\"modal\" data-target=\"#myModal\"> </div>\n\n<!-- Number badge on icon -->\n<div class=\"mdl-badge\" data-badge=\"1\"></div>\n<div class=\"notify\"><i class=\"fa fa-bell fa-1x\"></i></div>\n\n<div class=\"menu\"><i class=\"fa fa-bars fa-1x\"></i></div>\n";
   },"useData":true});
 templates['IAMCostView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   return "<div id=\"budgetCostContainer\"></div>\n";
@@ -251,6 +251,23 @@ templates['NonFreeBillingView'] = template({"1":function(depth0,helpers,partials
   stack1 = helpers.each.call(depth0, (depth0 != null ? depth0.billing : depth0), {"name":"each","hash":{},"fn":this.program(1, data),"inverse":this.noop,"data":data});
   if (stack1 != null) { buffer += stack1; }
   return buffer + "		</tbody>	\n	</table>\n</div> -->\n\n\n\n";
+},"useData":true});
+templates['NotificationView'] = template({"1":function(depth0,helpers,partials,data) {
+  var lambda=this.lambda, escapeExpression=this.escapeExpression;
+  return "<div class=\"notify\" id="
+    + escapeExpression(lambda((depth0 != null ? depth0.notification : depth0), depth0))
+    + ">Budget: "
+    + escapeExpression(lambda((depth0 != null ? depth0.notification : depth0), depth0))
+    + " <br> Reason: "
+    + escapeExpression(lambda((depth0 != null ? depth0.notificationType : depth0), depth0))
+    + " <br> Time: "
+    + escapeExpression(lambda((depth0 != null ? depth0.time : depth0), depth0))
+    + "\n</div>\n";
+},"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  var stack1, buffer = "<div class=\"notification-content\"> \n";
+  stack1 = helpers.each.call(depth0, (depth0 != null ? depth0.notifications : depth0), {"name":"each","hash":{},"fn":this.program(1, data),"inverse":this.noop,"data":data});
+  if (stack1 != null) { buffer += stack1; }
+  return buffer + "</div>";
 },"useData":true});
 templates['OperationsView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   return "<div id=\"operationscontainer\"></div>\n";
