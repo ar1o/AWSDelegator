@@ -15,8 +15,10 @@
 						<label class="budget-label">Name </label>
 						<input type="text" id="budgetname" placeholder="e.g., 'Monthly EC2 Budget'">
 					</div>
+					<div class="warning" id="budgetnamewarning">Invalid budget Name.</div>
+					<div class="warning" id="oldbudgetnamewarning">Budget Name already in use.</div>
+					<div class="warning" id="budgetnamerequest">Please enter a budget name.</div>
 				</div>
-
 
 				<div class="insetting"> 
 					<div class="incontainer">
@@ -34,29 +36,31 @@
 						<div class="hidden" id="filter-details">
 							<select class="sub-costfilter">
 								<option value="" disabled selected>Select</option>
-		
 								{{#each col}}
 								<option value={{this.name}}>{{this.name}}</option>
 								{{/each}}
-
-
 							</select>
 						</div>
 					</div>
+					<div class="warning" id="batchtyperequest">Please select a Batch Type.</div>
+					<div class="warning" id="batchnamerequest">Please select a Batch Name.</div>
 				</div>
 
 
 				<div class="insetting"> 
 					<div class="incontainer">
 						<label class="budget-label">Start date </label>
-						<input type="text" id="startdate" placeholder="2015-10-31">
+						<input type="text" id="startdate" placeholder="mm/dd/yyyy">
+						<div class="warning" id="startdaterequest">Please select a start date.</div>
 					</div>
 				</div>
 
 				<div class="insetting"> 
 					<div class="incontainer">
 						<label class="budget-label">End date </label>
-						<input type="text" id="enddate" placeholder="2015-10-31">
+						<input type="text" id="enddate" placeholder="mm/dd/yyyy">
+						<div class="warning" id="enddatewarning">Invalid dates selected.</div>
+						<div class="warning" id="enddaterequest">Please select an end.</div>
 					</div>
 				</div>
 
@@ -64,6 +68,8 @@
 					<div class="incontainer">
 						<label class="budget-label">Monthly Amount </label>
 						<input type="text" id="amount" placeholder="USD">
+						<div class="warning" id="amountwarning">Invalid amount.</div>
+						<div class="warning" id="amountrequest">Please enter an amount.</div>
 					</div>
 				</div>
 
