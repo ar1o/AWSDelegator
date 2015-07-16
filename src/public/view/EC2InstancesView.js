@@ -20,14 +20,16 @@ var EC2InstancesView = Backbone.View.extend({
 
     bindings: function() {
         var self = this;
+        var table;
+
         this.model.change('instancesDataReady', function(model, val) {
             this.render();
-            $('#InstanceTable').DataTable({
+            table = $('#InstanceTable').DataTable({
                 "iDisplayLength": 15,
                 "bSort": false
-                // "paging":   false,
-                // "info":     false,
-                // "bFilter": false
+                    // "paging":   false,
+                    // "info":     false,
+                    // "bFilter": false
             });
         }.bind(this));
 
@@ -39,6 +41,18 @@ var EC2InstancesView = Backbone.View.extend({
                 self.updateViews(name);
             }
         });
+
+        this.$el.on('click', '#InstanceTable tbody tr', function() {
+
+        // $('#InstanceTable tbody').on('click', 'tr', function() {
+            if ($(this).hasClass('selected')) {
+                $(this).removeClass('selected');
+            } else {
+                console.log(this.$('tr.selected').removeClass('selected'));
+                this.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+            }
+        }.bind(this));
     },
 
     render: function() {

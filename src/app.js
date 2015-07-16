@@ -93,8 +93,8 @@ app.get('/api/usage/userBudgetCost', require(__dirname + '/server/route/budgetRo
 app.get('/api/usage/groupServiceUsage', require(__dirname + '/server/route/budgetRoute').groupServiceUsage);
 app.get('/api/usage/userServiceUsage', require(__dirname + '/server/route/budgetRoute').userServiceUsage);
 
-app.get('/api/notifications', require(__dirname + '/server/route/notificationRoute').notifications);
-app.get('/api/notifications/seen', require(__dirname + '/server/route/notificationRoute').updateNotifications);
+app.get('/api/notifications', require(__dirname + '/server/route/notificationsRoute').notifications);
+app.get('/api/notifications/seen', require(__dirname + '/server/route/notificationsRoute').updateNotifications);
 
 var mongodb = require('mongodb');
 var MongoClient = mongodb.MongoClient;
