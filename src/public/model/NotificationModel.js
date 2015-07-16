@@ -21,6 +21,7 @@ var NotificationModel = Backbone.Model.extend({
 		});
 	},
 	getNotification: function() {
+		notificationCollection.reset();
 		var self = this;
 		this.notification_result().done(function(result) {
 			// console.log(result);
@@ -32,14 +33,13 @@ var NotificationModel = Backbone.Model.extend({
 					time: result[r].Time
 				});
 				notificationCollection.add(data);
-				// console.log(notificationCollection.pluck('Notification'));
 			}
 			self.set('dataReady', Date.now());
 		}).fail(function() {
 			console.log('FAILED');
 		});
 	},
-
+	// Get the number of notifications that have no been seen yet. 
 	getSeenNumber: function() {
 		var numSeen = 0;
 		for (var i=0; i< notificationCollection.length; i++) {
@@ -48,6 +48,20 @@ var NotificationModel = Backbone.Model.extend({
 			}
 		}
 		return numSeen;
+	},
+	//Sets the notification as seen in the database when clicked. 
+	setAsSeen: function(Id) {
+		var self = this;
+		var params = {
+			notificationName: Id
+		};
+		(function(params) {
+			$.get(host + '/api/notifications/seen', params, function(result) {
+				// console.log('resut', result);
+				self.getNotification();
+				// self.set('dataReady', Date.now());
+			});
+		})(params);
 	}
 
 });
@@ -65,17 +79,3 @@ var NotificationViewCollection = Backbone.Collection.extend({
 });
 
 var notificationCollection = new NotificationViewCollection();
-// var notify1 = new NotificationViewModel({
-// 	title: 'Alert1'
-// });
-// var notify2 = new NotificationViewModel({
-// 	title: 'Alert2'
-// });
-// var notify3 = new NotificationViewModel({
-// 	title: 'Alert3'
-// });
-// var notify4 = new NotificationViewModel({
-// 	title: 'Alert4'
-// });
-// var notify = [notify1, notify2, notify3, notify4];
-

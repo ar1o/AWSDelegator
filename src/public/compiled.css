@@ -315,6 +315,7 @@ td {
 }
 .setting:hover {
   color: orange;
+  cursor: pointer;
 }
 .menu {
   float: left;
@@ -330,6 +331,7 @@ td {
 }
 .menu:hover {
   color: orange;
+  cursor: pointer;
 }
 .budget:before {
   font-family: FontAwesome;
@@ -345,6 +347,7 @@ td {
 }
 .budget:hover {
   color: orange;
+  cursor: pointer;
 }
 .notify {
   float: right;
@@ -357,6 +360,7 @@ td {
 }
 .notify:hover {
   color: orange;
+  cursor: pointer;
 }
 .mdl-badge {
   top: 2.9em;
@@ -674,7 +678,7 @@ div#serviceContainer {
   right: -9999px;
   position: fixed;
 }
-.NotificationView.visible .notify {
+.NotificationView.visible .notify-data {
   padding: 5px;
   top: 0;
   font-family: 'Roboto', sans-serif;
@@ -685,8 +689,9 @@ div#serviceContainer {
   border-bottom: 1px solid black;
   float: left;
 }
-.NotificationView.visible .notify:hover {
+.NotificationView.visible .notify-data:hover {
   color: orange;
+  cursor: pointer;
 }
 .NotificationView.visible .notification-content {
   position: fixed;

@@ -1,7 +1,7 @@
 (function() {
   var template = Handlebars.template, templates = Handlebars.templates = Handlebars.templates || {};
 templates['AWSMonthlyCostView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  return "<div id=\"awsmonthlycostcontainer\"> testtesttest</div>\n\n";
+  return "<div id=\"awsmonthlycostcontainer\"></div>\n\n";
   },"useData":true});
 templates['AWSOperationsView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   return "<div id=\"awsoperationscontainer\"> </div>";
@@ -26,41 +26,21 @@ templates['BudgetView'] = template({"1":function(depth0,helpers,partials,data) {
   return buffer + "\n\n							</select>\n						</div>\n					</div>\n				</div>\n\n\n				<div class=\"insetting\"> \n					<div class=\"incontainer\">\n						<label class=\"budget-label\">Start date </label>\n						<input type=\"text\" id=\"startdate\" placeholder=\"2015-10-31\">\n					</div>\n				</div>\n\n				<div class=\"insetting\"> \n					<div class=\"incontainer\">\n						<label class=\"budget-label\">End date </label>\n						<input type=\"text\" id=\"enddate\" placeholder=\"2015-10-31\">\n					</div>\n				</div>\n\n				<div class=\"insetting\"> \n					<div class=\"incontainer\">\n						<label class=\"budget-label\">Monthly Amount </label>\n						<input type=\"text\" id=\"amount\" placeholder=\"USD\">\n					</div>\n				</div>\n\n\n				<div class=\"insetting\"> \n					<div class=\"incontainer\">\n						<label class=\"budget-label\">Stop resource(s) when quota reached </label>\n						<div class=\"onoffswitch\">\n							<input type=\"checkbox\" name=\"onoffswitch\" class=\"onoffswitch-checkbox\" id=\"myonoffswitch\" checked>\n							<label class=\"onoffswitch-label\" for=\"myonoffswitch\">\n								<span class=\"onoffswitch-inner\"></span>\n								<span class=\"onoffswitch-switch\"></span>\n							</label>\n						</div>\n					</div>\n				</div>\n			</div>\n			<div class=\"modal-footer\">\n				<button type=\"button\" class=\"btn btn-default\" id=\"savebtn\">Save</button>\n				<button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Close</button>\n			</div>\n		</div>\n\n	</div>\n</div>\n\n\n\n";
 },"useData":true});
 templates['ConfigurationView'] = template({"1":function(depth0,helpers,partials,data) {
-  var stack1, helperMissing=helpers.helperMissing, buffer = "";
-  stack1 = ((helpers.ifCond || (depth0 && depth0.ifCond) || helperMissing).call(depth0, (depth0 != null ? depth0.title : depth0), "==", "Account Number", {"name":"ifCond","hash":{},"fn":this.program(2, data),"inverse":this.noop,"data":data}));
-  if (stack1 != null) { buffer += stack1; }
-  stack1 = ((helpers.ifCond || (depth0 && depth0.ifCond) || helperMissing).call(depth0, (depth0 != null ? depth0.title : depth0), "==", "S3 Region", {"name":"ifCond","hash":{},"fn":this.program(4, data),"inverse":this.noop,"data":data}));
-  if (stack1 != null) { buffer += stack1; }
-  stack1 = ((helpers.ifCond || (depth0 && depth0.ifCond) || helperMissing).call(depth0, (depth0 != null ? depth0.title : depth0), "==", "AWS Regions", {"name":"ifCond","hash":{},"fn":this.program(6, data),"inverse":this.noop,"data":data}));
-  if (stack1 != null) { buffer += stack1; }
-  stack1 = ((helpers.ifCond || (depth0 && depth0.ifCond) || helperMissing).call(depth0, (depth0 != null ? depth0.title : depth0), "==", "Credits", {"name":"ifCond","hash":{},"fn":this.program(8, data),"inverse":this.noop,"data":data}));
-  if (stack1 != null) { buffer += stack1; }
-  return buffer + "\n";
-},"2":function(depth0,helpers,partials,data) {
   var lambda=this.lambda, escapeExpression=this.escapeExpression;
-  return "					<div type=\"text\" id=\"account\" value=\"\"></div>\n						"
-    + escapeExpression(lambda((depth0 != null ? depth0.title : depth0), depth0))
-    + ":\n						<h3><div id = \"div1\"></div></h3>\n						<hr>\n";
-},"4":function(depth0,helpers,partials,data) {
-  var lambda=this.lambda, escapeExpression=this.escapeExpression;
-  return "						"
-    + escapeExpression(lambda((depth0 != null ? depth0.title : depth0), depth0))
-    + "\n						<br>\n						<input type=\"radio\" id=\"s3West1\" name='S3_Region' value=\"us-west-1\"/><label for=\"s3West1\">us-west-1</label>\n						<input type=\"radio\" id=\"s3West2\" name='S3_Region' value=\"us-west-2\"/><label for=\"s3West2\">us-west-2</label>\n						<input type=\"radio\" id=\"s3East1\" name='S3_Region' value=\"us-east-1\"/><label for=\"s3East1\">us-east-1</label>\n						<script type = \"text/javascript\">\n							$(document).ready(function(){\n									$.get('/getS3Region', function(data){\n										console.log(\"S3\",data);\n										if(\"us-west-1\" == data|| \"s3West1\" == data){\n											document.getElementById(\"s3West1\").checked = true;\n										}\n										else if(\"us-west-2\" == data || \"s3West2\" == data){\n											document.getElementById(\"s3West2\").checked = true;\n										}\n										else if(\"us-east-1\" == data || \"s3East1\" == data){\n											document.getElementById(\"s3East1\").checked = true;\n										}\n									});\n								});\n						</script>\n						<hr>\n";
-},"6":function(depth0,helpers,partials,data) {
-  var lambda=this.lambda, escapeExpression=this.escapeExpression;
-  return "						"
-    + escapeExpression(lambda((depth0 != null ? depth0.title : depth0), depth0))
-    + "\n						<br> \n						<input type=\"checkbox\" id = \"awsWest1\" name='AWS_Regions' value=\"us-west-1\"/><label for=\"awsWest1\">us-west-1</label>\n						<input type=\"checkbox\" id = \"awsWest2\" name='AWS_Regions' value=\"us-west-2\"/><label for=\"awsWest2\">us-west-2</label>\n						<input type=\"checkbox\" id = \"awsEast1\" name='AWS_Regions' value=\"us-east-1\"/><label for=\"awsEast1\">us-east-1</label>\n						<script type = \"text/javascript\">\n							$(document).ready(function(){\n									$.get('/getAWSRegion', function(data){\n										console.log(\"AWS\",data);\n										if(data.indexOf('us-west-1')!=-1){\n											document.getElementById('awsWest1').checked = true;\n										}\n										if(data.indexOf('us-west-2')!=-1){\n											document.getElementById('awsWest2').checked = true;\n										}\n										if(data.indexOf('us-east-1')!=-1){\n											document.getElementById('awsEast1').checked = true;\n										}\n									});\n								});\n						</script>\n						<hr>\n";
-},"8":function(depth0,helpers,partials,data) {
-  var lambda=this.lambda, escapeExpression=this.escapeExpression;
-  return "						"
-    + escapeExpression(lambda((depth0 != null ? depth0.title : depth0), depth0))
-    + "<br> \n						<input type=\"text\" name=\"Credits\" id=\"myCredits\">\n							<script type = \"text/javascript\">\n								$(document).ready(function(){\n									$.get('/getAccountBalance', function(data){\n										var elem = document.getElementById(\"myCredits\");\n										elem.value =data; \n									});\n								});\n							</script>\n						<br>\n";
+  return "				<div class=\"insetting\"> \n					<div class=\"incontainer\">\n						<label class=\"config-label\">Account Number</label>\n						<div type=\"text\" class=\"account\" value=\"012345678910\"></div>\n						"
+    + escapeExpression(lambda((depth0 != null ? depth0.number : depth0), depth0))
+    + "\n					</div>\n				</div>\n				<div class=\"insetting\"> \n					<div class=\"incontainer\">\n						<label class=\"config-label\">S3 Bucket Region</label>\n						<div type=\"text\" class=\"account\" value=\"\">"
+    + escapeExpression(lambda((depth0 != null ? depth0.s3 : depth0), depth0))
+    + "</div>\n					</div>\n				</div>\n				<div class=\"insetting\"> \n					<div class=\"incontainer\">\n						<label class=\"config-label\">S3 Bucket Name</label>\n						<div type=\"text\" class=\"account\" value=\"\">"
+    + escapeExpression(lambda((depth0 != null ? depth0.bucketName : depth0), depth0))
+    + "</div>\n					</div>\n				</div>\n				<div class=\"insetting\"> \n					<div class=\"incontainer\">\n						<label class=\"config-label\">DB URL</label>\n						<div type=\"text\" class=\"account\" value=\"\" disabled>"
+    + escapeExpression(lambda((depth0 != null ? depth0.URL : depth0), depth0))
+    + "</div>\n					</div>\n				</div>\n				<div class=\"insetting\"> \n					<div class=\"incontainer\">\n						<div class=\"mdl-textfield mdl-js-textfield mdl-textfield--floating-label textfield-demo\">\n							<input class=\"mdl-textfield__input\" type=\"text\" pattern=\"^(19|20)\\d\\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$\" id='expDate'/>\n							<label class=\"mdl-textfield__label\" for=\"expiration\">Credit Expiration (YYYY/MM/DD)</label>\n							<span class=\"mdl-textfield__error\">Input is not a date!</span>\n						</div>\n					</div>\n					<div class=\"incontainer\">\n						<div class=\"mdl-textfield mdl-js-textfield mdl-textfield--floating-label textfield-demo\">\n							<input class=\"mdl-textfield__input\" type=\"text\" pattern=\"-?[0-9]*(\\.[0-9]+)?\" id=\"myCredits\" />\n						    <label class=\"mdl-textfield__label\" for=\"myCredits\">Credits</label>\n						    <span class=\"mdl-textfield__error\">Input is not a number!</span>\n						</div>\n					</div>\n				</div>\n";
 },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  var stack1, buffer = "<!-- Modal -->\n<div id=\"myModal2\" class=\"modal fade\" role=\"dialog\">\n  <div class=\"modal-dialog\">\n\n    <!-- Modal content-->\n    <div class=\"modal-content\">\n      <div class=\"modal-header\">\n        <button type=\"button\" class=\"close\" data-dismiss=\"modal\">&times;</button>\n        <h4 class=\"modal-title\">Modal Header</h4>\n      </div>\n      <div class=\"modal-body\">\n        <p>Some text in the modal.</p>\n        <form id=\"credentials\" action=\"/setCredentials\" method=\"post\">\n				<div>\n";
+  var stack1, buffer = "<!-- Modal -->\n<div id=\"myModal2\" class=\"modal fade\" role=\"dialog\">\n	<div class=\"modal-dialog\">\n		<!-- Modal content-->\n		<div class=\"modal-content\">\n			<div class=\"modal-header\">\n				<button type=\"button\" class=\"close\" data-dismiss=\"modal\">&times;</button>\n				<h4 class=\"modal-title\"> AWS Account Settings</h4>\n			</div>\n			<div class=\"modal-body\">\n";
   stack1 = helpers.each.call(depth0, (depth0 != null ? depth0.pages : depth0), {"name":"each","hash":{},"fn":this.program(1, data),"inverse":this.noop,"data":data});
   if (stack1 != null) { buffer += stack1; }
-  return buffer + "				<br>\n				<hr>\n				<input type=\"submit\" value=\"Save\">\n			</form>\n      </div>\n      <div class=\"modal-footer\">\n        <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Close</button>\n      </div>\n    </div>\n\n  </div>\n</div>\n\n\n";
+  return buffer + "			</div>\n			<div class=\"modal-footer\">\n				<p>To modify account settings, go to \\AWSDelegator\\src\\server\\config.js</p>\n				<button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\" id=\"saveConfig\">Save</button>\n				<button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Close</button>\n			</div>\n		</div>\n	</div>\n</div>\n";
 },"useData":true});
 templates['EC2BillingView'] = template({"1":function(depth0,helpers,partials,data) {
   var lambda=this.lambda, escapeExpression=this.escapeExpression;
@@ -140,6 +120,9 @@ templates['EC2MetricsView'] = template({"1":function(depth0,helpers,partials,dat
   if (stack1 != null) { buffer += stack1; }
   return buffer + "		</tbody>	\n	</table>\n</div>\n -->\n\n";
 },"useData":true});
+templates['EC2OperationsView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  return "<div id=\"ec2operationscontainer\"></div>";
+  },"useData":true});
 templates['EC2View'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   return "";
 },"useData":true});
@@ -147,10 +130,7 @@ templates['FooterView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":func
   return "";
 },"useData":true});
 templates['HeaderView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  return "\n<div id=\"settings\" class=\"setting\" data-toggle=\"modal\" data-target=\"#myModal2\"><i class=\"fa fa-cog fa-1x\"></i></div>\n\n<div id=\"budgets\" class=\"budget\" data-toggle=\"modal\" data-target=\"#myModal\"> </div>\n\n<!-- Number badge on icon -->\n<div class=\"mdl-badge\" data-badge=\"1\"></div>\n<div class=\"notify\"><i class=\"fa fa-bell fa-1x\"></i></div>\n\n<div class=\"menu\"><i class=\"fa fa-bars fa-1x\"></i></div>\n";
-  },"useData":true});
-templates['IAMCostView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  return "<div id=\"budgetCostContainer\"></div>\n";
+  return "\n<div id=\"settings\" class=\"setting\" data-toggle=\"modal\" data-target=\"#myModal2\"><i class=\"fa fa-cog fa-1x\"></i></div>\n\n<div id=\"budgets\" class=\"budget\" data-toggle=\"modal\" data-target=\"#myModal\"> </div>\n\n<!-- Number badge on icon -->\n<div class=\"mdl-badge\" data-badge=\"\"></div>\n<div class=\"notify\"><i class=\"fa fa-bell fa-1x\"></i></div>\n\n<div class=\"menu\"><i class=\"fa fa-bars fa-1x\"></i></div>\n";
   },"useData":true});
 templates['IAMGroupsView'] = template({"1":function(depth0,helpers,partials,data) {
   var lambda=this.lambda, escapeExpression=this.escapeExpression;
@@ -169,12 +149,6 @@ templates['IAMGroupsView'] = template({"1":function(depth0,helpers,partials,data
   if (stack1 != null) { buffer += stack1; }
   return buffer + "	</tbody>	\n</table>\n";
 },"useData":true});
-templates['IAMOperationsView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  return "<div id=\"serviceContainer\"></div>\n";
-  },"useData":true});
-templates['IAMUsageView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  return "<div id=\"budgetUsageContainer\"></div>\n";
-  },"useData":true});
 templates['IAMUsersView'] = template({"1":function(depth0,helpers,partials,data) {
   var lambda=this.lambda, escapeExpression=this.escapeExpression;
   return "		<tr>\n			<td >"
@@ -254,7 +228,7 @@ templates['NonFreeBillingView'] = template({"1":function(depth0,helpers,partials
 },"useData":true});
 templates['NotificationView'] = template({"1":function(depth0,helpers,partials,data) {
   var lambda=this.lambda, escapeExpression=this.escapeExpression;
-  return "<div class=\"notify\" id="
+  return "<div class=\"notify-data\" id="
     + escapeExpression(lambda((depth0 != null ? depth0.notification : depth0), depth0))
     + ">Budget: "
     + escapeExpression(lambda((depth0 != null ? depth0.notification : depth0), depth0))
@@ -335,7 +309,19 @@ templates['RDSInstancesView'] = template({"1":function(depth0,helpers,partials,d
   return buffer + "	</tbody>	\n</table>\n";
 },"useData":true});
 templates['RDSMetricsView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  return "<div id=\"rdsCpuContainer\"></div>\n<div id=\"readWriteIopsContainer\"></div>\n<div id=\"queueDepthContainer\"></div>\n<div class=\"clear\"></div>";
+  return "<div id=\"rdsCpuContainer\"></div>\n<div id=\"readWriteIopsContainer\"></div>\n<div id=\"queueDepthContainer\"></div>\n<div id=\"dbConnectionsContainer\"></div>\n<div class=\"clear\"></div>";
+  },"useData":true});
+templates['UMCostView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  return "<div id=\"budgetCostContainer\"></div>\n";
+  },"useData":true});
+templates['UMGroupUserServiceView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  return "<div id=\"groupUserServiceContainer\"></div>\n";
+  },"useData":true});
+templates['UMOperationsView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  return "<div id=\"serviceContainer\"></div>\n";
+  },"useData":true});
+templates['UMUsageView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  return "<div id=\"budgetUsageContainer\"></div>\n";
   },"useData":true});
 templates['UsageMonitorView'] = template({"1":function(depth0,helpers,partials,data) {
   var lambda=this.lambda, escapeExpression=this.escapeExpression;

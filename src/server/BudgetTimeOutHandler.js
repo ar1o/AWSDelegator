@@ -18,11 +18,11 @@ exports.checkBudgets = function() {
                 });
             };
             var iterator1 = function(callback1) {
-                console.log('time', time)
-                console.log('EndDate', d[index1])
-                console.log(typeof(time), typeof(d[index1].EndDate));
+                // console.log('time', time)
+                // console.log('EndDate', d[index1])
+                // console.log(typeof(time), typeof(d[index1].EndDate));
                 if (time > d[index1].EndDate && d[index1].TimeOut == 'true' && d[index1].State == 'valid') {
-                    console.log("HIT");
+                    // console.log("HIT");
                     db.collection('budgets').update({
                             BudgetName: d[index1].BudgetName
                         }, {

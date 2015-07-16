@@ -94,6 +94,7 @@ app.get('/api/usage/groupServiceUsage', require(__dirname + '/server/route/budge
 app.get('/api/usage/userServiceUsage', require(__dirname + '/server/route/budgetRoute').userServiceUsage);
 
 app.get('/api/notifications', require(__dirname + '/server/route/notificationRoute').notifications);
+app.get('/api/notifications/seen', require(__dirname + '/server/route/notificationRoute').updateNotifications);
 
 var mongodb = require('mongodb');
 var MongoClient = mongodb.MongoClient;
@@ -116,7 +117,7 @@ app.post('/budget', jsonParser, function(req, res) {
             State: 'valid'
         }, function(err) {
             if (err) throw err;
-            console.log('budget insert done')
+            console.log('A budget profile has been inserte.')
             res.send('Complete!');
         });
     });

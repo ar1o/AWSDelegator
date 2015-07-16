@@ -168,18 +168,22 @@ var AppView = Backbone.View.extend({
         }.bind(this));
 
         this.$el.on("click", '.notify', function(e) {
-            console.log('notification clicked')
+            // console.log('notification clicked')
             if (this.notificationView.model.isOpen == false) {
                 this.notificationView.model.isOpen = true;
                 // this.$( ".mdl-badge" ).removeAttr( "data-badge");
-                //set the notification collection as seen and send to server
-            } else {
+            } 
+            else {
                 this.notificationView.model.isOpen = false;
             }
         }.bind(this));
 
         this.notificationView.model.change('dataReady', function(model, val) {
-            this.$( ".mdl-badge" ).attr( "data-badge", this.notificationView.model.getSeenNumber());
+            if(this.notificationView.model.getSeenNumber() == 0) {
+                this.$( ".mdl-badge" ).removeAttr( "data-badge");
+            } else {
+                this.$( ".mdl-badge" ).attr( "data-badge", this.notificationView.model.getSeenNumber());
+            }
         }.bind(this));
 
     },
@@ -199,7 +203,6 @@ var AppView = Backbone.View.extend({
         var args = this.router.get('args');
         args.parentView = this;
         var viewInstance = new view(args);
-        // console.log(args);
         var oldView = this.model.get('currentView');
         if (oldView && oldView.destroy)
             oldView.destroy(viewInstance);
