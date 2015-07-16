@@ -83,33 +83,29 @@ templates['EC2CostView'] = template({"1":function(depth0,helpers,partials,data) 
 templates['EC2InstancesView'] = template({"1":function(depth0,helpers,partials,data) {
     var alias1=this.lambda, alias2=this.escapeExpression;
 
-  return "		<tr>\n			<td >"
+  return "		<tr>\n			<td>"
+    + alias2(alias1((depth0 != null ? depth0.userName : depth0), depth0))
+    + "</td>\n			<td>"
+    + alias2(alias1((depth0 != null ? depth0.groupName : depth0), depth0))
+    + "</td>\n			<td >"
     + alias2(alias1((depth0 != null ? depth0.instance : depth0), depth0))
-    + "</td>\n			<td>"
-    + alias2(alias1((depth0 != null ? depth0.state : depth0), depth0))
-    + "</td>\n			<td>"
-    + alias2(alias1((depth0 != null ? depth0.keyName : depth0), depth0))
     + "</td>\n			<td>"
     + alias2(alias1((depth0 != null ? depth0.instanceType : depth0), depth0))
     + "</td>\n			<td>"
-    + alias2(alias1((depth0 != null ? depth0.launchTime : depth0), depth0))
-    + "</td> \n			<td>"
+    + alias2(alias1((depth0 != null ? depth0.state : depth0), depth0))
+    + "</td>\n			<td>"
     + alias2(alias1((depth0 != null ? depth0.zone : depth0), depth0))
     + "</td>\n			<td>"
-    + alias2(alias1((depth0 != null ? depth0.duration : depth0), depth0))
+    + alias2(alias1((depth0 != null ? depth0.lifetime : depth0), depth0))
     + " min</td>\n			<td>"
-    + alias2(alias1((depth0 != null ? depth0.email : depth0), depth0))
-    + "</td>\n			<td>"
-    + alias2(alias1((depth0 != null ? depth0.volumeid : depth0), depth0))
-    + "</td>\n			<td>"
-    + alias2(alias1((depth0 != null ? depth0.lastActiveTime : depth0), depth0))
-    + "</td>\n		</tr>\n";
+    + alias2(alias1((depth0 != null ? depth0.launchTime : depth0), depth0))
+    + "</td> \n		</tr>\n";
 },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var stack1;
 
-  return "<table id=\"InstanceTable\" class=\"hover\">\n	<thead>\n		<tr class=\"dark-row\">\n			<th>Instance ID</th>\n			<th>State</th>\n			<th>Key Name</th>\n			<th>Type</th>\n			<th>Launched</th>\n			<th>Zone</th>\n			<th>Lifetime</th>\n			<th>E-Mail</th>\n			<th>Volume ID</th>\n			<th>LastActiveTime</th>\n		</tr>\n	</thead>\n	<tbody id=\"instanceData\">\n"
+  return "<table id=\"InstanceTable\" class=\"hover\">\n	<thead>\n		<tr class=\"dark-row\">\n			<th>User Name</th>\n			<th>Group Name</th>\n			<th>Instance ID</th>\n			<th>Type</th>\n			<th>State</th>\n			<th>Zone</th>\n			<th>Lifetime</th>\n			<th>Launched</th>\n		</tr>\n	</thead>\n	<tbody id=\"instanceData\">\n"
     + ((stack1 = helpers.each.call(depth0,(depth0 != null ? depth0.instances : depth0),{"name":"each","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
-    + "	</tbody>	\n</table>\n";
+    + "	</tbody>	\n</table>";
 },"useData":true});
 templates['EC2MetricsView'] = template({"1":function(depth0,helpers,partials,data) {
     var alias1=this.lambda, alias2=this.escapeExpression;

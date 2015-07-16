@@ -32,16 +32,18 @@ var EC2InstancesView = Backbone.View.extend({
         }.bind(this));
 
         this.$el.on('click', '#InstanceTable tr', function() {
-            var name = $('td', this).eq(0).text();
-            var state = $('td', this).eq(1).text();
-            if (name != "" && state == 'running') {
-                self.model.setEC2SelectedInstance(this.rowIndex - 1);
-                self.updateViews(name);
+            var rowIndex = this.rowIndex - 1;
+            var instance = ec2InstancesCollection.at(rowIndex).get('instance');
+            var state = ec2InstancesCollection.at(rowIndex).get('state');
+            if (state == 'running') {
+                self.model.setEC2SelectedInstance(rowIndex);
+                self.updateViews(instance);
             }
         });
     },
 
     render: function() {
+
         var html = Handlebars.templates.EC2InstancesView({
             instances: ec2InstancesCollection.toJSON()
         });

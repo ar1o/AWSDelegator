@@ -1,31 +1,27 @@
 <table id="InstanceTable" class="hover">
 	<thead>
 		<tr class="dark-row">
+			<th>User Name</th>
+			<th>Group Name</th>
 			<th>Instance ID</th>
-			<th>State</th>
-			<th>Key Name</th>
 			<th>Type</th>
-			<th>Launched</th>
+			<th>State</th>
 			<th>Zone</th>
 			<th>Lifetime</th>
-			<th>E-Mail</th>
-			<th>Volume ID</th>
-			<th>LastActiveTime</th>
+			<th>Launched</th>
 		</tr>
 	</thead>
 	<tbody id="instanceData">
 	{{#each instances}}
 		<tr>
+			<td>{{this.userName}}</td>
+			<td>{{this.groupName}}</td>
 			<td >{{this.instance}}</td>
-			<td>{{this.state}}</td>
-			<td>{{this.keyName}}</td>
 			<td>{{this.instanceType}}</td>
-			<td>{{this.launchTime}}</td> 
+			<td>{{this.state}}</td>
 			<td>{{this.zone}}</td>
-			<td>{{this.duration}} min</td>
-			<td>{{this.email}}</td>
-			<td>{{this.volumeid}}</td>
-			<td>{{this.lastActiveTime}}</td>
+			<td>{{this.lifetime}} min</td>
+			<td>{{this.launchTime}}</td> 
 		</tr>
 	{{/each}}
 	</tbody>	
