@@ -62,6 +62,16 @@ var NotificationModel = Backbone.Model.extend({
 				// self.set('dataReady', Date.now());
 			});
 		})(params);
+	},
+
+	isSeen: function(Id) {
+		for (var i = 0; i < notificationCollection.length; i++) {
+			if(notificationCollection.at(i).get('notification') == Id) {
+				if(notificationCollection.at(i).get('seen') == 'false') {
+					
+				}
+			}
+		}
 	}
 
 });
