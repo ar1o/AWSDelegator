@@ -43,7 +43,11 @@ exports.instances = function(req, res) {
 			MultiAZ: 1,
 			StorageType: 1
 		}
-	}]).exec(function(e, d) {
+	},{
+        $sort: {
+            DBInstanceStatus: 1
+        }
+    }]).exec(function(e, d) {
 		if (e) throw e;
 		res.send(d);
 	});
