@@ -93,6 +93,9 @@ app.get('/api/usage/userBudgetCost', require(__dirname + '/server/route/budgetRo
 app.get('/api/usage/groupServiceUsage', require(__dirname + '/server/route/budgetRoute').groupServiceUsage);
 app.get('/api/usage/userServiceUsage', require(__dirname + '/server/route/budgetRoute').userServiceUsage);
 
+app.get('/api/notifications', require(__dirname + '/server/route/notificationRoute').notifications);
+app.get('/api/notifications/seen', require(__dirname + '/server/route/notificationRoute').updateNotifications);
+
 var mongodb = require('mongodb');
 var MongoClient = mongodb.MongoClient;
 
@@ -107,18 +110,19 @@ app.post('/budget', jsonParser, function(req, res) {
             BudgetName: r.budgetName,
             BatchType: r.batchType,
             BatchName: r.batchName,
-            StartDate: startDate[2]+'-'+startDate[0]+'-'+startDate[1]+' '+'00:00:00',
-            EndDate: endDate[2]+'-'+endDate[0]+'-'+endDate[1]+' '+'23:00:00',
+            StartDate: startDate[2] + '-' + startDate[0] + '-' + startDate[1] + ' ' + '00:00:00',
+            EndDate: endDate[2] + '-' + endDate[0] + '-' + endDate[1] + ' ' + '23:00:00',
             Amount: r.amount,
-            Timeout: r.option,
-            Status: 'valid'
+            TimeOut: r.option,
+            State: 'valid'
         }, function(err) {
-            if(err) throw err;
-            console.log('budget insert done')
+            if (err) throw err;
+            console.log('A budget profile has been inserte.')
             res.send('Complete!');
         });
     });
 });
+
 
 
 function errorHandler(err, req, res, next) {

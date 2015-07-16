@@ -3,31 +3,33 @@
 	top: 0;
 	width: 100%;
 	margin: 0 auto;
-	height: 48px;
+	height: @headerHeight;
 	background-color: #f7f7f7;
 	border-bottom: 1px solid #ccc;
 	box-shadow: #e6e6e6 0 1px 3px;
-
 }
 
 
 .setting {
 	// border: 1px solid black;
-	position: relative;
+	// position: relative;
 	top: 0;
-	margin-top: 0;
-	width: 60px;
-	height: 48px;
+	// margin: 0 auto;
+	// width: 60px;
+	height: @headerHeight;
 	font-size: 20px;
-	padding-right: 30px;
+	width: 60px;
+	// padding-right: 30px;
 	vertical-align: middle;
-	text-align:right;
-	line-height: 48px;
-	margin-left: auto;
+
+	text-align:center;
+	line-height: @headerHeight;
+	// margin-left: auto;
 	float:right;
-	
 	&:hover {
 		color: orange;
+			cursor:pointer;
+
     }
 }
 .menu {
@@ -35,15 +37,17 @@
 	position: absolute;
 	top:0;
 	width: 48px;
-	height: 48px;
+	height: @headerHeight;
 	font-size: 20px;
-	padding-left: 30px;
+	padding-left: 25px;
 	text-align: left;
-	line-height: 48px;
+	line-height: @headerHeight;
 	vertical-align: middle;
 
 	&:hover {
 		color: orange;
+			cursor:pointer;
+
     }
 }
 
@@ -53,16 +57,56 @@
 	content: "\f155";
 	font-size: 20px;
 	float:right;
-	text-align:right;
+	text-align:center;
 	margin-top: 0;
-	height: 48px;
-	margin-right: 30px;
-	line-height: 48px;
+	height: @headerHeight;
+	width: 60px;
+	// padding-right: 25px;
+	line-height: @headerHeight;
 	vertical-align: middle;
 }
 
 .budget {
 	&:hover {
 		color: orange;
+			cursor:pointer;
+
     }
 }
+
+
+.notify {
+	// position: absolute;
+	// top: 17px;
+	// border: 1px solid black;
+	float: right;
+	vertical-align: middle;
+	text-align:center;
+	line-height: @headerHeight;
+	width: 60px;
+	font-size: 20px;
+	height: @headerHeight;
+
+	&:hover {
+		color: orange;
+			cursor:pointer;
+
+    }
+
+}
+
+.mdl-badge {
+	top: 2.9em;
+	right: 0.9em;
+	font-size: 5px;
+	// padding-right: 27px;
+	// border: 1px solid black;
+	float: right;
+	// vertical-align: middle;
+	// text-align:left;
+	// line-height: 58px;
+	// width: 20px;
+	z-index: 5;
+
+}
+

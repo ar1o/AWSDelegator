@@ -4,13 +4,13 @@ var AppView = Backbone.View.extend({
         AppView.sharedInstance = this;
 
         this.header = new HeaderView();
-        this.footer = new FooterView();
+        // this.footer = new FooterView();
         this.navView = new NavView();
 
         this.budgetView = new BudgetView();
 
         this.configurationView = new ConfigurationView();
-
+        this.notificationView = new NotificationView();
 
         this.router = new AppRouter({
             defaultView: 'AWSView'
@@ -20,6 +20,25 @@ var AppView = Backbone.View.extend({
         this.render();
         this.setListeners();
 
+        window_size = $(window).height();
+        // console.log(window_size);
+        var length_calc = (window_size - 50);
+        var length = length_calc + 'px';
+        this.$('.content-view').css({
+            'height': length
+        });
+
+
+        $(window).resize(function() {
+            //resize just happened, pixels changed
+            window_size = $(window).height();
+            // console.log(window_size);
+            var length_calc = (window_size - 50);
+            var length = length_calc + 'px';
+            this.$('.content-view').css({
+                'height': length
+            });
+        });
     },
 
     setListeners: function() {
@@ -52,7 +71,9 @@ var AppView = Backbone.View.extend({
                 this.navView.model.isOpen = false;
             } else {
                 this.navView.model.isOpen = true;
-                var length_calc = (this.$el.height() - 20);
+                window_size = $(window).height();
+                // console.log(window_size);
+                var length_calc = (window_size);
                 var length = length_calc + 'px';
                 this.$('.NavView').css({
                     'height': length
@@ -60,10 +81,10 @@ var AppView = Backbone.View.extend({
             }
         }.bind(this));
 
-
         this.$el.on("mouseenter", '.menu', function(e) {
             this.navView.model.isOpen = true;
-            var length_calc = (this.$el.height() - 20);
+            window_size = $(window).height();
+            var length_calc = (window_size);
             var length = length_calc + 'px';
             this.$('.NavView').css({
                 'height': length
@@ -146,6 +167,25 @@ var AppView = Backbone.View.extend({
             window.location.hash = '#/IAMUsers';
         }.bind(this));
 
+        this.$el.on("click", '.notify', function(e) {
+            // console.log('notification clicked')
+            if (this.notificationView.model.isOpen == false) {
+                this.notificationView.model.isOpen = true;
+                // this.$( ".mdl-badge" ).removeAttr( "data-badge");
+            } 
+            else {
+                this.notificationView.model.isOpen = false;
+            }
+        }.bind(this));
+
+        this.notificationView.model.change('dataReady', function(model, val) {
+            if(this.notificationView.model.getSeenNumber() == 0) {
+                this.$( ".mdl-badge" ).removeAttr( "data-badge");
+            } else {
+                this.$( ".mdl-badge" ).attr( "data-badge", this.notificationView.model.getSeenNumber());
+            }
+        }.bind(this));
+
     },
 
     render: function() {
@@ -153,10 +193,9 @@ var AppView = Backbone.View.extend({
         this.$el.append(this.header.el);
         this.$el.append(this.navView.el);
         this.$el.append(this.configurationView.el);
-
-        this.$el.append(this.footer.el);
+        // this.$el.append(this.footer.el);
         this.$el.append(this.budgetView.el);
-
+        this.$el.append(this.notificationView.el);
         this.setView(this.router.get('view'));
     },
 
@@ -164,7 +203,6 @@ var AppView = Backbone.View.extend({
         var args = this.router.get('args');
         args.parentView = this;
         var viewInstance = new view(args);
-        // console.log(args);
         var oldView = this.model.get('currentView');
         if (oldView && oldView.destroy)
             oldView.destroy(viewInstance);

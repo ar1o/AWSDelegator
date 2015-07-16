@@ -1,6 +1,7 @@
 //function/query to take a instance RID value, and sum both nonfree cost, and cost for per hour, then add theses values per hour
 exports.calcTotalCost = function(req, res) {
     var rid = req.query.instance;
+
     mongoose.model('ec2Instances').findOne({
         Id: rid
     }).exec(function(e,d1){
