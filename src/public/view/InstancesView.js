@@ -22,9 +22,10 @@ var InstancesView = Backbone.View.extend({
     },
 
     bindings: function() {
+        var table;
         this.model.change('dataReady', function(model, val) {
             this.render();
-            $('#InstanceTable').DataTable({
+            table = $('#InstanceTable').DataTable({
                 "iDisplayLength": 25,
                 "paging":   false,
                 "info":     false,
@@ -41,6 +42,8 @@ var InstancesView = Backbone.View.extend({
             this.metricsActivity.model.getEC2Metrics(selected);
             // this.operationsActivity.model.getEC2Operations(selected);
         }.bind(this));
+
+
     },
 
     render: function() {

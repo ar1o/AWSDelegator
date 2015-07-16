@@ -18,7 +18,10 @@ var NotificationView = Backbone.View.extend({
                 var currentID = clicked.id
                 console.log('currentID clicked',currentID);
                 //Set notification as seen 
-                this.model.setAsSeen(currentID);
+                if(this.model.isSeen(currentID) == false) {
+                    this.model.setAsSeen(currentID);
+                }
+                
             }
         }.bind(this));
 

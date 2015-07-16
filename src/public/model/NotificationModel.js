@@ -63,12 +63,14 @@ var NotificationModel = Backbone.Model.extend({
 			});
 		})(params);
 	},
-
+	//Check by ID if a particular budget is seen. 
 	isSeen: function(Id) {
 		for (var i = 0; i < notificationCollection.length; i++) {
 			if(notificationCollection.at(i).get('notification') == Id) {
 				if(notificationCollection.at(i).get('seen') == 'false') {
-					
+					return false;
+				} else {
+					return true; 
 				}
 			}
 		}
