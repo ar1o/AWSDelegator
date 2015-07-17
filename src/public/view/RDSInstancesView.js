@@ -34,8 +34,10 @@ var RDSInstancesView = Backbone.View.extend({
 
 
         this.$el.on('click', '#RDSInstanceTable tr', function() {
-            var name = $('td', this).eq(0).text();
-            if (name != "") {
+            var rowIndex = this.rowIndex - 1;
+            var name = rdsInstancesCollection.at(rowIndex).get('dbName');
+            var state = rdsInstancesCollection.at(rowIndex).get('dbStatus');
+            if (state == 'available') {
                 self.model.setRDSSelectedInstance(this.rowIndex - 1);
                 self.updateViews(name);
             }

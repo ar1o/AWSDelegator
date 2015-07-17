@@ -38,16 +38,13 @@ var InstancesModel = Backbone.Model.extend({
 			for (var r in result) {
 				var data = new ec2InstanceModel({
 					instance: result[r].Id,
-					imageId: result[r].ImageId,
 					state: result[r].State,
-					keyName: result[r].KeyName,
+					userName: result[r].Name,
+					groupName: result[r].Group,
 					instanceType: result[r].Type,
 					launchTime: result[r].LaunchTime,
-					duration: result[r].Lifetime,
-					zone: result[r].Zone,
-					email: result[r].Email,
-					volumeid: result[r].VolumeId,
-					lastActiveTime: result[r].LastActiveTime
+					lifetime: result[r].Lifetime,
+					zone: result[r].Zone
 				});
 				ec2InstancesCollection.add(data);
 			}
@@ -158,16 +155,13 @@ var InstancesModel = Backbone.Model.extend({
 var ec2InstanceModel = Backbone.Model.extend({
 	defaults: {
 		instance: null,
-		imageId: null,
 		state: null,
-		dns: null,
-		keyName: null,
+		userName: 'null',
+		groupName: 'null',
 		instanceType: null,
 		launchTime: null,
-		runningTime: null,
-		zone: null,
-		email: "mikesmit.com@gmail.com",
-		volumeid: null
+		lifetime: null,
+		zone: null
 	}
 });
 

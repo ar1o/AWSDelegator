@@ -674,6 +674,9 @@ div#serviceContainer {
 .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
   right: 0px;
 }
+.warning {
+  color: red;
+}
 .NotificationView {
   right: -9999px;
   position: fixed;
