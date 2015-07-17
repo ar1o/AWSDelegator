@@ -42,17 +42,17 @@ var EC2InstancesView = Backbone.View.extend({
             }
         });
 
-        this.$el.on('click', '#InstanceTable tbody tr', function() {
+        var table = $('#InstanceTable').DataTable();
 
-        // $('#InstanceTable tbody').on('click', 'tr', function() {
+        this.$el.on('click', '#InstanceTable tbody tr', function() {
             if ($(this).hasClass('selected')) {
                 $(this).removeClass('selected');
             } else {
-                console.log(this.$('tr.selected').removeClass('selected'));
-                this.$('tr.selected').removeClass('selected');
+                table.$('tr.selected').removeClass('selected');
                 $(this).addClass('selected');
             }
-        }.bind(this));
+        });
+
     },
 
     render: function() {

@@ -6,22 +6,37 @@ var NotificationView = Backbone.View.extend({
         if (!this.model) {
             this.model = new NotificationModel();
         }
-        setInterval(this.model.getNotification(),1000*6);
+        console.log('init')
+        var self = this;
+        self.model.getNotification();
+        setInterval(function() {
+            self.model.getNotification();
+        }, 1000 * 60 * 60);
         this.bindings();
     },
 
-
     bindings: function() {
         this.$el.on("click", '.notify-data', function(e) {
-            if(this.model.isOpen == true) {
+            if (this.model.isOpen == true) {
                 var clicked = e.target
                 var currentID = clicked.id
-                console.log('currentID clicked',currentID);
+                console.log('currentID clicked', currentID);
                 //Set notification as seen 
-                if(this.model.isSeen(currentID) == false) {
+                if (this.model.isSeen(currentID) == false) {
                     this.model.setAsSeen(currentID);
                 }
-                
+                //open usage monitor
+                window.location.hash = '#/UsageMonitor';
+                setTimeout(function() {
+                    $('#BudgetTable tr').each(function() {
+
+                        var str = ('#' + currentID);
+                        var id = $(this).find(str).html();
+                        if (typeof(id) != "undefined") {
+                            $('#' + id).click();
+                        }
+                    });
+                }, 200);
             }
         }.bind(this));
 
@@ -45,9 +60,9 @@ var NotificationView = Backbone.View.extend({
     },
 
     changeBackground: function() {
-        for(var i = 0; i < notificationCollection.length; i++) {
-            var id = '#'+notificationCollection.at(i).get('notification');
-            if(notificationCollection.at(i).get('seen') == 'false') {
+        for (var i = 0; i < notificationCollection.length; i++) {
+            var id = '#' + notificationCollection.at(i).get('notification');
+            if (notificationCollection.at(i).get('seen') == 'false') {
                 this.$(id).css({
                     'background': 'white'
                 });
@@ -61,16 +76,3 @@ var NotificationView = Backbone.View.extend({
 
 
 });
-
-
-
-
-
-
-
-
-
-
-
-
-

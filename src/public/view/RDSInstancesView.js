@@ -20,9 +20,10 @@ var RDSInstancesView = Backbone.View.extend({
 
     bindings: function() {
     var self = this;
+    var table;
         this.model.change('instancesDataReady', function(model, val) {
             this.render();
-            $('#RDSInstanceTable').DataTable({
+            table = $('#RDSInstanceTable').DataTable({
                 "iDisplayLength": 15,
                 "bSort": false
                 // "paging":   false,
@@ -39,6 +40,19 @@ var RDSInstancesView = Backbone.View.extend({
                 self.updateViews(name);
             }
         });
+
+
+        // var table = $('#RDSInstanceTable').DataTable();
+
+        this.$el.on('click', '#RDSInstanceTable tbody tr', function() {
+            if ($(this).hasClass('selected')) {
+                $(this).removeClass('selected');
+            } else {
+                table.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+            }
+        });
+
     },
 
     render: function() {

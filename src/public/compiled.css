@@ -38,8 +38,8 @@ body {
 }
 .NavView {
   position: fixed;
-  left: -250px;
-  width: 250px;
+  left: -270px;
+  width: 270px;
   top: 48px;
   background-color: #f7f7f7;
   overflow: hidden;

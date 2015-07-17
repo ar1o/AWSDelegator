@@ -10,6 +10,9 @@ var UsageMonitorView = Backbone.View.extend({
         this.costActivity = new UMCostView();
         this.groupUserServiceView = new UMGroupUserServiceView();
         this.bindings();
+        this.render();
+        // $(function() {
+        // });
     },
 
     updateUserViews: function(rowIndex) {
@@ -28,27 +31,40 @@ var UsageMonitorView = Backbone.View.extend({
 
     bindings: function() {
         var self = this;
-        this.render();
+        var table;
+
+        //        this.render();
         this.model.change('budgetDataReady', function(model, val) {
             this.render();
-            $('#BudgetTable').DataTable({
+            table = $('#BudgetTable').DataTable({
                 "iDisplayLength": 15,
                 "bSort": false
-                // "paging":   false,
-                // "info":     false,
-                // "bFilter": false
+                    // "paging":   false,
+                    // "info":     false,
+                    // "bFilter": false
             });
         }.bind(this));
 
         this.$el.on('click', '#BudgetTable tr', function() {
-            var rowIndex = this.rowIndex - 1; 
+            var rowIndex = this.rowIndex - 1;
             self.model.setBudgetIndex(rowIndex);
-            if(budgetCollection.at(rowIndex).get('batchType')=='user'){
+            if (budgetCollection.at(rowIndex).get('batchType') == 'user') {
                 $("#serviceContainer").remove();
                 self.updateUserViews(rowIndex);
-            }else{
+            } else {
                 $("#groupUserServiceContainer").remove();
                 self.updateGroupViews(rowIndex);
+            }
+        });
+
+        // var table = $('#BudgetTable').DataTable();
+
+        this.$el.on('click', '#BudgetTable tbody tr', function() {
+            if ($(this).hasClass('selected')) {
+                $(this).removeClass('selected');
+            } else {
+                table.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
             }
         });
     },

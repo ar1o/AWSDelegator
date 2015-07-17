@@ -21,6 +21,7 @@ var NotificationModel = Backbone.Model.extend({
 		});
 	},
 	getNotification: function() {
+		console.log('checking for notifications');
 		notificationCollection.reset();
 		var self = this;
 		this.notification_result().done(function(result) {

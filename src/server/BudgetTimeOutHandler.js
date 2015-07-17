@@ -18,11 +18,14 @@ exports.checkBudgets = function() {
                 });
             };
             var iterator1 = function(callback1) {
-                // console.log('time', time)
-                // console.log('EndDate', d[index1])
+                console.log('index', index1);
+                console.log('TIME', time);
+                console.log('budgetName TIME', d[index1].EndDate);
+
+                console.log('budgetName', d);
                 // console.log(typeof(time), typeof(d[index1].EndDate));
-                if (time > d[index1].EndDate && d[index1].TimeOut == 'true' && d[index1].State == 'valid') {
-                    // console.log("HIT");
+                if (time > d[index1].EndDate && /*d[index1].TimeOut == 'true' && */ d[index1].State == 'valid') {
+                    // console.log('budgetName', d);
                     db.collection('budgets').update({
                             BudgetName: d[index1].BudgetName
                         }, {
@@ -41,15 +44,18 @@ exports.checkBudgets = function() {
                                     Time: time
                                 }, function(err) {
                                     if (err) throw err;
-                                    console.log('done')
+                                    console.log('Added a notification')
                                     callback1();
                                 });
                             }, 0);
                         }
                     );
+                } else {
+                    callback1();
+
                 }
             };
-            if (d.length != 0) {
+            if (d.length > 0) {
                 controller1();
             }
         });
@@ -61,10 +67,6 @@ var checkDate = function(val) {
     if (val < 10) val = '0' + val;
     return val;
 };
-
-
-
-
 
 
 

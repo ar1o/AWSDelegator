@@ -161,7 +161,7 @@ templates['IAMUsersView'] = template({"1":function(depth0,helpers,partials,data)
     + escapeExpression(lambda((depth0 != null ? depth0.budgetNames : depth0), depth0))
     + "</td>\n		</tr>\n";
 },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  var stack1, buffer = "<table id=\"UsersTable\" class=\"hover\">\n	<thead>\n		<tr class=\"dark-row\">\n			<th>UserName</th>\n			<th>Arn</th>\n			<th>CreateDate</th>\n			<th>BudgetName/s</th>\n		</tr>\n	</thead>\n	<tbody id=\"instanceData\">\n";
+  var stack1, buffer = "<table id=\"UsersTable\" class=\"display\">\n	<thead>\n		<tr class=\"dark-row\">\n			<th>UserName</th>\n			<th>Arn</th>\n			<th>CreateDate</th>\n			<th>BudgetName/s</th>\n		</tr>\n	</thead>\n	<tbody id=\"instanceData\">\n";
   stack1 = helpers.each.call(depth0, (depth0 != null ? depth0.instances : depth0), {"name":"each","hash":{},"fn":this.program(1, data),"inverse":this.noop,"data":data});
   if (stack1 != null) { buffer += stack1; }
   return buffer + "	</tbody>	\n</table>";
@@ -325,21 +325,33 @@ templates['UMUsageView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":fun
   },"useData":true});
 templates['UsageMonitorView'] = template({"1":function(depth0,helpers,partials,data) {
   var lambda=this.lambda, escapeExpression=this.escapeExpression;
-  return "		<tr>\n			<td >"
+  return "		<tr>\n			<td id="
     + escapeExpression(lambda((depth0 != null ? depth0.budgetName : depth0), depth0))
-    + "</td>\n			<td>"
+    + " >"
+    + escapeExpression(lambda((depth0 != null ? depth0.budgetName : depth0), depth0))
+    + "</td>\n			<td id="
     + escapeExpression(lambda((depth0 != null ? depth0.batchType : depth0), depth0))
-    + "</td>\n			<td>"
+    + ">"
+    + escapeExpression(lambda((depth0 != null ? depth0.batchType : depth0), depth0))
+    + "</td>\n			<td id="
     + escapeExpression(lambda((depth0 != null ? depth0.batchName : depth0), depth0))
-    + "</td>\n			<td>"
+    + ">"
+    + escapeExpression(lambda((depth0 != null ? depth0.batchName : depth0), depth0))
+    + "</td>\n			<td id="
     + escapeExpression(lambda((depth0 != null ? depth0.startDate : depth0), depth0))
-    + "</td>\n			<td>"
+    + ">"
+    + escapeExpression(lambda((depth0 != null ? depth0.startDate : depth0), depth0))
+    + "</td>\n			<td id="
     + escapeExpression(lambda((depth0 != null ? depth0.endDate : depth0), depth0))
-    + "</td> \n			<td>"
+    + ">"
+    + escapeExpression(lambda((depth0 != null ? depth0.endDate : depth0), depth0))
+    + "</td> \n			<td id="
+    + escapeExpression(lambda((depth0 != null ? depth0.amount : depth0), depth0))
+    + ">"
     + escapeExpression(lambda((depth0 != null ? depth0.amount : depth0), depth0))
     + "</td>\n		</tr>\n";
 },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  var stack1, buffer = "<table id=\"BudgetTable\" class=\"hover\">\n	<thead>\n		<tr class=\"dark-row\">\n			<th>BudgetName</th>\n			<th>BatchType</th>\n			<th>BatchName</th>\n			<th>StartDate</th>\n			<th>EndDate</th>\n			<th>Amount</th>\n		</tr>\n	</thead>\n	<tbody id=\"budgetData\">\n";
+  var stack1, buffer = "<table id=\"BudgetTable\" class=\"display\">\n	<thead>\n		<tr class=\"dark-row\">\n			<th>BudgetName</th>\n			<th>BatchType</th>\n			<th>BatchName</th>\n			<th>StartDate</th>\n			<th>EndDate</th>\n			<th>Amount</th>\n		</tr>\n	</thead>\n	<tbody id=\"budgetData\">\n";
   stack1 = helpers.each.call(depth0, (depth0 != null ? depth0.budgets : depth0), {"name":"each","hash":{},"fn":this.program(1, data),"inverse":this.noop,"data":data});
   if (stack1 != null) { buffer += stack1; }
   return buffer + "	</tbody>	\n</table>\n";
