@@ -4,6 +4,7 @@ var UsageMonitorView = Backbone.View.extend({
         if (!this.model) {
             this.model = new UsageMonitorModel();
         }
+        this.editHTML = '<div class="insetting"> <div class="incontainer"><label class="budget-label">Name </label><input type="text" id="budgetname" placeholder="e.g., "Monthly EC2 Budget""></div><div class="warning" id="budgetnamewarning">Invalid budget Name.</div><div class="warning" id="oldbudgetnamewarning">Budget Name already in use.</div><div class="warning" id="budgetnamerequest">Please enter a budget name.</div></div><div class="insetting"> <div class="incontainer"><label class="budget-label">Include costs related to </label><select class="costfilter"><option value="" disabled selected>Select</option><option value="user">User</option><option value="group">Groups</option></select></div></div><div class="sub-insetting"> <div class="sub-incontainer"><div class="hidden" id="filter-details"><select class="sub-costfilter"><option value="" disabled selected>Select</option>{{#each col}}<option value={{this.name}}>{{this.name}}</option>{{/each}}</select></div></div><div class="warning" id="batchtyperequest">Please select a Batch Type.</div><div class="warning" id="batchnamerequest">Please select a Batch Name.</div></div><div class="insetting"> <div class="incontainer"><label class="budget-label">Start date </label><input type="text" id="startdate" placeholder="mm/dd/yyyy"><div class="warning" id="startdaterequest">Please select a start date.</div></div></div><div class="insetting"> <div class="incontainer"><label class="budget-label">End date </label><input type="text" id="enddate" placeholder="mm/dd/yyyy"><div class="warning" id="enddatewarning">Invalid dates selected.</div><div class="warning" id="enddaterequest">Please select an end.</div></div></div><div class="insetting"> <div class="incontainer"><label class="budget-label">Monthly Amount </label><input type="text" id="amount" placeholder="USD"><div class="warning" id="amountwarning">Invalid amount.</div><div class="warning" id="amountrequest">Please enter an amount.</div></div></div><div class="insetting"> <div class="incontainer"><label class="budget-label">Stop resource(s) when quota reached </label><div class="onoffswitch"><input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked><label class="onoffswitch-label" for="myonoffswitch"><span class="onoffswitch-inner"></span><span class="onoffswitch-switch"></span></label></div></div></div>';
         this.model.getBudgets();
         this.operationsActivity = new UMOperationsView();
         this.usageActivity = new UMUsageView();
@@ -126,7 +127,7 @@ var UsageMonitorView = Backbone.View.extend({
                 // A case for each action. Your actions here
                 case "Edit":
                     $('.modal-title').append('<div class="content-title">Edit budget: '+ self.data.budgetName+'</div>');
-                    $('.modal-body').append('<div class="content-body">EDIT CONTENT GOES HERE</div>');
+                    $('.modal-body').append('<div class="content-body">'+self.editHTML+'</div>');
                     $("#action").text("Save");
                     break;
 
