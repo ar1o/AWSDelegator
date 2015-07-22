@@ -1,0 +1,26 @@
+<table id="BudgetTable" class="hover">
+	<thead>
+		<tr class="dark-row">
+			<th>BudgetName</th>
+			<th>BatchType</th>
+			<th>BatchName</th>
+			<th>StartDate</th>
+			<th>EndDate</th>
+			<th>Amount</th>
+			<th>Stop Instances</th>
+		</tr>
+	</thead>
+	<tbody id="budgetData">
+	{{#each budgets}}
+		<tr>
+			<td >{{this.budgetName}}</td>
+			<td>{{this.batchType}}</td>
+			<td>{{this.batchName}}</td>
+			<td>{{this.startDate}}</td>
+			<td>{{this.endDate}}</td> 
+			<td>{{this.amount}}</td>
+			<td>{{this.timeout}}</td>
+		</tr>
+	{{/each}}
+	</tbody>	
+</table>

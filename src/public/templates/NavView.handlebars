@@ -2,7 +2,7 @@
 {{#each pages}}
 <div class="page" page-id="{{this.page_id}}">{{this.title}}</div>
 
-{{#ifCond this.title '==' "Amazon Elastic Compute Cloud"}}
+{{#ifCond this.title '==' "Amazon EC2 Service"}}
 <div class="subpage" subpage-id="0"> EC2 Instances</div>
 {{/ifCond}}
 
@@ -11,8 +11,8 @@
 {{/ifCond}}
 
 {{#ifCond this.title '==' "Usage Monitor"}}
-<div class="subpage" subpage-id="2"> IAM Groups</div>
-<div class="subpage" subpage-id="3"> IAM Users</div>
+<div class="subpage" subpage-id="2"> Cost Budgets</div>
+<div class="subpage" subpage-id="3"> Time Budgets</div>
 {{/ifCond}}
 {{/each}}
 

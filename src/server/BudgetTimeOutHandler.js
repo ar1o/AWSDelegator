@@ -41,7 +41,6 @@ exports.checkBudgets = function() {
                                     Time: time
                                 }, function(err) {
                                     if (err) throw err;
-                                    console.log('done')
                                     callback1();
                                 });
                             }, 0);

@@ -1,0 +1,121 @@
+<!-- Modal -->
+<div class="modal fade" id="timeBudgetModal" role="dialog">
+	<div class="modal-dialog">
+
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title">Create Time Budget Profile</h4>
+			</div>
+			<div class="modal-body">
+				<div class="insetting"> 
+					<div class="incontainer">
+						<label class="budget-label">Name </label>
+						<input type="text" id="time-budgetname" placeholder="e.g., 'Monthly EC2 Budget'">
+					</div>
+					<div class="warning" id="time-budgetnamewarning">Invalid budget Name.</div>
+					<div class="warning" id="time-oldbudgetnamewarning">Budget Name already in use.</div>
+					<div class="warning" id="time-budgetnamerequest">Please enter a budget name.</div>
+				</div>
+
+				<div class="insetting"> 
+					<div class="incontainer">
+						<label class="budget-label">Time budget related to </label>
+						<select class="time-costfilter">
+							<option value="" disabled selected>Select</option>
+							<option value="user">User</option>
+							<option value="group">Groups</option>
+						</select>
+					</div>
+				</div>
+
+				<div class="sub-insetting"> 
+					<div class="sub-incontainer">
+						<div class="hidden" id="time-filter-details">
+							<select class="time-sub-costfilter">
+								<option value="" disabled selected>Select</option>
+								{{#each col}}
+								<option value={{this.name}}>{{this.name}}</option>
+								{{/each}}
+							</select>
+						</div>
+					</div>
+					<div class="warning" id="time-batchtyperequest">Please select a Batch Type.</div>
+					<div class="warning" id="time-batchnamerequest">Please select a Batch Name.</div>
+				</div>
+
+				<div class="insetting"> 
+					<div class="incontainer">
+						<label class="budget-label">Start date </label>
+						<input type="text" id="time-startdate" placeholder="mm/dd/yyyy">
+						<div class="warning" id="time-startdaterequest">Please select a start date.</div>
+					</div>
+				</div>
+
+				<div class="insetting"> 
+					<div class="incontainer">
+						<label class="budget-label">End date </label>
+						<input type="text" id="time-enddate" placeholder="mm/dd/yyyy">
+						<div class="warning" id="time-enddatewarning">Invalid dates selected.</div>
+						<div class="warning" id="time-enddaterequest">Please select an end.</div>
+					</div>
+				</div>
+
+				<div class="insetting"> 
+					<div class="incontainer">
+						<label class="budget-label">Time Amount </label>
+						<input type="text" id="time-amount" placeholder="Hours">
+						<div class="warning" id="time-amountwarning">Invalid time amount.</div>
+						<div class="warning" id="time-amountrequest">Please enter a time amount.</div>
+					</div>
+				</div>
+
+				<div class="insetting"> 
+					<div class="incontainer">
+						<label class="budget-label">Under-profile Decay Rate</label>
+						<input type="text" id="time-udecay" placeholder="e.g., 3">
+						<div class="warning" id="time-udecaywarning">Invalid decay rate.</div>
+						<div class="warning" id="time-udecayrequest">Please enter a decay rate.</div>
+					</div>
+				</div>
+
+				<div class="insetting"> 
+					<div class="incontainer">
+						<label class="budget-label">Over-profile Decay Rate</label>
+						<input type="text" id="time-odecay" placeholder="e.g., 2">
+						<div class="warning" id="time-odecaywarning">Invalid decay rate.</div>
+						<div class="warning" id="time-odecayrequest">Please enter a decay rate.</div>
+					</div>
+				</div>
+
+				<div class="insetting"> 
+					<div class="incontainer">
+						<label class="budget-label">Max Database Connections</label>
+						<input type="text" id="time-dbconnections" placeholder="e.g., 20">
+						<div class="warning" id="time-dbconnectionswarning">Invalid number.</div>
+						<div class="warning" id="time-dbconnectionsrequest">Please enter a number.</div>
+					</div>
+				</div>
+
+				<div class="insetting"> 
+					<div class="incontainer">
+						<label class="budget-label">Stop resource(s) when quota reached </label>
+						<div class="onoffswitch">
+							<input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="time-myonoffswitch" checked>
+							<label class="onoffswitch-label" for="myonoffswitch">
+								<span class="onoffswitch-inner"></span>
+								<span class="onoffswitch-switch"></span>
+							</label>
+						</div>
+					</div>
+				</div>
+			</div>	
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" id="time-savebtn">Save</button>
+				<button type="button" class="btn btn-default" id="time-closebtn">Close</button>
+			</div>
+		</div>
+
+	</div>
+</div>

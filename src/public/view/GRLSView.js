@@ -1,28 +1,20 @@
-var EC2InstancesView = Backbone.View.extend({
-    className: 'EC2InstancesView',
+var GRLSView = Backbone.View.extend({
+    className: 'GRLSView',
     initialize: function(options) {
         if (!this.model) {
-            this.model = new InstancesModel();
+            this.model = new GRLSModel();
         }
         this.model.getEC2Instances();
-        this.billingActivity = new EC2BillingView();
-        this.operationsActivity = new EC2OperationsView();
-        this.metricsActivity = new EC2MetricsView();
+        this.model.getRDSInstances();
         this.bindings();
         this.render();
-    },
-
-    updateViews: function(selected) {
-        this.billingActivity.model.calcTotalCost(selected);
-        this.metricsActivity.model.getEC2Metrics(selected);
-        this.operationsActivity.model.getEC2Operations(selected);
     },
 
     bindings: function() {
         var self = this;
         var table;
 
-        this.model.change('instancesDataReady', function(model, val) {
+        this.model.change('ec2InstancesDataReady', function(model, val) {
             this.render();
             table = $('#EC2InstanceTable').DataTable({
                 "iDisplayLength": 15,
@@ -33,13 +25,25 @@ var EC2InstancesView = Backbone.View.extend({
             });
         }.bind(this));
 
-        this.$el.on('click', '#InstanceTable tr', function() {
+        // this.model.change('rdsInstancesDataReady', function(model, val) {
+        //     this.render();
+        //     table = $('#RDSInstanceTable').DataTable({
+        //         "iDisplayLength": 15,
+        //         "bSort": false
+        //             // "paging":   false,
+        //             // "info":     false,
+        //             // "bFilter": false
+        //     });
+        // }.bind(this));
+
+        this.$el.on('click', '#EC2InstanceTable tr', function() {
             var rowIndex = this.rowIndex - 1;
             var instance = ec2InstancesCollection.at(rowIndex).get('instance');
             var state = ec2InstancesCollection.at(rowIndex).get('state');
+            console.log(ec2InstancesCollection.at(rowIndex))
             if (state == 'running') {
-                self.model.setEC2SelectedInstance(rowIndex);
-                self.updateViews(instance);
+                // self.model.setEC2SelectedInstance(rowIndex);
+                // self.updateViews(instance);
             }
         });
 
@@ -58,12 +62,13 @@ var EC2InstancesView = Backbone.View.extend({
 
     render: function() {
 
-        var html = Handlebars.templates.EC2InstancesView({
-            instances: ec2InstancesCollection.toJSON()
+        var html = Handlebars.templates.GRLSView({
+            ec2instances: ec2InstancesCollection.toJSON(),
+            rdsinstances: rdsInstancesCollection.toJSON()
         });
         this.$el.html(html);
-        this.$el.append(this.operationsActivity.el);
-        this.$el.append(this.billingActivity.el);
-        this.$el.append(this.metricsActivity.el);
+        // this.$el.append(this.operationsActivity.el);
+        // this.$el.append(this.billingActivity.el);
+        // this.$el.append(this.metricsActivity.el);
     }
 });

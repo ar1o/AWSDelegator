@@ -1,4 +1,3 @@
-
 MongoClient = require('mongodb').MongoClient;
 AWS = require('aws-sdk');
 mongoose = require('mongoose');
@@ -11,8 +10,11 @@ require('./model/latest');
 require('./model/pricing');
 require('./model/billing');
 require('./model/budget');
+require('./model/timeBudget');
 require('./model/notification');
 require('./model/usageMeter');
+require('./model/grls');
+require('./model/grlsLineItem');
 billingAttributes = ['RateId', 'ProductName', 'UsageType', 'Operation', 'AvailabilityZone', 'ItemDescription',
     'UsageStartDate', 'UsageQuantity', 'Rate', 'Cost', 'user:Name', 'user:Group', 'user:Email' , 'ResourceId'];
 numericAttirbutes = ['RateId', 'UsageQuantity', 'Rate', 'Cost'];

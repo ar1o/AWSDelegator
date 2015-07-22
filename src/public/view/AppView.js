@@ -8,7 +8,7 @@ var AppView = Backbone.View.extend({
         this.navView = new NavView();
 
         this.budgetView = new BudgetView();
-
+        this.timeBudgetView = new TimeBudgetView();
         this.configurationView = new ConfigurationView();
         this.notificationView = new NotificationView();
 
@@ -144,6 +144,11 @@ var AppView = Backbone.View.extend({
 
         this.$el.on('click', '[page-id="3"]', function(e) {
             this.navView.model.isOpen = false
+            window.location.hash = '#/IAM';
+        }.bind(this));
+
+        this.$el.on('click', '[page-id="4"]', function(e) {
+            this.navView.model.isOpen = false
             window.location.hash = '#/UsageMonitor';
         }.bind(this));
 
@@ -159,12 +164,12 @@ var AppView = Backbone.View.extend({
 
         this.$el.on('click', '[subpage-id="2"]', function(e) {
             this.navView.model.isOpen = false
-            window.location.hash = '#/IAMGroups';
+            window.location.hash = '#/UMCostBudgets';
         }.bind(this));
 
         this.$el.on('click', '[subpage-id="3"]', function(e) {
             this.navView.model.isOpen = false
-            window.location.hash = '#/IAMUsers';
+            window.location.hash = '#/UMTimeBudgets';
         }.bind(this));
 
         this.$el.on("click", '.notify', function(e) {
@@ -195,6 +200,7 @@ var AppView = Backbone.View.extend({
         this.$el.append(this.configurationView.el);
         // this.$el.append(this.footer.el);
         this.$el.append(this.budgetView.el);
+        this.$el.append(this.timeBudgetView.el);
         this.$el.append(this.notificationView.el);
         this.setView(this.router.get('view'));
     },
