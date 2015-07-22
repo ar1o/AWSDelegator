@@ -1,0 +1,41 @@
+<table id="GroupsTable" class="hover">
+	<thead>
+		<tr class="dark-row">
+			<th>GroupName</th>
+			<th>Arn</th>
+			<th>CreateDate</th>
+			<th>BudgetName/s</th>
+		</tr>
+	</thead>
+	<tbody id="instanceData1">
+	{{#each groupInstances}}
+		<tr>
+			<td >{{this.name}}</td>
+			<td>{{this.arn}}</td>
+			<td>{{this.createDate}}</td>
+			<td>{{this.budgetNames}}</td>
+		</tr>
+	{{/each}}
+	</tbody>	
+</table>
+
+<table id="UsersTable" class="hover">
+	<thead>
+		<tr class="dark-row">
+			<th>UserName</th>
+			<th>Arn</th>
+			<th>CreateDate</th>
+			<th>BudgetName/s</th>
+		</tr>
+	</thead>
+	<tbody id="instanceData2">
+	{{#each userInstances}}
+		<tr>
+			<td >{{this.name}}</td>
+			<td>{{this.arn}}</td>
+			<td>{{this.createDate}}</td>
+			<td>{{this.budgetNames}}</td>
+		</tr>
+	{{/each}}
+	</tbody>	
+</table>

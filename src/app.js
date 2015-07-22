@@ -35,7 +35,6 @@ db.on("open", function() {
 
 
 app.post('/setBalance' , require(__dirname +'/server/route/CredentialsRoute').setBalance);
-// app.post('/setCredentials', require(__dirname + '/server/route/CredentialsRoute').setCredentials);
 app.get('/getAccount', require(__dirname + '/server/route/CredentialsRoute').getAccountNumber);
 app.get('/getConfiguration', require(__dirname + '/server/route/CredentialsRoute').getConfiguration);
 app.get('/getAccountBalance', require(__dirname + '/server/route/CredentialsRoute').getAccountBalance);
@@ -85,6 +84,7 @@ app.get('/api/usage/budget', require(__dirname + '/server/route/budgetRoute').bu
 app.get('/api/usage/groups', require(__dirname + '/server/route/iamRoute').groups);
 app.get('/api/usage/users', require(__dirname + '/server/route/iamRoute').users);
 app.get('/api/usage/budget', require(__dirname + '/server/route/budgetRoute').budgets);
+app.get('/api/usage/timeBudget', require(__dirname + '/server/route/timeBudgetRoute').timeBudgets);
 app.get('/api/usage/budgetCost', require(__dirname + '/server/route/budgetRoute').cost);
 app.get('/api/usage/groupUserService', require(__dirname + '/server/route/budgetRoute').groupUserService);
 app.get('/api/usage/userService', require(__dirname + '/server/route/budgetRoute').userService);
@@ -92,6 +92,11 @@ app.get('/api/usage/budgetUsage', require(__dirname + '/server/route/budgetRoute
 app.get('/api/usage/userBudgetCost', require(__dirname + '/server/route/budgetRoute').userCost);
 app.get('/api/usage/groupServiceUsage', require(__dirname + '/server/route/budgetRoute').groupServiceUsage);
 app.get('/api/usage/userServiceUsage', require(__dirname + '/server/route/budgetRoute').userServiceUsage);
+
+app.get('/api/usage/timeBudgetUsage', require(__dirname + '/server/route/budgetRoute').timeBudgetUsage);
+app.get('/api/usage/timeBudgetCost', require(__dirname + '/server/route/budgetRoute').timeBudgetCost);
+app.get('/api/usage/userTimeBudgetCost', require(__dirname + '/server/route/budgetRoute').userTimeCost);
+app.get('/api/usage/groupUserTimeService', require(__dirname + '/server/route/budgetRoute').groupUserTimeService);
 
 app.get('/api/notifications', require(__dirname + '/server/route/notificationsRoute').notifications);
 app.get('/api/notifications/seen', require(__dirname + '/server/route/notificationsRoute').updateNotifications);
@@ -117,13 +122,37 @@ app.post('/budget', jsonParser, function(req, res) {
             State: 'valid'
         }, function(err) {
             if (err) throw err;
-            console.log('A budget profile has been inserte.')
-            res.send('Complete!');
+            res.send();
         });
     });
 });
 
-
+app.post('/timebudget', jsonParser, function(req, res) {
+    var r = req.body;
+    var startDate = r.startDate.split('/');
+    var endDate = r.endDate.split('/');
+    MongoClient.connect(databaseUrl, function(err, db) {
+        if (err) throw err;
+        var doc = {
+            TimeBudgetName: r.timebudgetname,
+            BatchType: r.batchType,
+            BatchName: r.batchName,
+            StartDate: startDate[2] + '-' + startDate[0] + '-' + startDate[1] + ' ' + '00:00:00',
+            EndDate: endDate[2] + '-' + endDate[0] + '-' + endDate[1] + ' ' + '23:00:00',
+            TimeAmount: r.timeamount,
+            TimeOut: r.option,
+            uDecayRate: r.udecay,
+            oDecayRate: r.odecay,
+            dBConnections: r.dbConnections,
+            State: 'valid'
+        };
+        db.collection('timeBudgets').insert(doc, function(err) {
+            if (err) throw err;
+            res.send();
+            require('./server/route/timeBudgetRoute').createGRLSInstances(doc);
+        });
+    });
+});
 
 function errorHandler(err, req, res, next) {
     console.error(err.message);

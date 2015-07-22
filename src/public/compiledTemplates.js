@@ -23,9 +23,9 @@ templates['BudgetView'] = template({"1":function(depth0,helpers,partials,data) {
 },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var stack1;
 
-  return "\n<!-- Modal -->\n<div class=\"modal fade\" id=\"myModal\" role=\"dialog\">\n	<div class=\"modal-dialog\">\n\n		<!-- Modal content-->\n		<div class=\"modal-content\">\n			<div class=\"modal-header\">\n				<button type=\"button\" class=\"close\" data-dismiss=\"modal\">&times;</button>\n				<h4 class=\"modal-title\">Create Budget Profile</h4>\n			</div>\n			<div class=\"modal-body\">\n				<div class=\"insetting\"> \n					<div class=\"incontainer\">\n						<label class=\"budget-label\">Name </label>\n						<input type=\"text\" id=\"budgetname\" placeholder=\"e.g., 'Monthly EC2 Budget'\">\n					</div>\n					<div class=\"warning\" id=\"budgetnamewarning\">Invalid budget Name.</div>\n					<div class=\"warning\" id=\"oldbudgetnamewarning\">Budget Name already in use.</div>\n					<div class=\"warning\" id=\"budgetnamerequest\">Please enter a budget name.</div>\n				</div>\n\n				<div class=\"insetting\"> \n					<div class=\"incontainer\">\n						<label class=\"budget-label\">Include costs related to </label>\n						<select class=\"costfilter\">\n							<option value=\"\" disabled selected>Select</option>\n							<option value=\"user\">User</option>\n							<option value=\"group\">Groups</option>\n						</select>\n					</div>\n				</div>\n\n				<div class=\"sub-insetting\"> \n					<div class=\"sub-incontainer\">\n						<div class=\"hidden\" id=\"filter-details\">\n							<select class=\"sub-costfilter\">\n								<option value=\"\" disabled selected>Select</option>\n"
+  return "\n<!-- Modal -->\n<div class=\"modal fade\" id=\"myModal\" role=\"dialog\">\n	<div class=\"modal-dialog\">\n\n		<!-- Modal content-->\n		<div class=\"modal-content\">\n			<div class=\"modal-header\">\n				<button type=\"button\" class=\"close\" data-dismiss=\"modal\">&times;</button>\n				<h4 class=\"modal-title\">Create Cost Budget Profile</h4>\n			</div>\n			<div class=\"modal-body\">\n				<div class=\"insetting\"> \n					<div class=\"incontainer\">\n						<label class=\"budget-label\">Name </label>\n						<input type=\"text\" id=\"budgetname\" placeholder=\"e.g., 'Monthly EC2 Budget'\">\n					</div>\n					<div class=\"warning\" id=\"budgetnamewarning\">Invalid budget Name.</div>\n					<div class=\"warning\" id=\"oldbudgetnamewarning\">Budget Name already in use.</div>\n					<div class=\"warning\" id=\"budgetnamerequest\">Please enter a budget name.</div>\n				</div>\n\n				<div class=\"insetting\"> \n					<div class=\"incontainer\">\n						<label class=\"budget-label\">Include costs related to </label>\n						<select class=\"costfilter\">\n							<option value=\"\" disabled selected>Select</option>\n							<option value=\"user\">User</option>\n							<option value=\"group\">Groups</option>\n						</select>\n					</div>\n				</div>\n\n				<div class=\"sub-insetting\"> \n					<div class=\"sub-incontainer\">\n						<div class=\"hidden\" id=\"filter-details\">\n							<select class=\"sub-costfilter\">\n								<option value=\"\" disabled selected>Select</option>\n"
     + ((stack1 = helpers.each.call(depth0,(depth0 != null ? depth0.col : depth0),{"name":"each","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
-    + "							</select>\n						</div>\n					</div>\n					<div class=\"warning\" id=\"batchtyperequest\">Please select a Batch Type.</div>\n					<div class=\"warning\" id=\"batchnamerequest\">Please select a Batch Name.</div>\n				</div>\n\n\n				<div class=\"insetting\"> \n					<div class=\"incontainer\">\n						<label class=\"budget-label\">Start date </label>\n						<input type=\"text\" id=\"startdate\" placeholder=\"mm/dd/yyyy\">\n						<div class=\"warning\" id=\"startdaterequest\">Please select a start date.</div>\n					</div>\n				</div>\n\n				<div class=\"insetting\"> \n					<div class=\"incontainer\">\n						<label class=\"budget-label\">End date </label>\n						<input type=\"text\" id=\"enddate\" placeholder=\"mm/dd/yyyy\">\n						<div class=\"warning\" id=\"enddatewarning\">Invalid dates selected.</div>\n						<div class=\"warning\" id=\"enddaterequest\">Please select an end.</div>\n					</div>\n				</div>\n\n				<div class=\"insetting\"> \n					<div class=\"incontainer\">\n						<label class=\"budget-label\">Monthly Amount </label>\n						<input type=\"text\" id=\"amount\" placeholder=\"USD\">\n						<div class=\"warning\" id=\"amountwarning\">Invalid amount.</div>\n						<div class=\"warning\" id=\"amountrequest\">Please enter an amount.</div>\n					</div>\n				</div>\n\n\n				<div class=\"insetting\"> \n					<div class=\"incontainer\">\n						<label class=\"budget-label\">Stop resource(s) when quota reached </label>\n						<div class=\"onoffswitch\">\n							<input type=\"checkbox\" name=\"onoffswitch\" class=\"onoffswitch-checkbox\" id=\"myonoffswitch\" checked>\n							<label class=\"onoffswitch-label\" for=\"myonoffswitch\">\n								<span class=\"onoffswitch-inner\"></span>\n								<span class=\"onoffswitch-switch\"></span>\n							</label>\n						</div>\n					</div>\n				</div>\n			</div>\n			<div class=\"modal-footer\">\n				<button type=\"button\" class=\"btn btn-default\" id=\"savebtn\">Save</button>\n				<button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Close</button>\n			</div>\n		</div>\n\n	</div>\n</div>\n\n\n\n";
+    + "							</select>\n						</div>\n					</div>\n					<div class=\"warning\" id=\"batchtyperequest\">Please select a Batch Type.</div>\n					<div class=\"warning\" id=\"batchnamerequest\">Please select a Batch Name.</div>\n				</div>\n\n\n				<div class=\"insetting\"> \n					<div class=\"incontainer\">\n						<label class=\"budget-label\">Start date </label>\n						<input type=\"text\" id=\"startdate\" placeholder=\"mm/dd/yyyy\">\n						<div class=\"warning\" id=\"startdaterequest\">Please select a start date.</div>\n					</div>\n				</div>\n\n				<div class=\"insetting\"> \n					<div class=\"incontainer\">\n						<label class=\"budget-label\">End date </label>\n						<input type=\"text\" id=\"enddate\" placeholder=\"mm/dd/yyyy\">\n						<div class=\"warning\" id=\"enddatewarning\">Invalid dates selected.</div>\n						<div class=\"warning\" id=\"enddaterequest\">Please select an end.</div>\n					</div>\n				</div>\n\n				<div class=\"insetting\"> \n					<div class=\"incontainer\">\n						<label class=\"budget-label\">Cost Amount </label>\n						<input type=\"text\" id=\"amount\" placeholder=\"USD\">\n						<div class=\"warning\" id=\"amountwarning\">Invalid amount.</div>\n						<div class=\"warning\" id=\"amountrequest\">Please enter an amount.</div>\n					</div>\n				</div>\n\n\n				<div class=\"insetting\"> \n					<div class=\"incontainer\">\n						<label class=\"budget-label\">Stop resource(s) when quota reached </label>\n						<div class=\"onoffswitch\">\n							<input type=\"checkbox\" name=\"onoffswitch\" class=\"onoffswitch-checkbox\" id=\"myonoffswitch\" checked>\n							<label class=\"onoffswitch-label\" for=\"myonoffswitch\">\n								<span class=\"onoffswitch-inner\"></span>\n								<span class=\"onoffswitch-switch\"></span>\n							</label>\n						</div>\n					</div>\n				</div>\n			</div>\n			<div class=\"modal-footer\">\n				<button type=\"button\" class=\"btn btn-default\" id=\"savebtn\">Save</button>\n				<button type=\"button\" class=\"btn btn-default\" id=\"closebtn\">Close</button>\n			</div>\n		</div>\n\n	</div>\n</div>\n\n\n\n";
 },"useData":true});
 templates['ConfigurationView'] = template({"1":function(depth0,helpers,partials,data) {
     var alias1=this.lambda, alias2=this.escapeExpression;
@@ -103,7 +103,7 @@ templates['EC2InstancesView'] = template({"1":function(depth0,helpers,partials,d
 },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var stack1;
 
-  return "<table id=\"InstanceTable\" class=\"display\">\n	<thead>\n		<tr class=\"dark-row\">\n			<th>User Name</th>\n			<th>Group Name</th>\n			<th>Instance ID</th>\n			<th>Type</th>\n			<th>State</th>\n			<th>Zone</th>\n			<th>Lifetime</th>\n			<th>Launched</th>\n		</tr>\n	</thead>\n	<tbody id=\"instanceData\">\n"
+  return "<table id=\"EC2InstanceTable\" class=\"display\">\n	<thead>\n		<tr class=\"dark-row\">\n			<th>User Name</th>\n			<th>Group Name</th>\n			<th>Instance ID</th>\n			<th>Type</th>\n			<th>State</th>\n			<th>Zone</th>\n			<th>Lifetime</th>\n			<th>Launched</th>\n		</tr>\n	</thead>\n	<tbody id=\"instanceData\">\n"
     + ((stack1 = helpers.each.call(depth0,(depth0 != null ? depth0.instances : depth0),{"name":"each","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
     + "	</tbody>	\n</table>\n";
 },"useData":true});
@@ -137,8 +137,43 @@ templates['EC2View'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":functio
 templates['FooterView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     return "";
 },"useData":true});
+templates['GRLSView'] = template({"1":function(depth0,helpers,partials,data) {
+    var alias1=this.lambda, alias2=this.escapeExpression;
+
+  return "		<tr>\n			<td >"
+    + alias2(alias1((depth0 != null ? depth0.dbIdentifier : depth0), depth0))
+    + "</td>\n			<td>"
+    + alias2(alias1((depth0 != null ? depth0.dbClass : depth0), depth0))
+    + "</td>\n			<td>"
+    + alias2(alias1((depth0 != null ? depth0.dbStatus : depth0), depth0))
+    + "</td>\n			<td>"
+    + alias2(alias1((depth0 != null ? depth0.dbName : depth0), depth0))
+    + "</td>\n		</tr>\n";
+},"3":function(depth0,helpers,partials,data) {
+    var alias1=this.lambda, alias2=this.escapeExpression;
+
+  return "		<tr>\n			<td>"
+    + alias2(alias1((depth0 != null ? depth0.userName : depth0), depth0))
+    + "</td>\n			<td>"
+    + alias2(alias1((depth0 != null ? depth0.groupName : depth0), depth0))
+    + "</td>\n			<td >"
+    + alias2(alias1((depth0 != null ? depth0.instance : depth0), depth0))
+    + "</td>\n			<td>"
+    + alias2(alias1((depth0 != null ? depth0.instanceType : depth0), depth0))
+    + "</td>\n			<td>"
+    + alias2(alias1((depth0 != null ? depth0.state : depth0), depth0))
+    + "</td>\n		</tr>\n";
+},"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+    var stack1;
+
+  return "<!-- <table id=\"RDSInstanceTable\" class=\"display\">\n	<thead>\n		<tr class=\"dark-row\">\n			<th>Identifier</th>\n			<th>Class</th>\n			<th>Status</th>\n			<th>DBName</th>\n		</tr>\n	</thead>\n	<tbody id=\"instanceData\">\n"
+    + ((stack1 = helpers.each.call(depth0,(depth0 != null ? depth0.rdsinstances : depth0),{"name":"each","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
+    + "	</tbody>	\n</table> -->\n\n<table id=\"EC2InstanceTable\" class=\"display\">\n	<thead>\n		<tr class=\"dark-row\">\n			<th>User Name</th>\n			<th>Group Name</th>\n			<th>Instance ID</th>\n			<th>Type</th>\n			<th>State</th>\n		</tr>\n	</thead>\n	<tbody id=\"instanceData\">\n"
+    + ((stack1 = helpers.each.call(depth0,(depth0 != null ? depth0.ec2instances : depth0),{"name":"each","hash":{},"fn":this.program(3, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
+    + "	</tbody>	\n</table>";
+},"useData":true});
 templates['HeaderView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-    return "\n<div id=\"settings\" class=\"setting\" data-toggle=\"modal\" data-target=\"#myModal2\"><i class=\"fa fa-cog fa-1x\"></i></div>\n\n<div id=\"budgets\" class=\"budget\" data-toggle=\"modal\" data-target=\"#myModal\"> </div>\n\n<!-- Number badge on icon -->\n<div class=\"mdl-badge\" data-badge=\"\"></div>\n<div class=\"notify\"><i class=\"fa fa-bell fa-1x\"></i></div>\n\n<div class=\"menu\"><i class=\"fa fa-bars fa-1x\"></i></div>\n";
+    return "\n<div id=\"settings\" class=\"setting\" data-toggle=\"modal\" data-target=\"#myModal2\"><i class=\"fa fa-cog fa-1x\"></i></div>\n\n<div id=\"budgets\" class=\"budget\" data-toggle=\"modal\" data-target=\"#myModal\"> </div>\n\n<div id=\"timeBudgets\" class=\"timeBudgets\" data-toggle=\"modal\" data-target=\"#timeBudgetModal\"> </div>\n\n<!-- Number badge on icon -->\n<div class=\"mdl-badge\" data-badge=\"\"></div>\n<div class=\"notify\"><i class=\"fa fa-bell fa-1x\"></i></div>\n\n<div class=\"menu\"><i class=\"fa fa-bars fa-1x\"></i></div>\n";
 },"useData":true});
 templates['IAMGroupsView'] = template({"1":function(depth0,helpers,partials,data) {
     var alias1=this.lambda, alias2=this.escapeExpression;
@@ -178,6 +213,27 @@ templates['IAMUsersView'] = template({"1":function(depth0,helpers,partials,data)
     + ((stack1 = helpers.each.call(depth0,(depth0 != null ? depth0.instances : depth0),{"name":"each","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
     + "	</tbody>	\n</table>";
 },"useData":true});
+templates['IAMView'] = template({"1":function(depth0,helpers,partials,data) {
+    var alias1=this.lambda, alias2=this.escapeExpression;
+
+  return "		<tr>\n			<td >"
+    + alias2(alias1((depth0 != null ? depth0.name : depth0), depth0))
+    + "</td>\n			<td>"
+    + alias2(alias1((depth0 != null ? depth0.arn : depth0), depth0))
+    + "</td>\n			<td>"
+    + alias2(alias1((depth0 != null ? depth0.createDate : depth0), depth0))
+    + "</td>\n			<td>"
+    + alias2(alias1((depth0 != null ? depth0.budgetNames : depth0), depth0))
+    + "</td>\n		</tr>\n";
+},"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+    var stack1;
+
+  return "<table id=\"GroupsTable\" class=\"hover\">\n	<thead>\n		<tr class=\"dark-row\">\n			<th>GroupName</th>\n			<th>Arn</th>\n			<th>CreateDate</th>\n			<th>BudgetName/s</th>\n		</tr>\n	</thead>\n	<tbody id=\"instanceData1\">\n"
+    + ((stack1 = helpers.each.call(depth0,(depth0 != null ? depth0.groupInstances : depth0),{"name":"each","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
+    + "	</tbody>	\n</table>\n\n<table id=\"UsersTable\" class=\"hover\">\n	<thead>\n		<tr class=\"dark-row\">\n			<th>UserName</th>\n			<th>Arn</th>\n			<th>CreateDate</th>\n			<th>BudgetName/s</th>\n		</tr>\n	</thead>\n	<tbody id=\"instanceData2\">\n"
+    + ((stack1 = helpers.each.call(depth0,(depth0 != null ? depth0.userInstances : depth0),{"name":"each","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
+    + "	</tbody>	\n</table>";
+},"useData":true});
 templates['MeterView'] = template({"1":function(depth0,helpers,partials,data) {
     return "		$"
     + this.escapeExpression(this.lambda((depth0 != null ? depth0.value : depth0), depth0))
@@ -201,7 +257,7 @@ templates['NavView'] = template({"1":function(depth0,helpers,partials,data) {
     + "\">"
     + alias2(alias1((depth0 != null ? depth0.title : depth0), depth0))
     + "</div>\n\n"
-    + ((stack1 = (helpers.ifCond || (depth0 && depth0.ifCond) || alias3).call(depth0,(depth0 != null ? depth0.title : depth0),"==","Amazon Elastic Compute Cloud",{"name":"ifCond","hash":{},"fn":this.program(2, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
+    + ((stack1 = (helpers.ifCond || (depth0 && depth0.ifCond) || alias3).call(depth0,(depth0 != null ? depth0.title : depth0),"==","Amazon EC2 Service",{"name":"ifCond","hash":{},"fn":this.program(2, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
     + "\n"
     + ((stack1 = (helpers.ifCond || (depth0 && depth0.ifCond) || alias3).call(depth0,(depth0 != null ? depth0.title : depth0),"==","Amazon RDS Service",{"name":"ifCond","hash":{},"fn":this.program(4, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
     + "\n"
@@ -211,7 +267,7 @@ templates['NavView'] = template({"1":function(depth0,helpers,partials,data) {
 },"4":function(depth0,helpers,partials,data) {
     return "<div class=\"subpage\" subpage-id=\"1\"> RDS Instances</div>\n";
 },"6":function(depth0,helpers,partials,data) {
-    return "<div class=\"subpage\" subpage-id=\"2\"> IAM Groups</div>\n<div class=\"subpage\" subpage-id=\"3\"> IAM Users</div>\n";
+    return "<div class=\"subpage\" subpage-id=\"2\"> Cost Budgets</div>\n<div class=\"subpage\" subpage-id=\"3\"> Time Budgets</div>\n";
 },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var stack1;
 
@@ -331,19 +387,22 @@ templates['RDSInstancesView'] = template({"1":function(depth0,helpers,partials,d
 templates['RDSMetricsView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     return "<div id=\"rdsCpuContainer\"></div>\n<div id=\"readWriteIopsContainer\"></div>\n<div id=\"queueDepthContainer\"></div>\n<div id=\"dbConnectionsContainer\"></div>\n<div class=\"clear\"></div>";
 },"useData":true});
-templates['UMCostView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-    return "<div id=\"budgetCostContainer\"></div>\n";
+templates['TimeBudgetView'] = template({"1":function(depth0,helpers,partials,data) {
+    var alias1=this.lambda, alias2=this.escapeExpression;
+
+  return "								<option value="
+    + alias2(alias1((depth0 != null ? depth0.name : depth0), depth0))
+    + ">"
+    + alias2(alias1((depth0 != null ? depth0.name : depth0), depth0))
+    + "</option>\n";
+},"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+    var stack1;
+
+  return "<!-- Modal -->\n<div class=\"modal fade\" id=\"timeBudgetModal\" role=\"dialog\">\n	<div class=\"modal-dialog\">\n\n		<!-- Modal content-->\n		<div class=\"modal-content\">\n			<div class=\"modal-header\">\n				<button type=\"button\" class=\"close\" data-dismiss=\"modal\">&times;</button>\n				<h4 class=\"modal-title\">Create Time Budget Profile</h4>\n			</div>\n			<div class=\"modal-body\">\n				<div class=\"insetting\"> \n					<div class=\"incontainer\">\n						<label class=\"budget-label\">Name </label>\n						<input type=\"text\" id=\"time-budgetname\" placeholder=\"e.g., 'Monthly EC2 Budget'\">\n					</div>\n					<div class=\"warning\" id=\"time-budgetnamewarning\">Invalid budget Name.</div>\n					<div class=\"warning\" id=\"time-oldbudgetnamewarning\">Budget Name already in use.</div>\n					<div class=\"warning\" id=\"time-budgetnamerequest\">Please enter a budget name.</div>\n				</div>\n\n				<div class=\"insetting\"> \n					<div class=\"incontainer\">\n						<label class=\"budget-label\">Time budget related to </label>\n						<select class=\"time-costfilter\">\n							<option value=\"\" disabled selected>Select</option>\n							<option value=\"user\">User</option>\n							<option value=\"group\">Groups</option>\n						</select>\n					</div>\n				</div>\n\n				<div class=\"sub-insetting\"> \n					<div class=\"sub-incontainer\">\n						<div class=\"hidden\" id=\"time-filter-details\">\n							<select class=\"time-sub-costfilter\">\n								<option value=\"\" disabled selected>Select</option>\n"
+    + ((stack1 = helpers.each.call(depth0,(depth0 != null ? depth0.col : depth0),{"name":"each","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
+    + "							</select>\n						</div>\n					</div>\n					<div class=\"warning\" id=\"time-batchtyperequest\">Please select a Batch Type.</div>\n					<div class=\"warning\" id=\"time-batchnamerequest\">Please select a Batch Name.</div>\n				</div>\n\n				<div class=\"insetting\"> \n					<div class=\"incontainer\">\n						<label class=\"budget-label\">Start date </label>\n						<input type=\"text\" id=\"time-startdate\" placeholder=\"mm/dd/yyyy\">\n						<div class=\"warning\" id=\"time-startdaterequest\">Please select a start date.</div>\n					</div>\n				</div>\n\n				<div class=\"insetting\"> \n					<div class=\"incontainer\">\n						<label class=\"budget-label\">End date </label>\n						<input type=\"text\" id=\"time-enddate\" placeholder=\"mm/dd/yyyy\">\n						<div class=\"warning\" id=\"time-enddatewarning\">Invalid dates selected.</div>\n						<div class=\"warning\" id=\"time-enddaterequest\">Please select an end.</div>\n					</div>\n				</div>\n\n				<div class=\"insetting\"> \n					<div class=\"incontainer\">\n						<label class=\"budget-label\">Time Amount </label>\n						<input type=\"text\" id=\"time-amount\" placeholder=\"Hours\">\n						<div class=\"warning\" id=\"time-amountwarning\">Invalid time amount.</div>\n						<div class=\"warning\" id=\"time-amountrequest\">Please enter a time amount.</div>\n					</div>\n				</div>\n\n				<div class=\"insetting\"> \n					<div class=\"incontainer\">\n						<label class=\"budget-label\">Under-profile Decay Rate</label>\n						<input type=\"text\" id=\"time-udecay\" placeholder=\"e.g., 3\">\n						<div class=\"warning\" id=\"time-udecaywarning\">Invalid decay rate.</div>\n						<div class=\"warning\" id=\"time-udecayrequest\">Please enter a decay rate.</div>\n					</div>\n				</div>\n\n				<div class=\"insetting\"> \n					<div class=\"incontainer\">\n						<label class=\"budget-label\">Over-profile Decay Rate</label>\n						<input type=\"text\" id=\"time-odecay\" placeholder=\"e.g., 2\">\n						<div class=\"warning\" id=\"time-odecaywarning\">Invalid decay rate.</div>\n						<div class=\"warning\" id=\"time-odecayrequest\">Please enter a decay rate.</div>\n					</div>\n				</div>\n\n				<div class=\"insetting\"> \n					<div class=\"incontainer\">\n						<label class=\"budget-label\">Max Database Connections</label>\n						<input type=\"text\" id=\"time-dbconnections\" placeholder=\"e.g., 20\">\n						<div class=\"warning\" id=\"time-dbconnectionswarning\">Invalid number.</div>\n						<div class=\"warning\" id=\"time-dbconnectionsrequest\">Please enter a number.</div>\n					</div>\n				</div>\n\n				<div class=\"insetting\"> \n					<div class=\"incontainer\">\n						<label class=\"budget-label\">Stop resource(s) when quota reached </label>\n						<div class=\"onoffswitch\">\n							<input type=\"checkbox\" name=\"onoffswitch\" class=\"onoffswitch-checkbox\" id=\"time-myonoffswitch\" checked>\n							<label class=\"onoffswitch-label\" for=\"myonoffswitch\">\n								<span class=\"onoffswitch-inner\"></span>\n								<span class=\"onoffswitch-switch\"></span>\n							</label>\n						</div>\n					</div>\n				</div>\n			</div>	\n			<div class=\"modal-footer\">\n				<button type=\"button\" class=\"btn btn-default\" id=\"time-savebtn\">Save</button>\n				<button type=\"button\" class=\"btn btn-default\" id=\"time-closebtn\">Close</button>\n			</div>\n		</div>\n\n	</div>\n</div>";
 },"useData":true});
-templates['UMGroupUserServiceView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-    return "<div id=\"groupUserServiceContainer\"></div>\n";
-},"useData":true});
-templates['UMOperationsView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-    return "<div id=\"serviceContainer\"></div>\n";
-},"useData":true});
-templates['UMUsageView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-    return "<div id=\"budgetUsageContainer\"></div>\n";
-},"useData":true});
-templates['UsageMonitorView'] = template({"1":function(depth0,helpers,partials,data) {
+templates['UMCostBudgetsView'] = template({"1":function(depth0,helpers,partials,data) {
     var alias1=this.lambda, alias2=this.escapeExpression;
 
   return "		<tr>\n			<td >"
@@ -358,12 +417,60 @@ templates['UsageMonitorView'] = template({"1":function(depth0,helpers,partials,d
     + alias2(alias1((depth0 != null ? depth0.endDate : depth0), depth0))
     + "</td> \n			<td>"
     + alias2(alias1((depth0 != null ? depth0.amount : depth0), depth0))
+    + "</td>\n			<td>"
+    + alias2(alias1((depth0 != null ? depth0.timeout : depth0), depth0))
     + "</td>\n		</tr>\n";
 },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var stack1;
 
-  return "<table id=\"BudgetTable\" class=\"hover\">\n	<thead>\n		<tr class=\"dark-row\">\n			<th>BudgetName</th>\n			<th>BatchType</th>\n			<th>BatchName</th>\n			<th>StartDate</th>\n			<th>EndDate</th>\n			<th>Amount</th>\n		</tr>\n	</thead>\n	<tbody id=\"budgetData\">\n"
+  return "<table id=\"BudgetTable\" class=\"hover\">\n	<thead>\n		<tr class=\"dark-row\">\n			<th>BudgetName</th>\n			<th>BatchType</th>\n			<th>BatchName</th>\n			<th>StartDate</th>\n			<th>EndDate</th>\n			<th>Amount</th>\n			<th>Stop Instances</th>\n		</tr>\n	</thead>\n	<tbody id=\"budgetData\">\n"
     + ((stack1 = helpers.each.call(depth0,(depth0 != null ? depth0.budgets : depth0),{"name":"each","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
     + "	</tbody>	\n</table>\n";
+},"useData":true});
+templates['UMCostView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+    return "<div id=\"budgetCostContainer\"></div>\n";
+},"useData":true});
+templates['UMGroupUserServiceView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+    return "<div id=\"groupUserServiceContainer\"></div>\n";
+},"useData":true});
+templates['UMOperationsView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+    return "<div id=\"serviceContainer\"></div>\n";
+},"useData":true});
+templates['UMTimeBudgetsView'] = template({"1":function(depth0,helpers,partials,data) {
+    var alias1=this.lambda, alias2=this.escapeExpression;
+
+  return "		<tr>\n			<td >"
+    + alias2(alias1((depth0 != null ? depth0.timeBudgetName : depth0), depth0))
+    + "</td>\n			<td>"
+    + alias2(alias1((depth0 != null ? depth0.batchType : depth0), depth0))
+    + "</td>\n			<td>"
+    + alias2(alias1((depth0 != null ? depth0.batchName : depth0), depth0))
+    + "</td>\n			<td>"
+    + alias2(alias1((depth0 != null ? depth0.startDate : depth0), depth0))
+    + "</td>\n			<td>"
+    + alias2(alias1((depth0 != null ? depth0.endDate : depth0), depth0))
+    + "</td> \n			<td>"
+    + alias2(alias1((depth0 != null ? depth0.timeAmount : depth0), depth0))
+    + "</td>\n			<td>"
+    + alias2(alias1((depth0 != null ? depth0.udecay : depth0), depth0))
+    + "</td>\n			<td>"
+    + alias2(alias1((depth0 != null ? depth0.odecay : depth0), depth0))
+    + "</td>\n			<td>"
+    + alias2(alias1((depth0 != null ? depth0.dbConnections : depth0), depth0))
+    + "</td>\n			<td>"
+    + alias2(alias1((depth0 != null ? depth0.timeout : depth0), depth0))
+    + "</td>\n		</tr>\n";
+},"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+    var stack1;
+
+  return "<table id=\"TimeBudgetTable\" class=\"hover\">\n	<thead>\n		<tr class=\"dark-row\">\n			<th>BudgetName</th>\n			<th>BatchType</th>\n			<th>BatchName</th>\n			<th>StartDate</th>\n			<th>EndDate</th>\n			<th>Time Amount</th>\n			<th>uDecay</th>\n			<th>oDecay</th>\n			<th>maxConnections</th>\n			<th>Stop Instances</th>\n		</tr>\n	</thead>\n	<tbody id=\"budgetData\">\n"
+    + ((stack1 = helpers.each.call(depth0,(depth0 != null ? depth0.timebudgets : depth0),{"name":"each","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
+    + "	</tbody>	\n</table>\n";
+},"useData":true});
+templates['UMUsageView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+    return "<div id=\"budgetUsageContainer\"></div>\n";
+},"useData":true});
+templates['UsageMonitorView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+    return "";
 },"useData":true});
 })();

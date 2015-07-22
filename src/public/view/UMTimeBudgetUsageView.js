@@ -1,12 +1,12 @@
-var UMUsageView = Backbone.View.extend({
-    className: 'UMUsageView',
+var UMTimeBudgetUsageView = Backbone.View.extend({
+    className: 'UMTimeBudgetUsageView',
 
     initialize: function(options) {
         if (!this.model) {
             this.model = new UsageMonitorModel();
         }
-        this.costView = new UMCostView();
-        this.groupUserServiceView = new UMGroupUserServiceView();
+        this.costView = new UMTimeBudgetCostView();
+        this.groupUserServiceView = new UMTimeGroupUserServiceView();
         this.bindings();
     },
 
@@ -16,7 +16,7 @@ var UMUsageView = Backbone.View.extend({
             this.render();
             var budgetIndex = budgetIndexCollection.at(0).get('index');
             var highchart = $(function() {
-                var _title = 'Budget Usage Chart - '+budgetCollection.at(budgetIndex).get('budgetName');
+                var _title = 'Time Budget Usage Chart - '+timeBudgetCollection.at(budgetIndex).get('timeBudgetName');
                 var highcharts_options = {
                     chart: {
                         type: 'bar'
@@ -33,7 +33,7 @@ var UMUsageView = Backbone.View.extend({
                     tooltip: {
                         formatter: function() {
                             return '<b>' + this.series.name + '</b><br/>' +
-                                'Total Cost: '+ budgetUsageCollection.at(0).get('total').toFixed(2) + ' USD , '+
+                                'Total hours: '+ budgetUsageCollection.at(0).get('total').toFixed(2) + ' hrs , '+
                                 'Usage Percentage: ' + this.y.toFixed(2) + '%';
                         }
                     },
@@ -77,11 +77,11 @@ var UMUsageView = Backbone.View.extend({
                         point: {
                             events: {
                                 click: function(event) {
-                                    if(budgetCollection.at(budgetIndexCollection.at(0).get('index')).get('batchType')=='group'){
+                                    if(timeBudgetCollection.at(budgetIndexCollection.at(0).get('index')).get('batchType')=='group'){
                                         self.costView.updateUserAttributes(this.series.name,this.color);
-                                        self.costView.model.getUserCostBudget(budgetIndex,this.series.name);
+                                        self.costView.model.getUserTimeCostBudget(budgetIndex,this.series.name);
                                         self.groupUserServiceView.setUser(this.series.name);
-                                        self.groupUserServiceView.model.getGroupUserServiceUsageChart(this.series.name,budgetIndex);  
+                                        self.groupUserServiceView.model.getTimeGroupUserServiceUsageChart(this.series.name,budgetIndex);  
                                     }                                                                    
                                 }
                             }

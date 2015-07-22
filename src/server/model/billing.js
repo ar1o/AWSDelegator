@@ -1,4 +1,3 @@
-mongoose = require('mongoose');
 billingSchema = new mongoose.Schema({
 	_id: mongoose.Schema.ObjectId,
 	ProductName: String,
