@@ -12,6 +12,9 @@ templates['AWSView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":functio
 templates['AppView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
   return "<div class=\"content-view\"> </div>\n";
   },"useData":true});
+templates['BaseModalView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+  return "\n<!-- Modal -->\n<div class=\"modal fade\" id=\"base-modal\" role=\"dialog\">\n  <div class=\"modal-dialog modal-sm\">\n\n    <!-- Modal content-->\n    <div class=\"modal-content\">\n      <div class=\"modal-header\">\n        <button type=\"button\" class=\"close\" data-dismiss=\"modal\">&times;</button>\n        <h4 class=\"modal-title\"></h4>\n      </div>\n      <div class=\"modal-body\">\n     </div>\n      <div class=\"modal-footer\">\n        <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\" id=\"action\">Delete</button>\n        <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\" id=\"cancel\">Cancel</button>\n      </div>\n    </div>\n\n  </div>\n</div>\n\n";
+  },"useData":true});
 templates['BudgetView'] = template({"1":function(depth0,helpers,partials,data) {
   var lambda=this.lambda, escapeExpression=this.escapeExpression;
   return "								<option value="
@@ -95,7 +98,7 @@ templates['EC2InstancesView'] = template({"1":function(depth0,helpers,partials,d
   var stack1, buffer = "<table id=\"InstanceTable\" class=\"display\">\n	<thead>\n		<tr class=\"dark-row\">\n			<th>User Name</th>\n			<th>Group Name</th>\n			<th>Instance ID</th>\n			<th>Type</th>\n			<th>State</th>\n			<th>Zone</th>\n			<th>Lifetime</th>\n			<th>Launched</th>\n		</tr>\n	</thead>\n	<tbody id=\"instanceData\">\n";
   stack1 = helpers.each.call(depth0, (depth0 != null ? depth0.instances : depth0), {"name":"each","hash":{},"fn":this.program(1, data),"inverse":this.noop,"data":data});
   if (stack1 != null) { buffer += stack1; }
-  return buffer + "	</tbody>	\n</table>\n";
+  return buffer + "	</tbody>	\n</table>\n\n\n\n";
 },"useData":true});
 templates['EC2MetricsView'] = template({"1":function(depth0,helpers,partials,data) {
   var lambda=this.lambda, escapeExpression=this.escapeExpression;
@@ -350,6 +353,6 @@ templates['UsageMonitorView'] = template({"1":function(depth0,helpers,partials,d
   var stack1, buffer = "<table id=\"BudgetTable\" class=\"display\">\n	<thead>\n		<tr class=\"dark-row\">\n			<th>BudgetName</th>\n			<th>BatchType</th>\n			<th>BatchName</th>\n			<th>StartDate</th>\n			<th>EndDate</th>\n			<th>Amount</th>\n		</tr>\n	</thead>\n	<tbody id=\"budgetData\">\n";
   stack1 = helpers.each.call(depth0, (depth0 != null ? depth0.budgets : depth0), {"name":"each","hash":{},"fn":this.program(1, data),"inverse":this.noop,"data":data});
   if (stack1 != null) { buffer += stack1; }
-  return buffer + "	</tbody>	\n</table>\n";
+  return buffer + "	</tbody>	\n</table>\n\n\n<ul class='custom-menu'>\n  <li data-action=\"Edit\"data-toggle=\"modal\" data-target=\"#base-modal\" data-backdrop=\"static\" data-keyboard=\"false\">Edit Instance</li>\n  <li data-action=\"Delete\" data-toggle=\"modal\" data-target=\"#base-modal\" data-backdrop=\"static\" data-keyboard=\"false\" >Delete Instance</li>\n</ul>\n";
 },"useData":true});
 })();

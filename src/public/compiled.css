@@ -17,6 +17,29 @@ body {
   margin: 0 auto;
   overflow-y: scroll;
 }
+.custom-menu {
+  display: none;
+  z-index: 1000;
+  position: fixed;
+  overflow: hidden;
+  border: 1px solid #CCC;
+  white-space: nowrap;
+  background: #FFF;
+  color: #333;
+  border-radius: 5px;
+}
+ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+.custom-menu li {
+  padding: 8px 12px;
+  cursor: pointer;
+}
+.custom-menu li:hover {
+  background-color: #DEF;
+}
 .AWSView {
   margin: 0 auto;
   min-height: 350px;

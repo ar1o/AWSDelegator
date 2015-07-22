@@ -4,10 +4,13 @@ var EC2InstancesView = Backbone.View.extend({
         if (!this.model) {
             this.model = new InstancesModel();
         }
+        var self = this;
         this.model.getEC2Instances();
         this.billingActivity = new EC2BillingView();
         this.operationsActivity = new EC2OperationsView();
         this.metricsActivity = new EC2MetricsView();
+
+
         this.bindings();
         this.render();
     },
@@ -53,7 +56,6 @@ var EC2InstancesView = Backbone.View.extend({
                 $(this).addClass('selected');
             }
         });
-
     },
 
     render: function() {
@@ -65,5 +67,4 @@ var EC2InstancesView = Backbone.View.extend({
         this.$el.append(this.operationsActivity.el);
         this.$el.append(this.billingActivity.el);
         this.$el.append(this.metricsActivity.el);
-    }
-});
+    }});
