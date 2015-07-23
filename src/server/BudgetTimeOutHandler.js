@@ -199,15 +199,15 @@ var stopBatchInstances = function(serviceResources){
 }
 
 // sample call for testing purpose
-getBatchInstances({
-    "BudgetName" : "budget1",
-    "BatchType" : "group",
-    "BatchName" : "awsDelegator",
-    "StartDate" : "2015-06-01 00:00:00",
-    "EndDate" : "2015-08-01 00:00:00",
-    "Amount" : 100,
-    "State" : "valid",
-    "TimeOut" : "true"
-},function(){
-    process.exit(0);
-});
+// getBatchInstances({
+//     "BudgetName" : "budget1",
+//     "BatchType" : "group",
+//     "BatchName" : "awsDelegator",
+//     "StartDate" : "2015-06-01 00:00:00",
+//     "EndDate" : "2015-08-01 00:00:00",
+//     "Amount" : 100,
+//     "State" : "valid",
+//     "TimeOut" : "true"
+// },function(){
+//     process.exit(0);
+// });

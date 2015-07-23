@@ -209,19 +209,20 @@ var stopTimeBudget = function(timeBudget){
 				Time: currentTimeIso
 			}, function(err) {
 				if (err) throw err;
-				stopTimeBudgetInstances(timeBudget);
+				//get the resourceId's of invalid budget
+				getTimeBudgetInstances(timeBudget);
 			});
 		});
 	});
 }
 
-var stopTimeBudgetInstances = function(timeBudget){
-	mongoose.model('timeBudgets').find(){
+var getTimeBudgetInstances = function(timeBudget){
+	mongoose.model('timeBudgets').find({
 		timeBudgetName: timeBudget
-	}.exec(function(err, budget){
+	}).exec(function(err, budget){
 		if(err) throw err;
-		var batchType = budget.atchType;
-		var batchName = budget.batchName;
+		var batchType = budget.BatchType;
+		var batchName = budget.BatchName;
 		var startDate = budget.StartDate;
 		var endDate = budget.EndDate;
 		if (batchType == 'user') {
@@ -244,18 +245,18 @@ var stopTimeBudgetInstances = function(timeBudget){
 			}, {
 				$project: {
 					_id: 0,
-					decayTime: 1,
-					user: 1
+					instanceId: 1,
+					serviceType: 1
 				}
 			}, {
 				$group: {
-					_id: '$user',
-					Total: {
-						$sum: "$decayTime"
-					}
+					_id: '$serviceType',
+					instanceId: {
+                        $addToSet: "$instanceId"
+                    }
 				}
-			}]).exec(function(e, sum) {
-				res.send(sum);
+			}]).exec(function(e, serviceResources) {
+				stopTimeBudgetInstances(serviceResources);
 			});
 		} else {
 			mongoose.model('grlsLineItems').aggregate([{
@@ -275,19 +276,84 @@ var stopTimeBudgetInstances = function(timeBudget){
 			}, {
 				$project: {
 					_id: 0,
-					user: 1,
-					decayTime: 1
+					instanceId: 1,
+					serviceType: 1
 				}
 			}, {
 				$group: {
-					_id: '$user',
-					Total: {
-						$sum: "$decayTime"
-					}
+					_id: '$serviceType',
+					instanceId: {
+                        $addToSet: "$instanceId"
+                    }
 				}
-			}]).exec(function(e, sum) {
-				res.send(sum);
+			}]).exec(function(e, serviceResources) {
+				stopTimeBudgetInstances(serviceResources);
 			});
 		}
 	});
+}
+
+var stopTimeBudgetInstances = function(serviceResources){
+	var index1 = 0;
+    var controller1 = function() {
+        iterator1(function() {
+            index1++;
+            if (index1 < serviceResources.length) controller1();
+            else {
+
+            }
+        });
+    };
+    var iterator1 = function(callback1) {
+        switch(serviceResources[index1]._id){
+            case 'Amazon Elastic Compute Cloud':
+                var resources = serviceResources[index1].ResourceId;
+                var index2 = 0;
+                var controller2 = function() {
+                    iterator2(function() {
+                        index2++;
+                        if (index2 < resources.length) controller2();
+                        else {
+                            callback1();
+                        }
+                    });
+                };
+                var iterator2 = function(callback2) {
+                    if(/^i-/.test(resources[index2])){
+                        // the code to stop ec2 instances goes here
+                        // instanceId is in resources[index2]
+                        // console.log(resources[index2])
+                        callback2();
+                    }else{
+                        callback2();
+                    }                                      
+                };
+                controller2();
+                break;
+            case 'Amazon RDS Service':
+                var resources = serviceResources[index1].ResourceId;
+                var index2 = 0;
+                var controller2 = function() {
+                    iterator2(function() {
+                        index2++;
+                        if (index2 < resources.length) controller2();
+                        else {
+                            callback1();
+                        }
+                    });
+                };
+                var iterator2 = function(callback2) {
+                    // the code to stop rds instances goes here
+                    // rds resource arn is in resources[index2]
+                    // console.log(resources[index2])
+                    callback2();                                     
+                };
+                controller2();
+                break;
+            default:
+                callback1();
+                break;
+        }
+    };
+    controller1();
 }
