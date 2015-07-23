@@ -532,6 +532,37 @@ var UsageMonitorModel = Backbone.Model.extend({
 		})(params);
 	},
 
+	getTimeUserServiceUsageChart: function(budgetIndex) {
+		var self = this;
+		groupUserServiceCollection.reset();
+		var params = {
+			userName: timeBudgetCollection.at(budgetIndex).get('batchName'),
+			startDate: timeBudgetCollection.at(budgetIndex).get('startDate'),
+			endDate: timeBudgetCollection.at(budgetIndex).get('endDate'),
+		};
+
+		(function(params) {
+			$.get(host+'/api/usage/timeUserService', params, function(result) {
+				var total = 0;
+				for (var i in result) {
+					total += result[i].total;
+				}
+				for (var i in result) {
+					result[i]['percentage'] = (result[i].total / total) * 100;
+					for (var j in result[i].resourceId) {
+						result[i].resourceId[j]['percentage'] = (result[i].resourceId[j].total / total) * 100;
+					}
+				}
+				var data = new serviceModel({
+					batchName: params.userName,
+					services: result
+				});
+				groupUserServiceCollection.add(data);
+				self.set('groupUserServiceDataReady', Date.now());
+			});
+		})(params);
+	},
+
 	setBudgetIndex: function(budgetIndex){
 		budgetIndexCollection.reset();
 		var data = new budgetIndexModel({

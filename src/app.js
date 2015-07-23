@@ -97,6 +97,7 @@ app.get('/api/usage/timeBudgetUsage', require(__dirname + '/server/route/budgetR
 app.get('/api/usage/timeBudgetCost', require(__dirname + '/server/route/budgetRoute').timeBudgetCost);
 app.get('/api/usage/userTimeBudgetCost', require(__dirname + '/server/route/budgetRoute').userTimeCost);
 app.get('/api/usage/groupUserTimeService', require(__dirname + '/server/route/budgetRoute').groupUserTimeService);
+app.get('/api/usage/timeUserService', require(__dirname + '/server/route/budgetRoute').timeUserService);
 
 app.get('/api/notifications', require(__dirname + '/server/route/notificationsRoute').notifications);
 app.get('/api/notifications/seen', require(__dirname + '/server/route/notificationsRoute').updateNotifications);

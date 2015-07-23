@@ -182,6 +182,7 @@ var updateLifetime = function(maxBudgetLifetimes){
 }
 
 var stopTimeBudget = function(timeBudget){
+	var currentDate = new Date();
 	var currentTime = currentDate.getTime();
 	var currentTimeIso = new Date(currentTime).toISOString();
 	mongoose.model('timeBudgets').update({
@@ -208,8 +209,85 @@ var stopTimeBudget = function(timeBudget){
 				Time: currentTimeIso
 			}, function(err) {
 				if (err) throw err;
-
+				stopTimeBudgetInstances(timeBudget);
 			});
 		});
+	});
+}
+
+var stopTimeBudgetInstances = function(timeBudget){
+	mongoose.model('timeBudgets').find(){
+		timeBudgetName: timeBudget
+	}.exec(function(err, budget){
+		if(err) throw err;
+		var batchType = budget.atchType;
+		var batchName = budget.batchName;
+		var startDate = budget.StartDate;
+		var endDate = budget.EndDate;
+		if (batchType == 'user') {
+			mongoose.model('grlsLineItems').aggregate([{
+				$match: {
+					$and: [{
+						time: {
+							$gte: startDate
+						}
+					}, {
+						time: {
+							$lte: endDate
+						}
+					}, {
+						user: batchName
+					}, {
+						group: 'null'
+					}]
+				}
+			}, {
+				$project: {
+					_id: 0,
+					decayTime: 1,
+					user: 1
+				}
+			}, {
+				$group: {
+					_id: '$user',
+					Total: {
+						$sum: "$decayTime"
+					}
+				}
+			}]).exec(function(e, sum) {
+				res.send(sum);
+			});
+		} else {
+			mongoose.model('grlsLineItems').aggregate([{
+				$match: {
+					$and: [{
+						time: {
+							$gte: startDate
+						}
+					}, {
+						time: {
+							$lte: endDate
+						}
+					}, {
+						group: batchName
+					}]
+				}
+			}, {
+				$project: {
+					_id: 0,
+					user: 1,
+					decayTime: 1
+				}
+			}, {
+				$group: {
+					_id: '$user',
+					Total: {
+						$sum: "$decayTime"
+					}
+				}
+			}]).exec(function(e, sum) {
+				res.send(sum);
+			});
+		}
 	});
 }

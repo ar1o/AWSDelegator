@@ -72,7 +72,7 @@ var UMTimeBudgetCostView = Backbone.View.extend({
                         enabled: false
                     },
                     title: {
-                        text: 'Group Time Cost Chart - '+timeBudgetCollection.at(budgetIndex).get('timeBudgetName')
+                        text: 'Group Time Decay Chart - '+timeBudgetCollection.at(budgetIndex).get('timeBudgetName')
                     },
                     xAxis: {
                         max: endDate,
@@ -157,7 +157,7 @@ var UMTimeBudgetCostView = Backbone.View.extend({
                 var month = parseInt(date1[1]);
                 date1[1] = month - 1;
                 var utcDate = Date.UTC(date1[0], date1[1], date1[2], date2[0], date2[1], date2[2]);
-                costData.push([utcDate,budgetCostCollection.at(i).get('cost')]);
+                costData.push([utcDate,-1*budgetCostCollection.at(i).get('cost')]);
             }
 
             var userCostData = [];
@@ -172,7 +172,7 @@ var UMTimeBudgetCostView = Backbone.View.extend({
                 var month = parseInt(date1[1]);
                 date1[1] = month - 1;
                 var utcDate = Date.UTC(date1[0], date1[1], date1[2], date2[0], date2[1], date2[2]);
-                userCostData.push([utcDate,userBudgetCostCollection.at(i).get('cost')]);
+                userCostData.push([utcDate,-1*userBudgetCostCollection.at(i).get('cost')]);
             }
             var budgetIndex = budgetIndexCollection.at(0).get('index');
             $(function() {
@@ -185,7 +185,7 @@ var UMTimeBudgetCostView = Backbone.View.extend({
                         enabled: false
                     },
                     title: {
-                        text: 'Group Time Cost Chart - '+timeBudgetCollection.at(budgetIndex).get('timeBudgetName')
+                        text: 'Group Time Decay Chart - '+timeBudgetCollection.at(budgetIndex).get('timeBudgetName')
                     },
                     xAxis: {
                         max: endDate,
@@ -202,7 +202,6 @@ var UMTimeBudgetCostView = Backbone.View.extend({
                         title: {
                             text: 'decayRate (hrs)'
                         },
-                        min: 0,
                         minorGridLineWidth: 0,
                         gridLineWidth: 0,
                         alternateGridColor: null,
