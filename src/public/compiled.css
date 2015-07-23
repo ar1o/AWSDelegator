@@ -47,17 +47,12 @@ ul {
   margin-top: 70px;
   margin-bottom: 70px;
 }
-.RDSView {
-  min-height: 350px;
-  padding-top: 20px;
-  width: 1060px;
-  margin: 0 auto;
-}
 .EC2View {
-  min-height: 350px;
-  padding-top: 20px;
-  width: 1060px;
   margin: 0 auto;
+  min-height: 350px;
+  width: 1060px;
+  margin-top: 70px;
+  margin-bottom: 70px;
 }
 .NavView {
   position: fixed;
@@ -186,49 +181,27 @@ div#productcostcontainer {
   /*	border-style: dashed;
 	border-color: blue;*/
 }
-.EC2CostView {
-  padding-top: 20px;
-}
 #ec2CostContainer {
   margin-top: 20px;
   margin-bottom: 20px;
   margin-right: 20px;
   margin-left: 20px;
 }
-.RDSCostView {
-  padding-top: 20px;
-}
 .EC2InstancesView {
-  min-height: 350px;
-  padding-top: 20px;
-  width: 1060px;
   margin: 0 auto;
+  min-height: 350px;
+  width: 1060px;
+  margin-top: 70px;
+  margin-bottom: 70px;
 }
 .RDSInstancesView {
-  min-height: 350px;
-  padding-top: 20px;
-  width: 1060px;
   margin: 0 auto;
-}
-.IAMGroupsView {
   min-height: 350px;
-  padding-top: 20px;
   width: 1060px;
-  margin: 0 auto;
+  margin-top: 70px;
+  margin-bottom: 70px;
 }
-.IAMUsersView {
-  min-height: 350px;
-  padding-top: 20px;
-  width: 1060px;
-  margin: 0 auto;
-}
-.UsageMonitorView {
-  min-height: 350px;
-  padding-top: 20px;
-  width: 1060px;
-  margin: 0 auto;
-}
-#InstanceTable_wrapper {
+#EC2InstanceTable_wrapper {
   background-color: #f7f7f7;
   margin-top: 20px;
   margin-bottom: 20px;
@@ -242,45 +215,6 @@ div#productcostcontainer {
   /*border: 1px solid gray;*/
 }
 #RDSInstanceTable_wrapper {
-  background-color: #f7f7f7;
-  margin-top: 20px;
-  margin-bottom: 20px;
-  margin-right: 20px;
-  margin-left: 20px;
-  padding: 5px;
-  padding-top: 20px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid #aaa;
-  border-top: 1px solid #aaa;
-  /*border: 1px solid gray;*/
-}
-#GroupsTable_wrapper {
-  background-color: #f7f7f7;
-  margin-top: 20px;
-  margin-bottom: 20px;
-  margin-right: 20px;
-  margin-left: 20px;
-  padding: 5px;
-  padding-top: 20px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid #aaa;
-  border-top: 1px solid #aaa;
-  /*border: 1px solid gray;*/
-}
-#UsersTable_wrapper {
-  background-color: #f7f7f7;
-  margin-top: 20px;
-  margin-bottom: 20px;
-  margin-right: 20px;
-  margin-left: 20px;
-  padding: 5px;
-  padding-top: 20px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid #aaa;
-  border-top: 1px solid #aaa;
-  /*border: 1px solid gray;*/
-}
-#BudgetTable_wrapper {
   background-color: #f7f7f7;
   margin-top: 20px;
   margin-bottom: 20px;
@@ -369,6 +303,22 @@ td {
   vertical-align: middle;
 }
 .budget:hover {
+  color: orange;
+  cursor: pointer;
+}
+.timeBudgets:before {
+  font-family: FontAwesome;
+  content: "\f017";
+  font-size: 20px;
+  float: right;
+  text-align: center;
+  margin-top: 0;
+  height: 48px;
+  width: 60px;
+  line-height: 48px;
+  vertical-align: middle;
+}
+.timeBudgets:hover {
   color: orange;
   cursor: pointer;
 }
@@ -503,7 +453,7 @@ div#awsoperationscontainer {
   font-family: 'Roboto', sans-serif;
   font-size: 14px;
   position: absolute;
-  right: 200px;
+  left: 100px;
   padding-top: 4px;
 }
 .rate {
@@ -531,15 +481,31 @@ div#awsoperationscontainer {
   color: orange;
 }
 .IAMUsersView {
-  margin-left: 20px;
-  width: 1060px;
   margin: 0 auto;
+  min-height: 350px;
+  width: 1060px;
+  margin-top: 70px;
+  margin-bottom: 70px;
+}
+#UsersTable_wrapper {
+  background-color: #f7f7f7;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  margin-right: 20px;
+  margin-left: 20px;
+  padding: 5px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #aaa;
+  border-top: 1px solid #aaa;
+  /*border: 1px solid gray;*/
 }
 .IAMGroupsView {
-  /*width: 47%;*/
-  margin-left: 20px;
-  width: 1060px;
   margin: 0 auto;
+  min-height: 350px;
+  width: 1060px;
+  margin-top: 70px;
+  margin-bottom: 70px;
 }
 div#budgetUsageContainer {
   /*width: 32%;*/
@@ -553,7 +519,28 @@ div#serviceContainer {
   /*width: 62%;*/
   /*float: right*/
 }
+#GroupsTable_wrapper {
+  background-color: #f7f7f7;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  margin-right: 20px;
+  margin-left: 20px;
+  padding: 5px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #aaa;
+  border-top: 1px solid #aaa;
+  /*border: 1px solid gray;*/
+}
 #filter-details {
+  border: 1px solid #f2f2f2;
+  border-radius: 5px;
+  font-family: 'Roboto', sans-serif;
+  font-size: 13px;
+  height: 30px;
+  width: 100%;
+}
+#time-filter-details {
   border: 1px solid #f2f2f2;
   border-radius: 5px;
   font-family: 'Roboto', sans-serif;
@@ -724,7 +711,7 @@ div#serviceContainer {
   background: #f7f7f7;
   border: 1px solid #ccc;
   top: 65px;
-  right: 90px;
+  right: 150px;
   width: 200px;
   height: 500px;
 }
@@ -750,4 +737,51 @@ div#serviceContainer {
   border-bottom-color: #ccc;
   border-width: 16px;
   margin-left: -16px;
+}
+.UMCostBudgetsView {
+  margin: 0 auto;
+  min-height: 350px;
+  width: 1060px;
+  margin-top: 70px;
+  margin-bottom: 70px;
+}
+#BudgetTable_wrapper {
+  background-color: #f7f7f7;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  margin-right: 20px;
+  margin-left: 20px;
+  padding: 5px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #aaa;
+  border-top: 1px solid #aaa;
+  /*border: 1px solid gray;*/
+}
+.RDSView {
+  margin: 0 auto;
+  min-height: 350px;
+  width: 1060px;
+  margin-top: 70px;
+  margin-bottom: 70px;
+}
+.UMTimeBudgetsView {
+  margin: 0 auto;
+  min-height: 350px;
+  width: 1060px;
+  margin-top: 70px;
+  margin-bottom: 70px;
+}
+#TimeBudgetTable_wrapper {
+  background-color: #f7f7f7;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  margin-right: 20px;
+  margin-left: 20px;
+  padding: 5px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #aaa;
+  border-top: 1px solid #aaa;
+  /*border: 1px solid gray;*/
 }

@@ -45,6 +45,7 @@ exports.checkBudgets = function() {
                                 }, function(err) {
                                     if (err) throw err;
                                     console.log('Added a notification')
+
                                     callback1();
                                 });
                             }, 0);

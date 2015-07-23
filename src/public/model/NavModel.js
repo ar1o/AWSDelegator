@@ -22,10 +22,11 @@ var NavViewCollection = Backbone.Collection.extend({
 });
 
 var NavViewCollection = new NavViewCollection();
-var page0 = new NavViewModel({title: 'Amazon Web Services' , page_id: 0});
-var page1 = new NavViewModel({title: 'Amazon Elastic Compute Cloud', page_id: 1});
+var page0 = new NavViewModel({title: 'Amazon Web Service' , page_id: 0});
+var page1 = new NavViewModel({title: 'Amazon EC2 Service', page_id: 1});
 var page2 = new NavViewModel({title: 'Amazon RDS Service', page_id: 2});
-var page3 = new NavViewModel({title: 'Usage Monitor', page_id: 3});
-var pages = [page0, page1, page2, page3];
+var page3 = new NavViewModel({title: 'Amazon IAM Service', page_id: 3});
+var page4 = new NavViewModel({title: 'Usage Monitor', page_id: 4});
+var pages = [page0, page1, page2, page3, page4];
 
 NavViewCollection.add(pages);

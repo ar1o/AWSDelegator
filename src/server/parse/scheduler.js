@@ -5,6 +5,7 @@ var ec2Parser = require('./ec2Parse');
 var rdsParser = require('./rdsParse');
 var iamParser = require('./iamParse');
 var timeOutHandler = require('../BudgetTimeOutHandler');
+var grlsParser = require('./grlsParse');
 var self = this;
 var okey,next_okey;
 var s3 = new AWS.S3();
@@ -13,12 +14,39 @@ var _params = {
 };
 
 exports.s3Connect = function(_callback) {
+    // require('../route/timeBudgetRoute').createGRLSInstances({
+    //     "TimeBudgetName": "budget2",
+    //     "BatchType": "user",
+    //     "BatchName": "deepak",
+    //     "StartDate": "2015-07-01 00:00:00",
+    //     "EndDate": "2015-07-30 23:00:00",
+    //     "TimeAmount": "150",
+    //     "TimeOut": "true",
+    //     "uDecayRate": 3,
+    //     "oDecayRate": 2,
+    //     "dBConnections": 20,
+    //     "State": "valid"
+    // });
+    // require('../route/timeBudgetRoute').createGRLSInstances({
+    //     "TimeBudgetName": "budget3",
+    //     "BatchType": "group",
+    //     "BatchName": "awsDelegator",
+    //     "StartDate": "2015-07-01 00:00:00",
+    //     "EndDate": "2015-07-30 23:00:00",
+    //     "TimeAmount": "150",
+    //     "TimeOut": "true",
+    //     "uDecayRate": 3,
+    //     "oDecayRate": 2,
+    //     "dBConnections": 20,
+    //     "State": "valid"
+    // });
     printBanner(); 
-    s3.s3Watch();
+    // s3.s3Watch();
     // parseBills();
     AWS.config.credentials = awsCredentials.default;
     // parseAWSServices();
-    timeOutHandler.checkBudgets();
+    // timeOutHandler.checkBudgets();
+    // grlsParser.updateTimeBudgets();
 };
 
 var parseBills = function() {

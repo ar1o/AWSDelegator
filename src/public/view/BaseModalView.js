@@ -37,8 +37,5 @@ var BaseModalView = Backbone.View.extend({
         });
         this.$el.html(html);
         this.$el.modal({show:false});
-
-      // this.getTemplate(this.template, this.renderView);
-      // return this;
     }
  });

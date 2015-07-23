@@ -1,5 +1,5 @@
-var UMGroupUserServiceView = Backbone.View.extend({
-    className: 'UMGroupUserServiceView',
+var UMTimeGroupUserServiceView = Backbone.View.extend({
+    className: 'UMTimeGroupUserServiceView',
 
     initialize: function(options) {
         if (!this.model) {
@@ -83,7 +83,7 @@ var UMGroupUserServiceView = Backbone.View.extend({
                         type: 'pie'
                     },
                     title: {
-                        text: 'Services Cost Chart - '+budgetCollection.at(budgetIndex).get('budgetName')+' - '+self.user
+                        text: 'Services Time Cost Chart - '+timeBudgetCollection.at(budgetIndex).get('timeBudgetName')+' - '+self.user
                     },
                     plotOptions: {
                         pie: {

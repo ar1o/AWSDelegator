@@ -27,7 +27,7 @@ var EC2InstancesView = Backbone.View.extend({
 
         this.model.change('instancesDataReady', function(model, val) {
             this.render();
-            table = $('#InstanceTable').DataTable({
+            table = $('#EC2InstanceTable').DataTable({
                 "iDisplayLength": 15,
                 "bSort": false
                     // "paging":   false,

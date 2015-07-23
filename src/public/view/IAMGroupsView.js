@@ -5,22 +5,13 @@ var IAMGroupsView = Backbone.View.extend({
             this.model = new UsageMonitorModel();
         }
         this.model.getGroups();
-        this.usageActivity = new UMUsageView();
-        this.costActivity = new UMCostView();
-        this.operationsActivity = new UMOperationsView();
         this.bindings();
-        this.render();
-    },
-
-    updateViews: function(budgetIndex) {
-        this.usageActivity.updateViews(budgetIndex);
-        this.costActivity.updateViews(budgetIndex);
-        this.operationsActivity.updateGroupView(budgetIndex);
     },
 
     bindings: function() {
         var self = this;
-        var table;
+        // var table;
+
         this.model.change('groupDataReady', function(model, val) {
             this.render();
            table = $('#GroupsTable').DataTable({
@@ -31,7 +22,7 @@ var IAMGroupsView = Backbone.View.extend({
             });
         }.bind(this));
 
-        // var table = $('#GroupsTable').DataTable();
+        var table = $('#GroupsTable').DataTable();
 
         this.$el.on('click', '#GroupsTable tbody tr', function() {
             if ($(this).hasClass('selected')) {
@@ -47,9 +38,6 @@ var IAMGroupsView = Backbone.View.extend({
         var html = Handlebars.templates.IAMGroupsView({
             instances: GroupCollection.toJSON()
         });
-        this.$el.html(html);
-        this.$el.append(this.usageActivity.el);
-        this.$el.append(this.costActivity.el);
-        this.$el.append(this.operationsActivity.el);   
+        this.$el.html(html); 
     }
 });

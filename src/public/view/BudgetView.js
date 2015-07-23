@@ -14,7 +14,7 @@ var BudgetView = Backbone.View.extend({
             amount: null,
             option: 'true'
         };
-        this.validify = {
+        this.isValid = {
             budgetName: false,
             batchType: false,
             batchName: false,
@@ -22,10 +22,8 @@ var BudgetView = Backbone.View.extend({
             endDate: false,
             amount: false
         };
-        var collection;
         this.bindings();
         this.render();
-        // this.model.getBudgets();
         this.$('#budgetnamewarning').hide();
         this.$('#budgetnamerequest').hide();
         this.$('#oldbudgetnamewarning').hide();
@@ -36,14 +34,6 @@ var BudgetView = Backbone.View.extend({
         this.$('#amountrequest').hide();
         this.$('#batchtyperequest').hide();
         this.$('#batchnamerequest').hide();
-    },
-
-    render_collection: function(collection) {
-        if (collection == 'Groups') {
-            this.model.getGroups();
-        } else {
-            this.model.getUsers();
-        }
     },
 
     bindings: function() {
@@ -61,9 +51,8 @@ var BudgetView = Backbone.View.extend({
                 if(newBudget){
                     this.$('#oldbudgetnamewarning').hide();
                     this.data.budgetName = $('#budgetname').val();
-                    self.validify.budgetName = true;
+                    self.isValid.budgetName = true;
                 }else{
-                    console.log($('#budgetname').val())
                     $('#oldbudgetnamewarning').show();
                 }
             }else{
@@ -75,33 +64,31 @@ var BudgetView = Backbone.View.extend({
             var selected = $('.costfilter').val();
             $('#filter-details').removeClass('hidden');
             if (selected == 'group') {
-                this.render_collection('Groups')
+                self.model.getGroups();
             } else {
-                this.render_collection('Users')
+                self.model.getUsers();
             }
         }.bind(this));
 
         this.model.change('groupDataReady', function(model, val) {
-            this.collection = GroupCollection.toJSON();
-            this.rerender();
+            this.rerender(GroupCollection.toJSON());
         }.bind(this));
 
         this.model.change('userDataReady', function(model, val) {
-            this.collection = UserCollection.toJSON();
-            this.rerender();
+            this.rerender(UserCollection.toJSON());
         }.bind(this));
 
         this.$el.on("change", '.sub-costfilter', function(e) {
             var selected = $('.sub-costfilter').val();
             this.data.batchName = selected;
-            this.validify.batchName = true;
+            this.isValid.batchName = true;
             this.$('#batchnamerequest').hide();
         }.bind(this));
 
         this.$el.on("change", '.costfilter', function(e) {
             var selected = $('.costfilter').val();
             this.data.batchType = selected;
-            this.validify.batchType = true;
+            this.isValid.batchType = true;
             this.$('#batchtyperequest').hide();
         }.bind(this));
 
@@ -110,7 +97,7 @@ var BudgetView = Backbone.View.extend({
             var datePicker = $("#startdate").datepicker({
                 onSelect: function(dateText) {
                     self.data.startDate = this.value;
-                    self.validify.startDate = true;
+                    self.isValid.startDate = true;
                     self.$('#startdaterequest').hide();
                 }
             });
@@ -124,9 +111,9 @@ var BudgetView = Backbone.View.extend({
             var self = this;
             var datePicker = $("#enddate").datepicker({
                 onSelect: function(dateText) {
-                    if(self.data.endDate >= self.data.startDate){
+                    if(this.value >= self.data.startDate){
                         self.data.endDate = this.value;
-                        self.validify.endDate = true;
+                        self.isValid.endDate = true;
                         self.$('#enddatewarning').hide();
                         self.$('#enddaterequest').hide();
                     }else{
@@ -142,14 +129,13 @@ var BudgetView = Backbone.View.extend({
 
         this.$el.on('focusout', '#amount', function(e) {
             if(/^\d+(\.\d{1,2})?$/.test($('#amount').val())){
-                this.data.amount = $('#amount').val();
-                self.validify.amount = true;
+                this.data.amount = parseInt($('#amount').val());
+                self.isValid.amount = true;
                 self.$('#amountwarning').hide();
                 self.$('#amountrequest').hide();
             }else{
                 self.$('#amountwarning').show();
             }
-            
         }.bind(this));
 
         this.$el.on('click', '#myonoffswitch', function(e) {
@@ -174,7 +160,7 @@ var BudgetView = Backbone.View.extend({
             if(self.data.batchName == null){
                 self.$('#batchnamerequest').show();
             }
-            if(self.data.budgetname == null){
+            if(self.data.budgetName == null){
                 self.$('#budgetnamerequest').show();
             }
             if(self.data.amount == null){
@@ -187,15 +173,39 @@ var BudgetView = Backbone.View.extend({
                 self.$('#enddaterequest').show();
             }
             var validForm = true;
-            for(var i in self.validify){
-                if(!self.validify[i]){ 
+            for (var i in self.isValid) {
+                if (!self.isValid[i]) {
                     validForm = false;
                 }
             }
+            $('#filter-details').addClass('hidden');
             if(validForm){
-                $('#myModal').modal('hide');
                 this.model.post_budget_result(this.data);
+                for (var i in self.isValid) {
+                    self.isValid[i] = false;
+                    self.data[i] = null;
+                }
+                $("#amount").val("");
+                $("#budgetname").val("");
+                $(".costfilter").val("");
+                $("#startdate").val("");
+                $("#enddate").val("");
+                $('#myModal').modal('hide');
             }
+        }.bind(this));
+
+        this.$el.on('click', '#closebtn', function(e) {
+            for(var i in self.isValid){
+                self.isValid[i] = false;
+                self.data[i] = null;
+            }
+            $("#amount").val("");
+            $("#budgetname").val("");
+            $(".costfilter").val("");
+            $("#startdate").val("");
+            $("#enddate").val("");
+            $('#filter-details').addClass('hidden');
+            $('#myModal').modal('hide');
         }.bind(this));
     },
 
@@ -205,9 +215,10 @@ var BudgetView = Backbone.View.extend({
         });
         this.$el.html(html);
     },
-    rerender: function() {
+
+    rerender: function(collection) {
         var html = Handlebars.templates.BudgetView({
-            col: this.collection
+            col: collection
         });
         var selector = '.sub-costfilter';
         this.$el.find(selector).replaceWith($(selector, html));
