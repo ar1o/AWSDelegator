@@ -68,27 +68,24 @@ exports.createGRLSInstances = function(timeBudget) {
 							}
 						}]).exec(function(e, resourceData) {
 							if(resourceData.length != 0){
-								if(/^t2/.test(resourceData[0].Type)){
-									var doc = {
-										timeBudgetName: timeBudget.TimeBudgetName,
-										instanceId: resourceData[0].Id,
-										user: timeBudget.BatchName,
-										group: 'null',
-										instanceRegion: resourceData[0].Zone,
-										serviceType: 'ec2',
-										instanceType: resourceData[0].Type,
-										lifetime: 0,
-										uDecay: timeBudget.uDecayRate,
-										oDecay: timeBudget.oDecayRate,
-										state: 'valid'
-									};
-									db.collection('grlsInstances').insert(doc, function(err) {
-										if (err) throw err;
-										callback1();
-									});
-								}else{
+								var doc = {
+									timeBudgetName: timeBudget.TimeBudgetName,
+									instanceId: resourceData[0].Id,
+									instanceType: resourceData[0].Type,
+									user: timeBudget.BatchName,
+									group: 'null',
+									instanceRegion: resourceData[0].Zone,
+									serviceType: 'ec2',
+									instanceType: resourceData[0].Type,
+									lifetime: 0,
+									uDecay: timeBudget.uDecayRate,
+									oDecay: timeBudget.oDecayRate,
+									state: 'valid'
+								};
+								db.collection('grlsInstances').insert(doc, function(err) {
+									if (err) throw err;
 									callback1();
-								}
+								});
 							}else{
 								callback1();
 							}

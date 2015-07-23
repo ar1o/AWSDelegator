@@ -214,6 +214,7 @@ var addNewUserGroups = function(active_user_group,callback){
 	controller1();
 }
 
+//remove groups that are deleted at aws console from db
 var checkGroupConsistency = function(iamGroups,dbGroups,callback){
     var activeGroups = [];    
     for(var i in iamGroups.Groups)
@@ -255,6 +256,7 @@ var checkGroupConsistency = function(iamGroups,dbGroups,callback){
 	}
 }
 
+//remove users that are removed at aws console from db
 var checkUserConsistency = function(iamUsers,dbUsers,callback){
     var activeUsers = [];
     for(var i in iamUsers.Users)

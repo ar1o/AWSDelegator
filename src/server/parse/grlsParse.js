@@ -2,6 +2,8 @@ exports.updateTimeBudgets = function(){
 	getTimeAmount();
 }
 
+//get max TimeAmount for each instance, this result is used later 
+//to identify budget timeout
 var getTimeAmount = function(){
 	MongoClient.connect(databaseUrl, function(err, db) {
         if (err) throw err;
@@ -29,6 +31,7 @@ var getTimeAmount = function(){
     });
 }
 
+//update lifetime of instances based on their usage-profile
 var updateLifetime = function(maxBudgetLifetimes){
 	MongoClient.connect(databaseUrl, function(err, db) {
         if (err) throw err;
@@ -67,58 +70,114 @@ var updateLifetime = function(maxBudgetLifetimes){
 				var oDecayRate = grlsInstances[index1].oDecay;
 				switch(grlsInstances[index1].serviceType){
 				case 'ec2':
-					var params = {
-						EndTime: currentTimeIso,
-						MetricName: 'CPUCreditBalance',
-						Namespace: 'AWS/EC2',
-						Period: 3600,
-						StartTime: new Date(currentTime - 1000 * 3600 * 2).toISOString(),
-						Statistics: ['Average'],
-						Dimensions: [{
-							Name: 'InstanceId',
-							Value: grlsInstances[index1].instanceId
-						}, ],
-						Unit: 'Count'
-					};
-					cloudwatch.getMetricStatistics(params, function(err, data) {
-						if (err) throw err;
-						var decayRate = 1;
-						var slope = data.Datapoints[1].Average - data.Datapoints[0].Average;
-						var maxCredits = t2HourlyEarning[grlsInstances[index1].instanceType] * 24;
-						if (slope < 1){
-							if ((maxCredits - data.Datapoints[1].Average) < 0.1) {
+					//if t2 instance then use CPUCreditBalance for profiling-
+					//if slope of credit balance is equal to max allowed usage limit 
+					//for that instance type or 0 then apply under-profile decay rate,
+					//if slope is 0 and credit balance is 0 then apply over-profile decay rate,
+					//else check set to under-profile if under 2% CPUUtilization 
+					//and over-profile if greater than 100%
+					if(/^t2/.test(grlsInstances[index1].instanceType)){
+						var params = {
+							EndTime: currentTimeIso,
+							MetricName: 'CPUCreditBalance',
+							Namespace: 'AWS/EC2',
+							Period: 3600,
+							StartTime: new Date(currentTime - 1000 * 3600 * 2).toISOString(),
+							Statistics: ['Average'],
+							Dimensions: [{
+								Name: 'InstanceId',
+								Value: grlsInstances[index1].instanceId
+							}, ],
+							Unit: 'Count'
+						};
+						cloudwatch.getMetricStatistics(params, function(err, data) {
+							if (err) throw err;
+							var decayRate = 1;
+							var slope = data.Datapoints[1].Average - data.Datapoints[0].Average;
+							var maxCredits = t2HourlyEarning[grlsInstances[index1].instanceType] * 24;
+							if (slope < 1){
+								if ((maxCredits - data.Datapoints[1].Average) < 0.1) {
+									decayRate = uDecayRate;
+								} else if (data.Datapoints[1].Average < (.02 * maxCredits)) {
+									decayRate = oDecayRate;
+								}
+							}else if ((t2HourlyEarning[grlsInstances[index1].instanceType] - slope) < 0.1) {
 								decayRate = uDecayRate;
-							} else if (data.Datapoints[1].Average < (.02 * maxCredits)) {
+							}
+							mongoose.model('grlsInstances').update({
+								instanceId: grlsInstances[index1].instanceId,
+							}, {
+								$set: {
+									lifetime: grlsInstances[index1].lifetime + decayRate
+								}
+							}).exec(function(err) {
+								if (err) throw err;
+								if(!(grlsInstances[index1].timeBudgetName in budgetLifetimes)) {
+									budgetLifetimes[grlsInstances[index1].timeBudgetName] = 0;
+								}
+								budgetLifetimes[grlsInstances[index1].timeBudgetName] += grlsInstances[index1].lifetime + decayRate;
+								db.collection('grlsLineItems').insert({
+									instanceId: grlsInstances[index1].instanceId,
+									user: grlsInstances[index1].user,
+									group: grlsInstances[index1].group,
+									serviceType: grlsInstances[index1].serviceType,
+									decayTime: decayRate,
+									time: currentTimeIso
+								}, function(err) {
+									if (err) throw err;
+									callback1();
+								});
+							});
+						});		
+					}else{
+						var params = {
+							EndTime: currentTimeIso,
+							MetricName: 'CPUUtilization',
+							Namespace: 'AWS/EC2',
+							Period: 3600,
+							StartTime: new Date(currentTime - 1000 * 3600).toISOString(),
+							Statistics: ['Average'],
+							Dimensions: [{
+								Name: 'InstanceId',
+								Value: grlsInstances[index1].instanceId
+							}, ],
+							Unit: 'Percent'
+						};
+						cloudwatch.getMetricStatistics(params, function(err, data) {
+							if (err) throw err;
+							var decayRate = 1;
+							//set under-profile if CPUUtilization is less than 2% and over-profile if greater than 100%
+							if(data.Datapoints[0].Average < 2/100){
+								decayRate = uDecayRate;
+							}else if(data.Datapoints[0].Average > 1){
 								decayRate = oDecayRate;
 							}
-						}else if ((t2HourlyEarning[grlsInstances[index1].instanceType] - slope) < 0.1) {
-							decayRate = uDecayRate;
-						}
-						mongoose.model('grlsInstances').update({
-							instanceId: grlsInstances[index1].instanceId,
-						}, {
-							$set: {
-								lifetime: grlsInstances[index1].lifetime + decayRate
-							}
-						}).exec(function(err) {
-							if (err) throw err;
-							if(!(grlsInstances[index1].timeBudgetName in budgetLifetimes)) {
-								budgetLifetimes[grlsInstances[index1].timeBudgetName] = 0;
-							}
-							budgetLifetimes[grlsInstances[index1].timeBudgetName] += grlsInstances[index1].lifetime + decayRate;
-							db.collection('grlsLineItems').insert({
+							mongoose.model('grlsInstances').update({
 								instanceId: grlsInstances[index1].instanceId,
-								user: grlsInstances[index1].user,
-								group: grlsInstances[index1].group,
-								serviceType: grlsInstances[index1].serviceType,
-								decayTime: decayRate,
-								time: currentTimeIso
-							}, function(err) {
+							}, {
+								$set: {
+									lifetime: grlsInstances[index1].lifetime + decayRate
+								}
+							}).exec(function(err) {
 								if (err) throw err;
-								callback1();
+								if(!(grlsInstances[index1].timeBudgetName in budgetLifetimes)) {
+									budgetLifetimes[grlsInstances[index1].timeBudgetName] = 0;
+								}
+								budgetLifetimes[grlsInstances[index1].timeBudgetName] += grlsInstances[index1].lifetime + decayRate;
+								db.collection('grlsLineItems').insert({
+									instanceId: grlsInstances[index1].instanceId,
+									user: grlsInstances[index1].user,
+									group: grlsInstances[index1].group,
+									serviceType: grlsInstances[index1].serviceType,
+									decayTime: decayRate,
+									time: currentTimeIso
+								}, function(err) {
+									if (err) throw err;
+									callback1();
+								});
 							});
-						});
-					});					
+						});	
+					}			
 					break;
 				case 'rds':
 					var params = {
@@ -181,6 +240,7 @@ var updateLifetime = function(maxBudgetLifetimes){
     });
 }
 
+//mark timed-out budgets and grlsInstances as invalid
 var stopTimeBudget = function(timeBudget){
 	var currentDate = new Date();
 	var currentTime = currentDate.getTime();
@@ -216,6 +276,7 @@ var stopTimeBudget = function(timeBudget){
 	});
 }
 
+//get all instances associated with a timeBudget
 var getTimeBudgetInstances = function(timeBudget){
 	mongoose.model('timeBudgets').find({
 		timeBudgetName: timeBudget
@@ -293,6 +354,7 @@ var getTimeBudgetInstances = function(timeBudget){
 	});
 }
 
+//stop all serviceResources of invalid budget
 var stopTimeBudgetInstances = function(serviceResources){
 	var index1 = 0;
     var controller1 = function() {
