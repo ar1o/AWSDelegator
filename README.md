@@ -2,6 +2,8 @@ AWSDelegator
 =============
 [Toward a Solution for the Cloud Account Delegation Problem](http://www.mikesmit.com/wp-content/papercite-data/pdf/casconett2014.pdf)
 
+## Features
+
 
 ## Code Layout
      src/
@@ -35,3 +37,7 @@ AWSDelegator
      3. $ node app.js
      5. go to http://localhost:3000
 
+By:
+Deepak Mahendrakar - https://github.com/dpkm95
+Karl Simon - https://github.com/Ulric19
+Ario Khoshzamir - https://github.com/ar1o
