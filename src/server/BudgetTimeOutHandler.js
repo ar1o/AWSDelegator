@@ -33,11 +33,16 @@ exports.checkBudgets = function() {
                                     Time: time
                                 }, function(err) {
                                     if (err) throw err;
+                                    console.log('Added a notification')
+
                                     callback1();
                                 });
                             }, 0);
                         }
                     );
+                } else {
+                    callback1();
+
                 }
             };
             if (budgets.length != 0) {

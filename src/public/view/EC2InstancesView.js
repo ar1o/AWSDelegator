@@ -4,10 +4,13 @@ var EC2InstancesView = Backbone.View.extend({
         if (!this.model) {
             this.model = new InstancesModel();
         }
+        var self = this;
         this.model.getEC2Instances();
         this.billingActivity = new EC2BillingView();
         this.operationsActivity = new EC2OperationsView();
         this.metricsActivity = new EC2MetricsView();
+
+
         this.bindings();
         this.render();
     },
@@ -43,17 +46,16 @@ var EC2InstancesView = Backbone.View.extend({
             }
         });
 
-        this.$el.on('click', '#InstanceTable tbody tr', function() {
+        var table = $('#InstanceTable').DataTable();
 
-        // $('#InstanceTable tbody').on('click', 'tr', function() {
+        this.$el.on('click', '#InstanceTable tbody tr', function() {
             if ($(this).hasClass('selected')) {
                 $(this).removeClass('selected');
             } else {
-                console.log(this.$('tr.selected').removeClass('selected'));
-                this.$('tr.selected').removeClass('selected');
+                table.$('tr.selected').removeClass('selected');
                 $(this).addClass('selected');
             }
-        }.bind(this));
+        });
     },
 
     render: function() {
@@ -65,5 +67,4 @@ var EC2InstancesView = Backbone.View.extend({
         this.$el.append(this.operationsActivity.el);
         this.$el.append(this.billingActivity.el);
         this.$el.append(this.metricsActivity.el);
-    }
-});
+    }});

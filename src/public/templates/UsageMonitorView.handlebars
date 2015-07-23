@@ -1,0 +1,31 @@
+<table id="BudgetTable" class="display">
+	<thead>
+		<tr class="dark-row">
+			<th>BudgetName</th>
+			<th>BatchType</th>
+			<th>BatchName</th>
+			<th>StartDate</th>
+			<th>EndDate</th>
+			<th>Amount</th>
+		</tr>
+	</thead>
+	<tbody id="budgetData">
+	{{#each budgets}}
+		<tr>
+			<td id={{this.budgetName}} >{{this.budgetName}}</td>
+			<td id={{this.batchType}}>{{this.batchType}}</td>
+			<td id={{this.batchName}}>{{this.batchName}}</td>
+			<td id={{this.startDate}}>{{this.startDate}}</td>
+			<td id={{this.endDate}}>{{this.endDate}}</td> 
+			<td id={{this.amount}}>{{this.amount}}</td>
+		</tr>
+	{{/each}}
+	</tbody>	
+</table>
+
+
+<ul class='custom-menu'>
+  <li data-action="Edit"data-toggle="modal" data-target="#base-modal" data-backdrop="static" data-keyboard="false">Edit Instance</li>
+  <li data-action="Delete" data-toggle="modal" data-target="#base-modal" data-backdrop="static" data-keyboard="false" >Delete Instance</li>
+</ul>
+

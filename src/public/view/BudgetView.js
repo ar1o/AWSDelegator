@@ -136,7 +136,6 @@ var BudgetView = Backbone.View.extend({
             }else{
                 self.$('#amountwarning').show();
             }
-            
         }.bind(this));
 
         this.$el.on('click', '#myonoffswitch', function(e) {

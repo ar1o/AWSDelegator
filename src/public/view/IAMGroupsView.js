@@ -10,15 +10,28 @@ var IAMGroupsView = Backbone.View.extend({
 
     bindings: function() {
         var self = this;
+        // var table;
+
         this.model.change('groupDataReady', function(model, val) {
             this.render();
-            $('#GroupsTable').DataTable({
+           table = $('#GroupsTable').DataTable({
                 "iDisplayLength": 15
                 // "paging":   false,
                 // "info":     false,
                 // "bFilter": false
             });
         }.bind(this));
+
+        var table = $('#GroupsTable').DataTable();
+
+        this.$el.on('click', '#GroupsTable tbody tr', function() {
+            if ($(this).hasClass('selected')) {
+                $(this).removeClass('selected');
+            } else {
+                table.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+            }
+        });
     },
 
     render: function() {

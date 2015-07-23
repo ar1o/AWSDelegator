@@ -9,16 +9,27 @@ var IAMUsersView = Backbone.View.extend({
     },
 
     bindings: function() {
-        var self = this;        
+        var self = this;
+        var table;
+
         this.model.change('userDataReady', function(model, val) {
             this.render();
-            $('#UsersTable').DataTable({
+           table = $('#UsersTable').DataTable({
                 "iDisplayLength": 15
                 // "paging":   false,
                 // "info":     false,
                 // "bFilter": false
             });
         }.bind(this));
+
+         this.$el.on('click', '#UsersTable tbody tr', function() {
+            if ($(this).hasClass('selected')) {
+                $(this).removeClass('selected');
+            } else {
+                table.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+            }
+        });
     },
 
     render: function() {

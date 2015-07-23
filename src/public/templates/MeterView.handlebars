@@ -1,3 +1,33 @@
+
+<script type="text/javascript">
+$(document).ready(function() {
+    $("body").tooltip({ selector: '[data-toggle=tooltip]' });
+});
+</script>
+<div class="rate"data-toggle="tooltip" title="Rate of cost per hour" data-placement="bottom">Rate: 
+	{{#each rate}}
+		${{this.value}}/Hour
+	{{/each}}
+</div>
+
+
+<div class="usage"data-toggle="tooltip" title="Current usage from specified start/end date" data-placement="bottom">Usage:      N/A
+	{{!-- {{#each usage}}
+		${{this.value}}
+	{{/each}} --}}
+</div>
+
+<div class="balance" data-toggle="tooltip" title="Current remaining balance" data-placement="bottom">Balance:
+
+	{{#each rate}}
+	 	<div id = "div2"></div>
+	{{/each}}
+
+</div>
+
+
+
+
 <script type="text/javascript">
 		var response = '';
 			$(document).ready(function(){
@@ -6,25 +36,4 @@
 				});
 			});
 				
-		</script>
-
-<div class="rate">Rate: 
-	{{#each rate}}
-		${{this.value}}/Hour
-	{{/each}}
-</div>
-
-
-<div class="usage">Usage:      N/A
-	{{!-- {{#each usage}}
-		${{this.value}}
-	{{/each}} --}}
-</div>
-
-<div class="balance">Balance:
-
-	{{#each rate}}
-	 	<div id = "div2"></div>
-	{{/each}}
-
-</div>
+</script>
