@@ -6,12 +6,13 @@ var NotificationView = Backbone.View.extend({
         if (!this.model) {
             this.model = new NotificationModel();
         }
-        console.log('init')
         var self = this;
         self.model.getNotification();
         setInterval(function() {
             self.model.getNotification();
         }, 1000 * 60 * 60);
+        // }, 1000 * 6);
+
         this.bindings();
     },
 

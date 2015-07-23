@@ -162,7 +162,7 @@ templates['GRLSView'] = template({"1":function(depth0,helpers,partials,data) {
   return buffer + "	</tbody>	\n</table>";
 },"useData":true});
 templates['HeaderView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  return "\n<div id=\"settings\" class=\"setting\" data-toggle=\"modal\" data-target=\"#myModal2\"><i class=\"fa fa-cog fa-1x\"></i></div>\n\n<div id=\"budgets\" class=\"budget\" data-toggle=\"modal\" data-target=\"#myModal\"> </div>\n\n<div id=\"timeBudgets\" class=\"timeBudgets\" data-toggle=\"modal\" data-target=\"#timeBudgetModal\"> </div>\n\n<!-- Number badge on icon -->\n<div class=\"mdl-badge\" data-badge=\"\"></div>\n<div class=\"notify\"><i class=\"fa fa-bell fa-1x\"></i></div>\n\n<div class=\"menu\"><i class=\"fa fa-bars fa-1x\"></i></div>\n";
+  return "\n<div id=\"settings-tooltip\" data-toggle=\"tooltip\" title=\"Settings\"data-placement=\"bottom\"><div id=\"settings\" class=\"setting\" data-toggle=\"modal\" data-target=\"#myModal2\"><i class=\"fa fa-cog fa-1x\"></i></div></div>\n\n<div id=\"cost-tooltip\" data-toggle=\"tooltip\" title=\"Cost Budget\"data-placement=\"bottom\"><div id=\"budgets\" class=\"budget\" data-toggle=\"modal\" data-target=\"#myModal\"> </div></div>\n\n<div id=\"time-tooltip\" data-toggle=\"tooltip\" title=\"Time Budget\"data-placement=\"bottom\"><div id=\"timeBudgets\" class=\"timeBudgets\" data-toggle=\"modal\" data-target=\"#timeBudgetModal\"> </div></div>\n\n<!-- Number badge on icon -->\n<div class=\"mdl-badge\" data-badge=\"\"></div>\n<div ><div class=\"notify\"data-toggle=\"tooltip\" title=\"Notifications\" data-placement=\"bottom\"><i class=\"fa fa-bell fa-1x\"></i></div></div>\n\n<div class=\"menu\"><i class=\"fa fa-bars fa-1x\"></i></div>\n\n";
   },"useData":true});
 templates['IAMGroupsView'] = template({"1":function(depth0,helpers,partials,data) {
   var lambda=this.lambda, escapeExpression=this.escapeExpression;
@@ -209,13 +209,13 @@ templates['MeterView'] = template({"1":function(depth0,helpers,partials,data) {
 },"3":function(depth0,helpers,partials,data) {
   return "	 	<div id = \"div2\"></div>\n";
   },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
-  var stack1, buffer = "<script type=\"text/javascript\">\n		var response = '';\n			$(document).ready(function(){\n				$.get('/getAccountBalance', function(data){\n						$(\"#div2\").append('$'+data);\n				});\n			});\n				\n		</script>\n\n<div class=\"rate\">Rate: \n";
+  var stack1, buffer = "\n<script type=\"text/javascript\">\n$(document).ready(function() {\n    $(\"body\").tooltip({ selector: '[data-toggle=tooltip]' });\n});\n</script>\n<div class=\"rate\"data-toggle=\"tooltip\" title=\"Rate of cost per hour\" data-placement=\"bottom\">Rate: \n";
   stack1 = helpers.each.call(depth0, (depth0 != null ? depth0.rate : depth0), {"name":"each","hash":{},"fn":this.program(1, data),"inverse":this.noop,"data":data});
   if (stack1 != null) { buffer += stack1; }
-  buffer += "</div>\n\n\n<div class=\"usage\">Usage:      N/A\n</div>\n\n<div class=\"balance\">Balance:\n\n";
+  buffer += "</div>\n\n\n<div class=\"usage\"data-toggle=\"tooltip\" title=\"Current usage from specified start/end date\" data-placement=\"bottom\">Usage:      N/A\n</div>\n\n<div class=\"balance\" data-toggle=\"tooltip\" title=\"Current remaining balance\" data-placement=\"bottom\">Balance:\n\n";
   stack1 = helpers.each.call(depth0, (depth0 != null ? depth0.rate : depth0), {"name":"each","hash":{},"fn":this.program(3, data),"inverse":this.noop,"data":data});
   if (stack1 != null) { buffer += stack1; }
-  return buffer + "\n</div>\n";
+  return buffer + "\n</div>\n\n\n\n\n<script type=\"text/javascript\">\n		var response = '';\n			$(document).ready(function(){\n				$.get('/getAccountBalance', function(data){\n						$(\"#div2\").append('$'+data);\n				});\n			});\n				\n</script>";
 },"useData":true});
 templates['NavView'] = template({"1":function(depth0,helpers,partials,data) {
   var stack1, lambda=this.lambda, escapeExpression=this.escapeExpression, helperMissing=helpers.helperMissing, buffer = "<div class=\"page\" page-id=\""

@@ -274,6 +274,16 @@ td {
   color: orange;
   cursor: pointer;
 }
+#settings-tooltip {
+  top: 0;
+  height: 48px;
+  font-size: 20px;
+  width: 60px;
+  vertical-align: middle;
+  text-align: center;
+  line-height: 48px;
+  float: right;
+}
 .menu {
   float: left;
   position: absolute;
@@ -306,6 +316,12 @@ td {
   color: orange;
   cursor: pointer;
 }
+#cost-tooltip {
+  float: right;
+  height: 48px;
+  width: 60px;
+  line-height: 48px;
+}
 .timeBudgets:before {
   font-family: FontAwesome;
   content: "\f017";
@@ -321,6 +337,12 @@ td {
 .timeBudgets:hover {
   color: orange;
   cursor: pointer;
+}
+#time-tooltip {
+  float: right;
+  height: 48px;
+  width: 60px;
+  line-height: 48px;
 }
 .notify {
   float: right;
@@ -450,11 +472,8 @@ div#awsoperationscontainer {
   width: 100%;
 }
 .MeterView {
-  font-family: 'Roboto', sans-serif;
-  font-size: 14px;
-  position: absolute;
+  position: fixed;
   left: 100px;
-  padding-top: 4px;
 }
 .rate {
   padding-right: 15px;

@@ -6,6 +6,7 @@ var AppView = Backbone.View.extend({
         this.header = new HeaderView();
         // this.footer = new FooterView();
         this.navView = new NavView();
+        // this.meterActivity = new MeterView();
 
         this.budgetView = new BudgetView();
         this.timeBudgetView = new TimeBudgetView();
@@ -19,6 +20,8 @@ var AppView = Backbone.View.extend({
         this.bindings();
         this.render();
         this.setListeners();
+
+
 
         window_size = $(window).height();
         // console.log(window_size);
@@ -65,6 +68,9 @@ var AppView = Backbone.View.extend({
     },
 
     bindings: function() {
+        $(document).ready(function() {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
 
         this.$el.on("click", '.menu', function(e) {
             if (this.navView.model.isOpen == true) {
@@ -103,15 +109,14 @@ var AppView = Backbone.View.extend({
             this.navView.model.isOpen = false;
         }.bind(this));
 
-        this.$el.on("click", '.setting', function(e) {
-        }.bind(this));
+        this.$el.on("click", '.setting', function(e) {}.bind(this));
 
-        this.$el.on("click", '#saveConfig', function(e){
+        this.$el.on("click", '#saveConfig', function(e) {
             //set credit value
             var bal = $('#myCredits').val();
-            console.log("Credits",bal);
+            console.log("Credits", bal);
             var exp = $('#expDate').val();
-            console.log("Expiration",exp);
+            console.log("Expiration", exp);
             var self = this;
             $.ajax({
                 type: "POST",
@@ -123,7 +128,7 @@ var AppView = Backbone.View.extend({
                     console.log('success');
                     console.log(JSON.stringify(data));
                 },
-                dataType: 'text'   
+                dataType: 'text'
             });
         });
 
@@ -177,17 +182,16 @@ var AppView = Backbone.View.extend({
             if (this.notificationView.model.isOpen == false) {
                 this.notificationView.model.isOpen = true;
                 // this.$( ".mdl-badge" ).removeAttr( "data-badge");
-            } 
-            else {
+            } else {
                 this.notificationView.model.isOpen = false;
             }
         }.bind(this));
 
         this.notificationView.model.change('dataReady', function(model, val) {
-            if(this.notificationView.model.getSeenNumber() == 0) {
-                this.$( ".mdl-badge" ).removeAttr( "data-badge");
+            if (this.notificationView.model.getSeenNumber() == 0) {
+                this.$(".mdl-badge").removeAttr("data-badge");
             } else {
-                this.$( ".mdl-badge" ).attr( "data-badge", this.notificationView.model.getSeenNumber());
+                this.$(".mdl-badge").attr("data-badge", this.notificationView.model.getSeenNumber());
             }
         }.bind(this));
 
@@ -202,6 +206,8 @@ var AppView = Backbone.View.extend({
         this.$el.append(this.budgetView.el);
         this.$el.append(this.timeBudgetView.el);
         this.$el.append(this.notificationView.el);
+                // this.$el.append(this.meterActivity.el);       
+
         this.setView(this.router.get('view'));
     },
 
