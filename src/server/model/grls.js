@@ -1,6 +1,7 @@
 grlsInstanceSchema = new mongoose.Schema({
 	timeBudgetName: String,
 	instanceId: String,
+	instanceType: String,
 	user: String,
 	group: String,
 	instanceRegion: String,

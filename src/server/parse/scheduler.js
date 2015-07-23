@@ -1,3 +1,5 @@
+//scheduler is timed hourly to parse metrics, bills from aws and check for budget timeouts
+
 var fs = require("fs");
 var adm = require('adm-zip');
 var billingParser = require('./billingParse');
@@ -46,7 +48,7 @@ exports.s3Connect = function(_callback) {
     AWS.config.credentials = awsCredentials.default;
     // parseAWSServices();
     // timeOutHandler.checkBudgets();
-    // grlsParser.updateTimeBudgets();
+    grlsParser.updateTimeBudgets();
 };
 
 var parseBills = function() {

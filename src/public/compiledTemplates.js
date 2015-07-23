@@ -106,7 +106,7 @@ templates['EC2InstancesView'] = template({"1":function(depth0,helpers,partials,d
 },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var stack1;
 
-  return "<table id=\"EC2InstanceTable\" class=\"display\">\n	<thead>\n		<tr class=\"dark-row\">\n			<th>User Name</th>\n			<th>Group Name</th>\n			<th>Instance ID</th>\n			<th>Type</th>\n			<th>State</th>\n			<th>Zone</th>\n			<th>Lifetime</th>\n			<th>Launched</th>\n		</tr>\n	</thead>\n	<tbody id=\"instanceData\">\n"
+  return "<table id=\"EC2InstanceTable\" class=\"hover\">\n	<thead>\n		<tr class=\"dark-row\">\n			<th>User Name</th>\n			<th>Group Name</th>\n			<th>Instance ID</th>\n			<th>Type</th>\n			<th>State</th>\n			<th>Zone</th>\n			<th>Lifetime</th>\n			<th>Launched</th>\n		</tr>\n	</thead>\n	<tbody id=\"instanceData\">\n"
     + ((stack1 = helpers.each.call(depth0,(depth0 != null ? depth0.instances : depth0),{"name":"each","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
     + "	</tbody>	\n</table>\n\n\n\n";
 },"useData":true});
@@ -230,7 +230,7 @@ templates['MeterView'] = template({"1":function(depth0,helpers,partials,data) {
 
   return "\n<script type=\"text/javascript\">\n$(document).ready(function() {\n    $(\"body\").tooltip({ selector: '[data-toggle=tooltip]' });\n});\n</script>\n<div class=\"rate\"data-toggle=\"tooltip\" title=\"Rate of cost per hour\" data-placement=\"bottom\">Rate: \n"
     + ((stack1 = helpers.each.call(depth0,(depth0 != null ? depth0.rate : depth0),{"name":"each","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
-    + "</div>\n\n\n<div class=\"usage\"data-toggle=\"tooltip\" title=\"Current usage from specified start/end date\" data-placement=\"bottom\">Usage:      N/A\n</div>\n\n<div class=\"balance\" data-toggle=\"tooltip\" title=\"Current remaining balance\" data-placement=\"bottom\">Balance:\n\n"
+    + "</div>\n\n\n<div class=\"usage\"data-toggle=\"tooltip\" title=\"Current usage from specified start/end date\" data-placement=\"bottom\">Usage:      $23\n</div>\n\n<div class=\"balance\" data-toggle=\"tooltip\" title=\"Current remaining balance\" data-placement=\"bottom\">Balance:     $977\n\n"
     + ((stack1 = helpers.each.call(depth0,(depth0 != null ? depth0.rate : depth0),{"name":"each","hash":{},"fn":this.program(3, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
     + "\n</div>\n\n\n\n\n<script type=\"text/javascript\">\n		var response = '';\n			$(document).ready(function(){\n				$.get('/getAccountBalance', function(data){\n						$(\"#div2\").append('$'+data);\n				});\n			});\n				\n</script>";
 },"useData":true});
