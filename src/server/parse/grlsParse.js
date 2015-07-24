@@ -26,7 +26,9 @@ var getTimeAmount = function(){
 				maxBudgetLifetimes[timeBudgets[index1].TimeBudgetName] = timeBudgets[index1].TimeAmount;
 				callback1();
 			};
-			controller1();
+			if(timeBudgets.length!=0){
+				controller1();
+			}
         });
     });
 }
