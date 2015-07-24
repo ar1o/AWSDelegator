@@ -7,11 +7,14 @@ var UMTimeBudgetsView = Backbone.View.extend({
         this.model.getTimeBudgets();
         this.usageActivity = new UMTimeBudgetUsageView();
         this.costActivity = new UMTimeBudgetCostView();
+        this.groupUserServiceView = new UMTimeGroupUserServiceView();
         this.bindings();
     },
 
     updateUserViews: function(rowIndex) {
         this.usageActivity.model.getTimeBudgetUsageChart(rowIndex);
+        this.groupUserServiceView.setUser(timeBudgetCollection.at(rowIndex).get('batchName'));
+        this.groupUserServiceView.model.getTimeUserServiceUsageChart(rowIndex);
         this.costActivity.model.getTimeBudgetCostChart(rowIndex);
     },
 
@@ -38,8 +41,10 @@ var UMTimeBudgetsView = Backbone.View.extend({
             var rowIndex = this.rowIndex - 1; 
             self.model.setBudgetIndex(rowIndex);
             if(timeBudgetCollection.at(rowIndex).get('batchType')=='user'){
+                $("#serviceContainer").remove();
                 self.updateUserViews(rowIndex);
             }else{
+                $("#groupUserServiceContainer").remove();
                 self.updateGroupViews(rowIndex);
             }
         });
@@ -51,6 +56,7 @@ var UMTimeBudgetsView = Backbone.View.extend({
         });
         this.$el.html(html);
         this.$el.append(this.usageActivity.el);
+        this.$el.append(this.groupUserServiceView.el);
         this.$el.append(this.costActivity.el);
     }
 });

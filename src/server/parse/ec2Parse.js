@@ -1,3 +1,4 @@
+//update ec2Instances - add/remove instances & instance state changes
 exports.parseInstances = function(callback) {
     MongoClient.connect(databaseUrl, function(err, db) {
         if (err) throw err;
@@ -148,6 +149,7 @@ exports.parseInstances = function(callback) {
     });
 }
 
+//Hourly metric parse for ec2Instances
 exports.parseMetrics = function(caller,masterCallback) {
     MongoClient.connect(databaseUrl, function(err, db) {
         if (err) throw err;

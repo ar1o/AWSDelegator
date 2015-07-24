@@ -39,6 +39,7 @@ var EC2InstancesView = Backbone.View.extend({
         this.$el.on('click', '#EC2InstanceTable tr', function() {
             var rowIndex = this.rowIndex - 1;
             var instance = ec2InstancesCollection.at(rowIndex).get('instance');
+            console.log(instance)
             var state = ec2InstancesCollection.at(rowIndex).get('state');
             if (state == 'running') {
                 self.model.setEC2SelectedInstance(rowIndex);

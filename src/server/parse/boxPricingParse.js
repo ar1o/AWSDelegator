@@ -3,7 +3,6 @@ var mongodb = require('mongodb');
 var MongoClient = mongodb.MongoClient;
 var databaseUrl = 'mongodb://localhost:27017/awsdb';
 var mongoose = require('mongoose');
-var freeTier = require('../FreeTier');
 var region = 0; //us-east-1
 var compType = 0; //generalCompute
 var size = 0 //micro

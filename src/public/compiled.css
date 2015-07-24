@@ -473,6 +473,7 @@ div#awsoperationscontainer {
 }
 .MeterView {
   position: fixed;
+  padding-top: 4px;
   left: 100px;
 }
 .rate {
