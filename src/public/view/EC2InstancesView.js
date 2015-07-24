@@ -36,7 +36,7 @@ var EC2InstancesView = Backbone.View.extend({
             });
         }.bind(this));
 
-        this.$el.on('click', '#InstanceTable tr', function() {
+        this.$el.on('click', '#EC2InstanceTable tr', function() {
             var rowIndex = this.rowIndex - 1;
             var instance = ec2InstancesCollection.at(rowIndex).get('instance');
             var state = ec2InstancesCollection.at(rowIndex).get('state');
@@ -46,9 +46,9 @@ var EC2InstancesView = Backbone.View.extend({
             }
         });
 
-        var table = $('#InstanceTable').DataTable();
+        var table = $('#EC2InstanceTable').DataTable();
 
-        this.$el.on('click', '#InstanceTable tbody tr', function() {
+        this.$el.on('click', '#EC2InstanceTable tbody tr', function() {
             if ($(this).hasClass('selected')) {
                 $(this).removeClass('selected');
             } else {
