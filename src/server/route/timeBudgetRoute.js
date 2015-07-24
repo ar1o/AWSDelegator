@@ -6,7 +6,8 @@ exports.timeBudgets = function(req, res) {
 
 exports.createGRLSInstances = function(timeBudget) {
 	MongoClient.connect(databaseUrl, function(err, db) {
-        if (err) throw err;        
+        if (err) throw err;
+        console.log(timeBudget)      
 		if(timeBudget.BatchType == 'user'){
 			mongoose.model('Billings').aggregate([
 				{
@@ -151,6 +152,7 @@ exports.createGRLSInstances = function(timeBudget) {
 				}
 			}]).exec(function(e, query1) {
 				var index1 = 0;
+				query1[0].UserNames.push('null');
 				var controller1 = function() {
 					iterator1(function() {
 						index1++;
@@ -200,6 +202,7 @@ exports.createGRLSInstances = function(timeBudget) {
 							ProductName: 1
 						}
 					}]).exec(function(e, resources) {
+						if(e) throw e;
 						var index2 = 0;
 						var controller2 = function() {
 							iterator2(function() {
@@ -278,7 +281,11 @@ exports.createGRLSInstances = function(timeBudget) {
 								callback2();
 							}
 						};
-						controller2();						
+						if(resources.length!=0){
+							controller2();			
+						}else{
+							callback1();
+						}			
 					});
 				};
 				if (query1.length != 0) {

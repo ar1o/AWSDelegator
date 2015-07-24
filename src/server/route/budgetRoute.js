@@ -86,6 +86,7 @@ exports.cost = function(req, res) {
 
 exports.timeBudgetCost = function(req, res) {
 	var batchType=req.query.batchType;
+	console.log(batchType)
 	var	batchName=req.query.batchName;
 	var	startDate=req.query.startDate;
 	var endDate=req.query.endDate;
@@ -159,6 +160,7 @@ exports.timeBudgetCost = function(req, res) {
 				_id: 1
 			}
 		}]).exec(function(e, d) {	
+			console.log('d',d)
 			res.send(d);
 		});
 	}

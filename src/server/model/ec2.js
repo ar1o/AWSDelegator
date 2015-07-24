@@ -8,7 +8,8 @@ ec2InstanceSchema = new mongoose.Schema({
     Zone: String,
     Lifetime: Number,
     LastActiveTime: String,
-    Email: String,
+    Name: String,
+    Group: String,
     VolumeId: Array
 });
 
