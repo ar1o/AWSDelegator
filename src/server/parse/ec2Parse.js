@@ -53,11 +53,23 @@ exports.parseInstances = function(callback) {
                         }
                         instanceVolumes[data.Reservations[r].Instances[0].InstanceId]=volumeId;
                         //get emailId from tag
-                        var emailId = "mikesmit.com@gmail.com";
+                        var userName = 'null';
                         for (var t in data.Reservations[r].Instances[0].Tags) {
-                            if (data.Reservations[r].Instances[0].Tags[t].Key == 'email') {
-                                EmailId = data.Reservations[r].Instances[0].Tags[t].Value;
+                            if (data.Reservations[r].Instances[0].Tags[t].Key == 'Name') {
+                                userName = data.Reservations[r].Instances[0].Tags[t].Value;
                             }
+                        }
+                        if(userName == ""){
+                            userName = 'null';
+                        }
+                        var groupName = 'null';
+                        for (var t in data.Reservations[r].Instances[0].Tags) {
+                            if (data.Reservations[r].Instances[0].Tags[t].Key == 'Group') {
+                                groupName = data.Reservations[r].Instances[0].Tags[t].Value;
+                            }
+                        }
+                        if(groupName == ""){
+                            groupName = 'null';
                         }
                         var currentTimeMilliseconds = (new Date).getTime();
                         var currentTimeIso = new Date(currentTimeMilliseconds).toISOString();
@@ -75,7 +87,8 @@ exports.parseInstances = function(callback) {
                                 Zone: data.Reservations[r].Instances[0].Placement['AvailabilityZone'],
                                 Lifetime: lifetime,
                                 VolumeId: volumeId,
-                                Email: emailId,
+                                Name: userName,
+                                Group: groupName,
                                 LastActiveTime: currentTimeIso
                             };
                             newInstanceCount += 1;

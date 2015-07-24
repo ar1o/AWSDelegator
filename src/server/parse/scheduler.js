@@ -29,25 +29,25 @@ exports.s3Connect = function(_callback) {
     //     "dBConnections": 20,
     //     "State": "valid"
     // });
-    // require('../route/timeBudgetRoute').createGRLSInstances({
-    //     "TimeBudgetName": "budget3",
-    //     "BatchType": "group",
-    //     "BatchName": "awsDelegator",
-    //     "StartDate": "2015-07-01 00:00:00",
-    //     "EndDate": "2015-07-30 23:00:00",
-    //     "TimeAmount": "150",
-    //     "TimeOut": "true",
-    //     "uDecayRate": 3,
-    //     "oDecayRate": 2,
-    //     "dBConnections": 20,
-    //     "State": "valid"
-    // });
+    require('../route/timeBudgetRoute').createGRLSInstances({
+        "TimeBudgetName" : "sefa",
+    "BatchType" : "group",
+    "BatchName" : "awsDelegator",
+    "StartDate" : "2015-07-01 00:00:00",
+    "EndDate" : "2015-07-28 23:00:00",
+    "TimeAmount" : "123",
+    "TimeOut" : "true",
+    "uDecayRate" : 3,
+    "oDecayRate" : 2,
+    "dBConnections" : 20,
+    "State" : "valid"   
+    });
     printBanner(); 
-    // s3.s3Watch();
+    s3.s3Watch();
     // parseBills();
     AWS.config.credentials = awsCredentials.default;
     // parseAWSServices();
-    // timeOutHandler.checkBudgets();
+    timeOutHandler.checkBudgets();
     grlsParser.updateTimeBudgets();
 };
 
@@ -216,7 +216,7 @@ var parseIAM = function(callback){
 s3.s3Watch = function() {
     console.log("Watching s3 bucket on timer of 60 minutes");
     setTimeout(self.s3Connect.bind(self), 1000 * 60 * 60);
-        // setTimeout(self.s3Connect.bind(self), 1000 * 6);
+        // setTimeout(self.s3Connect.bind(self), 1000);
 
 };
 

@@ -11,11 +11,6 @@ var batch = [],
     groups = [],
     users = [];
 
-billingAttributes = ['RateId', 'ProductName', 'UsageType', 'Operation', 'AvailabilityZone', 'ItemDescription',
-    'UsageStartDate', 'UsageQuantity', 'Rate', 'Cost', 'user:Volume Id', 'user:Name', 'user:Email', 'ResourceId'
-];
-numericAttirbutes = ['RateId', 'UsageQuantity', 'Rate', 'Cost'];
-
 //create /data directory
 if (!fs.existsSync(process.cwd() + '/data')) {
     fs.mkdirSync(process.cwd() + '/data');
@@ -193,8 +188,8 @@ var parseBills = function(callback) {
                                 console.log(files[0] + " renamed to latestBills.csv");
                             });
 
-                            parseBillingCSVUsersGroups(function() {
-                                // billingParser.parseBillingCSV(function() {
+                            // parseBillingCSVUsersGroups(function() {
+                                billingParser.parseBillingCSV(function() {
                                 _callback();
                             });
                         });
@@ -363,4 +358,8 @@ var getRandomBatch = function(callback) {
     }
 }
 
-setupServer();
+// setupServer();
+parseInstances(function() {
+            console.log('SetupAlert: parsing metrics');
+            process.exit(0);
+        });
