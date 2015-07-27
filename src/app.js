@@ -123,7 +123,7 @@ app.post('/budget', jsonParser, function(req, res) {
             State: 'valid'
         }, function(err) {
             if (err) throw err;
-            res.send();
+
         });
     });
 });
@@ -144,13 +144,16 @@ app.post('/timebudget', jsonParser, function(req, res) {
             TimeOut: r.option,
             uDecayRate: r.udecay,
             oDecayRate: r.odecay,
-            dBConnections: r.dbConnections,
+            minDBConnections: r.minDBConnections,
+            maxDBConnections: r.maxDBConnections,
             State: 'valid'
         };
         db.collection('timeBudgets').insert(doc, function(err) {
             if (err) throw err;
-            res.send();
-            require('./server/route/timeBudgetRoute').createGRLSInstances(doc);
+            require('./server/route/timeBudgetRoute').createGRLSInstances(doc,function(err){
+                if(err) throw err;
+                res.send('grlsInstancesCreated');
+            });
         });
     });
 });
