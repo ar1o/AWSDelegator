@@ -8,7 +8,8 @@ grlsInstanceSchema = new mongoose.Schema({
 	serviceType: String,
 	//ec2 t2 instance type
 	instanceType: String,
-	//rds max allowed connections
+	//rds min,max allowed connections
+	minConnectionsLimit: Number,
 	maxConnectionsLimit: Number,
 	lifetime: Number,
 	//under profile decay coefficient

@@ -91,10 +91,19 @@
 
 				<div class="insetting"> 
 					<div class="incontainer">
+						<label class="budget-label">Min Database Connections</label>
+						<input type="text" id="time-mindbconnections" placeholder="e.g., 5">
+						<div class="warning" id="time-mindbconnectionswarning">Invalid number.</div>
+						<div class="warning" id="time-mindbconnectionsrequest">Please enter a number.</div>
+					</div>
+				</div>
+
+				<div class="insetting"> 
+					<div class="incontainer">
 						<label class="budget-label">Max Database Connections</label>
-						<input type="text" id="time-dbconnections" placeholder="e.g., 20">
-						<div class="warning" id="time-dbconnectionswarning">Invalid number.</div>
-						<div class="warning" id="time-dbconnectionsrequest">Please enter a number.</div>
+						<input type="text" id="time-dbconnections" placeholder="e.g., 50">
+						<div class="warning" id="time-maxdbconnectionswarning">Invalid number.</div>
+						<div class="warning" id="time-maxdbconnectionsrequest">Please enter a number.</div>
 					</div>
 				</div>
 

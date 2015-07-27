@@ -14,7 +14,8 @@ var TimeBudgetView = Backbone.View.extend({
             timeamount: null,
             udecay : null,
             odecay: null,
-            dbConnections: 20,
+            minDBConnections: null,
+            maxDBConnections: null,
             option: 'true'
         };
         this.isValid = {
@@ -25,12 +26,16 @@ var TimeBudgetView = Backbone.View.extend({
             endDate: false,
             timeamount: false,
             udecay : false,
-            odecay: false
+            odecay: false,
+            minDBConnections: false,
+            maxDBConnections: false,
         };
         this.bindings();
         this.render();
-        this.$('#time-dbconnectionswarning').hide();
-        this.$('#time-dbconnectionsrequest').hide();
+        this.$('#time-mindbconnectionswarning').hide();
+        this.$('#time-mindbconnectionsrequest').hide();
+        this.$('#time-maxdbconnectionswarning').hide();
+        this.$('#time-maxdbconnectionsrequest').hide();
         this.$('#time-odecaywarning').hide();
         this.$('#time-odecayrequest').hide();
         this.$('#time-udecaywarning').hide();
@@ -54,8 +59,9 @@ var TimeBudgetView = Backbone.View.extend({
                 $('#time-budgetnamewarning').hide();
                 $('#time-budgetnamerequest').hide();
                 var newBudget = true;
+                console.log(timeBudgetCollection)
                 for(var i=0;i<timeBudgetCollection.length;++i){
-                    if(timeBudgetCollection.at(i).get('timeBudgetName')==$('#timebudgetname').val()){
+                    if(timeBudgetCollection.at(i).get('timeBudgetName')==$('#time-budgetname').val()){
                         newBudget = false;
                     }
                 }
@@ -162,7 +168,7 @@ var TimeBudgetView = Backbone.View.extend({
             
         }.bind(this));
 
-        this.$el.on('focusout', '#time-odecay', function(e) {
+        this.$el.on('focusout', '#time-odecay', function(e) {   
             if(/\d/.test($('#time-odecay').val())){
                 this.data.odecay = parseInt($('#time-odecay').val());
                 self.isValid.odecay = true;
@@ -177,13 +183,27 @@ var TimeBudgetView = Backbone.View.extend({
         this.$el.on('focusout', '#time-dbconnections', function(e) {
             if(/\d/.test($('#time-dbconnections').val())){
                 this.data.dbConnections = parseInt($('#time-dbconnections').val());
-                self.$('#time-dbconnectionswarning').hide();
-                self.$('#time-dbconnectionsrequest').hide();
+                self.isValid.maxDBConnections = true;
+                self.$('#time-maxdbconnectionswarning').hide();
+                self.$('#time-maxdbconnectionsrequest').hide();
             }else{
-                self.$('#time-dbconnectionswarning').show();
+                self.$('#time-maxdbconnectionswarning').show();
             }
             
         }.bind(this));
+
+        this.$el.on('focusout', '#time-mindbconnections', function(e) {
+            if(/\d/.test($('#time-mindbconnections').val())){
+                this.data.dbConnections = parseInt($('#time-mindbconnections').val());
+                self.isValid.minDBConnections = true;
+                self.$('#time-mindbconnectionswarning').hide();
+                self.$('#time-mindbconnectionsrequest').hide();
+            }else{
+                self.$('#time-mindbconnectionswarning').show();
+            }
+            
+        }.bind(this));
+
 
         this.$el.on('click', '#time-myonoffswitch', function(e) {
             if ($('#time-myonoffswitch').val() == 'null') {
@@ -224,6 +244,12 @@ var TimeBudgetView = Backbone.View.extend({
             }
             if(self.data.odecay == null){
                 self.$('#time-odecayrequest').show();
+            }
+            if(self.data.minDBConnections == null){
+                self.$('#time-mindbconnectionsrequest').show();
+            }
+            if(self.data.maxDBConnections == null){
+                self.$('#time-maxdbconnectionsrequest').show();
             }
             $('#time-filter-details').addClass('hidden');
             var validForm = true;

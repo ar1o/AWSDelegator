@@ -4,10 +4,9 @@ exports.timeBudgets = function(req, res) {
 	});
 }
 
-exports.createGRLSInstances = function(timeBudget) {
+exports.createGRLSInstances = function(timeBudget,callback) {
 	MongoClient.connect(databaseUrl, function(err, db) {
-        if (err) throw err;
-        console.log(timeBudget)      
+        if (err) throw err; 
 		if(timeBudget.BatchType == 'user'){
 			mongoose.model('Billings').aggregate([
 				{
@@ -56,7 +55,7 @@ exports.createGRLSInstances = function(timeBudget) {
 						index1++;
 						if (index1 < resources.length) controller1();
 						else {
-
+							callback();
 						}
 					});
 				};
@@ -107,7 +106,8 @@ exports.createGRLSInstances = function(timeBudget) {
 									group: 'null',
 									instanceRegion: resourceData[0].AvailabilityZone,
 									serviceType: 'rds',
-									dBConnections: timeBudget.dBConnections,
+									minConnectionsLimit: resourceData[0].minDBConnections,
+									maxConnectionsLimit: resourceData[0].maxDBConnections,
 									lifetime: 0,
 									uDecay: timeBudget.uDecayRate,
 									oDecay: timeBudget.oDecayRate,
@@ -263,7 +263,8 @@ exports.createGRLSInstances = function(timeBudget) {
 											group: timeBudget.BatchName,
 											instanceRegion: resourceData[0].AvailabilityZone,
 											serviceType: 'rds',
-											dBConnections: timeBudget.dBConnections,
+											minConnectionsLimit: resourceData[0].minDBConnections,
+											maxConnectionsLimit: resourceData[0].maxDBConnections,
 											lifetime: 0,
 											uDecay: timeBudget.uDecayRate,
 											oDecay: timeBudget.oDecayRate,

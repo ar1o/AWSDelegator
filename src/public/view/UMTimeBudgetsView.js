@@ -4,6 +4,7 @@ var UMTimeBudgetsView = Backbone.View.extend({
         if (!this.model) {
             this.model = new UsageMonitorModel();
         }
+        
         this.model.getTimeBudgets();
         this.usageActivity = new UMTimeBudgetUsageView();
         this.costActivity = new UMTimeBudgetCostView();

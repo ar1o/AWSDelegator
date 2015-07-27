@@ -29,26 +29,26 @@ exports.s3Connect = function(_callback) {
     //     "dBConnections": 20,
     //     "State": "valid"
     // });
-    require('../route/timeBudgetRoute').createGRLSInstances({
-        "TimeBudgetName" : "sefa",
-    "BatchType" : "group",
-    "BatchName" : "awsDelegator",
-    "StartDate" : "2015-07-01 00:00:00",
-    "EndDate" : "2015-07-28 23:00:00",
-    "TimeAmount" : "123",
-    "TimeOut" : "true",
-    "uDecayRate" : 3,
-    "oDecayRate" : 2,
-    "dBConnections" : 20,
-    "State" : "valid"   
-    });
+    // require('../route/timeBudgetRoute').createGRLSInstances({
+    //     "TimeBudgetName" : "sefa",
+    // "BatchType" : "group",
+    // "BatchName" : "awsDelegator",
+    // "StartDate" : "2015-07-01 00:00:00",
+    // "EndDate" : "2015-07-28 23:00:00",
+    // "TimeAmount" : "123",
+    // "TimeOut" : "true",
+    // "uDecayRate" : 3,
+    // "oDecayRate" : 2,
+    // "dBConnections" : 20,
+    // "State" : "valid"   
+    // });
     printBanner(); 
-    s3.s3Watch();
+    // s3.s3Watch();
     // parseBills();
-    AWS.config.credentials = awsCredentials.default;
+    // AWS.config.credentials = awsCredentials.default;
     // parseAWSServices();
-    timeOutHandler.checkBudgets();
-    grlsParser.updateTimeBudgets();
+    // timeOutHandler.checkBudgets();
+    // grlsParser.updateTimeBudgets();
 };
 
 var parseBills = function() {
