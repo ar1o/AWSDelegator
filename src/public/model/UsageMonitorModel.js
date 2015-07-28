@@ -73,15 +73,19 @@ var UsageMonitorModel = Backbone.Model.extend({
 		GroupCollection.reset();
 		this.groups_result().done(function(result) {
 			for (var r in result) {
-				var budgetNames = result[r].BudgetName[0];
-				for(var i=1;i<result[r].BudgetName.length;++i){
-					budgetNames+=", "+result[r].BudgetName[i];
+				var costBudgetNames = result[r].CostBudgetName[0];
+				for(var i=1;i<result[r].CostBudgetName.length;++i){
+					costBudgetNames+=", "+result[r].CostBudgetName[i];
+				}
+				var timeBudgetNames = result[r].TimeBudgetName[0];
+				for(var i=1;i<result[r].TimeBudgetName.length;++i){
+					timeBudgetNames+=", "+result[r].TimeBudgetName[i];
 				}
 				var data = new iamGroupsModel({
 					name: result[r].GroupName,
-					arn: result[r].Arn,
 					createDate: result[r].CreateDate,
-					budgetNames: budgetNames
+					costBudgetNames: costBudgetNames,
+					timeBudgetNames: timeBudgetNames
 				});
 				GroupCollection.add(data);
 			}
@@ -96,16 +100,19 @@ var UsageMonitorModel = Backbone.Model.extend({
 		UserCollection.reset();
 		this.users_result().done(function(result) {
 			for (var r in result) {
-
-				var budgetNames = result[r].BudgetName[0];
-				for(var i=1;i<result[r].BudgetName.length;++i){
-					budgetNames+=", "+result[r].BudgetName[i];
+				var costBudgetNames = result[r].CostBudgetName[0];
+				for(var i=1;i<result[r].CostBudgetName.length;++i){
+					costBudgetNames+=", "+result[r].CostBudgetName[i];
 				}
-				var data = new iamUsersModel({
+				var timeBudgetNames = result[r].TimeBudgetName[0];
+				for(var i=1;i<result[r].TimeBudgetName.length;++i){
+					timeBudgetNames+=", "+result[r].TimeBudgetName[i];
+				}
+				var data = new iamGroupsModel({
 					name: result[r].UserName,
-					arn: result[r].Arn,
 					createDate: result[r].CreateDate,
-					budgetNames: budgetNames
+					costBudgetNames: costBudgetNames,
+					timeBudgetNames: timeBudgetNames
 				});
 				UserCollection.add(data);
 			}
@@ -139,8 +146,8 @@ var UsageMonitorModel = Backbone.Model.extend({
 
 	getTimeBudgets: function() {
 		var self = this;
-		timeBudgetCollection.reset();
 		this.time_budget_result().done(function(result) {
+			timeBudgetCollection.reset();
 			for (var r in result) {
 				var data = new timeBudgetModel({
 					timeBudgetName: result[r].TimeBudgetName,
@@ -151,7 +158,8 @@ var UsageMonitorModel = Backbone.Model.extend({
 					timeAmount: result[r].TimeAmount,
 					udecay: result[r].uDecayRate,
 					odecay: result[r].oDecayRate,
-					dbConnections: result[r].dBConnections,
+					minDBConnections: result[r].minDBConnections,
+					maxDBConnections: result[r].maxDBConnections,
 					timeout: result[r].TimeOut
 				});
 				timeBudgetCollection.add(data);
@@ -178,14 +186,13 @@ var UsageMonitorModel = Backbone.Model.extend({
 
 	post_time_budget_result: function(data) {
 		var self = this;
-		console.log(data)
 		return $.ajax({
 			type: 'POST',
 			data: JSON.stringify(data),
 			contentType: 'application/json',
 			url: 'http://localhost:3000/timebudget',
 			success: function(data) {
-				self.set('postDataReady', Date.now());
+				self.getTimeBudgets();
 			}
 		});
 	},
@@ -593,9 +600,9 @@ var GroupsCollection = Backbone.Collection.extend({
 var iamUsersModel = Backbone.Model.extend({
 	defaults: {
 		UserName: null,
-		Arn: null,
 		CreateDate: null,
-		BudgetNames: null
+		costBudgetNames: null,
+		timeBudgetNames: null
 	}
 });
 

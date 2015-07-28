@@ -358,8 +358,8 @@ var getRandomBatch = function(callback) {
     }
 }
 
-// setupServer();
-parseInstances(function() {
-            console.log('SetupAlert: parsing metrics');
-            process.exit(0);
-        });
+setupServer();
+// parseInstances(function() {
+//     console.log('SetupAlert: parsing metrics');
+//     process.exit(0);
+// });
