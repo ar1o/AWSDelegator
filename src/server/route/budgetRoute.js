@@ -438,8 +438,9 @@ exports.groupServiceUsage = function(req, res) {
 		var controller1 = function() {
 			iterator1(function() {
 				index1++;
-				if (index1 < d.length) controller1();
-				else {
+				if (index1 < d.length) {
+					controller1();
+				} else {
 					res.send(result);
 				}
 			});
@@ -475,6 +476,7 @@ exports.groupServiceUsage = function(req, res) {
 					}
 				}
 			}]).exec(function(e, d2) {
+				if(e) console.log("ERROR LOL");
 				var _res = {}
 				for(var i=0 in d2){
 					_res[d2[i]._id]={};
@@ -484,7 +486,11 @@ exports.groupServiceUsage = function(req, res) {
 				callback1();
 			});
 		};
-		controller1();
+		if(d.length != 0) {
+			controller1();
+		} else {
+			res.send(result);
+		}
 	});
 }
 
@@ -579,7 +585,11 @@ exports.userServiceUsage = function(req, res) {
 				callback1();
 			});
 		};
-		controller1();
+		if(d2.length != 0) {
+			controller1();
+		} else {
+
+		}
 	});
 }
 
@@ -675,7 +685,9 @@ exports.groupUserService = function(req,res){
 				callback1();
 			});
 		};
-		controller1();
+		if(d2.length != 0) {
+			controller1();
+		}
 	});
 }
 
@@ -771,7 +783,11 @@ exports.groupUserTimeService = function(req,res){
 				callback1();
 			});
 		};
-		controller1();
+		if(d2.length != 0 ) {
+			controller1();
+		} else {
+
+		}
 	});
 }
 
@@ -863,10 +879,13 @@ exports.userService = function(req,res){
 					_res[d2[i]._id]['total']=d2[i].Total;
 				}
 				result[d[index1]._id]['resourceId']=_res;
-				callback1();
+				if(d2.length != 0) 
+					callback1();
 			});
 		};
-		controller1();
+		if(d.length != 0) {
+			controller1();
+		}
 	});
 }
 
@@ -961,6 +980,8 @@ exports.timeUserService = function(req,res){
 				callback1();
 			});
 		};
-		controller1();
+		if(d2.length != 0) {
+			controller1();
+		}
 	});
 }
