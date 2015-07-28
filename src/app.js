@@ -168,5 +168,5 @@ function errorHandler(err, req, res, next) {
 }
 module.exports = errorHandler;
 app.listen(port);
-
+console.log('databaseUrl ',databaseUrl);
 console.log('Server Alert: server started on port %s', port);
