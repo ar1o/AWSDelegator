@@ -122,7 +122,7 @@ app.post('/budget', jsonParser, function(req, res) {
             TimeOut: r.option,
             State: 'valid'
         }, function(err) {
-            if (err) throw err;
+            if (err) { throw err };
 
         });
     });
@@ -133,7 +133,7 @@ app.post('/timebudget', jsonParser, function(req, res) {
     var startDate = r.startDate.split('/');
     var endDate = r.endDate.split('/');
     MongoClient.connect(databaseUrl, function(err, db) {
-        if (err) throw err;
+        if (err) { throw err };
         var doc = {
             TimeBudgetName: r.timebudgetname,
             BatchType: r.batchType,
