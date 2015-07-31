@@ -52,6 +52,7 @@ var updateLifetime = function(maxBudgetLifetimes) {
 		};
 		// $state: {$eq:'valid'}
 		var budgetLifetimes = {};
+		console.log('date ',date);
 		mongoose.model('timeBudgets').aggregate([{
 			$match: {
 				State: {
