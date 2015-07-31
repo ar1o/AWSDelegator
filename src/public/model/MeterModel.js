@@ -127,7 +127,7 @@ var MeterModel = Backbone.Model.extend({
 			});
 			// console.log(data);
 			creditBalanceCollection.add(data);			
-			self.set('balanceDataReady', Date.now());
+			// self.set('balanceDataReady', Date.now());
 		}).fail(function() {
 			console.log('FAILED');
 		});

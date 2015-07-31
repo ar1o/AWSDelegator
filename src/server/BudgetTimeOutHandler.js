@@ -1,4 +1,4 @@
-//checks budgets for time duration exceed
+// checks COST budgets for time duration exceed
 exports.checkBudgets = function() {
     var currentTime = new Date();
     //time format: '2015-07-22 23:50:20'
@@ -17,33 +17,56 @@ exports.checkBudgets = function() {
                 });
             };
             var iterator1 = function(callback1) {
-                if (time > budgets[index1].EndDate && budgets[index1].State == 'valid') {
-                    db.collection('budgets').update({
-                            BudgetName: budgets[index1].BudgetName
-                        }, {
-                            $set: {
-                                State: 'invalid'
-                            }
-                        }, function() {
-                            setTimeout(function() {
-                                db.collection('notifications').insert({
-                                    NotificationType: 'BudgetTimeOut',
-                                    NotificationData: budgets[index1].BudgetName,
-                                    Seen: 'false',
-                                    Time: time
-                                }, function(err) {
-                                    if (err) throw err;
-                                    console.log('Added a notification')
-
-                                    callback1();
-                                });
-                            }, 0);
+                var budget = budgets[index1];
+                //checking for amount exceeded or time exceeded
+                getBudgetTotalCost(budgets[index1].BatchType, budgets[index1].BatchName, budgets[index1].StartDate, budgets[index1].EndDate,
+                    function(result) {
+                        if (result[0].Cost >= budget.Amount && budget.State == 'valid') {
+                            db.collection('budgets').update({
+                                BudgetName: budget.BudgetName
+                            }, {
+                                $set: {
+                                    State: 'invalid'
+                                }
+                            }, function() {
+                                setTimeout(function() {
+                                    db.collection('notifications').insert({
+                                        NotificationType: 'BudgetCostExceeded',
+                                        NotificationData: budget.BudgetName,
+                                        Seen: 'false',
+                                        Time: time
+                                    }, function(err) {
+                                        if (err) throw err;
+                                        console.log('Added a notification for ', budget.BudgetName);
+                                        callback1();
+                                    });
+                                }, 0);
+                            });
+                        } else if (time > budget.EndDate && budget.State == 'valid') {
+                            db.collection('budgets').update({
+                                BudgetName: budget.BudgetName
+                            }, {
+                                $set: {
+                                    State: 'invalid'
+                                }
+                            }, function() {
+                                setTimeout(function() {
+                                    db.collection('notifications').insert({
+                                        NotificationType: 'BudgetTimeOut',
+                                        NotificationData: budget.BudgetName,
+                                        Seen: 'false',
+                                        Time: time
+                                    }, function(err) {
+                                        if (err) throw err;
+                                        console.log('Added a notification', budget.BudgetName)
+                                        callback1();
+                                    });
+                                }, 0);
+                            });
+                        } else {
+                            callback1();
                         }
-                    );
-                } else {
-                    callback1();
-
-                }
+                    });
             };
             if (budgets.length != 0) {
                 controller1();
@@ -51,6 +74,94 @@ exports.checkBudgets = function() {
         });
     });
 };
+
+// Get the amount the budget has currently incurred.
+var getBudgetTotalCost = function(_batchtype, _batchname, _startdate, _enddate, callback) {
+    var batchType = _batchtype;
+    var batchName = _batchname;
+    var startDate = _startdate;
+    var endDate = _enddate;
+    // console.log(batchType);
+    // console.log(batchName);
+    // console.log(startDate);
+    // console.log(endDate);
+
+    if (batchType == 'user') {
+        mongoose.model('Billings').aggregate([{
+            $match: {
+                $and: [{
+                    UsageStartDate: {
+                        $gte: startDate
+                    }
+                }, {
+                    UsageStartDate: {
+                        $lte: endDate
+                    }
+                }, {
+                    'user:Name': batchName
+                }, {
+                    'user:Group': 'null'
+                }]
+            }
+        }, {
+            $project: {
+                _id: 0,
+                UsageStartDate: 1,
+                Cost: 1
+            }
+        }, {
+            $group: {
+                _id: null,
+                Cost: {
+                    $sum: "$Cost"
+                }
+            }
+        }, {
+            $sort: {
+                _id: 1
+            }
+        }]).exec(function(e, d) {
+            console.log(d)
+        });
+    } else { // If group instead
+        var query = mongoose.model('Billings').aggregate([{
+                $match: {
+                    $and: [{
+                        UsageStartDate: {
+                            $gte: startDate
+                        }
+                    }, {
+                        UsageStartDate: {
+                            $lte: endDate
+                        }
+                    }, {
+                        'user:Group': batchName
+                    }]
+                }
+            }, {
+                $project: {
+                    _id: 0,
+                    UsageStartDate: 1,
+                    Cost: 1
+                }
+            }, {
+                $group: {
+                    _id: null,
+                    Cost: {
+                        $sum: "$Cost"
+                    }
+                }
+            }, {
+                $sort: {
+                    _id: 1
+                }
+            }])
+            .exec(function(e, d) {
+                callback(d);
+            });
+    }
+}
+
 
 //append '0' to single digit months
 var checkDate = function(val) {
@@ -63,8 +174,8 @@ var checkDate = function(val) {
 // result format: 
 // [ { _id: 'Amazon RDS Service', ResourceId: [ 'arn:aws:rds:us-east-1:092841396837:db:msmit' ] },
 // { _id: 'Amazon Elastic Compute Cloud', ResourceId: [ 'vol-f377d3bd', 'i-a717b04e'] } ]
-var getBatchInstances = function(budget,callback){
-    if(budget.BatchType == 'user'){
+var getBatchInstances = function(budget, callback) {
+    if (budget.BatchType == 'user') {
         mongoose.model('Billings').aggregate([{
             $match: {
                 $and: [{
@@ -98,7 +209,7 @@ var getBatchInstances = function(budget,callback){
             stopBatchInstances(resouces);
             callback();
         });
-    }else{
+    } else {
         mongoose.model('Billings').aggregate([{
             $match: {
                 $and: [{
@@ -133,7 +244,7 @@ var getBatchInstances = function(budget,callback){
     }
 }
 
-var stopBatchInstances = function(serviceResources){
+var stopBatchInstances = function(serviceResources) {
     var index1 = 0;
     var controller1 = function() {
         iterator1(function() {
@@ -145,7 +256,7 @@ var stopBatchInstances = function(serviceResources){
         });
     };
     var iterator1 = function(callback1) {
-        switch(serviceResources[index1]._id){
+        switch (serviceResources[index1]._id) {
             case 'Amazon Elastic Compute Cloud':
                 var resources = serviceResources[index1].ResourceId;
                 var index2 = 0;
@@ -159,14 +270,14 @@ var stopBatchInstances = function(serviceResources){
                     });
                 };
                 var iterator2 = function(callback2) {
-                    if(/^i-/.test(resources[index2])){
+                    if (/^i-/.test(resources[index2])) {
                         // the code to stop ec2 instances goes here
                         // instanceId is in resources[index2]
                         // console.log(resources[index2])
                         callback2();
-                    }else{
+                    } else {
                         callback2();
-                    }                                      
+                    }
                 };
                 controller2();
                 break;
@@ -186,7 +297,7 @@ var stopBatchInstances = function(serviceResources){
                     // the code to stop rds instances goes here
                     // rds resource arn is in resources[index2]
                     // console.log(resources[index2])
-                    callback2();                                     
+                    callback2();
                 };
                 controller2();
                 break;

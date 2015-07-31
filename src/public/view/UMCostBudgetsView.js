@@ -251,7 +251,7 @@ var UMCostBudgetsView = Backbone.View.extend({
         // amount 
         this.$el.on('focusout', '#amount', function(e) {
             if (/^\d+(\.\d{1,2})?$/.test($('#amount').val())) {
-                this.data.amount = parseInt($('#amount').val());
+                this.data.amount = parseFloat($('#amount').val());
                 self.isValid.amount = true;
                 self.$('#amountwarning').hide();
                 self.$('#amountrequest').hide();

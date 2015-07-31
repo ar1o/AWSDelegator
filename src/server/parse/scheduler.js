@@ -16,39 +16,14 @@ var _params = {
 };
 
 exports.s3Connect = function(_callback) {
-    // require('../route/timeBudgetRoute').createGRLSInstances({
-    //     "TimeBudgetName": "budget2",
-    //     "BatchType": "user",
-    //     "BatchName": "deepak",
-    //     "StartDate": "2015-07-01 00:00:00",
-    //     "EndDate": "2015-07-30 23:00:00",
-    //     "TimeAmount": "150",
-    //     "TimeOut": "true",
-    //     "uDecayRate": 3,
-    //     "oDecayRate": 2,
-    //     "dBConnections": 20,
-    //     "State": "valid"
-    // });
-    // require('../route/timeBudgetRoute').createGRLSInstances({
-    //     "TimeBudgetName" : "sefa",
-    // "BatchType" : "group",
-    // "BatchName" : "awsDelegator",
-    // "StartDate" : "2015-07-01 00:00:00",
-    // "EndDate" : "2015-07-28 23:00:00",
-    // "TimeAmount" : "123",
-    // "TimeOut" : "true",
-    // "uDecayRate" : 3,
-    // "oDecayRate" : 2,
-    // "dBConnections" : 20,
-    // "State" : "valid"   
-    // });
+    
     printBanner();
     s3.s3Watch();
     parseBills();
-    // AWS.config.credentials = awsCredentials.default;
-    // parseAWSServices();
-    // timeOutHandler.checkBudgets();
-    // grlsParser.updateTimeBudgets();
+    AWS.config.credentials = awsCredentials.default;
+    parseAWSServices();
+    timeOutHandler.checkBudgets();
+    grlsParser.updateTimeBudgets();
 };
 s3.s3Watch = function() {
 
@@ -290,7 +265,7 @@ var updateUsageBalance = function() {
                     config.setCredits(String(config.getAccountBalance().toFixed(2)));
                     config.setUsed(String(config.getCreditsUsed().toFixed(2)));
                 } else {
-                    console.log("Not a good comparison between dates")
+                    console.log("Not a good comparison between dates, or equal")
                 }
                 balance = config.getAccountBalance();
                 used = config.getCreditsUsed();

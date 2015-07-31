@@ -17,7 +17,7 @@ if (!fs.existsSync(process.cwd() + '/data')) {
 }
 
 mongoose.connect(databaseUrl, function(error) {
-    if (error) {
+    use strict if (error) {
         console.log(error);
     }
 });
@@ -63,7 +63,8 @@ var setupDatabase = function(callback) {
         });
         db.collection('usageMeter').save({
             _id: '1',
-            time: _time
+            time: '2015-01-01 00:00:00'
+            // time: _time 
         });
         require('./src/server/model/ec2');
         require('./src/server/model/rds');

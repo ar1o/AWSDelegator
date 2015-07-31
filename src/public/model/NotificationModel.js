@@ -22,9 +22,9 @@ var NotificationModel = Backbone.Model.extend({
 	},
 	getNotification: function() {
 		console.log('checking for notifications');
-		notificationCollection.reset();
 		var self = this;
 		this.notification_result().done(function(result) {
+			notificationCollection.reset();
 			// console.log(result);
 			for (var r in result) {
 				var data = new NotificationViewModel({

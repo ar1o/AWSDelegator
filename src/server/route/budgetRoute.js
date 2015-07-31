@@ -3,12 +3,18 @@ exports.budgets = function(req, res) {
 		res.send(d);
 	});
 }
-
+//Cost Budget Query
 exports.cost = function(req, res) {
 	var batchType = req.query.batchType;
 	var batchName = req.query.batchName;
 	var startDate = req.query.startDate;
 	var endDate = req.query.endDate;
+
+	    console.log(batchType);
+        console.log(batchName);
+    console.log(startDate);
+    console.log(endDate);
+	//If the budget is for a single user instance
 	if (batchType == 'user') {
 		mongoose.model('Billings').aggregate([{
 			$match: {
@@ -46,7 +52,7 @@ exports.cost = function(req, res) {
 		}]).exec(function(e, d) {
 			res.send(d);
 		});
-	} else {
+	} else { // If group instead
 		mongoose.model('Billings').aggregate([{
 			$match: {
 				$and: [{

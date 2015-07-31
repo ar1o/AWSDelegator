@@ -106,6 +106,7 @@ app.get('/api/notifications', require(__dirname + '/server/route/notificationsRo
 app.get('/api/notifications/seen', require(__dirname + '/server/route/notificationsRoute').updateNotifications);
 
 
+
 app.post('/setBalance' , jsonParser, function(req, res){    
     require('./server/route/CredentialsRoute').setBalance(req);
 });
@@ -121,7 +122,7 @@ app.post('/timebudget', jsonParser, function(req, res) {
     var startDate = r.startDate.split('/');
     var endDate = r.endDate.split('/');
     MongoClient.connect(databaseUrl, function(err, db) {
-        if (err) throw err;
+        if (err) { throw err };
         var doc = {
             TimeBudgetName: r.timebudgetname,
             BatchType: r.batchType,
@@ -180,4 +181,5 @@ function errorHandler(err, req, res, next) {
 module.exports = errorHandler;
 app.listen(port);
 
+console.log('databaseUrl ',databaseUrl);
 console.log('Server Alert: server started on port %s', port);

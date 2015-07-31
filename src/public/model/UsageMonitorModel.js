@@ -124,8 +124,8 @@ var UsageMonitorModel = Backbone.Model.extend({
 
 	getBudgets: function() {
 		var self = this;
-		budgetCollection.reset();
 		this.budget_result().done(function(result) {
+			budgetCollection.reset();
 			for (var r in result) {
 				var data = new budgetModel({
 					budgetName: result[r].BudgetName,
@@ -178,7 +178,7 @@ var UsageMonitorModel = Backbone.Model.extend({
 			type: 'POST',
 			data: JSON.stringify(data),
 			contentType: 'application/json',
-			url: 'http://localhost:3000/budget',
+			url: host + '/budget',
 			success: function(data) {
 				self.set('postDataReady', Date.now());
 
@@ -192,7 +192,7 @@ var UsageMonitorModel = Backbone.Model.extend({
 			type: 'POST',
 			data: JSON.stringify(data),
 			contentType: 'application/json',
-			url: 'http://localhost:3000/timebudget',
+			url: host + '/timebudget',
 			success: function(data) {
 				self.getTimeBudgets();
 			}
