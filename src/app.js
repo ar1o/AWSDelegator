@@ -9,6 +9,8 @@ var urlencodedParser = bodyParser.urlencoded({
 });
 // create application/json parser 
 var jsonParser = bodyParser.json();
+var mongodb = require('mongodb');
+var MongoClient = mongodb.MongoClient;
 
 require(__dirname + '/server/config.js');
 
@@ -32,9 +34,9 @@ db.on("open", function() {
         require(__dirname +'/server/parse/scheduler').s3Connect();
     });
 });
+//IMPORTANT!!
+app.use(bodyParser.urlencoded({extended: true}))
 
-
-app.post('/setBalance' , require(__dirname +'/server/route/CredentialsRoute').setBalance);
 app.get('/getAccount', require(__dirname + '/server/route/CredentialsRoute').getAccountNumber);
 app.get('/getConfiguration', require(__dirname + '/server/route/CredentialsRoute').getConfiguration);
 app.get('/getAccountBalance', require(__dirname + '/server/route/CredentialsRoute').getAccountBalance);
@@ -75,6 +77,7 @@ app.get('/api/statistics/operations', require(__dirname + '/server/route/Operati
 
 app.get('/api/meter/rate', require(__dirname + '/server/route/meterRoute').rate);
 app.get('/api/meter/usage', require(__dirname + '/server/route/meterRoute').usage);
+app.get('/api/meter/usageTotal', require(__dirname + '/server/route/meterRoute').usageTotal);
 app.get('/api/meter/balance', require(__dirname + '/server/route/meterRoute').balance);
 
 app.get('/api/usage/groups', require(__dirname + '/server/route/iamRoute').groups);
@@ -102,30 +105,15 @@ app.get('/api/usage/timeUserService', require(__dirname + '/server/route/budgetR
 app.get('/api/notifications', require(__dirname + '/server/route/notificationsRoute').notifications);
 app.get('/api/notifications/seen', require(__dirname + '/server/route/notificationsRoute').updateNotifications);
 
-var mongodb = require('mongodb');
-var MongoClient = mongodb.MongoClient;
 
-app.post('/budget', jsonParser, function(req, res) {
-    var r = req.body;
-    var startDate = r.startDate.split('/');
-    var endDate = r.endDate.split('/');
-    MongoClient.connect(databaseUrl, function(err, db) {
-        if (err) throw err;
-
-        db.collection('budgets').insert({
-            BudgetName: r.budgetName,
-            BatchType: r.batchType,
-            BatchName: r.batchName,
-            StartDate: startDate[2] + '-' + startDate[0] + '-' + startDate[1] + ' ' + '00:00:00',
-            EndDate: endDate[2] + '-' + endDate[0] + '-' + endDate[1] + ' ' + '23:00:00',
-            Amount: r.amount,
-            TimeOut: r.option,
-            State: 'valid'
-        }, function(err) {
-            if (err) throw err;
-
-        });
-    });
+app.post('/setBalance' , jsonParser, function(req, res){    
+    require('./server/route/CredentialsRoute').setBalance(req);
+});
+app.post('/setExpiration' , jsonParser, function(req, res){    
+    require('./server/route/CredentialsRoute').setExpiration(req);
+});
+app.post('/setCreditsUsed' , jsonParser, function(req, res){    
+    require('./server/route/CredentialsRoute').setCreditsUsed(req);
 });
 
 app.post('/timebudget', jsonParser, function(req, res) {
@@ -154,6 +142,29 @@ app.post('/timebudget', jsonParser, function(req, res) {
                 if(err) throw err;
                 res.send('grlsInstancesCreated');
             });
+        });
+    });
+});
+app.post('/config')
+app.post('/budget', jsonParser, function(req, res) {
+    var r = req.body;
+    var startDate = r.startDate.split('/');
+    var endDate = r.endDate.split('/');
+    MongoClient.connect(databaseUrl, function(err, db) {
+        if (err) throw err;
+
+        db.collection('budgets').insert({
+            BudgetName: r.budgetName,
+            BatchType: r.batchType,
+            BatchName: r.batchName,
+            StartDate: startDate[2] + '-' + startDate[0] + '-' + startDate[1] + ' ' + '00:00:00',
+            EndDate: endDate[2] + '-' + endDate[0] + '-' + endDate[1] + ' ' + '23:00:00',
+            Amount: r.amount,
+            TimeOut: r.option,
+            State: 'valid'
+        }, function(err) {
+            if (err) throw err;
+
         });
     });
 });

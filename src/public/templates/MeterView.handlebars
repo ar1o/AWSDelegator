@@ -11,22 +11,19 @@ $(document).ready(function() {
 </div>
 
 
-<div class="usage"data-toggle="tooltip" title="Current usage from specified start/end date" data-placement="bottom">Usage:      $23
-	{{!-- {{#each usage}}
+<div class="usage"data-toggle="tooltip" title="Current usage from specified start/end date" data-placement="bottom">Credits Used:
+	{{#each usage}}
 		${{this.value}}
-	{{/each}} --}}
+	{{/each}}
 </div>
 
-<div class="balance" data-toggle="tooltip" title="Current remaining balance" data-placement="bottom">Balance:     $977
+<div class="balance" data-toggle="tooltip" title="Current remaining balance" data-placement="bottom">Balance:
 
-	{{#each rate}}
-	 	<div id = "div2"></div>
+	{{#each balance}}
+	 	${{this.value}}
 	{{/each}}
 
 </div>
-
-
-
 
 <script type="text/javascript">
 		var response = '';
@@ -35,5 +32,4 @@ $(document).ready(function() {
 						$("#div2").append('$'+data);
 				});
 			});
-				
 </script>

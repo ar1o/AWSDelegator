@@ -487,14 +487,14 @@ div#awsoperationscontainer {
 .usage {
   float: left;
   padding-left: 10px;
-  width: 70px;
+  width: 100px;
 }
 .usage:hover {
   color: orange;
 }
 .balance {
   float: left;
-  padding-left: 10px;
+  padding-left: 25px;
   width: 75px;
 }
 .balance:hover {

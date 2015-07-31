@@ -6,6 +6,7 @@
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal">&times;</button>
 				<h4 class="modal-title"> AWS Account Settings</h4>
+				<p>For best accuracy, please input credits and credits used information information soon after Amazon updates the invoice for your account. This is usually around the end of the first week of the month<p> 
 			</div>
 			<div class="modal-body">
 				{{#each pages}}
@@ -46,6 +47,13 @@
 						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label textfield-demo">
 							<input class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="myCredits" />
 						    <label class="mdl-textfield__label" for="myCredits">Credits</label>
+						    <span class="mdl-textfield__error">Input is not a number!</span>
+						</div>
+					</div>
+					<div class="incontainer">
+						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label textfield-demo">
+							<input class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="creditsUsed" />
+						    <label class="mdl-textfield__label" for="creditsUsed">Credits Used</label>
 						    <span class="mdl-textfield__error">Input is not a number!</span>
 						</div>
 					</div>

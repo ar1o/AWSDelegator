@@ -30,6 +30,30 @@ var MeterModel = Backbone.Model.extend({
 			}
 		});
 	},
+	usage_result: function() {
+		var self = this;
+		return $.ajax({
+			type: 'GET',
+			data: self.data,
+			contentType: 'plain/text',
+			url: host + '/api/meter/usage',
+			success: function(data) {
+				result = data;
+			}
+		});
+	},
+	usage_result_total: function () { 
+		var self = this;
+		return $.ajax({
+			type: 'GET',
+			data: self.data,
+			contentType: 'plain/text',
+			url: host + '/api/meter/usageTotal',
+			success: function(data) {
+				result = Number(data);
+			}
+		});
+	},
 	credit_balance_result: function() {
 		var self = this;
 		return $.ajax({
@@ -51,6 +75,7 @@ var MeterModel = Backbone.Model.extend({
 				value : result[0].total.toFixed(2),
 				duration : result[0]._id
 			});
+			// console.log(data);
 			usageRateCollection.add(data);
 			self.set('rateDataReady', Date.now());
 		}).fail(function() {
@@ -66,6 +91,24 @@ var MeterModel = Backbone.Model.extend({
 				value : result.total.toFixed(2),
 				duration : result.time
 			});
+			// console.log(data);
+			usageCollection.add(data);			
+			self.set('usageDataReady', Date.now());
+		}).fail(function() {
+			console.log('FAILED');
+		});
+	},
+	getUsageTotal: function() {
+		var self = this;
+		usageCollection.reset();
+		this.usage_result_total().done(function(result) {
+			// console.log(result);
+			var data = new meterModel({
+				metric : 'usage',
+				value : result,
+				duration : result.time
+			});
+			// console.log(data);
 			usageCollection.add(data);			
 			self.set('usageDataReady', Date.now());
 		}).fail(function() {
@@ -76,12 +119,13 @@ var MeterModel = Backbone.Model.extend({
 		var self = this;
 		creditBalanceCollection.reset();
 		this.credit_balance_result().done(function(result) {
-			console.log(result);
+			// console.log(result);
 			var data = new meterModel({
 				metric : 'balance',
-				value : result[0].value,
-				duration : result[0].duration
+				value : result,
+				// duration : result[0].duration
 			});
+			// console.log(data);
 			creditBalanceCollection.add(data);			
 			self.set('balanceDataReady', Date.now());
 		}).fail(function() {
@@ -90,8 +134,20 @@ var MeterModel = Backbone.Model.extend({
 	},
 	getMeterValues: function(){
 		this.getUsageRate();
-		this.getUsage();
-		// this.getCreditBalance();
+		this.getUsageTotal();
+		this.getCreditBalance();
+	},
+	setCreditBalance: function(balance) {
+
+	},
+	setUsage: function(used) {
+
+	},
+	getBalance: function(){
+
+	},
+	getUse: function() {
+
 	}
 });
 

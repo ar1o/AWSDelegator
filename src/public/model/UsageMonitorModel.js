@@ -172,6 +172,8 @@ var UsageMonitorModel = Backbone.Model.extend({
 
 	post_budget_result: function(data) {
 		var self = this;
+		console.log(data);
+		//for comparison purposed. Remove when done. ^^
 		return $.ajax({
 			type: 'POST',
 			data: JSON.stringify(data),
