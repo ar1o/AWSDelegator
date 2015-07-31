@@ -5,8 +5,6 @@ var UMTimeGroupUserServiceView = Backbone.View.extend({
         if (!this.model) {
             this.model = new UsageMonitorModel();
         }
-        this.ec2InstancesView = new EC2InstancesView();
-        this.rdsInstancesView = new RDSInstancesView();
         this.user = "";
         this.bindings();
         this.render();
@@ -94,13 +92,15 @@ var UMTimeGroupUserServiceView = Backbone.View.extend({
                                 events: {
                                     click: function(event) {
                                         if(/^i/.test(this.name)){
-                                            self.ec2InstancesView.model.setEC2SelectedInstance(this.name, true);
-                                            self.ec2InstancesView.updateViews(this.name);
+                                            this.ec2InstancesView = new EC2InstancesView();
+                                            this.ec2InstancesView.model.setEC2SelectedInstance(this.name, true);
+                                            this.ec2InstancesView.updateViews(this.name);
                                             window.location.hash = '#/EC2Instances';
                                         }else if(/^arn:aws:rds/.test(this.name)){                                            
                                             var dbName = this.name.substring(this.name.lastIndexOf(':')+1,this.name.length);
-                                            self.rdsInstancesView.model.setRDSSelectedInstance(dbName, true);
-                                            self.rdsInstancesView.updateViews(dbName);
+                                            this.rdsInstancesView = new RDSInstancesView();
+                                            this.rdsInstancesView.model.setRDSSelectedInstance(dbName, true);
+                                            this.rdsInstancesView.updateViews(dbName);
                                             window.location.hash = '#/RDSInstances';
                                         }
                                     }

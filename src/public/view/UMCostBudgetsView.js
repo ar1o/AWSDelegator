@@ -11,6 +11,7 @@ var UMCostBudgetsView = Backbone.View.extend({
         this.costActivity = new UMCostView();
         this.groupUserServiceView = new UMGroupUserServiceView();
         this.modal = new BaseModalView();
+        
         this.data = {
             budgetName: null,
             batchType: null,
