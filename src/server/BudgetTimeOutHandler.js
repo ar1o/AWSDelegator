@@ -111,7 +111,7 @@ var getBudgetTotalCost = function(_batchtype, _batchname, _startdate, _enddate, 
             }
         }, {
             $group: {
-                _id: "$UsageStartDate",
+                _id: null,
                 Cost: {
                     $sum: "$Cost"
                 }

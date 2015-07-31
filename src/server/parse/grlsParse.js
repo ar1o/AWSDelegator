@@ -5,32 +5,33 @@ exports.updateTimeBudgets = function() {
 //get max TimeAmount for each instance, this result is used later 
 //to identify budget timeout
 var getTimeAmount = function() {
-	MongoClient.connect(databaseUrl, function(err, db) {
+	// MongoClient.connect(databaseUrl, function(err, db) {
+	// if (err) throw err;
+	var maxBudgetLifetimes = {};
+	mongoose.model('timeBudgets').find({
+		State: 'valid'
+	}).exec(function(err, timeBudgets) {
 		if (err) throw err;
-		var maxBudgetLifetimes = {};
-		mongoose.model('timeBudgets').find({
-			State: 'valid'
-		}).exec(function(err, timeBudgets) {
-			if (err) throw err;
-			var index1 = 0;
-			var controller1 = function() {
-				iterator1(function() {
-					index1++;
-					if (index1 < timeBudgets.length) controller1();
-					else {
-						updateLifetime(maxBudgetLifetimes);
-					}
-				});
-			};
-			var iterator1 = function(callback1) {
-				maxBudgetLifetimes[timeBudgets[index1].TimeBudgetName] = timeBudgets[index1].TimeAmount;
-				callback1();
-			};
-			if (timeBudgets.length != 0) {
-				controller1();
-			}
-		});
+		var index1 = 0;
+		var controller1 = function() {
+			iterator1(function() {
+				index1++;
+				if (index1 < timeBudgets.length) {
+					controller1();
+				} else {
+					updateLifetime(maxBudgetLifetimes);
+				}
+			});
+		};
+		var iterator1 = function(callback1) {
+			maxBudgetLifetimes[timeBudgets[index1].TimeBudgetName] = timeBudgets[index1].TimeAmount;
+			callback1();
+		};
+		if (timeBudgets.length != 0) {
+			controller1();
+		}
 	});
+	// });
 }
 
 //update lifetime of instances based on their usage-profile
@@ -41,8 +42,8 @@ var updateLifetime = function(maxBudgetLifetimes) {
 		var currentTime = currentDate.getTime();
 		var currentTimeIso = new Date(currentTime).toISOString();
 		var date = currentTimeIso.split('T');
-		date[1] = date[1].substring(0,date[1].lastIndexOf('.'));
-		var date = date[0]+" "+date[1];
+		date[1] = date[1].substring(0, date[1].lastIndexOf('.'));
+		var date = date[0] + " " + date[1];
 		var t2HourlyEarning = {
 			't2.micro': 6,
 			't2.small': 12,
@@ -52,16 +53,18 @@ var updateLifetime = function(maxBudgetLifetimes) {
 		// $state: {$eq:'valid'}
 		var budgetLifetimes = {};
 		mongoose.model('timeBudgets').aggregate([{
-            $match: {
-                State: {$eq:'valid'},
-                StartDate:{
-                	$lte: date
-                },
-                EndDate: {
-                	$gte: date
-                }
-            }
-        }]).exec(function(err, budgets) {
+			$match: {
+				State: {
+					$eq: 'valid'
+				},
+				StartDate: {
+					$lte: date
+				},
+				EndDate: {
+					$gte: date
+				}
+			}
+		}]).exec(function(err, budgets) {
 			var index1 = 0;
 			var controller1 = function() {
 				iterator1(function() {
@@ -129,7 +132,7 @@ var updateLifetime = function(maxBudgetLifetimes) {
 										Unit: 'Count'
 									};
 									cloudwatch.getMetricStatistics(params, function(err, cloudwatchData) {
-										if (err) throw err;	
+										if (err) throw err;
 										var decayRate = 1;
 										var slope = cloudwatchData.Datapoints[1].Average - cloudwatchData.Datapoints[0].Average;
 										var maxCredits = t2HourlyEarning[instanceType] * 24;
@@ -168,7 +171,7 @@ var updateLifetime = function(maxBudgetLifetimes) {
 											});
 										});
 									});
-								}else{
+								} else {
 									var params = {
 										EndTime: currentTimeIso,
 										MetricName: 'CPUUtilization',

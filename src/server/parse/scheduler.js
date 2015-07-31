@@ -48,7 +48,7 @@ exports.s3Connect = function(_callback) {
     // AWS.config.credentials = awsCredentials.default;
     // parseAWSServices();
     timeOutHandler.checkBudgets();
-    // grlsParser.updateTimeBudgets();
+    grlsParser.updateTimeBudgets();
 };
 
 var parseBills = function() {
