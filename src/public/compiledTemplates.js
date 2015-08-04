@@ -240,7 +240,7 @@ templates['MeterView'] = template({"1":function(depth0,helpers,partials,data) {
     + ((stack1 = helpers.each.call(depth0,(depth0 != null ? depth0.usage : depth0),{"name":"each","hash":{},"fn":this.program(3, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
     + "</div>\r\n\r\n<div class=\"balance\" data-toggle=\"tooltip\" title=\"Current remaining balance\" data-placement=\"bottom\">Balance:\r\n\r\n"
     + ((stack1 = helpers.each.call(depth0,(depth0 != null ? depth0.balance : depth0),{"name":"each","hash":{},"fn":this.program(5, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
-    + "\r\n</div>\r\n\r\n<script type=\"text/javascript\">\r\n		var response = '';\r\n			$(document).ready(function(){\r\n				$.get('/getAccountBalance', function(data){\r\n						$(\"#div2\").append('$'+data);\r\n				});\r\n			});\r\n</script>";
+    + "\r\n</div>\r\n\r\n";
 },"useData":true});
 templates['NavView'] = template({"1":function(depth0,helpers,partials,data) {
     var stack1, alias1=this.lambda, alias2=this.escapeExpression, alias3=helpers.helperMissing;

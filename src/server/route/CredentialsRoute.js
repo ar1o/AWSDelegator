@@ -51,17 +51,26 @@ exports.setConfiguration = function(req, res) {
   });
 }
 exports.setBalance = function(req, res) {
-    console.log("exp", creditExp);
-    var now = new Date();
-    if(now < creditExp){
-      credits = req.body["balance"];  
-    }
-    else{
+    var expD = creditExp.substr(8, 2);
+    var expM = creditExp.substr(5, 2);
+    var expY = creditExp.substr(0, 4);
+    console.log(expD, expM, expY);
+    var exp = new Date(expY, expM, expD).toUTCString();
+    console.log("exp", exp);
+    var nowD = new Date().getDate();
+    var nowM = new Date().getMonth() + 1;
+    var nowY = new Date().getFullYear();
+    var now = new Date(nowY, nowM, nowD).toUTCString();
+    console.log("now", now);
+    if (now < exp) {
+      credits = req.body["balance"];
+      console.log("Credits are still Good!");
+    } else {
       console.log("Credits Have Expired!");
       credits = "EXPIRED";
     }
 
-    
+
     // res.send("Balance set to:", req.body["balance"]);
   }
   //BAD rename to allow overloading...
@@ -92,13 +101,13 @@ exports.getCreditsUsed = function(req, res) {
 }
 exports.getExpiration = function(req, res) {
   var data = {
-    date: [{
-      "day" : creditExp.substr(8, 2),
-      "month" : Number(creditExp.substr(5, 2))-1,
-      "year" : creditExp.substr(0, 4),
-    }]
-  }
-  // console.log(data);
+      date: [{
+        "day": creditExp.substr(8, 2),
+        "month": Number(creditExp.substr(5, 2)) - 1,
+        "year": creditExp.substr(0, 4),
+      }]
+    }
+    // console.log(data);
   return (data);
   // res.send(creditExp);
 }
