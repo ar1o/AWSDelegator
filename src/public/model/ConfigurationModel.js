@@ -51,7 +51,7 @@ var ConfigurationModel = Backbone.Model.extend({
 		});
 	},
 	setBalance: function(data) {
-		console.log('ConfigurationView/setBalance',data);
+		// console.log('ConfigurationView/setBalance',data);
 		var self = this;
 		return $.ajax({
 			type: 'POST',
@@ -66,7 +66,7 @@ var ConfigurationModel = Backbone.Model.extend({
 		});
 	},
 	setCreditsUsed: function(data) {
-		console.log('ConfigurationView/setCreditsUsed',data); //not added to app.js
+		// console.log('ConfigurationView/setCreditsUsed',data); //not added to app.js
 		var self = this;
 		return $.ajax({
 			type: 'POST',
@@ -81,7 +81,7 @@ var ConfigurationModel = Backbone.Model.extend({
 		});
 	},
 	setExpiration: function(data) {
-		console.log('ConfigurationView /setExpiration',data);
+		// console.log('ConfigurationView /setExpiration',data);
 		var self = this;
 		$.ajax({
 			type: 'POST',

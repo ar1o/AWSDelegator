@@ -4,6 +4,7 @@ $(document).ready(function() {
     $("body").tooltip({ selector: '[data-toggle=tooltip]' });
 });
 </script>
+
 <div class="rate"data-toggle="tooltip" title="Rate of cost per hour" data-placement="bottom">Rate: 
 	{{#each rate}}
 		${{this.value}}/Hour
@@ -18,10 +19,8 @@ $(document).ready(function() {
 </div>
 
 <div class="balance" data-toggle="tooltip" title="Current remaining balance" data-placement="bottom">Balance:
-
 	{{#each balance}}
 	 	${{this.value}}
 	{{/each}}
-
 </div>
 
