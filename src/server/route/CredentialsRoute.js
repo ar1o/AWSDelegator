@@ -51,7 +51,17 @@ exports.setConfiguration = function(req, res) {
   });
 }
 exports.setBalance = function(req, res) {
-    credits = req.body["balance"];
+    console.log("exp", creditExp);
+    var now = new Date();
+    if(now < creditExp){
+      credits = req.body["balance"];  
+    }
+    else{
+      console.log("Credits Have Expired!");
+      credits = "EXPIRED";
+    }
+
+    
     // res.send("Balance set to:", req.body["balance"]);
   }
   //BAD rename to allow overloading...

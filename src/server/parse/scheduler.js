@@ -29,7 +29,10 @@ s3.s3Watch = function() {
 
     console.log("Watching s3 bucket on timer of 60 minutes");
     setTimeout(self.s3Connect.bind(self), 1000 * 60 * 60);
-    setInterval(updateUsageBalance.bind(self), 1000 * 60 * 60);
+    if(credits != "EXPIRED"){
+        setInterval(updateUsageBalance.bind(self), 1000 * 60 * 60);    
+    }
+    
 
 };
 
@@ -256,7 +259,7 @@ var updateUsageBalance = function() {
                 console.log("exp", exp);
                 if (nowY > expData.date[0].year || nowY == expData.date[0].year && nowM > expData.date[0].month || nowY == expData.date[0].year && nowM == expData.date[0].month && nowD > expData.date[0].day) {
                     console.log("Credits have expired!");
-                    config.setCredits("Expired");
+                    config.setCredits("EXPIRED");
                 } else if (now <= exp) {
                     console.log("credits still good");
                     console.log("Subtracting rate");

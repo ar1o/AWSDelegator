@@ -5,52 +5,52 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal">&times;</button>
-				<h4 class="modal-title"> AWS Account Settings</h4>
-				<p>For best accuracy, please input credits and credits used information information soon after Amazon updates the invoice for your account. This is usually around the end of the first week of the month<p> 
+				<h4 class="modal-title"> AWS Account Settings <i class="fa fa-question-circle" id ="AccountSettings" data-toggle="tooltip" title="General Info regarding account settings"></i></h4>
+				<p>For best accuracy, please input credits and credits used information information soon after Amazon updates the invoice for your account. This is usually at the end of the first week of the month<p> 
 			</div>
 			<div class="modal-body">
 				{{#each pages}}
 				<div class="insetting"> 
 					<div class="incontainer">
-						<label class="config-label">Account Number</label>
+						<label class="config-label">Account Number <i class="fa fa-question-circle" id ="AccountNumTooltip" data-toggle="tooltip" title="This is your account number set in config"></i></label>
 						<div type="text" class="account" value="012345678910"></div>
 						{{this.number}}
 					</div>
 				</div>
 				<div class="insetting"> 
 					<div class="incontainer">
-						<label class="config-label">S3 Bucket Region</label>
+						<label class="config-label">S3 Bucket Region <i class="fa fa-question-circle" id ="S3BucketRegion" data-toggle="tooltip" title="The region where your S3 bucket is located"></i></label>
 						<div type="text" class="account" value="">{{this.s3}}</div>
 					</div>
 				</div>
 				<div class="insetting"> 
 					<div class="incontainer">
-						<label class="config-label">S3 Bucket Name</label>
+						<label class="config-label">S3 Bucket Name <i class="fa fa-question-circle" id ="S3BucketName" data-toggle="tooltip" title="The name of the S3 bucket where invoices are saved"></i></label>
 						<div type="text" class="account" value="">{{this.bucketName}}</div>
 					</div>
 				</div>
 				<div class="insetting"> 
 					<div class="incontainer">
-						<label class="config-label">DB URL</label>
+						<label class="config-label">DB URL <i class="fa fa-question-circle" id ="DBURL" data-toggle="tooltip" title="Location of your database"></i></label>
 						<div type="text" class="account" value="" disabled>{{this.URL}}</div>
 					</div>
 				</div>
 				<div class="insetting"> 
-					<div class="incontainer">
+					<div class="incontainer"><i class="fa fa-question-circle" id ="Expiration" data-toggle="tooltip" title="Expiration date of AWS credits. Value can be found at: https://console.aws.amazon.com/billing/home?region=us-west-2#/credits"></i>
 						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label textfield-demo">
 							<input class="mdl-textfield__input" type="text" pattern="^(19|20)\d\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$" id='expDate'/>
 							<label class="mdl-textfield__label" for="expiration">Credit Expiration (YYYY/MM/DD)</label>
 							<span class="mdl-textfield__error">Input is not a date!</span>
 						</div>
 					</div>
-					<div class="incontainer">
+					<div class="incontainer"><i class="fa fa-question-circle" id ="CreditsRemaining" data-toggle="tooltip" title="Number of remaining AWS credits. Value can be found at: https://console.aws.amazon.com/billing/home?region=us-west-2#/credits"></i>
 						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label textfield-demo">
 							<input class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="myCredits" />
 						    <label class="mdl-textfield__label" for="myCredits">Credits</label>
 						    <span class="mdl-textfield__error">Input is not a number!</span>
 						</div>
 					</div>
-					<div class="incontainer">
+					<div class="incontainer"><i class="fa fa-question-circle" id ="CreditsUsed" data-toggle="tooltip" title="Number of used AWS credits. Value can be found at: https://console.aws.amazon.com/billing/home?region=us-west-2#/credits"></i>
 						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label textfield-demo">
 							<input class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="creditsUsed" />
 						    <label class="mdl-textfield__label" for="creditsUsed">Credits Used</label>

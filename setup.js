@@ -17,7 +17,7 @@ if (!fs.existsSync(process.cwd() + '/data')) {
 }
 
 mongoose.connect(databaseUrl, function(error) {
-    use strict if (error) {
+    if (error) {
         console.log(error);
     }
 });
