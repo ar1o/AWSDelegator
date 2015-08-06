@@ -24,18 +24,19 @@ mongoose.connect(databaseUrl, function(error) {
 });
 var db = mongoose.connection;
 db.on("open", function() {
-    require(__dirname +'/server/model/ec2');
-    require(__dirname +'/server/model/rds');
-    require(__dirname +'/server/model/latest');
-    require(__dirname +'/server/model/pricing');
-    require(__dirname +'/server/model/billing');
-    require(__dirname +'/server/parse/boxPricingParse').getPricing(function(){
-        require(__dirname +'/server/parse/scheduler').s3Connect();
+    require(__dirname + '/server/model/ec2');
+    require(__dirname + '/server/model/rds');
+    require(__dirname + '/server/model/latest');
+    require(__dirname + '/server/model/pricing');
+    require(__dirname + '/server/model/billing');
+    require(__dirname + '/server/parse/boxPricingParse').getPricing(function() {
+        require(__dirname + '/server/parse/scheduler').s3Connect();
     });
 });
 //IMPORTANT!!
 app.use(bodyParser.urlencoded({extended: true}))
 
+app.post('/setBalance', require(__dirname + '/server/route/CredentialsRoute').setBalance);
 app.get('/getAccount', require(__dirname + '/server/route/CredentialsRoute').getAccountNumber);
 app.get('/getConfiguration', require(__dirname + '/server/route/CredentialsRoute').getConfiguration);
 app.get('/getAccountBalance', require(__dirname + '/server/route/CredentialsRoute').getAccountBalance);
@@ -134,7 +135,9 @@ app.post('/timebudget', jsonParser, function(req, res) {
     var startDate = r.startDate.split('/');
     var endDate = r.endDate.split('/');
     MongoClient.connect(databaseUrl, function(err, db) {
-        if (err) { throw err };
+        if (err) {
+            throw err
+        };
         var doc = {
             TimeBudgetName: r.timebudgetname,
             BatchType: r.batchType,
@@ -151,8 +154,8 @@ app.post('/timebudget', jsonParser, function(req, res) {
         };
         db.collection('timeBudgets').insert(doc, function(err) {
             if (err) throw err;
-            require('./server/route/timeBudgetRoute').createGRLSInstances(doc,function(err){
-                if(err) throw err;
+            require('./server/route/timeBudgetRoute').createGRLSInstances(doc, function(err) {
+                if (err) throw err;
                 res.send('grlsInstancesCreated');
             });
         });

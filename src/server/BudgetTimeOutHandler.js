@@ -13,7 +13,9 @@ exports.checkBudgets = function() {
             var controller1 = function() {
                 iterator1(function() {
                     index1++;
-                    if (index1 < budgets.length) controller1();
+                    if (index1 < budgets.length) {
+                        controller1();
+                    }
                 });
             };
             var iterator1 = function(callback1) {
@@ -122,7 +124,6 @@ var getBudgetTotalCost = function(_batchtype, _batchname, _startdate, _enddate, 
                 _id: 1
             }
         }]).exec(function(e, d) {
-            console.log("d", d);
             callback(d);
         });
     } else { // If group instead

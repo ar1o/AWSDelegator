@@ -5,33 +5,42 @@ exports.updateTimeBudgets = function() {
 //get max TimeAmount for each instance, this result is used later 
 //to identify budget timeout
 var getTimeAmount = function() {
-	// MongoClient.connect(databaseUrl, function(err, db) {
-	// if (err) throw err;
-	var maxBudgetLifetimes = {};
-	mongoose.model('timeBudgets').find({
-		State: 'valid'
-	}).exec(function(err, timeBudgets) {
+	MongoClient.connect(databaseUrl, function(err, db) {
 		if (err) throw err;
-		var index1 = 0;
-		var controller1 = function() {
-			iterator1(function() {
-				index1++;
-				if (index1 < timeBudgets.length) {
-					controller1();
-				} else {
-					updateLifetime(maxBudgetLifetimes);
-				}
-			});
-		};
-		var iterator1 = function(callback1) {
-			maxBudgetLifetimes[timeBudgets[index1].TimeBudgetName] = timeBudgets[index1].TimeAmount;
-			callback1();
-		};
-		if (timeBudgets.length != 0) {
-			controller1();
-		}
+		var maxBudgetLifetimes = {};
+		mongoose.model('timeBudgets').find({
+			State: 'valid'
+		}).exec(function(err, timeBudgets) {
+			if (err) throw err;
+
+			//keep an index of the timebudgets iterated through
+			var index1 = 0;
+
+			//main function to loop through time budgets and create a hashmap based on timebudgetNames
+			var controller1 = function() {
+				iterator1(function() {
+					index1++;
+					if (index1 < timeBudgets.length) {
+						controller1();
+					} else {
+						//when all the timebudgets have been added to the hashmap call the updateLifeTime() function
+						updateLifetime(maxBudgetLifetimes);
+					}
+				});
+			};
+
+			//add the time amount to the maxBudgetLifeTimes hashmap then callback to the main function
+			var iterator1 = function(callback1) {
+				maxBudgetLifetimes[timeBudgets[index1].TimeBudgetName] = timeBudgets[index1].TimeAmount;
+				callback1();
+			};
+
+			//only go into main function if there exists timebudgets
+			if (timeBudgets.length > 0) {
+				controller1();
+			}
+		});
 	});
-	// });
 }
 
 //update lifetime of instances based on their usage-profile
@@ -50,14 +59,14 @@ var updateLifetime = function(maxBudgetLifetimes) {
 			't2.medium': 24,
 			't2.large': 36
 		};
-		// $state: {$eq:'valid'}
+		//some random hashmap
 		var budgetLifetimes = {};
-		console.log('date ',date);
 		mongoose.model('timeBudgets').aggregate([{
 			$match: {
 				State: {
 					$eq: 'valid'
 				},
+				// StartDate < currentDate < EndDate -- WHY?!
 				StartDate: {
 					$lte: date
 				},
@@ -67,11 +76,15 @@ var updateLifetime = function(maxBudgetLifetimes) {
 			}
 		}]).exec(function(err, budgets) {
 			var index1 = 0;
-			var controller1 = function() {
-				iterator1(function() {
+
+			//controller function that calls the iterator to loop through something
+			var timeBudgetsController = function() {
+				timeBudgetsIterator(function() {
 					index1++;
-					if (index1 < budgets.length) controller1();
-					else {
+					//Check if the index is still smaller than the number of timeBudgets
+					if (index1 < budgets.length) {
+						timeBudgetsController();
+					} else {
 						for (var budget in budgetLifetimes) {
 							if (budgetLifetimes[budget] >= maxBudgetLifetimes[budget]) {
 								stopTimeBudget(budget);
@@ -80,23 +93,26 @@ var updateLifetime = function(maxBudgetLifetimes) {
 					}
 				});
 			};
-			var iterator1 = function(callback1) {
+
+			var timeBudgetsIterator = function(callback1) {
 				var timeBudgetName = budgets[index1].TimeBudgetName;
+
 				mongoose.model('grlsInstances').find({
 					timeBudgetName: timeBudgetName
 				}).exec(function(e, grlsInstances) {
 					var index2 = 0;
-					var controller2 = function() {
-						iterator2(function() {
+					var grlsInstancesController = function() {
+						grlsInstancesIterator(function() {
 							index2++;
-							if (index2 < grlsInstances.length) controller2();
-							else {
-
+							if (index2 < grlsInstances.length) {
+								grlsInstancesController();
+							} else {
 								callback1();
 							}
 						});
 					};
-					var iterator2 = function(callback2) {
+
+					var grlsInstancesIterator = function(callback2) {
 						var instanceId = grlsInstances[index2].instanceId;
 						var serviceType = grlsInstances[index2].serviceType;
 						var instanceType = grlsInstances[index2].instanceType;
@@ -150,6 +166,7 @@ var updateLifetime = function(maxBudgetLifetimes) {
 											budgetLifetimes[timeBudgetName] = 0;
 										}
 										budgetLifetimes[timeBudgetName] += lifetime + decayRate;
+										
 										mongoose.model('grlsInstances').update({
 											timeBudgetName: timeBudgetName,
 											instanceId: instanceId
@@ -278,15 +295,19 @@ var updateLifetime = function(maxBudgetLifetimes) {
 							default:
 								callback2();
 								break;
-						};
-					};
-					controller2();
-				});
-			};
-			controller1();
-		});
-	});
-}
+						}; //end of switch cases
+					}; //end of iterator2
+					if(grlsInstances.length != 0) {
+						grlsInstancesController();
+					} else {
+						console.log('grlsInstances is empty');
+					}
+				}); //end of grlsLineItem find query
+			}; //end of iterator1
+			timeBudgetsController();
+		}); //end of timeBudgets query
+	}); //end of mongoDB connection call
+} //end of updateLifetime function
 
 //mark timed-out budgets and grlsInstances as invalid
 var stopTimeBudget = function(timeBudget) {

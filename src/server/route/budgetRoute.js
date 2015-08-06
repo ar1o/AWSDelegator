@@ -10,10 +10,10 @@ exports.cost = function(req, res) {
 	var startDate = req.query.startDate;
 	var endDate = req.query.endDate;
 
-	    console.log(batchType);
-        console.log(batchName);
-    console.log(startDate);
-    console.log(endDate);
+	   //  console.log(batchType);
+    //     console.log(batchName);
+    // console.log(startDate);
+    // console.log(endDate);
 	//If the budget is for a single user instance
 	if (batchType == 'user') {
 		mongoose.model('Billings').aggregate([{
@@ -545,12 +545,15 @@ exports.userServiceUsage = function(req, res) {
 		var controller1 = function() {
 			iterator1(function() {
 				index1++;
-				if (index1 < d.length) controller1();
-				else {
+				if (index1 < d.length) {
+					controller1();
+				} else {
+					console.log('RESULT', result);
 					res.send(result);
 				}
 			});
 		};
+		
 		var iterator1 = function(callback1) {
 			mongoose.model('Billings').aggregate([{
 				$match: {
@@ -594,11 +597,12 @@ exports.userServiceUsage = function(req, res) {
 					callback1();
 				}
 			});
-		};
+		}; //iterator1 end
+
 		if (d.length != 0) {
 			controller1();
 		} else {
-
+			res.send(result);
 		}
 	});
 }
