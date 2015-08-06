@@ -9,11 +9,13 @@ exports.checkBudgets = function() {
         if (err) throw err;
         mongoose.model('Budgets').find({}, function(e, budgets) {
             if (e) throw e;
+            console.log("BUDGETS", budgets);
             var index1 = 0;
             var controller1 = function() {
                 iterator1(function() {
                     index1++;
                     if (index1 < budgets.length) {
+                        console.log("INDEX==" +index1 + "\tBUDGETLENGTH=="+budgets.length);
                         controller1();
                     }
                 });
@@ -23,7 +25,8 @@ exports.checkBudgets = function() {
                 //checking for amount exceeded or time exceeded
                 getBudgetTotalCost(budgets[index1].BatchType, budgets[index1].BatchName, budgets[index1].StartDate, budgets[index1].EndDate,
                     function(result) {
-                        if (result[0].Cost >= budget.Amount && budget.State == 'valid') {
+                        console.log("RESULT", result);
+                        if (result[0].Total >= budget.Amount && budget.State == 'valid') {
                             db.collection('budgets').update({
                                 BudgetName: budget.BudgetName
                             }, {
@@ -144,14 +147,21 @@ var getBudgetTotalCost = function(_batchtype, _batchname, _startdate, _enddate, 
                 $project: {
                     _id: 0,
                     UsageStartDate: 1,
-                    Cost: 1
+                    Cost: 1,
                 }
             }, {
                 $group: {
                     _id: null,
-                    Cost: {
+                    Total: {
                         $sum: "$Cost"
-                    }
+                    },
+                    Group: {$addToSet: batchName}
+                }
+            }, {
+                $project: {
+                    _id: 0,
+                    Total: 1,
+                    Group: 1
                 }
             }, {
                 $sort: {
@@ -159,6 +169,7 @@ var getBudgetTotalCost = function(_batchtype, _batchname, _startdate, _enddate, 
                 }
             }])
             .exec(function(e, d) {
+                console.log("THIS D", d)
                 callback(d);
             });
     }
