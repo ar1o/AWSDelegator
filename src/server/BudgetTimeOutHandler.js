@@ -13,7 +13,9 @@ exports.checkBudgets = function() {
             var controller1 = function() {
                 iterator1(function() {
                     index1++;
-                    if (index1 < budgets.length) controller1();
+                    if (index1 < budgets.length) {
+                        controller1();
+                    }
                 });
             };
             var iterator1 = function(callback1) {
@@ -64,7 +66,7 @@ exports.checkBudgets = function() {
                                 }, 0);
                             });
                         } else {
-                            callback1();
+                            // callback1();
                         }
                     });
             };
@@ -87,7 +89,7 @@ var getBudgetTotalCost = function(_batchtype, _batchname, _startdate, _enddate, 
     // console.log(endDate);
 
     if (batchType == 'user') {
-        mongoose.model('Billings').aggregate([{
+        var query = mongoose.model('Billings').aggregate([{
             $match: {
                 $and: [{
                     UsageStartDate: {
@@ -121,7 +123,7 @@ var getBudgetTotalCost = function(_batchtype, _batchname, _startdate, _enddate, 
                 _id: 1
             }
         }]).exec(function(e, d) {
-            console.log(d)
+            callback(d);
         });
     } else { // If group instead
         var query = mongoose.model('Billings').aggregate([{

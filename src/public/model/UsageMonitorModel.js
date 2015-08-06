@@ -237,7 +237,6 @@ var UsageMonitorModel = Backbone.Model.extend({
 		};
 		(function(params) {
 			$.get(host+'/api/usage/timeBudgetCost', params, function(result) {
-				console.log(result)
 				for (var i in result) {
 					var data = new budgetCostModel({
 						date: result[i]._id,
@@ -426,6 +425,7 @@ var UsageMonitorModel = Backbone.Model.extend({
 		};
 		(function(params) {
 			$.get(host+'/api/usage/userServiceUsage', params, function(result) {
+				console.log('userServiceUsage', result);
 				var total = 0;
 				for(var i in result){
 					total += result[i].total;

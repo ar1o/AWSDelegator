@@ -42,11 +42,11 @@ exports.s3Connect = function(_callback) {
     // "dBConnections" : 20,
     // "State" : "valid"   
     // });
-    printBanner(); 
+    // printBanner(); 
     // s3.s3Watch();
-    // parseBills();
-    // AWS.config.credentials = awsCredentials.default;
-    // parseAWSServices();
+    parseBills();
+    AWS.config.credentials = awsCredentials.default;
+    parseAWSServices();
     timeOutHandler.checkBudgets();
     grlsParser.updateTimeBudgets();
 };
