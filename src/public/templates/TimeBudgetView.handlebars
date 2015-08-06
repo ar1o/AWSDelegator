@@ -6,12 +6,12 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal">&times;</button>
-				<h4 class="modal-title">Create Time Budget Profile</h4>
+				<h4 class="modal-title">Create Time Budget Profile <i class="fa fa-question-circle" id ="CreateTimeBudget" data-toggle="tooltip" title="Info here about Time Budgets"></i></h4>
 			</div>
 			<div class="modal-body">
 				<div class="insetting"> 
 					<div class="incontainer">
-						<label class="budget-label">Name </label>
+						<label class="budget-label">Name <i class="fa fa-question-circle" id ="TimeBudgetName" data-toggle="tooltip" title="Unique name assigned to this Time Budget"></i></label>
 						<input type="text" id="time-budgetname" placeholder="e.g., 'Monthly EC2 Budget'">
 					</div>
 					<div class="warning" id="time-budgetnamewarning">Invalid budget Name.</div>
@@ -21,7 +21,7 @@
 
 				<div class="insetting"> 
 					<div class="incontainer">
-						<label class="budget-label">Time budget related to </label>
+						<label class="budget-label">Time budget related to <i class="fa fa-question-circle" id ="TimeBudgetAssociatedTo" data-toggle="tooltip" title="User or group this budget applies to"></i></label>
 						<select class="time-costfilter">
 							<option value="" disabled selected>Select</option>
 							<option value="user">User</option>
@@ -47,7 +47,7 @@
 
 				<div class="insetting"> 
 					<div class="incontainer">
-						<label class="budget-label">Start date </label>
+						<label class="budget-label">Start date <i class="fa fa-question-circle" id ="StartDate" data-toggle="tooltip" title="Date when budget begins"></i></label>
 						<input type="text" id="time-startdate" placeholder="mm/dd/yyyy">
 						<div class="warning" id="time-startdaterequest">Please select a start date.</div>
 					</div>
@@ -55,7 +55,7 @@
 
 				<div class="insetting"> 
 					<div class="incontainer">
-						<label class="budget-label">End date </label>
+						<label class="budget-label">End date <i class="fa fa-question-circle" id ="EndDate" data-toggle="tooltip" title="Date of termination for budget"></i></label>
 						<input type="text" id="time-enddate" placeholder="mm/dd/yyyy">
 						<div class="warning" id="time-enddatewarning">Invalid dates selected.</div>
 						<div class="warning" id="time-enddaterequest">Please select an end.</div>
@@ -64,7 +64,7 @@
 
 				<div class="insetting"> 
 					<div class="incontainer">
-						<label class="budget-label">Time Amount </label>
+						<label class="budget-label">Time Amount <i class="fa fa-question-circle" id ="TimeAmount" data-toggle="tooltip" title="Number of hours of time in use for instance during budget duration"></i></label>
 						<input type="text" id="time-amount" placeholder="Hours">
 						<div class="warning" id="time-amountwarning">Invalid time amount.</div>
 						<div class="warning" id="time-amountrequest">Please enter a time amount.</div>
@@ -73,7 +73,7 @@
 
 				<div class="insetting"> 
 					<div class="incontainer">
-						<label class="budget-label">Under-profile Decay Rate</label>
+						<label class="budget-label">Under-profile Decay Rate <i class="fa fa-question-circle" id ="UnderProfile" data-toggle="tooltip" title="Rate at which hours of usage are consumed when the instance is being used less than what is optimal"></i></label>
 						<input type="text" id="time-udecay" placeholder="e.g., 3">
 						<div class="warning" id="time-udecaywarning">Invalid decay rate.</div>
 						<div class="warning" id="time-udecayrequest">Please enter a decay rate.</div>
@@ -82,7 +82,7 @@
 
 				<div class="insetting"> 
 					<div class="incontainer">
-						<label class="budget-label">Over-profile Decay Rate</label>
+						<label class="budget-label">Over-profile Decay Rate <i class="fa fa-question-circle" id ="OverProfile" data-toggle="tooltip" title="Rate at which hours of usage are consumed when the instance is being used more than what is optimal"></i></label>
 						<input type="text" id="time-odecay" placeholder="e.g., 2">
 						<div class="warning" id="time-odecaywarning">Invalid decay rate.</div>
 						<div class="warning" id="time-odecayrequest">Please enter a decay rate.</div>
@@ -91,7 +91,7 @@
 
 				<div class="insetting"> 
 					<div class="incontainer">
-						<label class="budget-label">Min Database Connections</label>
+						<label class="budget-label">Min Database Connections <i class="fa fa-question-circle" id ="minDatabase" data-toggle="tooltip" title="Minimum number of acceptable database connections at a given time"></i></label>
 						<input type="text" id="time-mindbconnections" placeholder="e.g., 5">
 						<div class="warning" id="time-mindbconnectionswarning">Invalid number.</div>
 						<div class="warning" id="time-mindbconnectionsrequest">Please enter a number.</div>
@@ -100,7 +100,7 @@
 
 				<div class="insetting"> 
 					<div class="incontainer">
-						<label class="budget-label">Max Database Connections</label>
+						<label class="budget-label">Max Database Connections <i class="fa fa-question-circle" id ="maxDatabase" data-toggle="tooltip" title="Maximum number of acceptable database connections at a given time"></i></label>
 						<input type="text" id="time-dbconnections" placeholder="e.g., 50">
 						<div class="warning" id="time-maxdbconnectionswarning">Invalid number.</div>
 						<div class="warning" id="time-maxdbconnectionsrequest">Please enter a number.</div>
@@ -109,10 +109,10 @@
 
 				<div class="insetting"> 
 					<div class="incontainer">
-						<label class="budget-label">Stop resource(s) when quota reached </label>
+						<label class="budget-label">Stop resource(s) when quota reached <i class="fa fa-question-circle" id ="TimeBudgetStop" data-toggle="tooltip" title="Stop instance when provided time is exceeded?"></i></label>
 						<div class="onoffswitch">
 							<input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="time-myonoffswitch" checked>
-							<label class="onoffswitch-label" for="myonoffswitch">
+							<label class="onoffswitch-label" for="time-myonoffswitch">
 								<span class="onoffswitch-inner"></span>
 								<span class="onoffswitch-switch"></span>
 							</label>

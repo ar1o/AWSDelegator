@@ -12,7 +12,7 @@ var AppView = Backbone.View.extend({
         this.timeBudgetView = new TimeBudgetView();
         this.configurationView = new ConfigurationView();
         this.notificationView = new NotificationView();
-        this.budgetView.model.getBudgets();
+        // this.budgetView.model.getBudgets();
         this.timeBudgetView.model.getTimeBudgets();
 
         this.router = new AppRouter({
@@ -112,27 +112,6 @@ var AppView = Backbone.View.extend({
         }.bind(this));
 
         this.$el.on("click", '.setting', function(e) {}.bind(this));
-
-        this.$el.on("click", '#saveConfig', function(e) {
-            //set credit value
-            var bal = $('#myCredits').val();
-            console.log("Credits", bal);
-            var exp = $('#expDate').val();
-            console.log("Expiration", exp);
-            var self = this;
-            $.ajax({
-                type: "POST",
-                url: 'http://localhost:3000/setBalance',
-                data: {
-                    balance: bal
-                },
-                success: function(data) {
-                    console.log('success');
-                    console.log(JSON.stringify(data));
-                },
-                dataType: 'text'
-            });
-        });
 
         this.$el.on('click', '[page-id="0"]', function(e) {
             this.navView.model.isOpen = false;

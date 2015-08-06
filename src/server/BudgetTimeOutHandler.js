@@ -23,6 +23,7 @@ exports.checkBudgets = function() {
                 //checking for amount exceeded or time exceeded
                 getBudgetTotalCost(budgets[index1].BatchType, budgets[index1].BatchName, budgets[index1].StartDate, budgets[index1].EndDate,
                     function(result) {
+                        console.log("BudgetTimoutHandler result", result);
                         if (result[0].Cost >= budget.Amount && budget.State == 'valid') {
                             db.collection('budgets').update({
                                 BudgetName: budget.BudgetName
@@ -159,6 +160,7 @@ var getBudgetTotalCost = function(_batchtype, _batchname, _startdate, _enddate, 
                 }
             }])
             .exec(function(e, d) {
+                //ERROR FROM THIS CALL BACK
                 callback(d);
             });
     }
