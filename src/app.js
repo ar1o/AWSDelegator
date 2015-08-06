@@ -9,8 +9,7 @@ var urlencodedParser = bodyParser.urlencoded({
 });
 // create application/json parser 
 var jsonParser = bodyParser.json();
-var mongodb = require('mongodb');
-var MongoClient = mongodb.MongoClient;
+
 
 require(__dirname + '/server/config.js');
 
@@ -106,6 +105,16 @@ app.get('/api/notifications', require(__dirname + '/server/route/notificationsRo
 app.get('/api/notifications/seen', require(__dirname + '/server/route/notificationsRoute').updateNotifications);
 
 
+app.get('/getUsers'), jsonParser, function( req, res) {
+    MongoClient.connect(databaseUrl, function(err, db) {
+        if (err) { throw err };
+        db.collection('ec2Instances').aggregate({$project : {'_id': 0, 'Name' : 1 } }, function(err) {
+            if (err) throw err;
+            res.send('db');
+        })
+    })
+}
+
 
 app.post('/setBalance' , jsonParser, function(req, res){    
     require('./server/route/CredentialsRoute').setBalance(req);
@@ -116,6 +125,9 @@ app.post('/setExpiration' , jsonParser, function(req, res){
 app.post('/setCreditsUsed' , jsonParser, function(req, res){    
     require('./server/route/CredentialsRoute').setCreditsUsed(req);
 });
+
+var mongodb = require('mongodb');
+var MongoClient = mongodb.MongoClient;
 
 app.post('/timebudget', jsonParser, function(req, res) {
     var r = req.body;
@@ -146,6 +158,39 @@ app.post('/timebudget', jsonParser, function(req, res) {
         });
     });
 });
+
+app.post('/removeCostBudget', jsonParser, function(req, res) {
+    var r = req.body;
+    MongoClient.connect(databaseUrl, function(err, db) {
+        if (err) throw err;
+        db.collection('budgets').remove({
+            BudgetName: r.budgetName
+        });
+    res.send("success");
+    });
+});
+app.post('/editCostBudget', jsonParser, function(req, res){
+    var r = req.body;
+    console.log("editing Cost Budget");
+    MongoClient.connect(databaseUrl, function(err, db){
+        db.collection('budgets').update({
+            BudgetName: r.oldName
+        }, {
+            $set: {
+                BudgetName: r.budgetName,
+                BatchType: r.batchType,
+                BatchName: r.batchName,
+                StartDate: r.startDate + ' ' + '00:00:00',
+                EndDate: r.endDate + ' ' + '23:00:00',
+                Amount: r.amount,
+                TimeOut: r.option,
+                State: 'valid'
+            }
+        });
+        res.send("success");
+    });
+});
+
 app.post('/config')
 app.post('/budget', jsonParser, function(req, res) {
     var r = req.body;
@@ -158,8 +203,8 @@ app.post('/budget', jsonParser, function(req, res) {
             BudgetName: r.budgetName,
             BatchType: r.batchType,
             BatchName: r.batchName,
-            StartDate: startDate[2] + '-' + startDate[0] + '-' + startDate[1] + ' ' + '00:00:00',
-            EndDate: endDate[2] + '-' + endDate[0] + '-' + endDate[1] + ' ' + '23:00:00',
+            StartDate: startDate[2] + '/' + startDate[0] + '/' + startDate[1] + ' ' + '00:00:00',
+            EndDate: endDate[2] + '/' + endDate[0] + '/' + endDate[1] + ' ' + '23:00:00',
             Amount: r.amount,
             TimeOut: r.option,
             State: 'valid'
@@ -167,6 +212,7 @@ app.post('/budget', jsonParser, function(req, res) {
             if (err) throw err;
 
         });
+        res.send("success");
     });
 });
 

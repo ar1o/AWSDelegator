@@ -6,7 +6,7 @@
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal">&times;</button>
 				<h4 class="modal-title"> AWS Account Settings <i class="fa fa-question-circle" id ="AccountSettings" data-toggle="tooltip" title="General Info regarding account settings"></i></h4>
-				<p>For best accuracy, please input credits and credits used information information soon after Amazon updates the invoice for your account. This is usually at the end of the first week of the month<p> 
+				<p>For best accuracy, please input credits and credits used information information soon after Amazon updates the invoice for your account. This is usually at the end of the first week of the month. Info found at <b>https://console.aws.amazon.com/billing/home</b> by clicking the "Credits" link on the left side of the page<p> 
 			</div>
 			<div class="modal-body">
 				{{#each pages}}
@@ -36,21 +36,21 @@
 					</div>
 				</div>
 				<div class="insetting"> 
-					<div class="incontainer"><i class="fa fa-question-circle" id ="Expiration" data-toggle="tooltip" title="Expiration date of AWS credits. Value can be found at: https://console.aws.amazon.com/billing/home?region=us-west-2#/credits"></i>
+					<div class="incontainer"><i class="fa fa-question-circle" id ="Expiration" data-toggle="tooltip" title="Expiration date of AWS credits. Value can be found by following the link at the top"></i>
 						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label textfield-demo">
 							<input class="mdl-textfield__input" type="text" pattern="^(19|20)\d\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])$" id='expDate'/>
 							<label class="mdl-textfield__label" for="expiration">Credit Expiration (YYYY/MM/DD)</label>
 							<span class="mdl-textfield__error">Input is not a date!</span>
 						</div>
 					</div>
-					<div class="incontainer"><i class="fa fa-question-circle" id ="CreditsRemaining" data-toggle="tooltip" title="Number of remaining AWS credits. Value can be found at: https://console.aws.amazon.com/billing/home?region=us-west-2#/credits"></i>
+					<div class="incontainer"><i class="fa fa-question-circle" id ="CreditsRemaining" data-toggle="tooltip" title="Number of remaining AWS credits. Value can be found by following the link at the top"></i>
 						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label textfield-demo">
 							<input class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="myCredits" />
 						    <label class="mdl-textfield__label" for="myCredits">Credits</label>
 						    <span class="mdl-textfield__error">Input is not a number!</span>
 						</div>
 					</div>
-					<div class="incontainer"><i class="fa fa-question-circle" id ="CreditsUsed" data-toggle="tooltip" title="Number of used AWS credits. Value can be found at: https://console.aws.amazon.com/billing/home?region=us-west-2#/credits"></i>
+					<div class="incontainer"><i class="fa fa-question-circle" id ="CreditsUsed" data-toggle="tooltip" title="Number of used AWS credits. Value can be found by following the link at the top"></i>
 						<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label textfield-demo">
 							<input class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="creditsUsed" />
 						    <label class="mdl-textfield__label" for="creditsUsed">Credits Used</label>

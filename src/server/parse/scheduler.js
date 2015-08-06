@@ -18,7 +18,7 @@ var _params = {
 exports.s3Connect = function(_callback) {
     
     printBanner();
-    s3.s3Watch();
+    // s3.s3Watch();
     parseBills();
     AWS.config.credentials = awsCredentials.default;
     parseAWSServices();
@@ -58,7 +58,7 @@ var printBanner = function() {
     console.log("    /_\\ \\    / / __|   \\ ___| |___ __ _ __ _| |_ ___ _ _ ");
     console.log("   / _ \\ \\/\\/ /\\__ \\ |) / -_) / -_) _` / _` |  _/ _ \\ '_|");
     console.log("  /_/ \\_\\_/\\_/ |___/___/\\___|_\\___\\__, \\__,_|\\__\\___/_|  ");
-    console.log("       " + currentTimeIso + "    |___/                  \n");
+    console.log("       " + currentTimeIso + "   |___/                  \n");
 }
 
 var parseAWSServices = function() {

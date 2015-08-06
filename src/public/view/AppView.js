@@ -12,7 +12,7 @@ var AppView = Backbone.View.extend({
         this.timeBudgetView = new TimeBudgetView();
         this.configurationView = new ConfigurationView();
         this.notificationView = new NotificationView();
-        this.budgetView.model.getBudgets();
+        // this.budgetView.model.getBudgets();
         this.timeBudgetView.model.getTimeBudgets();
 
         this.router = new AppRouter({
