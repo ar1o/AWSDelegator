@@ -3,5 +3,6 @@
 var AppModel = Backbone.Model.extend({
 	defaults: {
 		currentView: undefined
-	}
+	},
+
 });

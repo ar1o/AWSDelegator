@@ -9,7 +9,6 @@ exports.checkBudgets = function() {
         if (err) throw err;
         mongoose.model('Budgets').find({}, function(e, budgets) {
             if (e) throw e;
-            console.log("BUDGETS", budgets);
             var index1 = 0;
             var controller1 = function() {
                 iterator1(function() {
@@ -25,7 +24,7 @@ exports.checkBudgets = function() {
                 //checking for amount exceeded or time exceeded
                 getBudgetTotalCost(budgets[index1].BatchType, budgets[index1].BatchName, budgets[index1].StartDate, budgets[index1].EndDate,
                     function(result) {
-                        console.log("RESULT", result);
+                        // console.log("RESULT", result);
                         if (result[0].Total >= budget.Amount && budget.State == 'valid') {
                             db.collection('budgets').update({
                                 BudgetName: budget.BudgetName
@@ -92,7 +91,7 @@ var getBudgetTotalCost = function(_batchtype, _batchname, _startdate, _enddate, 
     // console.log(endDate);
 
     if (batchType == 'user') {
-        var query = mongoose.model('Billings').aggregate([{
+        mongoose.model('Billings').aggregate([{
             $match: {
                 $and: [{
                     UsageStartDate: {
@@ -129,7 +128,7 @@ var getBudgetTotalCost = function(_batchtype, _batchname, _startdate, _enddate, 
             callback(d);
         });
     } else { // If group instead
-        var query = mongoose.model('Billings').aggregate([{
+        mongoose.model('Billings').aggregate([{
                 $match: {
                     $and: [{
                         UsageStartDate: {
@@ -169,7 +168,6 @@ var getBudgetTotalCost = function(_batchtype, _batchname, _startdate, _enddate, 
                 }
             }])
             .exec(function(e, d) {
-                console.log("THIS D", d)
                 callback(d);
             });
     }

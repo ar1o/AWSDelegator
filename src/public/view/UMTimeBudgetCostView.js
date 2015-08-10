@@ -25,40 +25,40 @@ var UMTimeBudgetCostView = Backbone.View.extend({
         this.model.change('budgetCostDataReady', function(model, val) {
             this.render();
             var date = budgetCostCollection.at(budgetCostCollection.length-1).get('date').split(' ');
-            //date1=[year,month,date]
-            var date1 = date[0].split(/-/);
-            //date2=[hour,minute,second]                
-            var date2 = date[1].split(':');
+            //date=[year,month,date]
+            var date = rawDate[0].split(/-/);
+            //time=[hour,minute,second]                
+            var time = rawDate[1].split(':');
             //correction for JS viewing JAN as '00'
-            var month = parseInt(date1[1]);
-            date1[1] = month - 1;
-            var endDate = Date.UTC(date1[0], date1[1], date1[2], date2[0], date2[1], date2[2]);
+            var month = parseInt(date[1]);
+            date[1] = month - 1;
+            var endDate = Date.UTC(date[0], date[1], date[2], time[0], time[1], time[2]);
             
             //date format- ISOString i.e., '2015-07-22T17:26:16.799Z' 
             var date = budgetCostCollection.at(0).get('date').split('T');
-            //date1=[year,month,date]
-            var date1 = date[0].split(/-/);
-            //date2=[hour,minute,second]                
-            var date2 = date[1].split(':');
-            date2[2] = date2[2].substring(0,date2[2].indexOf('.'));
+            //date=[year,month,date]
+            var date = rawDate[0].split(/-/);
+            //time=[hour,minute,second]                
+            var time = rawDate[1].split(':');
+            time[2] = time[2].substring(0,time[2].indexOf('.'));
             //correction for JS viewing JAN as '00'
-            var month = parseInt(date1[1]);
-            date1[1] = month - 1;
-            var startDate = Date.UTC(date1[0], date1[1], date1[2], date2[0], date2[1], date2[2]);
+            var month = parseInt(date[1]);
+            date[1] = month - 1;
+            var startDate = Date.UTC(date[0], date[1], date[2], time[0], time[1], time[2]);
             var budgetIndex = budgetIndexCollection.at(0).get('index');
             
             var costData = [];
             for (var i = 0; i < budgetCostCollection.length - 1; ++i) {
                 var date = budgetCostCollection.at(i).get('date').split('T');
-                //date1=[year,month,date]
-                var date1 = date[0].split(/-/);
-                //date2=[hour,minute,second]                
-                var date2 = date[1].split(':');
-                date2[2] = date2[2].substring(0,date2[2].indexOf('.'));
+                //date=[year,month,date]
+                var date = rawDate[0].split(/-/);
+                //time=[hour,minute,second]                
+                var time = rawDate[1].split(':');
+                time[2] = time[2].substring(0,time[2].indexOf('.'));
                 //correction for JS viewing JAN as '00'
-                var month = parseInt(date1[1]);
-                date1[1] = month - 1;
-                var utcDate = Date.UTC(date1[0], date1[1], date1[2], date2[0], date2[1], date2[2]);
+                var month = parseInt(date[1]);
+                date[1] = month - 1;
+                var utcDate = Date.UTC(date[0], date[1], date[2], time[0], time[1], time[2]);
                 costData.push([utcDate,-1*budgetCostCollection.at(i).get('cost')]);
             }
 
@@ -124,54 +124,54 @@ var UMTimeBudgetCostView = Backbone.View.extend({
 
         this.model.change('userBudgetCostDataReady', function(model, val) {
             this.render();
-            var date = userBudgetCostCollection.at(userBudgetCostCollection.length-1).get('date').split(' ');
-            //date1=[year,month,date]
-            var date1 = date[0].split(/-/);
-            //date2=[hour,minute,second]                
-            var date2 = date[1].split(':');
+            var rawDate = userBudgetCostCollection.at(userBudgetCostCollection.length-1).get('date').split(' ');
+            //date=[year,month,date]
+            var date = rawDate[0].split(/-/);
+            //time=[hour,minute,second]                
+            var time = rawDate[1].split(':');
             //correction for JS viewing JAN as '00'
-            var month = parseInt(date1[1]);
-            date1[1] = month - 1;
-            var endDate = Date.UTC(date1[0], date1[1], date1[2], date2[0], date2[1], date2[2]);
+            var month = parseInt(date[1]);
+            date[1] = month - 1;
+            var endDate = Date.UTC(date[0], date[1], date[2], time[0], time[1], time[2]);
             
             var date = userBudgetCostCollection.at(0).get('date').split('T');
-            //date1=[year,month,date]
-            var date1 = date[0].split(/-/);
-            //date2=[hour,minute,second]                
-            var date2 = date[1].split(':');
-            date2[2] = date2[2].substring(0,date2[2].indexOf('.'));
+            //date=[year,month,date]
+            var date = rawDate[0].split(/-/);
+            //time=[hour,minute,second]                
+            var time = rawDate[1].split(':');
+            time[2] = time[2].substring(0,time[2].indexOf('.'));
             //correction for JS viewing JAN as '00'
-            var month = parseInt(date1[1]);
-            date1[1] = month - 1;
-            var startDate = Date.UTC(date1[0], date1[1], date1[2], date2[0], date2[1], date2[2]);
+            var month = parseInt(date[1]);
+            date[1] = month - 1;
+            var startDate = Date.UTC(date[0], date[1], date[2], time[0], time[1], time[2]);
 
             var costData = [];
             for (var i = 0; i < budgetCostCollection.length - 1; ++i) {
                 var date = budgetCostCollection.at(i).get('date').split('T');
-                //date1=[year,month,date]
-                var date1 = date[0].split(/-/);
-                //date2=[hour,minute,second]                
-                var date2 = date[1].split(':');
-                date2[2] = date2[2].substring(0,date2[2].indexOf('.'));
+                //date=[year,month,date]
+                var date = rawDate[0].split(/-/);
+                //time=[hour,minute,second]                
+                var time = rawDate[1].split(':');
+                time[2] = time[2].substring(0,time[2].indexOf('.'));
                 //correction for JS viewing JAN as '00'
-                var month = parseInt(date1[1]);
-                date1[1] = month - 1;
-                var utcDate = Date.UTC(date1[0], date1[1], date1[2], date2[0], date2[1], date2[2]);
+                var month = parseInt(date[1]);
+                date[1] = month - 1;
+                var utcDate = Date.UTC(date[0], date[1], date[2], time[0], time[1], time[2]);
                 costData.push([utcDate,-1*budgetCostCollection.at(i).get('cost')]);
             }
 
             var userCostData = [];
             for (var i = 0; i < userBudgetCostCollection.length - 1; ++i) {
                 var date = userBudgetCostCollection.at(i).get('date').split('T');
-                //date1=[year,month,date]
-                var date1 = date[0].split(/-/);
-                //date2=[hour,minute,second]                
-                var date2 = date[1].split(':');
-                date2[2] = date2[2].substring(0,date2[2].indexOf('.'));
+                //date=[year,month,date]
+                var date = rawDate[0].split(/-/);
+                //time=[hour,minute,second]                
+                var time = rawDate[1].split(':');
+                time[2] = time[2].substring(0,time[2].indexOf('.'));
                 //correction for JS viewing JAN as '00'
-                var month = parseInt(date1[1]);
-                date1[1] = month - 1;
-                var utcDate = Date.UTC(date1[0], date1[1], date1[2], date2[0], date2[1], date2[2]);
+                var month = parseInt(date[1]);
+                date[1] = month - 1;
+                var utcDate = Date.UTC(date[0], date[1], date[2], time[0], time[1], time[2]);
                 userCostData.push([utcDate,-1*userBudgetCostCollection.at(i).get('cost')]);
             }
             var budgetIndex = budgetIndexCollection.at(0).get('index');

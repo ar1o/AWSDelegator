@@ -7,12 +7,12 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal">&times;</button>
-				<h4 class="modal-title">Create Cost Budget Profile</h4>
+				<h4 class="modal-title">Create Cost Budget Profile <i class="fa fa-question-circle" id ="CreateCBudget" data-toggle="tooltip" title="Info here about Cost Budgets"></i></h4>
 			</div>
 			<div class="modal-body">
 				<div class="insetting"> 
 					<div class="incontainer">
-						<label class="budget-label">Name </label>
+						<label class="budget-label">Name <i class="fa fa-question-circle" id ="BudgetName" data-toggle="tooltip" title="Unique name assigned to this Cost Budget"></i></label>
 						<input type="text" id="budgetname" placeholder="e.g., 'Monthly EC2 Budget'">
 					</div>
 					<div class="warning" id="budgetnamewarning">Invalid budget Name.</div>
@@ -22,7 +22,7 @@
 
 				<div class="insetting"> 
 					<div class="incontainer">
-						<label class="budget-label">Include costs related to </label>
+						<label class="budget-label">Track costs associated to <i class="fa fa-question-circle" id ="AssociatedTo" data-toggle="tooltip" title="User or group this budget applies to"></i></label>
 						<select class="costfilter">
 							<option value="" disabled selected>Select</option>
 							<option value="user">User</option>
@@ -49,7 +49,7 @@
 
 				<div class="insetting"> 
 					<div class="incontainer">
-						<label class="budget-label">Start date </label>
+						<label class="budget-label">Start date <i class="fa fa-question-circle" id ="StartDate" data-toggle="tooltip" title="Date when budget begins"></i></label>
 						<input type="text" id="startdate" placeholder="mm/dd/yyyy">
 						<div class="warning" id="startdaterequest">Please select a start date.</div>
 					</div>
@@ -57,7 +57,7 @@
 
 				<div class="insetting"> 
 					<div class="incontainer">
-						<label class="budget-label">End date </label>
+						<label class="budget-label">End date <i class="fa fa-question-circle" id ="EndDate" data-toggle="tooltip" title="Date of termination for budget"></i></label>
 						<input type="text" id="enddate" placeholder="mm/dd/yyyy">
 						<div class="warning" id="enddatewarning">Invalid dates selected.</div>
 						<div class="warning" id="enddaterequest">Please select an end.</div>
@@ -66,7 +66,7 @@
 
 				<div class="insetting"> 
 					<div class="incontainer">
-						<label class="budget-label">Cost Amount </label>
+						<label class="budget-label">Cost Amount <i class="fa fa-question-circle" id ="CostAmount" data-toggle="tooltip" title="Dollar amount the associated user/group is allocated between start and end dates"></i></label>
 						<input type="text" id="amount" placeholder="USD">
 						<div class="warning" id="amountwarning">Invalid amount.</div>
 						<div class="warning" id="amountrequest">Please enter an amount.</div>
@@ -76,7 +76,7 @@
 
 				<div class="insetting"> 
 					<div class="incontainer">
-						<label class="budget-label">Stop resource(s) when quota reached </label>
+						<label class="budget-label">Stop resource(s) when quota reached <i class="fa fa-question-circle" id ="Stop" data-toggle="tooltip" title="Stop instance when budget is exceeded?"></i></label>
 						<div class="onoffswitch">
 							<input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked>
 							<label class="onoffswitch-label" for="myonoffswitch">

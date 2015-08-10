@@ -6,26 +6,26 @@ var TimeBudgetView = Backbone.View.extend({
             this.model = new UsageMonitorModel();
         }
         this.data = {
-            timebudgetname: null,            
+            timebudgetname: null,
             batchName: null,
             batchType: null,
             startDate: null,
             endDate: null,
             timeamount: null,
-            udecay : null,
+            udecay: null,
             odecay: null,
             minDBConnections: null,
             maxDBConnections: null,
             option: 'true'
         };
         this.isValid = {
-            timebudgetname: false,            
+            timebudgetname: false,
             batchName: false,
             batchType: false,
             startDate: false,
             endDate: false,
             timeamount: false,
-            udecay : false,
+            udecay: false,
             odecay: false,
             minDBConnections: false,
             maxDBConnections: false,
@@ -55,26 +55,26 @@ var TimeBudgetView = Backbone.View.extend({
     bindings: function() {
         var self = this;
         this.$el.on('focusout', '#time-budgetname', function(e) {
-            if(/^[a-z\d\-_\s]+$/i.test($('#time-budgetname').val())){
+            if (/^[a-z\d\-_\s]+$/i.test($('#time-budgetname').val())) {
                 $('#time-budgetnamewarning').hide();
                 $('#time-budgetnamerequest').hide();
                 var newBudget = true;
                 console.log(timeBudgetCollection)
-                for(var i=0;i<timeBudgetCollection.length;++i){
-                    if(timeBudgetCollection.at(i).get('timeBudgetName')==$('#time-budgetname').val()){
+                for (var i = 0; i < timeBudgetCollection.length; ++i) {
+                    if (timeBudgetCollection.at(i).get('timeBudgetName') == $('#time-budgetname').val()) {
                         newBudget = false;
                     }
                 }
-                if(newBudget){
+                if (newBudget) {
                     this.$('#time-oldbudgetnamewarning').hide();
                     this.data.timebudgetname = $('#time-budgetname').val();
                     self.isValid.timebudgetname = true;
-                }else{
+                } else {
                     $('#time-oldbudgetnamewarning').show();
                 }
-            }else{
+            } else {
                 $('#time-budgetnamewarning').show();
-            } 
+            }
         }.bind(this));
 
         this.$el.on("change", '.time-costfilter', function(e) {
@@ -111,11 +111,36 @@ var TimeBudgetView = Backbone.View.extend({
 
         this.$el.on('focusin', '#time-startdate', function(e) {
             var self = this;
+            // console.log("FOCUS IN startDate", self.data);
             var datePicker = $("#time-startdate").datepicker({
                 onSelect: function(dateText) {
-                    self.data.startDate = this.value;
-                    self.isValid.startDate = true;
-                    self.$('#time-startdaterequest').hide();
+                    if (self.data.endDate === null || self.data.endDate == "") {
+                        self.data.startDate = this.value;
+                        self.isValid.startDate = true;
+                        self.$('#time-startdaterequest').hide();
+                    } else {
+                        var startD, startM, startY;
+                        var endD, endM, endY;
+                        startD = this.value.substr(3, 2);
+                        startM = this.value.substr(0, 2);
+                        startY = this.value.substr(6, 4);
+                        var start = new Date(startY, startM - 1, startD);
+                        endD = self.data.endDate.substr(3, 2);
+                        endM = self.data.endDate.substr(0, 2);
+                        endY = self.data.endDate.substr(6, 4);
+                        var end = new Date(endY, endM - 1, endD);
+                        console.log("From", start, "\nto", end);
+                        if (end > start) {
+                            console.log("valid date range");
+                            self.data.endDate = this.value;
+                            self.isValid.endDate = true;
+                            self.$('#time-enddatewarning').hide();
+                            self.$('#time-enddaterequest').hide();
+                        } else {
+                            console.log("invalid date range")
+                            self.$('#time-enddatewarning').show();
+                        }
+                    }
                 }
             });
             $("#timeBudgetModal").scroll(function() {
@@ -124,17 +149,43 @@ var TimeBudgetView = Backbone.View.extend({
             });
         }.bind(this));
 
+        this.$el.on('focusout', '#time-startdate', function(e) {
+            self = this;
+            this.data.startDate = ($('#time-startdate').val());
+            console.log("FOCUS OUT startDate", self.data);
+        }.bind(this));
+
         this.$el.on('focusin', '#time-enddate', function(e) {
             var self = this;
+            console.log("FOCUS on endDate", self.data);
             var datePicker = $("#time-enddate").datepicker({
                 onSelect: function(dateText) {
-                    if(this.value >= self.data.startDate){
-                        self.data.endDate = this.value;
-                        self.isValid.endDate = true;
-                        self.$('#time-enddatewarning').hide();
-                        self.$('#time-enddaterequest').hide();
-                    }else{
-                        self.$('#time-enddatewarning').show();
+                    if (self.data.startDate == null) {
+                        self.data.startDate = this.value;
+                        self.isValid.startDate = true;
+                        self.$('#time-startdaterequest').hide();
+                    } else if (self.data.startDate != null) {
+                        var startD, startM, startY;
+                        var endD, endM, endY;
+                        startD = self.data.startDate.substr(3, 2);
+                        startM = self.data.startDate.substr(0, 2);
+                        startY = self.data.startDate.substr(6, 4);
+                        var start = new Date(startY, startM - 1, startD);
+                        endD = this.value.substr(3, 2);
+                        endM = this.value.substr(0, 2);
+                        endY = this.value.substr(6, 4);
+                        var end = new Date(endY, endM - 1, endD);
+                        console.log("From", start, "to", end);
+                        if (end > start) {
+                            console.log("valid date range");
+                            self.data.endDate = this.value;
+                            self.isValid.endDate = true;
+                            self.$('#time-enddatewarning').hide();
+                            self.$('#time-enddaterequest').hide();
+                        } else {
+                            console.log("invalid date range")
+                            self.$('#time-enddatewarning').show();
+                        }
                     }
                 }
             });
@@ -144,64 +195,70 @@ var TimeBudgetView = Backbone.View.extend({
             });
         }.bind(this));
 
+        this.$el.on('focusout', '#time-enddate', function(e) {
+            self = this;
+            this.data.endDate = ($('#time-enddate').val());
+            console.log("enddate is ", this.data);
+        }.bind(this));
+
         this.$el.on('focusout', '#time-amount', function(e) {
-            if(/^\d+(\.\d{1,2})?$/.test($('#time-amount').val())){
+            if (/^\d+(\.\d{1,2})?$/.test($('#time-amount').val())) {
                 this.data.timeamount = $('#time-amount').val();
                 self.isValid.timeamount = true;
                 self.$('#time-amountwarning').hide();
                 self.$('#time-amountrequest').hide();
-            }else{
+            } else {
                 self.$('#time-amountwarning').show();
             }
-            
+
         }.bind(this));
 
         this.$el.on('focusout', '#time-udecay', function(e) {
-            if(/\d/.test($('#time-udecay').val())){
+            if (/\d/.test($('#time-udecay').val())) {
                 this.data.udecay = parseInt($('#time-udecay').val());
                 self.isValid.udecay = true;
                 self.$('#time-udecaywarning').hide();
                 self.$('#time-udecayrequest').hide();
-            }else{
+            } else {
                 self.$('#time-udecaywarning').show();
             }
-            
+
         }.bind(this));
 
-        this.$el.on('focusout', '#time-odecay', function(e) {   
-            if(/\d/.test($('#time-odecay').val())){
+        this.$el.on('focusout', '#time-odecay', function(e) {
+            if (/\d/.test($('#time-odecay').val())) {
                 this.data.odecay = parseInt($('#time-odecay').val());
                 self.isValid.odecay = true;
                 self.$('#time-odecaywarning').hide();
                 self.$('#time-odecayrequest').hide();
-            }else{
+            } else {
                 self.$('#time-odecaywarning').show();
             }
-            
+
         }.bind(this));
 
         this.$el.on('focusout', '#time-dbconnections', function(e) {
-            if(/\d/.test($('#time-dbconnections').val())){
+            if (/\d/.test($('#time-dbconnections').val())) {
                 this.data.dbConnections = parseInt($('#time-dbconnections').val());
                 self.isValid.maxDBConnections = true;
                 self.$('#time-maxdbconnectionswarning').hide();
                 self.$('#time-maxdbconnectionsrequest').hide();
-            }else{
+            } else {
                 self.$('#time-maxdbconnectionswarning').show();
             }
-            
+
         }.bind(this));
 
         this.$el.on('focusout', '#time-mindbconnections', function(e) {
-            if(/\d/.test($('#time-mindbconnections').val())){
+            if (/\d/.test($('#time-mindbconnections').val())) {
                 this.data.dbConnections = parseInt($('#time-mindbconnections').val());
                 self.isValid.minDBConnections = true;
                 self.$('#time-mindbconnectionswarning').hide();
                 self.$('#time-mindbconnectionsrequest').hide();
-            }else{
+            } else {
                 self.$('#time-mindbconnectionswarning').show();
             }
-            
+
         }.bind(this));
 
 
@@ -221,34 +278,34 @@ var TimeBudgetView = Backbone.View.extend({
         }.bind(this));
 
         this.$el.on('click', '#time-savebtn', function(e) {
-            if(self.data.timebudgetname == null){
+            if (self.data.timebudgetname == null) {
                 self.$('#time-budgetnamerequest').show();
             }
-            if(self.data.batchType == null){
+            if (self.data.batchType == null) {
                 self.$('#time-batchtyperequest').show();
             }
-            if(self.data.batchName == null){
+            if (self.data.batchName == null) {
                 self.$('#time-batchnamerequest').show();
-            }            
-            if(self.data.startDate == null){
+            }
+            if (self.data.startDate == null) {
                 self.$('#time-startdaterequest').show();
             }
-            if(self.data.endDate == null){
+            if (self.data.endDate == null) {
                 self.$('#time-enddaterequest').show();
             }
-            if(self.data.timeamount == null){
+            if (self.data.timeamount == null) {
                 self.$('#time-amountrequest').show();
             }
-            if(self.data.udecay == null){
+            if (self.data.udecay == null) {
                 self.$('#time-udecayrequest').show();
             }
-            if(self.data.odecay == null){
+            if (self.data.odecay == null) {
                 self.$('#time-odecayrequest').show();
             }
-            if(self.data.minDBConnections == null){
+            if (self.data.minDBConnections == null) {
                 self.$('#time-mindbconnectionsrequest').show();
             }
-            if(self.data.maxDBConnections == null){
+            if (self.data.maxDBConnections == null) {
                 self.$('#time-maxdbconnectionsrequest').show();
             }
             $('#time-filter-details').addClass('hidden');
@@ -258,7 +315,7 @@ var TimeBudgetView = Backbone.View.extend({
                     validForm = false;
                 }
             }
-            if(validForm){
+            if (validForm) {
                 this.model.post_time_budget_result(this.data);
                 for (var i in self.isValid) {
                     self.isValid[i] = false;
@@ -276,13 +333,13 @@ var TimeBudgetView = Backbone.View.extend({
         }.bind(this));
 
         this.$el.on('click', '#time-closebtn', function(e) {
-            for(var i in self.isValid){
+            for (var i in self.isValid) {
                 self.isValid[i] = false;
                 self.data[i] = null;
             }
             $("#time-amount").val("");
             $("#time-budgetname").val("");
-            $(".time-costfilter").val("");            
+            $(".time-costfilter").val("");
             $("#time-startdate").val("");
             $("#time-enddate").val("");
             $("#time-udecay").val("");

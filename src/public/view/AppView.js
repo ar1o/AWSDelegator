@@ -2,29 +2,31 @@ var AppView = Backbone.View.extend({
 
     initialize: function(options) {
         AppView.sharedInstance = this;
+        var self = this;
 
         this.header = new HeaderView();
-        // this.footer = new FooterView();
         this.navView = new NavView();
         // this.meterActivity = new MeterView();
-
+        this.latestTime = new TimeView();
         this.budgetView = new BudgetView();
         this.timeBudgetView = new TimeBudgetView();
         this.configurationView = new ConfigurationView();
         this.notificationView = new NotificationView();
-        this.budgetView.model.getBudgets();
+        // this.budgetView.model.getBudgets();
         this.timeBudgetView.model.getTimeBudgets();
-
+        this.footer = new FooterView();
         this.router = new AppRouter({
             defaultView: 'AWSView'
         });
+
 
         this.bindings();
         this.render();
         this.setListeners();
 
-
-
+        $('.content-view').append(this.footer.el);
+        $('.content-view').append(this.latestTime.el);
+        //Resize the content view
         window_size = $(window).height();
         // console.log(window_size);
         var length_calc = (window_size - 50);
@@ -43,7 +45,25 @@ var AppView = Backbone.View.extend({
             this.$('.content-view').css({
                 'height': length
             });
+
+
         });
+
+
+// var docHeight = $(".content-view").height();
+// var footerHeight = $('.FooterView').height();
+// console.log(docHeight);
+// console.log(footerHeight);
+// var footerTop = $('.FooterView').position().top + footerHeight;
+
+ // if (footerTop < docHeight) {
+ //    $('.FooterView').css('margin-top', 10+ (docHeight - footerTop) + 'px');
+ //   }
+        // var footerResize = function() {
+        //     $('.FooterView').css('position', $(".content-view").height() + $(".FooterView").innerHeight() > $(window).height() ? "inherit" : "fixed");
+        // };
+        // $(window).resize(footerResize).ready(footerResize);
+        // console.log(footerResize());
     },
 
     setListeners: function() {
@@ -113,27 +133,6 @@ var AppView = Backbone.View.extend({
 
         this.$el.on("click", '.setting', function(e) {}.bind(this));
 
-        this.$el.on("click", '#saveConfig', function(e) {
-            //set credit value
-            var bal = $('#myCredits').val();
-            console.log("Credits", bal);
-            var exp = $('#expDate').val();
-            console.log("Expiration", exp);
-            var self = this;
-            $.ajax({
-                type: "POST",
-                url: 'http://localhost:3000/setBalance',
-                data: {
-                    balance: bal
-                },
-                success: function(data) {
-                    console.log('success');
-                    console.log(JSON.stringify(data));
-                },
-                dataType: 'text'
-            });
-        });
-
         this.$el.on('click', '[page-id="0"]', function(e) {
             this.navView.model.isOpen = false;
             window.location.hash = '#/AWS';
@@ -200,7 +199,10 @@ var AppView = Backbone.View.extend({
     },
 
     render: function() {
-        this.$el.html(Handlebars.templates.AppView());
+        this.$el.html(Handlebars.templates.AppView({
+            time: this.time
+
+        }));
         this.$el.append(this.header.el);
         this.$el.append(this.navView.el);
         this.$el.append(this.configurationView.el);
@@ -208,8 +210,10 @@ var AppView = Backbone.View.extend({
         this.$el.append(this.budgetView.el);
         this.$el.append(this.timeBudgetView.el);
         this.$el.append(this.notificationView.el);
-                // this.$el.append(this.meterActivity.el);       
 
+        // this.$el.append(this.meterActivity.el);       
+        // this.$el.append(this.latestTime.el);
+        // this.$('.content-view').append(this.footer.el);
         this.setView(this.router.get('view'));
     },
 
@@ -222,6 +226,8 @@ var AppView = Backbone.View.extend({
             oldView.destroy(viewInstance);
         this.model.set('currentView', viewInstance);
         this.$el.find('.content-view').html(viewInstance.el);
+                        $('.content-view').append(this.footer.el);
+        $('.content-view').append(this.latestTime.el);
     }
 
 

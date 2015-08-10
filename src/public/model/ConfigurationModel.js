@@ -10,6 +10,8 @@ var ConfigurationModel = Backbone.Model.extend({
 		var result;
 		this.change('openConfig');
 		this.getConfiguration();
+		this.change('balanceDataReady');
+		this.change('UsedCreditsDataReady');
 	},
 	configuration_result: function() {
 		result = '';
@@ -29,7 +31,7 @@ var ConfigurationModel = Backbone.Model.extend({
 		var self = this;
 		ConfigurationCollection.reset();
 		this.configuration_result().done(function(result) {
-			console.log('result',result)
+			// console.log('result',result)
 			for (var r in result) {
 				var data = new ConfigurationViewModel({
 					number: result["account"][0]["Number"],
@@ -38,7 +40,8 @@ var ConfigurationModel = Backbone.Model.extend({
 					regions : result["account"][0]["Regions"],
 					bucketName : result["account"][0]["S3BucketName"],
 					URL : result["account"][0]["DB_URL"],
-					balanceExp : result["account"][0]["BalanceExp"]
+					balanceExp : result["account"][0]["BalanceExp"],
+					creditsUsed : result["account"][0]["creditsUsed"]
 				});
 				ConfigurationCollection.add(data);
 			}
@@ -48,16 +51,47 @@ var ConfigurationModel = Backbone.Model.extend({
 		});
 	},
 	setBalance: function(data) {
-		console.log('wtf',data);
+		// console.log('ConfigurationView/setBalance',data);
 		var self = this;
 		return $.ajax({
 			type: 'POST',
-			data: JSON.stringify(data),
-			contentType: 'application/json',
 			url: 'http://localhost:3000/setBalance',
+			data: {"balance" : data},
 			success: function(data) {
-				console.log('success');
-				console.log(JSON.stringify(data));
+				self.set('balanceDataReady', Date.now());
+			},
+			error: function(data){
+				// console.log(data);
+			}
+		});
+	},
+	setCreditsUsed: function(data) {
+		// console.log('ConfigurationView/setCreditsUsed',data); //not added to app.js
+		var self = this;
+		return $.ajax({
+			type: 'POST',
+			url: 'http://localhost:3000/setCreditsUsed',
+			data: {"used" : data},
+			success: function(data) {
+				self.set('UsedCreditsDataReady', Date.now());
+			},
+			error: function(data){
+				// console.log(data);
+			}
+		});
+	},
+	setExpiration: function(data) {
+		// console.log('ConfigurationView /setExpiration',data);
+		var self = this;
+		$.ajax({
+			type: 'POST',
+			url: 'http://localhost:3000/setExpiration',
+			data: {"expiration" : data},
+			success: function(data) {
+				self.set('expirationDataReady', Date.now());
+			},
+			error: function(data){
+				// console.log(data);
 			}
 		});
 	}

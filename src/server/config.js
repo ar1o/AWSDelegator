@@ -35,6 +35,7 @@ s3Bucket = 'csvcontainer';
 awsRegions = ['us-west-1', 'us-west-2',
      'us-east-1'];
 databaseUrl = 'mongodb://localhost:27017/awsdb'; //?
-credits = 0;
-creditExp = '';
+credits = "2326.19";
+creditExp = '2015/12/31';
+creditsUsed = "2173.81";
 //Perhaps it would be good to move either these values ^, or everything else to another file

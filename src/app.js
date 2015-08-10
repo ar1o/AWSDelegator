@@ -10,6 +10,7 @@ var urlencodedParser = bodyParser.urlencoded({
 // create application/json parser 
 var jsonParser = bodyParser.json();
 
+
 require(__dirname + '/server/config.js');
 
 // Front-end code
@@ -32,7 +33,10 @@ db.on("open", function() {
         require(__dirname + '/server/parse/scheduler').s3Connect();
     });
 });
-
+//IMPORTANT!!
+app.use(bodyParser.urlencoded({
+    extended: true
+}))
 
 app.post('/setBalance', require(__dirname + '/server/route/CredentialsRoute').setBalance);
 app.get('/getAccount', require(__dirname + '/server/route/CredentialsRoute').getAccountNumber);
@@ -75,6 +79,7 @@ app.get('/api/statistics/operations', require(__dirname + '/server/route/Operati
 
 app.get('/api/meter/rate', require(__dirname + '/server/route/meterRoute').rate);
 app.get('/api/meter/usage', require(__dirname + '/server/route/meterRoute').usage);
+app.get('/api/meter/usageTotal', require(__dirname + '/server/route/meterRoute').usageTotal);
 app.get('/api/meter/balance', require(__dirname + '/server/route/meterRoute').balance);
 
 app.get('/api/usage/groups', require(__dirname + '/server/route/iamRoute').groups);
@@ -102,33 +107,45 @@ app.get('/api/usage/timeUserService', require(__dirname + '/server/route/budgetR
 app.get('/api/notifications', require(__dirname + '/server/route/notificationsRoute').notifications);
 app.get('/api/notifications/seen', require(__dirname + '/server/route/notificationsRoute').updateNotifications);
 
-var mongodb = require('mongodb');
-var MongoClient = mongodb.MongoClient;
 
-app.post('/budget', jsonParser, function(req, res) {
-    var r = req.body;
-    var startDate = r.startDate.split('/');
-    var endDate = r.endDate.split('/');
-    MongoClient.connect(databaseUrl, function(err, db) {
-        if (err) throw err;
-
-        db.collection('budgets').insert({
-            BudgetName: r.budgetName,
-            BatchType: r.batchType,
-            BatchName: r.batchName,
-            StartDate: startDate[2] + '-' + startDate[0] + '-' + startDate[1] + ' ' + '00:00:00',
-            EndDate: endDate[2] + '-' + endDate[0] + '-' + endDate[1] + ' ' + '23:00:00',
-            Amount: r.amount,
-            TimeOut: r.option,
-            State: 'valid'
-        }, function(err) {
+app.get('/getUsers'), jsonParser,
+    function(req, res) {
+        MongoClient.connect(databaseUrl, function(err, db) {
             if (err) {
                 throw err
             };
-
+            db.collection('ec2Instances').aggregate({
+                $project: {
+                    '_id': 0,
+                    'Name': 1
+                }
+            }, function(err) {
+                if (err) throw err;
+                res.send('db');
+            })
+        })
+    }
+app.get('/time', function(req, res) {
+        mongoose.model('Billings').find().limit(1).sort({
+            $natural: -1
+        }).exec(function(e, d) {
+            // console.log(d[0].UsageStartDate);
+            res.send(d[0].UsageStartDate);
         });
-    });
 });
+
+app.post('/setBalance', jsonParser, function(req, res) {
+    require('./server/route/CredentialsRoute').setBalance(req);
+});
+app.post('/setExpiration', jsonParser, function(req, res) {
+    require('./server/route/CredentialsRoute').setExpiration(req);
+});
+app.post('/setCreditsUsed', jsonParser, function(req, res) {
+    require('./server/route/CredentialsRoute').setCreditsUsed(req);
+});
+
+var mongodb = require('mongodb');
+var MongoClient = mongodb.MongoClient;
 
 app.post('/timebudget', jsonParser, function(req, res) {
     var r = req.body;
@@ -162,6 +179,63 @@ app.post('/timebudget', jsonParser, function(req, res) {
     });
 });
 
+app.post('/removeCostBudget', jsonParser, function(req, res) {
+    var r = req.body;
+    MongoClient.connect(databaseUrl, function(err, db) {
+        if (err) throw err;
+        db.collection('budgets').remove({
+            BudgetName: r.budgetName
+        });
+        res.send("success");
+    });
+});
+app.post('/editCostBudget', jsonParser, function(req, res) {
+    var r = req.body;
+    console.log("editing Cost Budget");
+    MongoClient.connect(databaseUrl, function(err, db) {
+        db.collection('budgets').update({
+            BudgetName: r.oldName
+        }, {
+            $set: {
+                BudgetName: r.budgetName,
+                BatchType: r.batchType,
+                BatchName: r.batchName,
+                StartDate: r.startDate + ' ' + '00:00:00',
+                EndDate: r.endDate + ' ' + '23:00:00',
+                Amount: r.amount,
+                TimeOut: r.option,
+                State: 'valid'
+            }
+        });
+        res.send("success");
+    });
+});
+
+app.post('/config')
+app.post('/budget', jsonParser, function(req, res) {
+    var r = req.body;
+    var startDate = r.startDate.split('/');
+    var endDate = r.endDate.split('/');
+    MongoClient.connect(databaseUrl, function(err, db) {
+        if (err) throw err;
+
+        db.collection('budgets').insert({
+            BudgetName: r.budgetName,
+            BatchType: r.batchType,
+            BatchName: r.batchName,
+            StartDate: startDate[2] + '/' + startDate[0] + '/' + startDate[1] + ' ' + '00:00:00',
+            EndDate: endDate[2] + '/' + endDate[0] + '/' + endDate[1] + ' ' + '23:00:00',
+            Amount: r.amount,
+            TimeOut: r.option,
+            State: 'valid'
+        }, function(err) {
+            if (err) throw err;
+
+        });
+        res.send("success");
+    });
+});
+
 function errorHandler(err, req, res, next) {
     console.error(err.message);
     console.error(err.stack);
@@ -172,5 +246,6 @@ function errorHandler(err, req, res, next) {
 }
 module.exports = errorHandler;
 app.listen(port);
+
 console.log('databaseUrl ', databaseUrl);
 console.log('Server Alert: server started on port %s', port);
