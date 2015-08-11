@@ -142,7 +142,7 @@ var BudgetView = Backbone.View.extend({
                     var sy = dtMin.getFullYear();
                     var sdtFormatted = smm + '/' + sdd + '/' + sy;
                     //logic
-                    if (edtFormatted == sdtFormatted) {
+                    if (edtFormatted == sdtFormatted ||  ey < sy || ey == sy && emm < smm ||ey == sy && emm == smm && edd < sdd) {
                         var sdd = dtMin.getDate();
                         var smm = dtMin.getMonth() + 1;
                         var sy = dtMin.getFullYear();

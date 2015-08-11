@@ -341,16 +341,18 @@ var UMCostBudgetsView = Backbone.View.extend({
                     var edtFormatted = emm + '/' + edd + '/' + ey;
                     //start
                     var dtMin = new Date(self.data.startDate);
-                    console.log(dtMin);
+                    console.log("344 UMC",dtMin);
                     var sdd = dtMin.getDate();
                     var smm = dtMin.getMonth() + 1;
                     var sy = dtMin.getFullYear();
                     var sdtFormatted = smm + '/' + sdd + '/' + sy;
+                    console.log()
                     //logic
-                    if (edtFormatted == sdtFormatted) {
-                        var sdd = dtMin.getDate();
-                        var smm = dtMin.getMonth() + 1;
-                        var sy = dtMin.getFullYear();
+                    if (edtFormatted == sdtFormatted||  ey < sy || ey == sy && emm < smm ||ey == sy && emm == smm && edd < sdd) {
+                        console.log("conditional met");
+                        var sdd = dtMax.getDate() -1;
+                        var smm = dtMax.getMonth() + 1;
+                        var sy = dtMax.getFullYear();
                         var sdtFormatted = smm + '/' + sdd + '/' + sy;
                         self.data.startDate = sdtFormatted;
                     }
