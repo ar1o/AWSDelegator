@@ -12,8 +12,10 @@ var AppView = Backbone.View.extend({
         this.timeBudgetView = new TimeBudgetView();
         this.configurationView = new ConfigurationView();
         this.notificationView = new NotificationView();
+
         // this.budgetView.model.getBudgets();
-        this.timeBudgetView.model.getTimeBudgets();
+        // this.timeBudgetView.model.getTimeBudgets();
+        //commented these, as the post methods for them should call them, in which case they get called twice.
 
         this.router = new AppRouter({
             defaultView: 'AWSView'

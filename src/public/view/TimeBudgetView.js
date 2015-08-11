@@ -117,6 +117,7 @@ var TimeBudgetView = Backbone.View.extend({
                     if (self.data.endDate === null || self.data.endDate == "") {
                         self.data.startDate = this.value;
                         self.isValid.startDate = true;
+                            console.log("No End Date");
                         self.$('#time-startdaterequest').hide();
                     } else {
                         var startD, startM, startY;
@@ -150,6 +151,13 @@ var TimeBudgetView = Backbone.View.extend({
         }.bind(this));
 
         this.$el.on('focusout', '#time-startdate', function(e) {
+            if (self.data.endDate > self.data.startDate) {
+                console.log("valid date range");
+                self.data.endDate = this.value;
+                self.isValid.endDate = true;
+                self.$('#time-enddatewarning').hide();
+                self.$('#time-enddaterequest').hide();
+            }
             self = this;
             this.data.startDate = ($('#time-startdate').val());
             console.log("FOCUS OUT startDate", self.data);

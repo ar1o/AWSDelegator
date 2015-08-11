@@ -33,8 +33,6 @@ db.on("open", function() {
         require(__dirname + '/server/parse/scheduler').s3Connect();
     });
 });
-//IMPORTANT!!
-app.use(bodyParser.urlencoded({extended: true}))
 
 app.post('/setBalance', require(__dirname + '/server/route/CredentialsRoute').setBalance);
 app.get('/getAccount', require(__dirname + '/server/route/CredentialsRoute').getAccountNumber);
@@ -83,10 +81,6 @@ app.get('/api/meter/balance', require(__dirname + '/server/route/meterRoute').ba
 app.get('/api/usage/groups', require(__dirname + '/server/route/iamRoute').groups);
 app.get('/api/usage/users', require(__dirname + '/server/route/iamRoute').users);
 app.get('/api/usage/budget', require(__dirname + '/server/route/budgetRoute').budgets);
-
-app.get('/api/usage/groups', require(__dirname + '/server/route/iamRoute').groups);
-app.get('/api/usage/users', require(__dirname + '/server/route/iamRoute').users);
-app.get('/api/usage/budget', require(__dirname + '/server/route/budgetRoute').budgets);
 app.get('/api/usage/timeBudget', require(__dirname + '/server/route/timeBudgetRoute').timeBudgets);
 app.get('/api/usage/budgetCost', require(__dirname + '/server/route/budgetRoute').cost);
 app.get('/api/usage/groupUserService', require(__dirname + '/server/route/budgetRoute').groupUserService);
@@ -106,15 +100,8 @@ app.get('/api/notifications', require(__dirname + '/server/route/notificationsRo
 app.get('/api/notifications/seen', require(__dirname + '/server/route/notificationsRoute').updateNotifications);
 
 
-app.get('/getUsers'), jsonParser, function( req, res) {
-    MongoClient.connect(databaseUrl, function(err, db) {
-        if (err) { throw err };
-        db.collection('ec2Instances').aggregate({$project : {'_id': 0, 'Name' : 1 } }, function(err) {
-            if (err) throw err;
-            res.send('db');
-        })
-    })
-}
+app.get('/getUsers', require(__dirname + '/server/route/budgetRoute').getUsers);
+    
 
 
 app.post('/setBalance' , jsonParser, function(req, res){    
@@ -172,6 +159,7 @@ app.post('/removeCostBudget', jsonParser, function(req, res) {
     res.send("success");
     });
 });
+
 app.post('/editCostBudget', jsonParser, function(req, res){
     var r = req.body;
     console.log("editing Cost Budget");
@@ -183,8 +171,8 @@ app.post('/editCostBudget', jsonParser, function(req, res){
                 BudgetName: r.budgetName,
                 BatchType: r.batchType,
                 BatchName: r.batchName,
-                StartDate: r.startDate + ' ' + '00:00:00',
-                EndDate: r.endDate + ' ' + '23:00:00',
+                StartDate: r.startDate,
+                EndDate: r.endDate,
                 Amount: r.amount,
                 TimeOut: r.option,
                 State: 'valid'
@@ -206,8 +194,8 @@ app.post('/budget', jsonParser, function(req, res) {
             BudgetName: r.budgetName,
             BatchType: r.batchType,
             BatchName: r.batchName,
-            StartDate: startDate[2] + '/' + startDate[0] + '/' + startDate[1] + ' ' + '00:00:00',
-            EndDate: endDate[2] + '/' + endDate[0] + '/' + endDate[1] + ' ' + '23:00:00',
+            StartDate: startDate[2] + '-' + startDate[0] + '-' + startDate[1] + ' ' + '00:00:00',
+            EndDate: endDate[2] + '-' + endDate[0] + '-' + endDate[1] + ' ' + '23:00:00',
             Amount: r.amount,
             TimeOut: r.option,
             State: 'valid'

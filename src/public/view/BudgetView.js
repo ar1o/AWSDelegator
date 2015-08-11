@@ -1,3 +1,4 @@
+var daysToAdd = 1;
 var BudgetView = Backbone.View.extend({
     className: 'BudgetView',
 
@@ -95,93 +96,66 @@ var BudgetView = Backbone.View.extend({
         this.$el.on('focusin', '#startdate', function(e) {
             var self = this;
             // console.log("FOCUS IN startDate", self.data);
-            var datePicker = $("#startdate").datepicker({
-                onSelect: function(dateText) {
-                   if (self.data.endDate === null || self.data.endDate == "") {
-                        self.data.startDate = this.value;
-                        self.isValid.startDate = true;
-                        self.$('#startdaterequest').hide();
-                    } else {
-                        var startD, startM, startY;
-                        var endD, endM, endY;
-                        startD = this.value.substr(3, 2);
-                        startM = this.value.substr(0, 2);
-                        startY = this.value.substr(6, 4);
-                        var start = new Date(startY, startM - 1, startD);
-                        endD = self.data.endDate.substr(3, 2);
-                        endM = self.data.endDate.substr(0, 2);
-                        endY = self.data.endDate.substr(6, 4);
-                        var end = new Date(endY, endM - 1, endD);
-                        console.log("From", start, "\nto", end);
-                        if (end > start) {
-                            console.log("valid date range");
-                            self.data.endDate = this.value;
-                            self.isValid.endDate = true;
-                            self.$('#enddatewarning').hide();
-                            self.$('#enddaterequest').hide();
-                        } else {
-                            console.log("invalid date range")
-                            self.$('#enddatewarning').show();
-                        }
-                    }
+            $("#startdate").datepicker({
+                onSelect: function(selected) {
+                    var dtMax = new Date(selected);
+                    dtMax.setDate(dtMax.getDate() + daysToAdd);
+                    var dd = dtMax.getDate();
+                    var mm = dtMax.getMonth() + 1;
+                    var y = dtMax.getFullYear();
+                    var dtFormatted = mm + '/' + dd + '/' + y;
+                    $("#enddate").datepicker("option", "minDate", dtFormatted);
+                    $('#startdaterequest').hide();
+                },
+                onClose: function(selected) {
+                    self.data.startDate = selected;
+                    self.isValid.startDate = true;
                 }
             });
-            $("#myModal").scroll(function() {
-                $("#startdate").datepicker("hide");
-                $("#startdate").blur();
-            });
-        }.bind(this));
-
-        this.$el.on('focusout', '#startdate', function(e) {
-            self = this;
-            this.data.startDate = ($('#startdate').val());
-            // console.log("FOCUS OUT startDate", self.data);
         }.bind(this));
 
         this.$el.on('focusin', '#enddate', function(e) {
             var self = this;
             // console.log("FOCUS on endDate", self.data);
-            var datePicker = $("#enddate").datepicker({
-                onSelect: function(dateText) {
-                    if (self.data.startDate == null) {
-                        self.data.startDate = this.value;
-                        self.isValid.startDate = true;
-                        self.$('#startdaterequest').hide();
-                    } else {
-                        var startD, startM, startY;
-                        var endD, endM, endY;
-                        startD = self.data.startDate.substr(3, 2);
-                        startM = self.data.startDate.substr(0, 2);
-                        startY = self.data.startDate.substr(6, 4);
-                        var start = new Date(startY, startM - 1, startD);
-                        endD = this.value.substr(3, 2);
-                        endM = this.value.substr(0, 2);
-                        endY = this.value.substr(6, 4);
-                        var end = new Date(endY, endM - 1, endD);
-                        // console.log("From", start, "to", end);
-                        if (end > start) {
-                            console.log("valid date range");
-                            self.data.endDate = this.value;
-                            self.isValid.endDate = true;
-                            self.$('#enddatewarning').hide();
-                            self.$('#enddaterequest').hide();
-                        } else {
-                            console.log("invalid enddate")
-                            $('#enddatewarning').show();
-                        }
+            $("#enddate").datepicker({
+                onSelect: function(selected) {
+                    var dtMax = new Date(selected);
+                    dtMax.setDate(dtMax.getDate() - daysToAdd);
+                    var dd = dtMax.getDate();
+                    var mm = dtMax.getMonth() + 1;
+                    var y = dtMax.getFullYear();
+                    var dtFormatted = mm + '/' + dd + '/' + y;
+                    $("#startdate").datepicker("option", "maxDate", dtFormatted)
+                    $('#enddaterequest').hide();
+                },
+                onClose: function(selected) {
+                    //end
+                    var dtMax = new Date(selected);
+                    var edd = dtMax.getDate();
+                    var emm = dtMax.getMonth() + 1;
+                    var ey = dtMax.getFullYear();
+                    var edtFormatted = emm + '/' + edd + '/' + ey;
+                    //start
+                    var dtMin = new Date(self.data.startDate);
+                    var sdd = dtMin.getDate();
+                    var smm = dtMin.getMonth() + 1;
+                    var sy = dtMin.getFullYear();
+                    var sdtFormatted = smm + '/' + sdd + '/' + sy;
+                    //logic
+                    if (edtFormatted == sdtFormatted) {
+                        var sdd = dtMin.getDate();
+                        var smm = dtMin.getMonth() + 1;
+                        var sy = dtMin.getFullYear();
+                        var sdtFormatted = smm + '/' + sdd + '/' + sy;
+                        self.data.startDate = sdtFormatted;
                     }
+                    self.data.endDate = selected;
+                    self.isValid.endDate = true;
                 }
             });
-            $("#myModal").scroll(function() {
-                $("#enddate").datepicker("hide");
-                $("#enddate").blur();
-            });
+
         }.bind(this));
-        this.$el.on('focusout', '#enddate', function(e) {
-            self = this;
-            this.data.endDate = ($('#enddate').val());
-            // console.log("FOCUS OUT startDate", self.data);
-        }.bind(this));
+
 
         this.$el.on('focusout', '#amount', function(e) {
             if (/^\d+(\.\d{1,2})?$/.test($('#amount').val())) {
@@ -223,19 +197,24 @@ var BudgetView = Backbone.View.extend({
                 self.$('#amountrequest').show();
             }
             if (self.data.startDate == null) {
+                console.log($('#startdate').val())
                 self.$('#startdaterequest').show();
             }
             if (self.data.endDate == null) {
+                console.log($('#enddate').val())
                 self.$('#enddaterequest').show();
             }
             var validForm = true;
             for (var i in self.isValid) {
+                console.log("valid", i);
                 if (!self.isValid[i]) {
                     validForm = false;
+                    console.log("invalid", i);
                 }
             }
             $('#filter-details').addClass('hidden');
             if (validForm) {
+                console.log("validform");
                 this.model.post_budget_result(this.data);
                 for (var i in self.isValid) {
                     self.isValid[i] = false;

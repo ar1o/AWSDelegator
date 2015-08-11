@@ -214,7 +214,27 @@ exports.userCost = function(req, res) {
 		res.send(d);
 	});
 }
-
+exports.getUsers = function (req, res) {
+	var result;
+    console.log("1");
+    mongoose.model('ec2Instances').aggregate({
+        $project : {'_id': 0, 'Name' : 1 } 
+    }).exec(function(e, d) {
+        console.log("2");
+        console.log(d);
+        result.append(d);
+        mongoose.model('rdsInstance').aggregate({
+            $project : {'_id': 0, 'Name' : 1 }
+        }).exec(function(e, d) {
+            console.log("3");
+            console.log(d);
+            result.append(d);
+        })
+    }).exec(function(e, d) {
+    	console.log(d);
+    	res.send(d);
+    });
+}
 exports.userTimeCost = function(req, res) {
 	var userName = req.query.userName;
 	var batchName = req.query.batchName;

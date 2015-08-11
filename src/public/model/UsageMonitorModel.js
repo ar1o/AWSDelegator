@@ -34,16 +34,26 @@ var UsageMonitorModel = Backbone.Model.extend({
 		return $.ajax({
 			type: 'GET',
 			data: self.data,
-			contentType: 'json',
+			contentType: 'application/json',
 			url: host + '/api/usage/users',
 			success: function(data) {
 				result = data;
-				return result;
 			}
-		}).done(function(obj) {
-			console.log(obj);
-			return obj;
 		});
+	},
+	list_users: function() {
+		var result;
+		console.log('listUsers');
+		var self = this;
+		return $.ajax({
+			type: 'GET',
+			data: self.data,
+			contentType: 'application/json',
+			url: host + '/getUsers',
+			success: function(data) {
+				result = data;
+			}
+		})
 	},
 	budget_result: function() {
 		var self = this;
@@ -120,7 +130,8 @@ var UsageMonitorModel = Backbone.Model.extend({
 				UserCollection.add(data);
 			}
 			self.set('userDataReady', Date.now());
-			return UserCollection;
+		}).success(function() {
+			console.log("success");
 		}).fail(function() {
 			console.log('FAILED');
 		});
@@ -185,7 +196,7 @@ var UsageMonitorModel = Backbone.Model.extend({
 			url: host + '/budget',
 			success: function(data) {
 				self.getBudgets();
-				self.set('postDataReady', Date.now());
+				self.set('budgetDataReady', Date.now());
 
 			}
 		});
@@ -204,7 +215,7 @@ var UsageMonitorModel = Backbone.Model.extend({
 			}
 		});
 	},
-	edit_cost_budget: function (data) {
+	edit_cost_budget: function(data) {
 		var self = this;
 		return $.ajax({
 			type: 'POST',
@@ -213,7 +224,7 @@ var UsageMonitorModel = Backbone.Model.extend({
 			url: host + '/editCostBudget',
 			success: function(data) {
 				self.getTimeBudgets();
-				self.set('postDataReady', Date.now());
+				self.set('budgetDataReady', Date.now());
 			}
 		});
 	},
@@ -230,8 +241,8 @@ var UsageMonitorModel = Backbone.Model.extend({
 			url: host + '/removeCostBudget',
 			success: function(data) {
 				self.getBudgets();
-				console.log("Budget: "+name+" deleted!");
-				self.set('postDataReady', Date.now());
+				console.log("Budget: " + name + " deleted!");
+				self.set('budgetDataReady', Date.now());
 			}
 		});
 	},
