@@ -4,8 +4,8 @@ var UMTimeBudgetsView = Backbone.View.extend({
         if (!this.model) {
             this.model = new UsageMonitorModel();
         }
-        
-        // this.editHTML =
+
+        this.editHTML = '<div class="insetting"> <div class="incontainer"><label class="time-budget-label" id="timeBudgetEdit">Budget Name </label><input type="text" id="time-budget-name" placeholder="Monthly EC2 Budget""></div><div class="warning" id="budgetnamewarning">Invalid budget Name.</div><div class="warning" id="oldbudgetnamewarning">Budget Name already in use.</div><div class="warning" id="budgetnamerequest">Please enter a budget name.</div></div><div class="insetting"> <div class="incontainer"><label class="budget-label" id="time-budget-relatedTo">Include costs related to </label><select id = "time-costfilter" class="costfilter"><option value="" disabled selected>Select</option><option value="user">User</option><option value="group">Groups</option></select></div></div><div class="sub-insetting"> <div class="sub-incontainer"><div id="time-filter-details"><select id="time-subcostfilter" class="subcostfilter"><option value="" disabled selected>Select</option></select></div></div><div class="warning" id="time-batchtyperequest">Please select a Batch Type.</div><div class="warning" id="time-batchnamerequest">Please select a Batch Name.</div></div><div class="insetting"> <div class="incontainer"><label class="budget-label" id="time-edit-startDate">Start date </label><input type="text" id="time-startdate" placeholder="mm/dd/yyyy"><div class="warning" id="startdaterequest">Please select a start date.</div></div></div><div class="insetting"> <div class="incontainer"><label class="budget-label" id="time-edit-endDate">End date </label><input type="text" id="enddate" placeholder="mm/dd/yyyy"><div class="warning" id="time-enddatewarning">Invalid dates selected.</div><div class="warning" id="time-enddaterequest">Please select an end.</div></div></div><div class="insetting"> <div class="incontainer"><label class="budget-label" id="-time-edit-amount">Time Amount </label><input type="text" id="time-amount" placeholder="Hours"><div class="warning" id="amountwarning">Invalid amount.</div><div class="warning" id="amountrequest">Please enter an amount.</div></div></div><div class="insetting"> <div class="incontainer"><label class="budget-label" id="time-under-profile">Under-profile Decay Rate </label><input type="text" id="amount" placeholder="e.g., 3"><div class="warning" id="amountwarning">Invalid rate.</div><div class="warning" id="amountrequest">Please enter an amount.</div></div></div><div class="insetting"> <div class="incontainer"><label class="budget-label" id="time-over-profile">Over-profile Decay Rate </label><input type="text" id="time-over-profile-rate" placeholder="eg., 2"><div class="warning" id="amountwarning">Invalid amount.</div><div class="warning" id="amountrequest">Please enter an amount.</div></div></div><div class="insetting"> <div class="incontainer"><label class="budget-label" id="time-min-connections">Min Database Connections </label><input type="text" id="amount" placeholder="e.g., 5"><div class="warning" id="amountwarning">Invalid amount.</div><div class="warning" id="amountrequest">Please enter an amount.</div></div></div><div class="insetting"> <div class="incontainer"><label class="budget-label" id="time-edit-max-connections">Max Database Connections </label><input type="text" id="time-max-connections" placeholder="e.g., 40"><div class="warning" id="amountwarning">Invalid amount.</div><div class="warning" id="amountrequest">Please enter an amount.</div></div></div><div class="insetting"> <div class="incontainer"><label id= "edit-option" class="budget-label">Stop resource(s) when quota reached </label><div class="onoffswitch"><input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked><label class="onoffswitch-label" for="myonoffswitch"><span class="onoffswitch-inner"></span><span class="onoffswitch-switch"></span></label></div></div></div>';
         this.model.getTimeBudgets();
         this.usageActivity = new UMTimeBudgetUsageView();
         this.costActivity = new UMTimeBudgetCostView();
@@ -54,19 +54,19 @@ var UMTimeBudgetsView = Backbone.View.extend({
             $('#TimeBudgetTable').DataTable({
                 "iDisplayLength": 15,
                 "bSort": false
-                // "paging":   false,
-                // "info":     false,
-                // "bFilter": false
+                    // "paging":   false,
+                    // "info":     false,
+                    // "bFilter": false
             });
         }.bind(this));
 
         this.$el.on('click', '#TimeBudgetTable tr', function() {
-            var rowIndex = this.rowIndex - 1; 
+            var rowIndex = this.rowIndex - 1;
             self.model.setBudgetIndex(rowIndex);
-            if(timeBudgetCollection.at(rowIndex).get('batchType')=='user'){
+            if (timeBudgetCollection.at(rowIndex).get('batchType') == 'user') {
                 $("#serviceContainer").remove();
                 self.updateUserViews(rowIndex);
-            }else{
+            } else {
                 $("#groupUserServiceContainer").remove();
                 self.updateGroupViews(rowIndex);
             }
@@ -131,10 +131,10 @@ var UMTimeBudgetsView = Backbone.View.extend({
             switch ($(this).attr("data-action")) {
                 // A case for each action. Your actions here
                 case "Edit":
+                    console.log("Edit Case");
                     var result;
                     console.log(this.data);
                     self.data.oldName = self.data.budgetName;
-                    // console.log(self.data);
                     $('.modal-title').append('<div class="content-title">Edit budget: ' + self.data.budgetName + '</div>');
                     $('.modal-body').append('<div class="content-body">' + self.editHTML + '</div>');
                     $('#edit-name').append('<i class="fa fa-question-circle" id ="name-tooltop" data-toggle="tooltip" title="Edit budget name."></i>');
@@ -267,5 +267,6 @@ var UMTimeBudgetsView = Backbone.View.extend({
         this.$el.append(this.usageActivity.el);
         this.$el.append(this.groupUserServiceView.el);
         this.$el.append(this.costActivity.el);
+        this.$el.append(this.modal.el);
     }
 });
