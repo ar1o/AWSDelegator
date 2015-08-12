@@ -81,7 +81,6 @@ app.get('/api/meter/balance', require(__dirname + '/server/route/meterRoute').ba
 app.get('/api/usage/groups', require(__dirname + '/server/route/iamRoute').groups);
 app.get('/api/usage/users', require(__dirname + '/server/route/iamRoute').users);
 app.get('/api/usage/budget', require(__dirname + '/server/route/budgetRoute').budgets);
-app.get('/api/usage/timeBudget', require(__dirname + '/server/route/timeBudgetRoute').timeBudgets);
 app.get('/api/usage/budgetCost', require(__dirname + '/server/route/budgetRoute').cost);
 app.get('/api/usage/groupUserService', require(__dirname + '/server/route/budgetRoute').groupUserService);
 app.get('/api/usage/userService', require(__dirname + '/server/route/budgetRoute').userService);
@@ -90,11 +89,12 @@ app.get('/api/usage/userBudgetCost', require(__dirname + '/server/route/budgetRo
 app.get('/api/usage/groupServiceUsage', require(__dirname + '/server/route/budgetRoute').groupServiceUsage);
 app.get('/api/usage/userServiceUsage', require(__dirname + '/server/route/budgetRoute').userServiceUsage);
 
-app.get('/api/usage/timeBudgetUsage', require(__dirname + '/server/route/budgetRoute').timeBudgetUsage);
-app.get('/api/usage/timeBudgetCost', require(__dirname + '/server/route/budgetRoute').timeBudgetCost);
-app.get('/api/usage/userTimeBudgetCost', require(__dirname + '/server/route/budgetRoute').userTimeCost);
-app.get('/api/usage/groupUserTimeService', require(__dirname + '/server/route/budgetRoute').groupUserTimeService);
-app.get('/api/usage/timeUserService', require(__dirname + '/server/route/budgetRoute').timeUserService);
+app.get('/api/usage/timeBudget', require(__dirname + '/server/route/timeBudgetRoute').timeBudgets);
+app.get('/api/usage/timeBudgetUsage', require(__dirname + '/server/route/timeBudgetRoute').timeBudgetUsage);
+app.get('/api/usage/timeBudgetCost', require(__dirname + '/server/route/timeBudgetRoute').timeBudgetCost);
+app.get('/api/usage/userTimeBudgetCost', require(__dirname + '/server/route/timeBudgetRoute').userTimeCost);
+app.get('/api/usage/groupUserTimeService', require(__dirname + '/server/route/timeBudgetRoute').groupUserTimeService);
+app.get('/api/usage/timeUserService', require(__dirname + '/server/route/timeBudgetRoute').timeUserService);
 
 app.get('/api/notifications', require(__dirname + '/server/route/notificationsRoute').notifications);
 app.get('/api/notifications/seen', require(__dirname + '/server/route/notificationsRoute').updateNotifications);

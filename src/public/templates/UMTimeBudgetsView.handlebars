@@ -13,7 +13,7 @@
 			<th>Stop Instances</th>
 		</tr>
 	</thead>
-	<tbody id="budgetData">
+	<tbody id="timeBudgetData">
 	{{#each timebudgets}}
 		<tr>
 			<td >{{this.timeBudgetName}}</td>
@@ -30,3 +30,9 @@
 	{{/each}}
 	</tbody>	
 </table>
+
+<ul class='custom-menu'>
+  <li data-action="Edit"data-toggle="modal" data-target="#base-modal" data-backdrop="static" data-keyboard="false">Edit Instance</li>
+  <li data-action="Delete" data-toggle="modal" data-target="#base-modal" data-backdrop="static" data-keyboard="false" >Delete Instance</li>
+</ul>
+

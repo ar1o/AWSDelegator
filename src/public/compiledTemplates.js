@@ -456,9 +456,9 @@ templates['UMTimeBudgetsView'] = template({"1":function(depth0,helpers,partials,
 },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var stack1;
 
-  return "<table id=\"TimeBudgetTable\" class=\"hover\">\r\n	<thead>\r\n		<tr class=\"dark-row\">\r\n			<th>BudgetName</th>\r\n			<th>BatchType</th>\r\n			<th>BatchName</th>\r\n			<th>StartDate</th>\r\n			<th>EndDate</th>\r\n			<th>Time Amount</th>\r\n			<th>uDecay</th>\r\n			<th>oDecay</th>\r\n			<th>maxConnections</th>\r\n			<th>Stop Instances</th>\r\n		</tr>\r\n	</thead>\r\n	<tbody id=\"budgetData\">\r\n"
+  return "<table id=\"TimeBudgetTable\" class=\"hover\">\r\n	<thead>\r\n		<tr class=\"dark-row\">\r\n			<th>BudgetName</th>\r\n			<th>BatchType</th>\r\n			<th>BatchName</th>\r\n			<th>StartDate</th>\r\n			<th>EndDate</th>\r\n			<th>Time Amount</th>\r\n			<th>uDecay</th>\r\n			<th>oDecay</th>\r\n			<th>maxConnections</th>\r\n			<th>Stop Instances</th>\r\n		</tr>\r\n	</thead>\r\n	<tbody id=\"timeBudgetData\">\r\n"
     + ((stack1 = helpers.each.call(depth0,(depth0 != null ? depth0.timebudgets : depth0),{"name":"each","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
-    + "	</tbody>	\r\n</table>\r\n";
+    + "	</tbody>	\r\n</table>\r\n\r\n<ul class='custom-menu'>\r\n  <li data-action=\"Edit\"data-toggle=\"modal\" data-target=\"#base-modal\" data-backdrop=\"static\" data-keyboard=\"false\">Edit Instance</li>\r\n  <li data-action=\"Delete\" data-toggle=\"modal\" data-target=\"#base-modal\" data-backdrop=\"static\" data-keyboard=\"false\" >Delete Instance</li>\r\n</ul>\r\n\r\n";
 },"useData":true});
 templates['UMUsageView'] = template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     return "<div id=\"budgetUsageContainer\"></div>\r\n";

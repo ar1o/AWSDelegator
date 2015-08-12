@@ -24,7 +24,7 @@ var UMTimeBudgetCostView = Backbone.View.extend({
         var self = this;
         this.model.change('budgetCostDataReady', function(model, val) {
             this.render();
-            var date = budgetCostCollection.at(budgetCostCollection.length-1).get('date').split(' ');
+            var rawDate = budgetCostCollection.at(budgetCostCollection.length-1).get('date').split(' ');
             //date=[year,month,date]
             var date = rawDate[0].split(/-/);
             //time=[hour,minute,second]                
