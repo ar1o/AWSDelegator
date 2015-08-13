@@ -14,7 +14,6 @@ exports.checkBudgets = function() {
                 iterator1(function() {
                     index1++;
                     if (index1 < budgets.length) {
-                        console.log("INDEX==" +index1 + "\tBUDGETLENGTH=="+budgets.length);
                         controller1();
                     }
                 });
@@ -22,10 +21,82 @@ exports.checkBudgets = function() {
             var iterator1 = function(callback1) {
                 var budget = budgets[index1];
                 //checking for amount exceeded or time exceeded
+
+                // getInstanceId(budgets[index1].BatchType, budgets[index1].BatchName,
+                getInstanceId('group', 'testGroup1', function(result) {
+                    // for (var i = 0; i < result[0].Instances.length; i++) {
+                    // console.log(result[1]._id);
+                    console.log(result);
+                    
+                    var index1 = 0;
+                    var ec2;
+                    var _zone;
+                    var controller5 = function() {
+                                        
+                        var i = 0;
+                        while(i < result[index1].Zone.length) {
+                           
+                            if(result[index1].Zone[i] == 'null') {
+                                i++;
+                            } else {
+                                _zone = result[i].Zone[i];
+                                break;
+                            }
+                            if(result[index1].Zone.length == 1 && result[index1].Zone[i] == 'null') {
+                                controller5();
+                            }
+
+                        }
+                        
+                        iterator5(function() {
+
+                            index1++;
+                            // console.log(result.length);
+                            // console.log(index1);
+                            // console.log(result[index1-1]._id);
+                            if (index1 < result.length) {
+                                controller5();
+                            }
+                        });
+                    };
+
+                     var iterator5 = function(callback1) {
+                        if(_zone != undefined) {
+                            var instanceZone = _zone.substring(0,9);
+                        //     callback1();    
+                             ec2 = new AWS.EC2({
+                                region: instanceZone
+                            });
+
+                        var params = {
+                            InstanceIds: [result[index1]._id],
+                            DryRun: true
+                                // Force: true || false
+                        };
+                        console.log([result[index1]._id]);
+                        console.log(params.InstanceIds)
+                        console.log(_zone);
+                        
+                        console.log(instanceZone);
+
+                        ec2.stopInstances(params, function(err, data) {
+                            if (err) console.log(err, err.stack); // an error occurred
+                            else console.log(data); // successful response
+                        });
+                        callback1();
+                        } else {
+                            console.log([result[index1]._id]);
+                            callback1();
+                        }
+
+                     };
+                     controller5();
+
+                }); //end get instnaceid
+
                 getBudgetTotalCost(budgets[index1].BatchType, budgets[index1].BatchName, budgets[index1].StartDate, budgets[index1].EndDate,
                     function(result) {
-                        // console.log("RESULT", result);
-                        if (result[0].Total >= budget.Amount && budget.State == 'valid') {
+                        if (result[0].Total >= budget.Amount && budget.State == 'valid') { //Check if ammount exceeded
                             db.collection('budgets').update({
                                 BudgetName: budget.BudgetName
                             }, {
@@ -42,11 +113,13 @@ exports.checkBudgets = function() {
                                     }, function(err) {
                                         if (err) throw err;
                                         console.log('Added a notification for ', budget.BudgetName);
+                                        //Also stop the instance here
+
                                         callback1();
                                     });
                                 }, 0);
                             });
-                        } else if (time > budget.EndDate && budget.State == 'valid') {
+                        } else if (time > budget.EndDate && budget.State == 'valid') { //Check if date expired
                             db.collection('budgets').update({
                                 BudgetName: budget.BudgetName
                             }, {
@@ -63,6 +136,8 @@ exports.checkBudgets = function() {
                                     }, function(err) {
                                         if (err) throw err;
                                         console.log('Added a notification', budget.BudgetName)
+                                            //Also stop the instance here
+
                                         callback1();
                                     });
                                 }, 0);
@@ -78,6 +153,68 @@ exports.checkBudgets = function() {
         });
     });
 };
+
+//Get the instance id(s) of the budgets.
+var getInstanceId = function(_batchtype, _batchname, callback) {
+    var batchType = _batchtype;
+    var batchName = _batchname;
+
+    if (batchType == 'user') {
+        mongoose.model('Billings').aggregate([{
+            $match: {
+                $and: [{
+                    'user:Name': batchName
+                }, {
+                    'user:Group': 'null'
+                }]
+            }
+        }, {
+            $project: {
+                _id: 0,
+                ResourceId: 1,
+                AvailabilityZone: 1
+            }
+        }, {
+            $group: {
+                _id: null,
+                Instances: {
+                    $addToSet: "$ResourceId"
+                },
+                Zone: {
+                    $push: "$AvailabilityZone"
+                }
+            }
+        }]).exec(function(e, d) {
+            callback(d);
+        });
+    } else {
+        mongoose.model('Billings').aggregate([{
+            $match: {
+                $and: [{
+                    'user:Group': batchName
+                }]
+            }
+        }, {
+            $project: {
+                _id: 1,
+                ResourceId: 1,
+                AvailabilityZone: 1
+            }
+        }, {
+            $group: {
+                _id: "$ResourceId",
+                Zone: {
+                    $addToSet: "$AvailabilityZone"
+                }
+                // Zone: {
+                //     $push: "$AvailabilityZone"
+            }
+        }]).exec(function(e, d) {
+            callback(d);
+            // console.log('d', d);
+        });
+    }
+}
 
 // Get the amount the budget has currently incurred.
 var getBudgetTotalCost = function(_batchtype, _batchname, _startdate, _enddate, callback) {
@@ -154,7 +291,9 @@ var getBudgetTotalCost = function(_batchtype, _batchname, _startdate, _enddate, 
                     Total: {
                         $sum: "$Cost"
                     },
-                    Group: {$addToSet: batchName}
+                    Group: {
+                        $addToSet: batchName
+                    }
                 }
             }, {
                 $project: {
