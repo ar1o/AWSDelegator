@@ -86,21 +86,16 @@ var UMTimeBudgetsView = Backbone.View.extend({
 
 
         this.$el.on('click', '#TimeBudgetTable tbody tr', function() {
-            console.log("click");
-            console.log(this);
             if ($(this).hasClass('selected')) {
                 $(this).removeClass('selected');
-                console.log("remove");
             } else {
                 table.$('tr.selected').removeClass('selected');
                 $(this).addClass('selected');
-                console.log("select");
             }
         });
 
         this.$el.on('mousedown', '#TimeBudgetTable tbody tr', function(e) {
             if (e.button == 2) {
-                console.log(this);
                 if ($(this).hasClass('selected')) {
                     $(this).removeClass('selected');
                 } else {
@@ -119,13 +114,11 @@ var UMTimeBudgetsView = Backbone.View.extend({
                 self.data.minDB = $('td', this).eq(8).text();
                 self.data.maxDB = $('td', this).eq(9).text();
                 self.data.timeout = $('td', this).eq(10).text();
-                // console.log(self.data);
             }
         });
         // Trigger action when the contexmenu is about to be shown
         $(document).bind("contextmenu", function(event) {
             if (event.target.matches('#TimeBudgetTable *')) {
-                // console.log(rowIndex);
                 // Avoid the real one
                 event.preventDefault();
                 // Show contextmenu
@@ -153,7 +146,6 @@ var UMTimeBudgetsView = Backbone.View.extend({
             switch ($(this).attr("data-action")) {
                 // A case for each action. Your actions here
                 case "Edit":
-                    console.log("Edit Case");
                     var result;
                     self.data.oldName = self.data.budgetName;
                     $('.modal-title').append('<div class="content-title">Edit budget: ' + self.data.budgetName + '</div>');
@@ -171,12 +163,9 @@ var UMTimeBudgetsView = Backbone.View.extend({
                     $('#time-maxDB').prop('value', self.data.maxDB);
                     var state = self.data.timeout;
                     if(self.data.timeout == 'true' ){
-                        console.log(typeof self.data.timeout);
-                        console.log("Stop set to true", self.data.timeout );
                         $('#time-myonoffswitch').prop('checked', 'checked');
                     }
                     if(self.data.timeout == 'false' ){
-                        console.log("Stop set to false", self.data.timeout );
                         $('#time-myonoffswitch').prop('checked', '');
                     }
                     $('#time-myonoffswitch').attr('checked', self.data.timeout);
@@ -185,11 +174,8 @@ var UMTimeBudgetsView = Backbone.View.extend({
                         self.model.getUsers();
                         self.model.change('userDataReady', function(model) {
                             result = (UserCollection.pluck('name'));
-                            console.log(result);
                             for (var i in result) {
-                                console.log(i, ":", result[i]);
                                 if (result[i] == self.data.batchName) {
-                                    console.log("match at index", i);
                                     $('.time-sub-costfilter').append($('<option>', {
                                         value: result[i],
                                         text: result[i],
@@ -211,11 +197,8 @@ var UMTimeBudgetsView = Backbone.View.extend({
                         self.model.getGroups();
                         self.model.change('groupDataReady', function(model) {
                             result = (GroupCollection.pluck('name'));
-                            console.log(result);
                             for (var i in result) {
-                                console.log(i, ":", result[i]);
                                 if (result[i] == self.data.batchName) {
-                                    console.log("match at index", i);
                                     $('.time-sub-costfilter').append($('<option>', {
                                         value: result[i],
                                         text: result[i],
@@ -292,7 +275,6 @@ var UMTimeBudgetsView = Backbone.View.extend({
                 $('#base-modal').hide();
             }
             if ($("#action").text() == "Save") {
-                console.log("about to edit", self.data);
                 self.model.edit_time_budget(self.data);
                 $('#base-modal').hide();
             } else {
@@ -304,27 +286,20 @@ var UMTimeBudgetsView = Backbone.View.extend({
             if (/^[a-z\d\-_\s]+$/i.test($('#time-budgetname').val())) {
                 $('#time-budgetnamewarning').hide();
                 $('#time-budgetnamerequest').hide();
-                console.log($('#time-budgetname').val());
                 var newBudget = true;
-                console.log(budgetCollection);
-                console.log(budgetCollection.pluck('budgetname'));
                 for (var i = 0; i < budgetCollection.length; ++i) {
-                    console.log("test", i);
                     if (budgetCollection.at(i).get('budgetName') == $('#time-budgetname').val()) {
                         newBudget = false;
                     }
                 }
                 if (newBudget) {
-                    console.log('new budget name');
                     this.$('#time-oldbudgetnamewarning').hide();
 
                     this.data.budgetName = $('#time-budgetname').val();
                     self.isValid.budgetName = true;
                 } else if ($('#time-budgetname').val() == this.data.oldName) {
-                    console.log("same name. Hide warning")
                     $('#time-budgetnamewarning').hide();
                 } else {
-                    console.log("Something selse for the budget name");
                     $('#time-oldbudgetnamewarning').show();
                 }
             } else {
@@ -345,7 +320,6 @@ var UMTimeBudgetsView = Backbone.View.extend({
                     $('#time-startdaterequest').hide();
                 },
                 onClose: function(selected) {
-                    console.log("startdate", selected);
                     self.data.startDate = selected;
                     self.isValid.startDate = true;
                 }
@@ -380,23 +354,19 @@ var UMTimeBudgetsView = Backbone.View.extend({
                     var edtFormatted = emm + '/' + edd + '/' + ey;
                     //start
                     var dtMin = new Date(self.data.startDate);
-                    console.log("344 UMC", dtMin);
                     var sdd = dtMin.getDate();
                     var smm = dtMin.getMonth() + 1;
                     var sy = dtMin.getFullYear();
                     var sdtFormatted = smm + '/' + sdd + '/' + sy;
-                    console.log()
                         //logic
                     if (edtFormatted == sdtFormatted || ey < sy || ey == sy && emm < smm || ey == sy && emm == smm && edd < sdd) {
-                        console.log("conditional met");
                         var sdd = dtMax.getDate() - 1;
                         var smm = dtMax.getMonth() + 1;
                         var sy = dtMax.getFullYear();
                         var sdtFormatted = smm + '/' + sdd + '/' + sy;
                         self.data.startDate = sdtFormatted;
                     }
-                    console.log("startdate", self.data.startDate);
-                    console.log("enddate", selected);
+
                     self.data.endDate = selected;
                     self.isValid.endDate = true;
                 }
@@ -406,14 +376,12 @@ var UMTimeBudgetsView = Backbone.View.extend({
         this.$el.on('focusout', '#time-minDB', function(e) {
             if (/\d/.test($('#time-minDB').val())) {
                 this.data.minDB = parseInt($('#time-minDB').val());
-                console.log(this.data.minDB, this.data.maxDB);
                 if(this.data.minDB < 1){
                     this.data.minDB = 0;
                     $('#time-minDB').prop('value', this.data.minDB);
                 }
                 
                 if (this.data.minDB > this.data.maxDB) {
-                    console.log("minDB > max");
                     this.data.minDB = this.data.maxDB - 1;
                     $('#time-minDB').prop('value', this.data.minDB);
                     // $('#time-minDB').val(this.data.minDB);
@@ -429,13 +397,11 @@ var UMTimeBudgetsView = Backbone.View.extend({
         this.$el.on('focusout', '#time-maxDB', function(e) {
             if (/\d/.test($('#time-maxDB').val())) {
                 this.data.maxDB = parseInt($('#time-maxDB').val());
-                console.log(this.data.minDB, this.data.maxDB);
                 if(this.data.maxDB < 1){
                     this.data.maxDB = 0;
                     $('#time-maxDB').prop('value', this.data.maxDB);
                 }
                 if (this.data.minDB > this.data.maxDB) {
-                    console.log("minDB > max");
                     this.data.maxDB = (this.data.minDB + 1);
                     $('#time-maxDB').prop('value', this.data.maxDB);
                     // $('#time-maxDB').val(this.data.maxDB);
