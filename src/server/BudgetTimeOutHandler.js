@@ -20,80 +20,9 @@ exports.checkBudgets = function() {
             };
             var iterator1 = function(callback1) {
                 var budget = budgets[index1];
+                //test
+                // stopInstances('group', 'testGroup1')
                 //checking for amount exceeded or time exceeded
-
-                // getInstanceId(budgets[index1].BatchType, budgets[index1].BatchName,
-                getInstanceId('group', 'testGroup1', function(result) {
-                    // for (var i = 0; i < result[0].Instances.length; i++) {
-                    // console.log(result[1]._id);
-                    console.log(result);
-                    
-                    var index1 = 0;
-                    var ec2;
-                    var _zone;
-                    var controller5 = function() {
-                                        
-                        var i = 0;
-                        while(i < result[index1].Zone.length) {
-                           
-                            if(result[index1].Zone[i] == 'null') {
-                                i++;
-                            } else {
-                                _zone = result[i].Zone[i];
-                                break;
-                            }
-                            if(result[index1].Zone.length == 1 && result[index1].Zone[i] == 'null') {
-                                controller5();
-                            }
-
-                        }
-                        
-                        iterator5(function() {
-
-                            index1++;
-                            // console.log(result.length);
-                            // console.log(index1);
-                            // console.log(result[index1-1]._id);
-                            if (index1 < result.length) {
-                                controller5();
-                            }
-                        });
-                    };
-
-                     var iterator5 = function(callback1) {
-                        if(_zone != undefined) {
-                            var instanceZone = _zone.substring(0,9);
-                        //     callback1();    
-                             ec2 = new AWS.EC2({
-                                region: instanceZone
-                            });
-
-                        var params = {
-                            InstanceIds: [result[index1]._id],
-                            DryRun: true
-                                // Force: true || false
-                        };
-                        console.log([result[index1]._id]);
-                        console.log(params.InstanceIds)
-                        console.log(_zone);
-                        
-                        console.log(instanceZone);
-
-                        ec2.stopInstances(params, function(err, data) {
-                            if (err) console.log(err, err.stack); // an error occurred
-                            else console.log(data); // successful response
-                        });
-                        callback1();
-                        } else {
-                            console.log([result[index1]._id]);
-                            callback1();
-                        }
-
-                     };
-                     controller5();
-
-                }); //end get instnaceid
-
                 getBudgetTotalCost(budgets[index1].BatchType, budgets[index1].BatchName, budgets[index1].StartDate, budgets[index1].EndDate,
                     function(result) {
                         if (result[0].Total >= budget.Amount && budget.State == 'valid') { //Check if ammount exceeded
@@ -113,8 +42,11 @@ exports.checkBudgets = function() {
                                     }, function(err) {
                                         if (err) throw err;
                                         console.log('Added a notification for ', budget.BudgetName);
-                                        //Also stop the instance here
-
+                                        //Check for stop the instance here
+                                        if (budget.TimeOut == "true") {
+                                            console.log('CHECKING');
+                                            stopInstances(budgets[index1].BatchType, budgets[index1].BatchName);
+                                        }
                                         callback1();
                                     });
                                 }, 0);
@@ -137,7 +69,10 @@ exports.checkBudgets = function() {
                                         if (err) throw err;
                                         console.log('Added a notification', budget.BudgetName)
                                             //Also stop the instance here
-
+                                        if (budget.TimeOut == "true") {
+                                            console.log('CHECKING');
+                                            stopInstances(budgets[index1].BatchType, budgets[index1].BatchName);
+                                        }
                                         callback1();
                                     });
                                 }, 0);
@@ -153,6 +88,86 @@ exports.checkBudgets = function() {
         });
     });
 };
+
+var stopInstances = function(batchtype, batchname) {
+    getInstanceId(batchtype, batchname,
+        function(result) {
+            var index1 = 0;
+            var ec2;
+            var _zone;
+            var controller5 = function() {
+
+                var i = 0;
+                while (i < result[index1].Zone.length) {
+
+                    if (result[index1].Zone[i] == 'null') {
+                        i++;
+                    } else {
+                        _zone = result[i].Zone[i];
+                        break;
+                    }
+                    if (result[index1].Zone.length == 1 && result[index1].Zone[i] == 'null') {
+                        controller5();
+                    }
+                }
+                iterator5(function() {
+                    index1++;
+                    if (index1 < result.length) {
+                        controller5();
+                    }
+                });
+            };
+
+            var iterator5 = function(callback1) {
+                //check for rds or ec2 here
+                if (_zone != undefined && /^i-/.test(result[index1]._id)) {
+
+                    var instanceZone = _zone.substring(0, 9);
+                    //     callback1();    
+                    ec2 = new AWS.EC2({
+                        region: instanceZone
+                    });
+
+                    var params = {
+                        InstanceIds: [result[index1]._id]
+                            // DryRun: true
+                            // Force: true || false
+                    };
+
+                    ec2.stopInstances(params, function(err, data) {
+                        if (err) console.log(err, err.stack); // an error occurred
+                        else console.log(data); // successful response
+                    });
+                    callback1();
+                } else if (_zone != undefined && /^arn:aws:rds/.test(result[index1]._id)) {
+                    console.log('There is no "stop/start" actions for RDS databases,' +
+                        'currently you would have to terminate the database taking a final snapshot' +
+                        'and restore from that snapshot.');
+                    //add a notiication for this
+                    db.collection('notifications').insert({
+                        NotificationType: 'RDS-Stop',
+                        NotificationData: 'There is no "stop/start" actions for RDS databases,' +
+                        'currently you would have to terminate the database taking a final snapshot' +
+                        'and restore from that snapshot.',
+                        Seen: 'false',
+                        Time: time
+                    }, function(err) {
+                        if (err) throw err;
+                        callback1();
+                    });
+                    //rds-create-db-snapshot
+                    //rds-delete-db-instance
+                    //rds-restore-db-instance-from-db-snapshot
+                } else {
+                    console.log([result[index1]._id]);
+                    callback1();
+                }
+
+            };
+            controller5();
+        }); //end get instnaceid
+}
+
 
 //Get the instance id(s) of the budgets.
 var getInstanceId = function(_batchtype, _batchname, callback) {
