@@ -229,7 +229,7 @@ var UMCostBudgetsView = Backbone.View.extend({
                     // self.data.batchName
                     $('.sub-costfilter').prop('value', self.data.batchName);
 
-=======
+// =======
                     $('#budgetname').attr('value', self.data.budgetName);
                     $('.costfilter').val(self.data.batchType);
                     $('#filter-details').show();
@@ -237,7 +237,7 @@ var UMCostBudgetsView = Backbone.View.extend({
                     $('#startdate').attr('value', sDate);
                     $('#enddate').attr('value', eDate);
                     $('#amount').attr('value', self.data.amount);
->>>>>>> 3f3266438f22d8a99e54e8455a3c84964ac8e184
+// >>>>>>> 3f3266438f22d8a99e54e8455a3c84964ac8e184
                     //Set Field data ^^
                     $("#action").text("Save");
 
@@ -283,19 +283,11 @@ var UMCostBudgetsView = Backbone.View.extend({
             // Check for save or delete button clickedif (!this.model) {
             if ($("#action").text() == "Delete") {
                 self.model.remove_cost_budget(self.data);
-<<<<<<< HEAD
                 $('#base-modal').hide();
-=======
-
-                //remove from database
->>>>>>> 3f3266438f22d8a99e54e8455a3c84964ac8e184
             }
             if ($("#action").text() == "Save") {
                 self.model.edit_cost_budget(self.data);
-<<<<<<< HEAD
                 $('#base-modal').hide();
-=======
->>>>>>> 3f3266438f22d8a99e54e8455a3c84964ac8e184
             } else {
                 console.log("No Case Matched for button text");
             }
@@ -319,18 +311,8 @@ var UMCostBudgetsView = Backbone.View.extend({
                     this.$('#oldbudgetnamewarning').hide();
                     this.data.budgetName = $('#budgetname').val();
                     self.isValid.budgetName = true;
-<<<<<<< HEAD
                 } else if ($('#budgetname').val() == this.data.oldName) {
-                    console.log("same name. Hide warning")
-                    $('#budgetnamewarning').hide();
                 } else {
-                    console.log("Something selse for the budget name");
-=======
-                }
-                if ($('#budgetname').val() == this.data.oldName) {
-                    $('#budgetnamewarning').hide();
-                } else {
->>>>>>> 3f3266438f22d8a99e54e8455a3c84964ac8e184
                     $('#oldbudgetnamewarning').show();
                 }
             } else {
