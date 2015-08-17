@@ -6,10 +6,10 @@ exports.timeBudgets = function(req, res) {
 
 exports.timeBudgetCost = function(req, res) {
 	var batchType = req.query.batchType;
-	console.log(batchType)
 	var batchName = req.query.batchName;
 	var startDate = req.query.startDate;
 	var endDate = req.query.endDate;
+
 	if (batchType == 'user') {
 		mongoose.model('grlsLineItems').aggregate([{
 			$match: {
@@ -80,7 +80,7 @@ exports.timeBudgetCost = function(req, res) {
 				_id: 1
 			}
 		}]).exec(function(e, d) {
-			console.log('d', d)
+			// console.log('d', d)
 			res.send(d);
 		});
 	}
@@ -402,7 +402,9 @@ exports.userTimeCost = function(req, res) {
 	});
 }
 
+//Issue here due to productName. Not sure how to fix...
 exports.createGRLSInstances = function(timeBudget,callback) {
+	console.log("createGRLSInstances",timeBudget);
 	MongoClient.connect(databaseUrl, function(err, db) {
         if (err) throw err; 
 		if(timeBudget.BatchType == 'user'){
@@ -451,6 +453,7 @@ exports.createGRLSInstances = function(timeBudget,callback) {
 				var controller1 = function() {
 					iterator1(function() {
 						index1++;
+						console.log("resources",resources);
 						if (index1 < resources.length) controller1();
 						else {
 							callback();
@@ -458,6 +461,7 @@ exports.createGRLSInstances = function(timeBudget,callback) {
 					});
 				};
 				var iterator1 = function(callback1) {
+					console.log('timeBudgetRoute', resources[index1]);
 					if(resources[index1].ProductName[0] == 'Amazon Elastic Compute Cloud'){
 						mongoose.model('ec2Instances').aggregate([{
 							$match: {
@@ -475,9 +479,11 @@ exports.createGRLSInstances = function(timeBudget,callback) {
 									instanceRegion: resourceData[0].Zone,
 									serviceType: 'ec2',
 									instanceType: resourceData[0].Type,
+									//why 0 for lifetime??
 									lifetime: 0,
 									uDecay: timeBudget.uDecayRate,
 									oDecay: timeBudget.oDecayRate,
+									stop: timeBudget.timeout,
 									state: 'valid'
 								};
 								db.collection('grlsInstances').insert(doc, function(err) {
@@ -509,6 +515,7 @@ exports.createGRLSInstances = function(timeBudget,callback) {
 									lifetime: 0,
 									uDecay: timeBudget.uDecayRate,
 									oDecay: timeBudget.oDecayRate,
+									stop: timeBudget.timeout,
 									state: 'valid'
 								};
 								db.collection('grlsInstances').insert(doc, function(err) {
@@ -632,6 +639,7 @@ exports.createGRLSInstances = function(timeBudget,callback) {
 												lifetime: 0,
 												uDecay: timeBudget.uDecayRate,
 												oDecay: timeBudget.oDecayRate,
+												stop: timeBudget.timeout,
 												state: 'valid'
 											};
 											db.collection('grlsInstances').insert(doc, function(err) {

@@ -1,3 +1,4 @@
+
 <table id="TimeBudgetTable" class="hover">
 	<thead>
 		<tr class="dark-row">
@@ -9,8 +10,9 @@
 			<th>Time Amount</th>
 			<th>uDecay</th>
 			<th>oDecay</th>
-			<th>maxConnections</th>
-			<th>Stop Instances</th>
+			<th>minDB</th>
+			<th>maxDB</th>
+			<th>TimeOut</th>
 		</tr>
 	</thead>
 	<tbody id="timeBudgetData">
@@ -24,7 +26,8 @@
 			<td>{{this.timeAmount}}</td>
 			<td>{{this.udecay}}</td>
 			<td>{{this.odecay}}</td>
-			<td>{{this.dbConnections}}</td>
+			<td>{{this.minDB}}</td>
+			<td>{{this.maxDB}}</td>
 			<td>{{this.timeout}}</td>
 		</tr>
 	{{/each}}

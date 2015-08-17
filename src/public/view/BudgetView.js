@@ -1,3 +1,4 @@
+//View for CostBudget creation
 var daysToAdd = 1;
 var BudgetView = Backbone.View.extend({
     className: 'BudgetView',
@@ -13,7 +14,7 @@ var BudgetView = Backbone.View.extend({
             startDate: null,
             endDate: null,
             amount: null,
-            option: 'true'
+            timeout: true
         };
         this.isValid = {
             budgetName: false,
@@ -21,7 +22,8 @@ var BudgetView = Backbone.View.extend({
             batchName: false,
             startDate: false,
             endDate: false,
-            amount: false
+            amount: false,
+            timeout: true
         };
         this.bindings();
         this.render();
@@ -63,6 +65,7 @@ var BudgetView = Backbone.View.extend({
 
         this.$el.on("change", '.costfilter', function(e) {
             var selected = $('.costfilter').val();
+            this.$('.sub-costfilter').show();
             $('#filter-details').removeClass('hidden');
             if (selected == 'group') {
                 self.model.getGroups();
@@ -153,7 +156,6 @@ var BudgetView = Backbone.View.extend({
                     self.isValid.endDate = true;
                 }
             });
-
         }.bind(this));
 
 
@@ -169,21 +171,12 @@ var BudgetView = Backbone.View.extend({
         }.bind(this));
 
         this.$el.on('click', '#myonoffswitch', function(e) {
-            if ($('#myonoffswitch').val() == 'null') {
-                $('#myonoffswitch').val('true');
-            } else if ($('#myonoffswitch').val() == 'true') {
-                var value = $('#myonoffswitch').val();
-                $('#myonoffswitch').val('false');
-                this.data.option = $('#myonoffswitch').val();
-            } else {
-                var value = $('#myonoffswitch').val();
-                $('#myonoffswitch').val('true');
-                this.data.option = $('#myonoffswitch').val();
-            }
-
+            this.data.timeout = $('#myonoffswitch').prop('checked');
+            this.isValid.timeout = true
         }.bind(this));
 
         this.$el.on('click', '#savebtn', function(e) {
+            console.log("DATA about to be save (pre-check)",self.data);
             if (self.data.batchType == null) {
                 self.$('#batchtyperequest').show();
             }
@@ -204,9 +197,11 @@ var BudgetView = Backbone.View.extend({
                 console.log($('#enddate').val())
                 self.$('#enddaterequest').show();
             }
+            if (self.data.timeout == null) {
+                console.log($('#myonoffswitch').prop('checked'));
+            }
             var validForm = true;
             for (var i in self.isValid) {
-                console.log("valid", i);
                 if (!self.isValid[i]) {
                     validForm = false;
                     console.log("invalid", i);
@@ -214,7 +209,7 @@ var BudgetView = Backbone.View.extend({
             }
             $('#filter-details').addClass('hidden');
             if (validForm) {
-                console.log("validform");
+                console.log("form is valid");
                 this.model.post_budget_result(this.data);
                 for (var i in self.isValid) {
                     self.isValid[i] = false;
