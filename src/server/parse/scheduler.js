@@ -16,9 +16,7 @@ var _params = {
 };
 
 exports.s3Connect = function(_callback) {
-   
     printBanner();
-
     // s3.s3Watch();
     // parseBills();
     AWS.config.credentials = awsCredentials.default;
@@ -27,15 +25,13 @@ exports.s3Connect = function(_callback) {
     grlsParser.updateTimeBudgets();    
     });    
 };
-s3.s3Watch = function() {
 
+s3.s3Watch = function() {
     console.log("Watching s3 bucket on timer of 60 minutes");
     setTimeout(self.s3Connect.bind(self), 1000 * 60 * 60);
-    if(credits != "EXPIRED"){
-        setInterval(updateUsageBalance.bind(self), 1000 * 60 * 60);    
+    if (credits != "EXPIRED") {
+        setInterval(updateUsageBalance.bind(self), 1000 * 60 * 60);
     }
-    
-
 };
 
 var parseBills = function() {
@@ -63,7 +59,7 @@ var printBanner = function() {
     console.log("       " + currentTimeIso + "   |___/                  \n");
 }
 
-var parseAWSServices = function() {
+var parseAWSServices = function(callback) {
     console.log('ParseAlert(ec2): parsing initiated');
     parseEC2(function() {
         console.log('ParseAlert(ec2): parsing completed');

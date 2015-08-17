@@ -6,9 +6,10 @@ var UMCostBudgetsView = Backbone.View.extend({
         if (!this.model) {
             this.model = new UsageMonitorModel();
         }
-
-
         this.editHTML = '<div class="insetting"> <div class="incontainer"><label class="budget-label">Name <i class="fa fa-question-circle" id="BudgetName" data-toggle="tooltip" title="Unique name assigned to this Cost Budget"></i></label><input type="text" id="budgetname" placeholder="e.g., "Monthly EC2 Budget"></div><div class="warning" id="budgetnamewarning">Invalid budget Name.</div><div class="warning" id="oldbudgetnamewarning">Budget Name already in use.</div><div class="warning" id="budgetnamerequest">Please enter a budget name.</div></div><div class="insetting"> <div class="incontainer"><label class="budget-label">Track costs associated to <i class="fa fa-question-circle" id="AssociatedTo" data-toggle="tooltip" title="User or group this budget applies to"></i></label><select class="costfilter"><option value="" disabled selected>Select</option><option value="user">User</option><option value="group">Groups</option></select></div></div><div class="sub-insetting"> <div class="sub-incontainer"><div class="" id="filter-details"><select class="sub-costfilter"><option value="" disabled selected>Select</option>{{#each col}}<option value={{this.name}}></option>{{/each}}</select></div></div><div class="warning" id="batchtyperequest">Please select a Batch Type.</div><div class="warning" id="batchnamerequest">Please select a Batch Name.</div></div><div class="insetting"> <div class="incontainer"><label class="budget-label">Start date <i class="fa fa-question-circle" id="StartDate" data-toggle="tooltip" title="Date when budget begins"></i></label><input type="text" id="startdate" placeholder="mm/dd/yyyy"><div class="warning" id="startdaterequest">Please select a start date.</div></div></div><div class="insetting"> <div class="incontainer"><label class="budget-label">End date <i class="fa fa-question-circle" id="EndDate" data-toggle="tooltip" title="Date of termination for budget"></i></label><input type="text" id="enddate" placeholder="mm/dd/yyyy"><div class="warning" id="enddatewarning">Invalid dates selected.</div><div class="warning" id="enddaterequest">Please select an end.</div></div></div><div class="insetting"> <div class="incontainer"><label class="budget-label">Cost Amount <i class="fa fa-question-circle" id="CostAmount" data-toggle="tooltip" title="Dollar amount the associated user/group is allocated between start and end dates"></i></label><input type="text" id="amount" placeholder="USD"><div class="warning" id="amountwarning">Invalid amount.</div><div class="warning" id="amountrequest">Please enter an amount.</div></div></div><div class="insetting"> <div class="incontainer"><label class="budget-label">Stop resource(s) when quota reached <i class="fa fa-question-circle" id="Stop" data-toggle="tooltip" title="Stop instance when budget is exceeded?"></i></label><div class="onoffswitch"><input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked><label class="onoffswitch-label" for="myonoffswitch"><span class="onoffswitch-inner"></span><span class="onoffswitch-switch"></span></label></div></div></div>';
+        var users = this.model.users_result(function() {
+            console.log(users);
+        });
         this.model.getBudgets();
         this.operationsActivity = new UMOperationsView();
         this.usageActivity = new UMUsageView();
@@ -145,12 +146,17 @@ var UMCostBudgetsView = Backbone.View.extend({
             switch ($(this).attr("data-action")) {
                 // A case for each action. Your actions here
                 case "Edit":
-                    var result;
-                    self.data.oldName = self.data.budgetName;
-                    console.log(self.data);
+// <<<<<<< HEAD
+//                     var result;
+// =======
+//                     var sDate = "" + self.data.startDate.substr(0, 4) + '/' + self.data.startDate.substr(5, 2) + '/' + self.data.startDate.substr(8, 2);
+//                     var eDate = "" + self.data.endDate.substr(0, 4) + '/' + self.data.endDate.substr(5, 2) + '/' + self.data.endDate.substr(8, 2);
+// >>>>>>> 3f3266438f22d8a99e54e8455a3c84964ac8e184
+//                     self.data.oldName = self.data.budgetName;
+//                     console.log(self.data);
                     $('.modal-title').append('<div class="content-title">Edit budget: ' + self.data.budgetName + '</div>');
                     $('.modal-body').append('<div class="content-body">' + self.editHTML + '</div>');
-
+// <<<<<<< HEAD
                     $('#budgetname').prop('value', self.data.budgetName);
                     $('.costfilter').val(self.data.batchType);
                     $('.costfilter').prop('disabled', 'disabled');
@@ -223,6 +229,15 @@ var UMCostBudgetsView = Backbone.View.extend({
                     // self.data.batchName
                     $('.sub-costfilter').prop('value', self.data.batchName);
 
+=======
+                    $('#budgetname').attr('value', self.data.budgetName);
+                    $('.costfilter').val(self.data.batchType);
+                    $('#filter-details').show();
+                    $('.sub-costfilter').val(self.data.batchName);
+                    $('#startdate').attr('value', sDate);
+                    $('#enddate').attr('value', eDate);
+                    $('#amount').attr('value', self.data.amount);
+>>>>>>> 3f3266438f22d8a99e54e8455a3c84964ac8e184
                     //Set Field data ^^
                     $("#action").text("Save");
 
@@ -268,11 +283,19 @@ var UMCostBudgetsView = Backbone.View.extend({
             // Check for save or delete button clickedif (!this.model) {
             if ($("#action").text() == "Delete") {
                 self.model.remove_cost_budget(self.data);
+<<<<<<< HEAD
                 $('#base-modal').hide();
+=======
+
+                //remove from database
+>>>>>>> 3f3266438f22d8a99e54e8455a3c84964ac8e184
             }
             if ($("#action").text() == "Save") {
                 self.model.edit_cost_budget(self.data);
+<<<<<<< HEAD
                 $('#base-modal').hide();
+=======
+>>>>>>> 3f3266438f22d8a99e54e8455a3c84964ac8e184
             } else {
                 console.log("No Case Matched for button text");
             }
@@ -296,11 +319,18 @@ var UMCostBudgetsView = Backbone.View.extend({
                     this.$('#oldbudgetnamewarning').hide();
                     this.data.budgetName = $('#budgetname').val();
                     self.isValid.budgetName = true;
+<<<<<<< HEAD
                 } else if ($('#budgetname').val() == this.data.oldName) {
                     console.log("same name. Hide warning")
                     $('#budgetnamewarning').hide();
                 } else {
                     console.log("Something selse for the budget name");
+=======
+                }
+                if ($('#budgetname').val() == this.data.oldName) {
+                    $('#budgetnamewarning').hide();
+                } else {
+>>>>>>> 3f3266438f22d8a99e54e8455a3c84964ac8e184
                     $('#oldbudgetnamewarning').show();
                 }
             } else {

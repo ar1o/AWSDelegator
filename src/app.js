@@ -5,7 +5,7 @@ app.use(require(__dirname + '/server/CORS'));
 var bodyParser = require('body-parser');
 // create application/x-www-form-urlencoded parser 
 var urlencodedParser = bodyParser.urlencoded({
-    extended: false
+    extended: true
 });
 // create application/json parser 
 var jsonParser = bodyParser.json();
@@ -100,17 +100,40 @@ app.get('/api/notifications', require(__dirname + '/server/route/notificationsRo
 app.get('/api/notifications/seen', require(__dirname + '/server/route/notificationsRoute').updateNotifications);
 
 
-app.get('/getUsers', require(__dirname + '/server/route/budgetRoute').getUsers);
-    
 
+app.get('/getUsers'), jsonParser,
+    function(req, res) {
+        MongoClient.connect(databaseUrl, function(err, db) {
+            if (err) {
+                throw err
+            };
+            db.collection('ec2Instances').aggregate({
+                $project: {
+                    '_id': 0,
+                    'Name': 1
+                }
+            }, function(err) {
+                if (err) throw err;
+                res.send('db');
+            })
+        })
+    }
+app.get('/time', function(req, res) {
+        mongoose.model('Billings').find().limit(1).sort({
+            $natural: -1
+        }).exec(function(e, d) {
+            // console.log(d[0].UsageStartDate);
+            res.send(d[0].UsageStartDate);
+        });
+});
 
-app.post('/setBalance' , jsonParser, function(req, res){    
+app.post('/setBalance', jsonParser, function(req, res) {
     require('./server/route/CredentialsRoute').setBalance(req);
 });
-app.post('/setExpiration' , jsonParser, function(req, res){    
+app.post('/setExpiration', jsonParser, function(req, res) {
     require('./server/route/CredentialsRoute').setExpiration(req);
 });
-app.post('/setCreditsUsed' , jsonParser, function(req, res){    
+app.post('/setCreditsUsed', jsonParser, function(req, res) {
     require('./server/route/CredentialsRoute').setCreditsUsed(req);
 });
 
@@ -158,14 +181,14 @@ app.post('/removeCostBudget', jsonParser, function(req, res) {
         db.collection('budgets').remove({
             BudgetName: r.budgetName
         });
-    res.send("success");
+        res.send("success");
     });
 });
 
-app.post('/editCostBudget', jsonParser, function(req, res){
+app.post('/editCostBudget', jsonParser, function(req, res) {
     var r = req.body;
     console.log("editing Cost Budget");
-    MongoClient.connect(databaseUrl, function(err, db){
+    MongoClient.connect(databaseUrl, function(err, db) {
         db.collection('budgets').update({
             BudgetName: r.oldName
         }, {
@@ -257,5 +280,5 @@ function errorHandler(err, req, res, next) {
 module.exports = errorHandler;
 app.listen(port);
 
-console.log('databaseUrl ',databaseUrl);
+console.log('databaseUrl ', databaseUrl);
 console.log('Server Alert: server started on port %s', port);

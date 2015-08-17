@@ -14,6 +14,7 @@ exports.checkBudgets = function() {
                 iterator1(function() {
                     index1++;
                     if (index1 < budgets.length) {
+                        console.log("INDEX==" +index1 + "\tBUDGETLENGTH=="+budgets.length);
                         controller1();
                     }
                 });
@@ -23,11 +24,14 @@ exports.checkBudgets = function() {
                 //checking for amount exceeded or time exceeded
                 getBudgetTotalCost(budgets[index1].BatchType, budgets[index1].BatchName, budgets[index1].StartDate, budgets[index1].EndDate,
                     function(result) {
-                        console.log("BudgetTimoutHandler result", result);
-                        if (result[0].Cost  == undefined) {
-                            console.log("Oh No, not this again!!");
-                        }
-                        if (result[0].Cost >= budget.Amount && budget.State == 'valid') {
+
+                        // console.log("BudgetTimoutHandler result", result);
+                        // if (result[0].Cost  == undefined) {
+                        //     console.log("Oh No, not this again!!");
+                        // }
+                        // if (result[0].Cost >= budget.Amount && budget.State == 'valid') {
+                        if (result[0].Total >= budget.Amount && budget.State == 'valid') {
+
                             db.collection('budgets').update({
                                 BudgetName: budget.BudgetName
                             }, {
@@ -93,7 +97,7 @@ var getBudgetTotalCost = function(_batchtype, _batchname, _startdate, _enddate, 
     // console.log(endDate);
 
     if (batchType == 'user') {
-        var query = mongoose.model('Billings').aggregate([{
+        mongoose.model('Billings').aggregate([{
             $match: {
                 $and: [{
                     UsageStartDate: {
@@ -130,7 +134,7 @@ var getBudgetTotalCost = function(_batchtype, _batchname, _startdate, _enddate, 
             callback(d);
         });
     } else { // If group instead
-        var query = mongoose.model('Billings').aggregate([{
+        mongoose.model('Billings').aggregate([{
                 $match: {
                     $and: [{
                         UsageStartDate: {
@@ -148,14 +152,21 @@ var getBudgetTotalCost = function(_batchtype, _batchname, _startdate, _enddate, 
                 $project: {
                     _id: 0,
                     UsageStartDate: 1,
-                    Cost: 1
+                    Cost: 1,
                 }
             }, {
                 $group: {
                     _id: null,
-                    Cost: {
+                    Total: {
                         $sum: "$Cost"
-                    }
+                    },
+                    Group: {$addToSet: batchName}
+                }
+            }, {
+                $project: {
+                    _id: 0,
+                    Total: 1,
+                    Group: 1
                 }
             }, {
                 $sort: {
@@ -163,7 +174,6 @@ var getBudgetTotalCost = function(_batchtype, _batchname, _startdate, _enddate, 
                 }
             }])
             .exec(function(e, d) {
-                //ERROR FROM THIS CALL BACK
                 callback(d);
             });
     }

@@ -3,6 +3,7 @@ var HeaderView = Backbone.View.extend({
     className: 'HeaderView',
 
     initialize: function(options) {
+        // this.latestTime = new TimeView();
         this.meterActivity = new MeterView();
         // this.budgetView = new BudgetView();
         this.bindings();
@@ -16,7 +17,7 @@ var HeaderView = Backbone.View.extend({
         var html = Handlebars.templates.HeaderView;        
         this.$el.html(html);
         this.$el.append(this.meterActivity.el);       
-        // this.$el.append(this.budgetView.el);       
+        // this.$el.append(this.latestTime.el);       
 
     }
 });
