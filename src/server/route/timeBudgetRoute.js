@@ -4,7 +4,407 @@ exports.timeBudgets = function(req, res) {
 	});
 }
 
+exports.timeBudgetCost = function(req, res) {
+	var batchType = req.query.batchType;
+	var batchName = req.query.batchName;
+	var startDate = req.query.startDate;
+	var endDate = req.query.endDate;
+
+	if (batchType == 'user') {
+		mongoose.model('grlsLineItems').aggregate([{
+			$match: {
+				$and: [{
+					time: {
+						$gte: startDate
+					}
+				}, {
+					time: {
+						$lte: endDate
+					}
+				}, {
+					user: batchName
+				}, {
+					group: 'null'
+				}]
+			}
+		}, {
+			$project: {
+				_id: 0,
+				time: 1,
+				decayTime: 1
+			}
+		}, {
+			$group: {
+				_id: "$time",
+				Cost: {
+					$sum: "$decayTime"
+				}
+			}
+		}, {
+			$sort: {
+				_id: 1
+			}
+		}]).exec(function(e, d) {
+			res.send(d);
+		});
+	} else {
+		mongoose.model('grlsLineItems').aggregate([{
+			$match: {
+				$and: [{
+					time: {
+						$gte: startDate
+					}
+				}, {
+					time: {
+						$lte: endDate
+					}
+				}, {
+					group: batchName
+				}]
+			}
+		}, {
+			$project: {
+				_id: 0,
+				time: 1,
+				decayTime: 1
+			}
+		}, {
+			$group: {
+				_id: "$time",
+				Cost: {
+					$sum: "$decayTime"
+				}
+			}
+		}, {
+			$sort: {
+				_id: 1
+			}
+		}]).exec(function(e, d) {
+			// console.log('d', d)
+			res.send(d);
+		});
+	}
+}
+
+exports.timeBudgetUsage = function(req, res) {
+	var batchType = req.query.batchType;
+	var batchName = req.query.batchName;
+	var startDate = req.query.startDate;
+	var endDate = req.query.endDate;
+	if (batchType == 'user') {
+		mongoose.model('grlsLineItems').aggregate([{
+			$match: {
+				$and: [{
+					time: {
+						$gte: startDate
+					}
+				}, {
+					time: {
+						$lte: endDate
+					}
+				}, {
+					user: batchName
+				}, {
+					group: 'null'
+				}]
+			}
+		}, {
+			$project: {
+				_id: 0,
+				decayTime: 1,
+				user: 1
+			}
+		}, {
+			$group: {
+				_id: '$user',
+				Total: {
+					$sum: "$decayTime"
+				}
+			}
+		}]).exec(function(e, sum) {
+			res.send(sum);
+		});
+	} else {
+		mongoose.model('grlsLineItems').aggregate([{
+			$match: {
+				$and: [{
+					time: {
+						$gte: startDate
+					}
+				}, {
+					time: {
+						$lte: endDate
+					}
+				}, {
+					group: batchName
+				}]
+			}
+		}, {
+			$project: {
+				_id: 0,
+				user: 1,
+				decayTime: 1
+			}
+		}, {
+			$group: {
+				_id: '$user',
+				Total: {
+					$sum: "$decayTime"
+				}
+			}
+		}]).exec(function(e, sum) {
+			res.send(sum);
+		});
+	}
+}
+
+exports.groupUserTimeService = function(req, res) {
+	var userName = req.query.userName;
+	var groupName = req.query.groupName;
+	var startDate = req.query.startDate;
+	var endDate = req.query.endDate;
+	mongoose.model('grlsLineItems').aggregate([{
+		$match: {
+			$and: [{
+				time: {
+					$gte: startDate
+				}
+			}, {
+				time: {
+					$lte: endDate
+				}
+			}, {
+				user: userName
+			}, {
+				group: groupName
+			}]
+		}
+	}, {
+		$project: {
+			_id: 0,
+			serviceType: 1,
+			decayTime: 1
+		}
+	}, {
+		$group: {
+			_id: '$serviceType',
+			Total: {
+				$sum: "$decayTime"
+			}
+		}
+	}]).exec(function(e, d) {
+		var result = {};
+		for (var i = 0 in d) {
+			result[d[i]._id] = {};
+			result[d[i]._id]['total'] = d[i].Total;
+		}
+		var index1 = 0;
+		var controller1 = function() {
+			iterator1(function() {
+				index1++;
+				if (index1 < d.length) controller1();
+				else {
+					res.send(result);
+				}
+			});
+		};
+		var iterator1 = function(callback1) {
+			mongoose.model('grlsLineItems').aggregate([{
+				$match: {
+					$and: [{
+						time: {
+							$gte: startDate
+						}
+					}, {
+						time: {
+							$lte: endDate
+						}
+					}, {
+						user: userName
+					}, {
+						group: groupName
+					}, {
+						serviceType: d[index1]._id
+					}]
+				}
+			}, {
+				$project: {
+					_id: 0,
+					instanceId: 1,
+					decayTime: 1
+				}
+			}, {
+				$group: {
+					_id: '$instanceId',
+					Total: {
+						$sum: "$decayTime"
+					}
+				}
+			}]).exec(function(e, d2) {
+				var _res = {}
+				for (var i = 0 in d2) {
+					_res[d2[i]._id] = {};
+					_res[d2[i]._id]['total'] = d2[i].Total;
+				}
+				result[d[index1]._id]['resourceId'] = _res;
+				if (d2.length != 0) {
+					callback1();
+				}
+			});
+		};
+		if (d.length != 0) {
+			controller1();
+		} else {
+
+		}
+	});
+}
+
+exports.timeUserService = function(req, res) {
+	var userName = req.query.userName;
+	var startDate = req.query.startDate;
+	var endDate = req.query.endDate;
+	mongoose.model('grlsLineItems').aggregate([{
+		$match: {
+			$and: [{
+				time: {
+					$gte: startDate
+				}
+			}, {
+				time: {
+					$lte: endDate
+				}
+			}, {
+				user: userName
+			}, {
+				group: 'null'
+			}]
+		}
+	}, {
+		$project: {
+			_id: 0,
+			serviceType: 1,
+			decayTime: 1
+		}
+	}, {
+		$group: {
+			_id: '$serviceType',
+			Total: {
+				$sum: "$decayTime"
+			}
+		}
+	}]).exec(function(e, d) {
+		var result = {};
+		for (var i = 0 in d) {
+			result[d[i]._id] = {};
+			result[d[i]._id]['total'] = d[i].Total;
+		}
+		var index1 = 0;
+		var controller1 = function() {
+			iterator1(function() {
+				index1++;
+				if (index1 < d.length) controller1();
+				else {
+					res.send(result);
+				}
+			});
+		};
+		var iterator1 = function(callback1) {
+			mongoose.model('grlsLineItems').aggregate([{
+				$match: {
+					$and: [{
+						time: {
+							$gte: startDate
+						}
+					}, {
+						time: {
+							$lte: endDate
+						}
+					}, {
+						user: userName
+					}, {
+						group: 'null'
+					}, {
+						serviceType: d[index1]._id
+					}]
+				}
+			}, {
+				$project: {
+					_id: 0,
+					instanceId: 1,
+					decayTime: 1
+				}
+			}, {
+				$group: {
+					_id: '$instanceId',
+					Total: {
+						$sum: "$decayTime"
+					}
+				}
+			}]).exec(function(e, d2) {
+				var _res = {}
+				for (var i = 0 in d2) {
+					_res[d2[i]._id] = {};
+					_res[d2[i]._id]['total'] = d2[i].Total;
+				}
+				result[d[index1]._id]['resourceId'] = _res;
+				if (d2.length != 0) {
+					callback1();
+				}
+			});
+		};
+		if (d.length != 0) {
+			controller1();
+		}
+
+	});
+}
+exports.userTimeCost = function(req, res) {
+	var userName = req.query.userName;
+	var batchName = req.query.batchName;
+	var startDate = req.query.startDate;
+	var endDate = req.query.endDate;
+	mongoose.model('grlsLineItems').aggregate([{
+		$match: {
+			$and: [{
+				time: {
+					$gte: startDate
+				}
+			}, {
+				time: {
+					$lte: endDate
+				}
+			}, {
+				user: userName
+			}, {
+				group: batchName
+			}]
+		}
+	}, {
+		$project: {
+			_id: 0,
+			time: 1,
+			decayTime: 1
+		}
+	}, {
+		$group: {
+			_id: "$time",
+			Cost: {
+				$sum: "$decayTime"
+			}
+		}
+	}, {
+		$sort: {
+			_id: 1
+		}
+	}]).exec(function(e, d) {
+		res.send(d);
+	});
+}
+
+//Issue here due to productName. Not sure how to fix...
 exports.createGRLSInstances = function(timeBudget,callback) {
+	console.log("createGRLSInstances",timeBudget);
 	MongoClient.connect(databaseUrl, function(err, db) {
         if (err) throw err; 
 		if(timeBudget.BatchType == 'user'){
@@ -53,6 +453,7 @@ exports.createGRLSInstances = function(timeBudget,callback) {
 				var controller1 = function() {
 					iterator1(function() {
 						index1++;
+						console.log("resources",resources);
 						if (index1 < resources.length) controller1();
 						else {
 							callback();
@@ -60,6 +461,7 @@ exports.createGRLSInstances = function(timeBudget,callback) {
 					});
 				};
 				var iterator1 = function(callback1) {
+					console.log('timeBudgetRoute', resources[index1]);
 					if(resources[index1].ProductName[0] == 'Amazon Elastic Compute Cloud'){
 						mongoose.model('ec2Instances').aggregate([{
 							$match: {
@@ -77,9 +479,11 @@ exports.createGRLSInstances = function(timeBudget,callback) {
 									instanceRegion: resourceData[0].Zone,
 									serviceType: 'ec2',
 									instanceType: resourceData[0].Type,
+									//why 0 for lifetime??
 									lifetime: 0,
 									uDecay: timeBudget.uDecayRate,
 									oDecay: timeBudget.oDecayRate,
+									stop: timeBudget.timeout,
 									state: 'valid'
 								};
 								db.collection('grlsInstances').insert(doc, function(err) {
@@ -111,6 +515,7 @@ exports.createGRLSInstances = function(timeBudget,callback) {
 									lifetime: 0,
 									uDecay: timeBudget.uDecayRate,
 									oDecay: timeBudget.oDecayRate,
+									stop: timeBudget.timeout,
 									state: 'valid'
 								};
 								db.collection('grlsInstances').insert(doc, function(err) {
@@ -234,6 +639,7 @@ exports.createGRLSInstances = function(timeBudget,callback) {
 												lifetime: 0,
 												uDecay: timeBudget.uDecayRate,
 												oDecay: timeBudget.oDecayRate,
+												stop: timeBudget.timeout,
 												state: 'valid'
 											};
 											db.collection('grlsInstances').insert(doc, function(err) {

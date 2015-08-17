@@ -1,15 +1,15 @@
+//View for EDITING CostBudget 
+var daysToAdd = 1;
 var UMCostBudgetsView = Backbone.View.extend({
     className: 'UMCostBudgetsView',
     initialize: function(options) {
         if (!this.model) {
             this.model = new UsageMonitorModel();
         }
+        this.editHTML = '<div class="insetting"> <div class="incontainer"><label class="budget-label">Name <i class="fa fa-question-circle" id="BudgetName" data-toggle="tooltip" title="Unique name assigned to this Cost Budget"></i></label><input type="text" id="budgetname" placeholder="e.g., "Monthly EC2 Budget"></div><div class="warning" id="budgetnamewarning">Invalid budget Name.</div><div class="warning" id="oldbudgetnamewarning">Budget Name already in use.</div><div class="warning" id="budgetnamerequest">Please enter a budget name.</div></div><div class="insetting"> <div class="incontainer"><label class="budget-label">Track costs associated to <i class="fa fa-question-circle" id="AssociatedTo" data-toggle="tooltip" title="User or group this budget applies to"></i></label><select class="costfilter"><option value="" disabled selected>Select</option><option value="user">User</option><option value="group">Groups</option></select></div></div><div class="sub-insetting"> <div class="sub-incontainer"><div class="" id="filter-details"><select class="sub-costfilter"><option value="" disabled selected>Select</option>{{#each col}}<option value={{this.name}}></option>{{/each}}</select></div></div><div class="warning" id="batchtyperequest">Please select a Batch Type.</div><div class="warning" id="batchnamerequest">Please select a Batch Name.</div></div><div class="insetting"> <div class="incontainer"><label class="budget-label">Start date <i class="fa fa-question-circle" id="StartDate" data-toggle="tooltip" title="Date when budget begins"></i></label><input type="text" id="startdate" placeholder="mm/dd/yyyy"><div class="warning" id="startdaterequest">Please select a start date.</div></div></div><div class="insetting"> <div class="incontainer"><label class="budget-label">End date <i class="fa fa-question-circle" id="EndDate" data-toggle="tooltip" title="Date of termination for budget"></i></label><input type="text" id="enddate" placeholder="mm/dd/yyyy"><div class="warning" id="enddatewarning">Invalid dates selected.</div><div class="warning" id="enddaterequest">Please select an end.</div></div></div><div class="insetting"> <div class="incontainer"><label class="budget-label">Cost Amount <i class="fa fa-question-circle" id="CostAmount" data-toggle="tooltip" title="Dollar amount the associated user/group is allocated between start and end dates"></i></label><input type="text" id="amount" placeholder="USD"><div class="warning" id="amountwarning">Invalid amount.</div><div class="warning" id="amountrequest">Please enter an amount.</div></div></div><div class="insetting"> <div class="incontainer"><label class="budget-label">Stop resource(s) when quota reached <i class="fa fa-question-circle" id="Stop" data-toggle="tooltip" title="Stop instance when budget is exceeded?"></i></label><div class="onoffswitch"><input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked><label class="onoffswitch-label" for="myonoffswitch"><span class="onoffswitch-inner"></span><span class="onoffswitch-switch"></span></label></div></div></div>';
         var users = this.model.users_result(function() {
             console.log(users);
         });
-
-        this.editHTML = '<div class="insetting"> <div class="incontainer"><label class="budget-label">Name </label><input type="text" id="budgetname" placeholder="e.g., "Monthly EC2 Budget""></div><div class="warning" id="budgetnamewarning">Invalid budget Name.</div><div class="warning" id="oldbudgetnamewarning">Budget Name already in use.</div><div class="warning" id="budgetnamerequest">Please enter a budget name.</div></div><div class="insetting"> <div class="incontainer"><label class="budget-label">Include costs related to </label><select class="costfilter"><option value="" disabled selected>Select</option><option value="user">User</option><option value="group">Groups</option></select></div></div><div class="sub-insetting"> <div class="sub-incontainer"><div id="filter-details"><select class="sub-costfilter"><option value="" disabled selected>Select</option>{{#each col}}<option value={{name}}>{{name}}</option>{{/each}}</select></div></div><div class="warning" id="batchtyperequest">Please select a Batch Type.</div><div class="warning" id="batchnamerequest">Please select a Batch Name.</div></div><div class="insetting"> <div class="incontainer"><label class="budget-label">Start date </label><input type="text" id="startdate" placeholder="mm/dd/yyyy"><div class="warning" id="startdaterequest">Please select a start date.</div></div></div><div class="insetting"> <div class="incontainer"><label class="budget-label">End date </label><input type="text" id="enddate" placeholder="mm/dd/yyyy"><div class="warning" id="enddatewarning">Invalid dates selected.</div><div class="warning" id="enddaterequest">Please select an end.</div></div></div><div class="insetting"> <div class="incontainer"><label class="budget-label">Monthly Amount </label><input type="text" id="amount" placeholder="USD"><div class="warning" id="amountwarning">Invalid amount.</div><div class="warning" id="amountrequest">Please enter an amount.</div></div></div><div class="insetting"> <div class="incontainer"><label class="budget-label">Stop resource(s) when quota reached </label><div class="onoffswitch"><input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked><label class="onoffswitch-label" for="myonoffswitch"><span class="onoffswitch-inner"></span><span class="onoffswitch-switch"></span></label></div></div></div>';
-
         this.model.getBudgets();
         this.operationsActivity = new UMOperationsView();
         this.usageActivity = new UMUsageView();
@@ -23,7 +23,8 @@ var UMCostBudgetsView = Backbone.View.extend({
             batchName: null,
             startDate: null,
             endDate: null,
-            amount: null
+            amount: null,
+            stop: true
         };
 
         this.isValid = {
@@ -32,7 +33,8 @@ var UMCostBudgetsView = Backbone.View.extend({
             batchName: false,
             startDate: false,
             endDate: false,
-            amount: false
+            amount: false,
+            stop: true
         };
 
         this.bindings();
@@ -56,7 +58,6 @@ var UMCostBudgetsView = Backbone.View.extend({
     bindings: function() {
         var self = this;
         var table = $('#BudgetTable').DataTable();
-
         this.model.change('budgetDataReady', function(model, val) {
             this.render();
             table = $('#BudgetTable').DataTable({
@@ -81,16 +82,21 @@ var UMCostBudgetsView = Backbone.View.extend({
         });
 
         this.$el.on('click', '#BudgetTable tbody tr', function() {
+            console.log("click budgetTable");
+            console.log(this);
             if ($(this).hasClass('selected')) {
                 $(this).removeClass('selected');
+                console.log("deselect");
             } else {
                 table.$('tr.selected').removeClass('selected');
                 $(this).addClass('selected');
+                console.log("select");
             }
         });
 
         this.$el.on('mousedown', '#BudgetTable tbody tr', function(e) {
             if (e.button == 2) {
+                console.log(this);
                 if ($(this).hasClass('selected')) {
                     $(this).removeClass('selected');
                 } else {
@@ -104,7 +110,8 @@ var UMCostBudgetsView = Backbone.View.extend({
                 self.data.startDate = $('td', this).eq(3).text();
                 self.data.endDate = $('td', this).eq(4).text();
                 self.data.amount = $('td', this).eq(5).text();
-                console.log(self.data);
+                self.data.timeout = $('td', this).eq(6).text();
+                // console.log(self.data);
             }
         });
 
@@ -139,11 +146,90 @@ var UMCostBudgetsView = Backbone.View.extend({
             switch ($(this).attr("data-action")) {
                 // A case for each action. Your actions here
                 case "Edit":
-                    var sDate = "" + self.data.startDate.substr(0, 4) + '/' + self.data.startDate.substr(5, 2) + '/' + self.data.startDate.substr(8, 2);
-                    var eDate = "" + self.data.endDate.substr(0, 4) + '/' + self.data.endDate.substr(5, 2) + '/' + self.data.endDate.substr(8, 2);
-                    self.data.oldName = self.data.budgetName;
+// <<<<<<< HEAD
+//                     var result;
+// =======
+//                     var sDate = "" + self.data.startDate.substr(0, 4) + '/' + self.data.startDate.substr(5, 2) + '/' + self.data.startDate.substr(8, 2);
+//                     var eDate = "" + self.data.endDate.substr(0, 4) + '/' + self.data.endDate.substr(5, 2) + '/' + self.data.endDate.substr(8, 2);
+// >>>>>>> 3f3266438f22d8a99e54e8455a3c84964ac8e184
+//                     self.data.oldName = self.data.budgetName;
+//                     console.log(self.data);
                     $('.modal-title').append('<div class="content-title">Edit budget: ' + self.data.budgetName + '</div>');
                     $('.modal-body').append('<div class="content-body">' + self.editHTML + '</div>');
+// <<<<<<< HEAD
+                    $('#budgetname').prop('value', self.data.budgetName);
+                    $('.costfilter').val(self.data.batchType);
+                    $('.costfilter').prop('disabled', 'disabled');
+                    $('.sub-costfilter').prop('disabled', 'disabled');
+                    $('#startdate').prop('value', self.data.startDate);
+                    $('#enddate').prop('value', self.data.endDate);
+                    $('#amount').prop('value', self.data.amount);
+                    if(self.data.timeout == 'true' ){
+                        $('#myonoffswitch').prop('checked', 'checked');
+                    }
+                    if(self.data.timeout == 'false' ){
+                        $('#myonoffswitch').prop('checked', '');
+                    }
+                    console.log($('.costfilter').val());
+                    if ($('.costfilter').val() == 'user') {
+                        self.model.getUsers();
+                        console.log("matched user");
+                        self.model.change('userDataReady', function(model) {
+                            result = (UserCollection.pluck('name'));
+                            console.log(result);
+                            for (var i in result) {
+                                console.log(i, ":", result[i]);
+                                if (result[i] == self.data.batchName) {
+                                    console.log("match at index", i);
+                                    $('.sub-costfilter').append($('<option>', {
+                                        value: result[i],
+                                        text: result[i],
+                                        selected: 'selected',
+                                        disabled: "disabled"
+                                    }));
+                                } else {
+                                    $('.sub-costfilter').append($('<option>', {
+                                        value: result[i],
+                                        text: result[i],
+                                        disabled: "disabled"
+                                    }));
+                                }
+                            }
+
+                            UserCollection.reset();
+                        });
+                    }
+                    if ($('.costfilter').val() == 'group') {
+                        self.model.getGroups();
+                        console.log("matched group");
+                        self.model.change('groupDataReady', function(model) {
+                            result = (GroupCollection.pluck('name'));
+                            console.log(result);
+                            for (var i in result) {
+                                console.log(i, ":", result[i]);
+                                if (result[i] == self.data.batchName) {
+                                    console.log("match at index", i);
+                                    $('.sub-costfilter').append($('<option>', {
+                                        value: result[i],
+                                        text: result[i],
+                                        selected: "selected",
+                                        disabled: "disabled"
+                                    }));
+                                } else {
+                                    $('.sub-costfilter').append($('<option>', {
+                                        value: result[i],
+                                        text: result[i],
+                                        disabled: "disabled"
+                                    }));
+                                }
+                            }
+                            GroupCollection.reset();
+                        });
+                    }
+                    // self.data.batchName
+                    $('.sub-costfilter').prop('value', self.data.batchName);
+
+=======
                     $('#budgetname').attr('value', self.data.budgetName);
                     $('.costfilter').val(self.data.batchType);
                     $('#filter-details').show();
@@ -151,6 +237,7 @@ var UMCostBudgetsView = Backbone.View.extend({
                     $('#startdate').attr('value', sDate);
                     $('#enddate').attr('value', eDate);
                     $('#amount').attr('value', self.data.amount);
+>>>>>>> 3f3266438f22d8a99e54e8455a3c84964ac8e184
                     //Set Field data ^^
                     $("#action").text("Save");
 
@@ -170,7 +257,6 @@ var UMCostBudgetsView = Backbone.View.extend({
                     $('.modal-title').append('<div class="content-title">Delete budget: ' + self.data.budgetName + '</div>');
                     $('.modal-body').append('<div class="content-body">Are you sure you want to delete this?</div>');
                     $("#action").text("Delete");
-                    break;
             }
             // Hide it AFTER the action was triggered
             $(".custom-menu").hide(100);
@@ -196,39 +282,55 @@ var UMCostBudgetsView = Backbone.View.extend({
             $('.modal-backdrop').remove();
             // Check for save or delete button clickedif (!this.model) {
             if ($("#action").text() == "Delete") {
-                console.log("DELETING");
                 self.model.remove_cost_budget(self.data);
+<<<<<<< HEAD
+                $('#base-modal').hide();
+=======
 
                 //remove from database
+>>>>>>> 3f3266438f22d8a99e54e8455a3c84964ac8e184
             }
             if ($("#action").text() == "Save") {
-                console.log(self.data);
                 self.model.edit_cost_budget(self.data);
+<<<<<<< HEAD
+                $('#base-modal').hide();
+=======
+>>>>>>> 3f3266438f22d8a99e54e8455a3c84964ac8e184
             } else {
                 console.log("No Case Matched for button text");
             }
 
         });
 
-        // budget name
         this.$el.on('focusout', '#budgetname', function(e) {
             if (/^[a-z\d\-_\s]+$/i.test($('#budgetname').val())) {
                 $('#budgetnamewarning').hide();
                 $('#budgetnamerequest').hide();
                 var newBudget = true;
+                console.log(budgetCollection.pluck('budgetname'));
                 for (var i = 0; i < budgetCollection.length; ++i) {
+                    console.log("test", i);
                     if (budgetCollection.at(i).get('budgetName') == $('#budgetname').val()) {
                         newBudget = false;
                     }
                 }
                 if (newBudget) {
+                    console.log('new budget name');
                     this.$('#oldbudgetnamewarning').hide();
                     this.data.budgetName = $('#budgetname').val();
                     self.isValid.budgetName = true;
+<<<<<<< HEAD
+                } else if ($('#budgetname').val() == this.data.oldName) {
+                    console.log("same name. Hide warning")
+                    $('#budgetnamewarning').hide();
+                } else {
+                    console.log("Something selse for the budget name");
+=======
                 }
                 if ($('#budgetname').val() == this.data.oldName) {
                     $('#budgetnamewarning').hide();
                 } else {
+>>>>>>> 3f3266438f22d8a99e54e8455a3c84964ac8e184
                     $('#oldbudgetnamewarning').show();
                 }
             } else {
@@ -239,54 +341,74 @@ var UMCostBudgetsView = Backbone.View.extend({
         // start date
         this.$el.on('focusin', '#startdate', function(e) {
             var self = this;
-            var datePicker = $("#startdate").datepicker({
-                onSelect: function(dateText) {
-                    self.data.startDate = this.value;
+            $("#startdate").datepicker({
+                onSelect: function(selected) {
+                    var dtMax = new Date(selected);
+                    dtMax.setDate(dtMax.getDate() + daysToAdd);
+                    var dd = dtMax.getDate();
+                    var mm = dtMax.getMonth() + 1;
+                    var y = dtMax.getFullYear();
+                    var dtFormatted = mm + '/' + dd + '/' + y;
+                    $("#enddate").datepicker("option", "minDate", dtFormatted);
+                    $('#startdaterequest').hide();
+                },
+                onClose: function(selected) {
+                    console.log("startdate", selected);
+                    self.data.startDate = selected;
                     self.isValid.startDate = true;
-                    self.$('#startdaterequest').hide();
                 }
-            });
-            $("#base-modal").scroll(function() {
-                $("#startdate").datepicker("hide");
-                $("#startdate").blur();
             });
         }.bind(this));
 
-        // end date
         this.$el.on('focusin', '#enddate', function(e) {
             var self = this;
-            var datePicker = $("#enddate").datepicker({
-                onSelect: function(dateText) {
-                    if (this.value >= self.data.startDate) {
-                        self.data.endDate = this.value;
-                        self.isValid.endDate = true;
-                        self.$('#enddatewarning').hide();
-                        self.$('#enddaterequest').hide();
-                    } else {
-                        self.$('#enddatewarning').show();
+            $("#enddate").datepicker({
+                onSelect: function(selected) {
+                    var dtMax = new Date(selected);
+                    dtMax.setDate(dtMax.getDate() - daysToAdd);
+                    var dd = dtMax.getDate();
+                    var mm = dtMax.getMonth() + 1;
+                    var y = dtMax.getFullYear();
+                    var dtFormatted = mm + '/' + dd + '/' + y;
+                    $("#startdate").datepicker("option", "maxDate", dtFormatted)
+                    $('#enddaterequest').hide();
+                },
+                onClose: function(selected) {
+                    //end
+                    var dtMax = new Date(selected);
+                    var edd = dtMax.getDate();
+                    var emm = dtMax.getMonth() + 1;
+                    var ey = dtMax.getFullYear();
+                    var edtFormatted = emm + '/' + edd + '/' + ey;
+                    //start
+                    var dtMin = new Date(self.data.startDate);
+                    console.log("344 UMC", dtMin);
+                    var sdd = dtMin.getDate();
+                    var smm = dtMin.getMonth() + 1;
+                    var sy = dtMin.getFullYear();
+                    var sdtFormatted = smm + '/' + sdd + '/' + sy;
+                    console.log()
+                        //logic
+                    if (edtFormatted == sdtFormatted || ey < sy || ey == sy && emm < smm || ey == sy && emm == smm && edd < sdd) {
+                        console.log("conditional met");
+                        var sdd = dtMax.getDate() - 1;
+                        var smm = dtMax.getMonth() + 1;
+                        var sy = dtMax.getFullYear();
+                        var sdtFormatted = smm + '/' + sdd + '/' + sy;
+                        self.data.startDate = sdtFormatted;
                     }
+                    console.log("startdate", self.data.startDate);
+                    console.log("enddate", selected);
+                    self.data.endDate = selected;
+                    self.isValid.endDate = true;
                 }
             });
-            $("#base-modal").scroll(function() {
-                $("#enddate").datepicker("hide");
-                $("#enddate").blur();
-            });
         }.bind(this));
-
-        // amount 
-        this.$el.on('focusout', '#amount', function(e) {
-            if (/^\d+(\.\d{1,2})?$/.test($('#amount').val())) {
-                this.data.amount = parseFloat($('#amount').val());
-                self.isValid.amount = true;
-                self.$('#amountwarning').hide();
-                self.$('#amountrequest').hide();
-            } else {
-                self.$('#amountwarning').show();
-            }
+        this.$el.on('click', '#myonoffswitch', function(e) {
+            this.data.timeout = $('#myonoffswitch').prop('checked');
+            this.isValid.timeout = true
         }.bind(this));
-
     },
-
     render: function() {
         var html = Handlebars.templates.UsageMonitorView({
             budgets: budgetCollection.toJSON()

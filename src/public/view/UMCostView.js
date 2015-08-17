@@ -28,21 +28,21 @@ var UMCostView = Backbone.View.extend({
             //date1=[year,month,date]
             var date1 = date[0].split(/-/);
             //date2=[hour,minute,second]                
-            var date2 = date[1].split(':');
+            // var date2 = date[1].split(':');
             //correction for JS viewing JAN as '00'
             var month = parseInt(date1[1]);
             date1[1] = month - 1;
-            var endDate = Date.UTC(date1[0], date1[1], date1[2], date2[0], date2[1], date2[2]);
+            var endDate = Date.UTC(date1[0], date1[1], date1[2]);
             
             var date = budgetCostCollection.at(0).get('date').split(' ');
             //date1=[year,month,date]
             var date1 = date[0].split(/-/);
             //date2=[hour,minute,second]                
-            var date2 = date[1].split(':');
+            // var date2 = date[1].split(':');
             //correction for JS viewing JAN as '00'
             var month = parseInt(date1[1]);
             date1[1] = month - 1;
-            var startDate = Date.UTC(date1[0], date1[1], date1[2], date2[0], date2[1], date2[2]);
+            var startDate = Date.UTC(date1[0], date1[1], date1[2]);
             var budgetIndex = budgetIndexCollection.at(0).get('index');
             $(function() {
                 $('#budgetCostContainer').highcharts({

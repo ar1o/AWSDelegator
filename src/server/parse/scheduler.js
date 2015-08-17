@@ -19,10 +19,11 @@ exports.s3Connect = function(_callback) {
     printBanner();
     // s3.s3Watch();
     // parseBills();
-    // AWS.config.credentials = awsCredentials.default;
-    // parseAWSServices();
+    AWS.config.credentials = awsCredentials.default;
+    parseAWSServices(function(){
     timeOutHandler.checkBudgets();
-    // grlsParser.updateTimeBudgets();
+    grlsParser.updateTimeBudgets();    
+    });    
 };
 
 s3.s3Watch = function() {
