@@ -1,3 +1,4 @@
+
 <table id="TimeBudgetTable" class="hover">
 	<thead>
 		<tr class="dark-row">
@@ -9,11 +10,12 @@
 			<th>Time Amount</th>
 			<th>uDecay</th>
 			<th>oDecay</th>
-			<th>maxConnections</th>
-			<th>Stop Instances</th>
+			<th>minDB</th>
+			<th>maxDB</th>
+			<th>TimeOut</th>
 		</tr>
 	</thead>
-	<tbody id="budgetData">
+	<tbody id="timeBudgetData">
 	{{#each timebudgets}}
 		<tr>
 			<td >{{this.timeBudgetName}}</td>
@@ -24,9 +26,16 @@
 			<td>{{this.timeAmount}}</td>
 			<td>{{this.udecay}}</td>
 			<td>{{this.odecay}}</td>
-			<td>{{this.dbConnections}}</td>
+			<td>{{this.minDB}}</td>
+			<td>{{this.maxDB}}</td>
 			<td>{{this.timeout}}</td>
 		</tr>
 	{{/each}}
 	</tbody>	
 </table>
+
+<ul class='custom-menu'>
+  <li data-action="Edit"data-toggle="modal" data-target="#base-modal" data-backdrop="static" data-keyboard="false">Edit Instance</li>
+  <li data-action="Delete" data-toggle="modal" data-target="#base-modal" data-backdrop="static" data-keyboard="false" >Delete Instance</li>
+</ul>
+

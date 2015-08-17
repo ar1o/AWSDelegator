@@ -7,17 +7,19 @@
 			<th>StartDate</th>
 			<th>EndDate</th>
 			<th>Amount</th>
+			<th>Stop</th>
 		</tr>
 	</thead>
 	<tbody id="budgetData">
 	{{#each budgets}}
 		<tr>
 			<td id={{this.budgetName}} >{{this.budgetName}}</td>
-			<td id={{this.batchType}}>{{this.batchType}}</td>
-			<td id={{this.batchName}}>{{this.batchName}}</td>
-			<td id={{this.startDate}}>{{this.startDate}}</td>
-			<td id={{this.endDate}}>{{this.endDate}}</td> 
-			<td id={{this.amount}}>{{this.amount}}</td>
+			<td >{{this.batchType}}</td>
+			<td >{{this.batchName}}</td>
+			<td >{{this.startDate}}</td>
+			<td >{{this.endDate}}</td> 
+			<td >{{this.amount}}</td>
+			<td >{{this.timeout}}</td>
 		</tr>
 	{{/each}}
 	</tbody>	

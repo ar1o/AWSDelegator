@@ -1,3 +1,5 @@
+//View for Timebudget creation
+var daysToAdd = 1;
 var TimeBudgetView = Backbone.View.extend({
     className: 'TimeBudgetView',
 
@@ -14,9 +16,9 @@ var TimeBudgetView = Backbone.View.extend({
             timeamount: null,
             udecay: null,
             odecay: null,
-            minDBConnections: null,
-            maxDBConnections: null,
-            option: 'true'
+            minDB: null,
+            maxDB: null,
+            stop: true
         };
         this.isValid = {
             timebudgetname: false,
@@ -27,15 +29,16 @@ var TimeBudgetView = Backbone.View.extend({
             timeamount: false,
             udecay: false,
             odecay: false,
-            minDBConnections: false,
-            maxDBConnections: false,
+            minDB: false,
+            maxDB: false,
+            stop: true
         };
         this.bindings();
         this.render();
-        this.$('#time-mindbconnectionswarning').hide();
-        this.$('#time-mindbconnectionsrequest').hide();
-        this.$('#time-maxdbconnectionswarning').hide();
-        this.$('#time-maxdbconnectionsrequest').hide();
+        this.$('#time-minDBwarning').hide();
+        this.$('#time-minDBrequest').hide();
+        this.$('#time-maxDBwarning').hide();
+        this.$('#time-maxDBrequest').hide();
         this.$('#time-odecaywarning').hide();
         this.$('#time-odecayrequest').hide();
         this.$('#time-udecaywarning').hide();
@@ -112,93 +115,78 @@ var TimeBudgetView = Backbone.View.extend({
         this.$el.on('focusin', '#time-startdate', function(e) {
             var self = this;
             // console.log("FOCUS IN startDate", self.data);
-            var datePicker = $("#time-startdate").datepicker({
-                onSelect: function(dateText) {
-                    if (self.data.endDate === null || self.data.endDate == "") {
-                        self.data.startDate = this.value;
-                        self.isValid.startDate = true;
-                        self.$('#time-startdaterequest').hide();
-                    } else {
-                        var startD, startM, startY;
-                        var endD, endM, endY;
-                        startD = this.value.substr(3, 2);
-                        startM = this.value.substr(0, 2);
-                        startY = this.value.substr(6, 4);
-                        var start = new Date(startY, startM - 1, startD);
-                        endD = self.data.endDate.substr(3, 2);
-                        endM = self.data.endDate.substr(0, 2);
-                        endY = self.data.endDate.substr(6, 4);
-                        var end = new Date(endY, endM - 1, endD);
-                        console.log("From", start, "\nto", end);
-                        if (end > start) {
-                            console.log("valid date range");
-                            self.data.endDate = this.value;
-                            self.isValid.endDate = true;
-                            self.$('#time-enddatewarning').hide();
-                            self.$('#time-enddaterequest').hide();
-                        } else {
-                            console.log("invalid date range")
-                            self.$('#time-enddatewarning').show();
-                        }
-                    }
+            $("#time-startdate").datepicker({
+                onSelect: function(selected) {
+                    var dtMax = new Date(selected);
+                    dtMax.setDate(dtMax.getDate() + daysToAdd);
+                    var dd = dtMax.getDate();
+                    var mm = dtMax.getMonth() + 1;
+                    var y = dtMax.getFullYear();
+                    var dtFormatted = mm + '/' + dd + '/' + y;
+                    $("#time-enddate").datepicker("option", "minDate", dtFormatted);
+                    $('#time-startdaterequest').hide();
+                },
+                onClose: function(selected) {
+                    self.data.startDate = selected;
+                    self.isValid.startDate = true;
                 }
             });
-            $("#timeBudgetModal").scroll(function() {
-                $("#time-startdate").datepicker("hide");
-                $("#time-startdate").blur();
-            });
-        }.bind(this));
-
-        this.$el.on('focusout', '#time-startdate', function(e) {
-            self = this;
-            this.data.startDate = ($('#time-startdate').val());
-            console.log("FOCUS OUT startDate", self.data);
         }.bind(this));
 
         this.$el.on('focusin', '#time-enddate', function(e) {
             var self = this;
-            console.log("FOCUS on endDate", self.data);
-            var datePicker = $("#time-enddate").datepicker({
-                onSelect: function(dateText) {
-                    if (self.data.startDate == null) {
-                        self.data.startDate = this.value;
-                        self.isValid.startDate = true;
-                        self.$('#time-startdaterequest').hide();
-                    } else if (self.data.startDate != null) {
-                        var startD, startM, startY;
-                        var endD, endM, endY;
-                        startD = self.data.startDate.substr(3, 2);
-                        startM = self.data.startDate.substr(0, 2);
-                        startY = self.data.startDate.substr(6, 4);
-                        var start = new Date(startY, startM - 1, startD);
-                        endD = this.value.substr(3, 2);
-                        endM = this.value.substr(0, 2);
-                        endY = this.value.substr(6, 4);
-                        var end = new Date(endY, endM - 1, endD);
-                        console.log("From", start, "to", end);
-                        if (end > start) {
-                            console.log("valid date range");
-                            self.data.endDate = this.value;
-                            self.isValid.endDate = true;
-                            self.$('#time-enddatewarning').hide();
-                            self.$('#time-enddaterequest').hide();
-                        } else {
-                            console.log("invalid date range")
-                            self.$('#time-enddatewarning').show();
-                        }
+            // console.log("FOCUS on endDate", self.data);
+            $("#time-enddate").datepicker({
+                onSelect: function(selected) {
+                    var dtMax = new Date(selected);
+                    dtMax.setDate(dtMax.getDate() - daysToAdd);
+                    var dd = dtMax.getDate();
+                    var mm = dtMax.getMonth() + 1;
+                    var y = dtMax.getFullYear();
+                    var dtFormatted = mm + '/' + dd + '/' + y;
+
+                    var dtNow = new Date();
+                    var ndd = dtNow.getDate();
+                    var nmm = dtNow.getMonth() +1;
+                    var ny = dtNow.getFullYear();
+                    var ndtFormatted = nmm + '/' + ndd + '/' + ny;
+                    $('#time-startdate').datepicker("option", "maxDate", dtFormatted)
+                    $('#time-enddaterequest').hide();
+                    $('#time-enddate').datepicker("option", "minDate", ndtFormatted);
+                },
+                onClose: function(selected) {
+                    //end
+                    
+                    var dtMax = new Date(selected);
+                    var edd = dtMax.getDate();
+                    var emm = dtMax.getMonth() + 1;
+                    var ey = dtMax.getFullYear();
+                    var edtFormatted = emm + '/' + edd + '/' + ey;
+                    //start
+                    var dtMin = new Date(self.data.startDate);
+                    var sdd = dtMin.getDate();
+                    var smm = dtMin.getMonth() + 1;
+                    var sy = dtMin.getFullYear();
+                    var sdtFormatted = smm + '/' + sdd + '/' + sy;
+                    //logic
+                    if (edtFormatted == sdtFormatted ||  ey < sy || ey == sy && emm < smm ||ey == sy && emm == smm && edd < sdd) {
+                        var sdd = dtMin.getDate();
+                        var smm = dtMin.getMonth() + 1;
+                        var sy = dtMin.getFullYear();
+                        var sdtFormatted = smm + '/' + sdd + '/' + sy;
+                        self.data.startDate = sdtFormatted;
                     }
+                    //Prevent endDate from being less than now:
+
+                    // if(ey < ny || ey == ny && emm < nmm ||ey == ny && emm == nmm && edd < ndd){
+
+                    //     self.data.endDate = 
+                    // }
+                    self.data.endDate = selected;
+                    self.isValid.endDate = true;
                 }
             });
-            $("#timeBudgetModal").scroll(function() {
-                $("#time-enddate").datepicker("hide");
-                $("#time-enddate").blur();
-            });
-        }.bind(this));
 
-        this.$el.on('focusout', '#time-enddate', function(e) {
-            self = this;
-            this.data.endDate = ($('#time-enddate').val());
-            console.log("enddate is ", this.data);
         }.bind(this));
 
         this.$el.on('focusout', '#time-amount', function(e) {
@@ -237,47 +225,59 @@ var TimeBudgetView = Backbone.View.extend({
 
         }.bind(this));
 
-        this.$el.on('focusout', '#time-dbconnections', function(e) {
-            if (/\d/.test($('#time-dbconnections').val())) {
-                this.data.dbConnections = parseInt($('#time-dbconnections').val());
-                self.isValid.maxDBConnections = true;
-                self.$('#time-maxdbconnectionswarning').hide();
-                self.$('#time-maxdbconnectionsrequest').hide();
+        this.$el.on('focusout', '#time-minDB', function(e) {
+            if (/\d/.test($('#time-minDB').val())) {
+                this.data.minDB = parseInt($('#time-minDB').val());
+                console.log(this.data.minDB, this.data.maxDB);
+                if(this.data.minDB < 1){
+                    this.data.minDB = 0;
+                    $('#time-minDB').prop('value', this.data.minDB);
+                }
+                
+                if (this.data.minDB > this.data.maxDB) {
+                    console.log("minDB > max");
+                    this.data.minDB = this.data.maxDB - 1;
+                    $('#time-minDB').prop('value', this.data.minDB);
+                    // $('#time-minDB').val(this.data.minDB);
+                }
+                self.isValid.minDB = true;
+                self.$('#time-minDBwarning').hide();
+                self.$('#time-minDBrequest').hide();
             } else {
-                self.$('#time-maxdbconnectionswarning').show();
+                self.$('#time-minDBwarning').show();
             }
-
         }.bind(this));
 
-        this.$el.on('focusout', '#time-mindbconnections', function(e) {
-            if (/\d/.test($('#time-mindbconnections').val())) {
-                this.data.dbConnections = parseInt($('#time-mindbconnections').val());
-                self.isValid.minDBConnections = true;
-                self.$('#time-mindbconnectionswarning').hide();
-                self.$('#time-mindbconnectionsrequest').hide();
+        this.$el.on('focusout', '#time-maxDB', function(e) {
+            if (/\d/.test($('#time-maxDB').val())) {
+                this.data.maxDB = parseInt($('#time-maxDB').val());
+                console.log(this.data.minDB, this.data.maxDB);
+                if(this.data.maxDB < 1){
+                    this.data.maxDB = 0;
+                    $('#time-maxDB').prop('value', this.data.maxDB);
+                }
+                if (this.data.minDB > this.data.maxDB) {
+                    console.log("minDB > max");
+                    this.data.maxDB = (this.data.minDB + 1);
+                    $('#time-maxDB').prop('value', this.data.maxDB);
+                    // $('#time-maxDB').val(this.data.maxDB);
+                }
+                self.isValid.maxDB = true;
+                self.$('#time-maxDBwarning').hide();
+                self.$('#time-maxDBrequest').hide();
             } else {
-                self.$('#time-mindbconnectionswarning').show();
+                self.$('#time-maxDBwarning').show();
             }
-
         }.bind(this));
 
 
         this.$el.on('click', '#time-myonoffswitch', function(e) {
-            if ($('#time-myonoffswitch').val() == 'null') {
-                $('#time-myonoffswitch').val('true');
-            } else if ($('#time-myonoffswitch').val() == 'true') {
-                var value = $('#time-myonoffswitch').val();
-                $('#time-myonoffswitch').val('false');
-                this.data.option = $('#time-myonoffswitch').val();
-            } else {
-                var value = $('#time-myonoffswitch').val();
-                $('#time-myonoffswitch').val('true');
-                this.data.option = $('#time-myonoffswitch').val();
-            }
-
+            this.data.timeout = $('#time-myonoffswitch').prop('checked');
+            this.isValid.timeout = true
         }.bind(this));
 
         this.$el.on('click', '#time-savebtn', function(e) {
+            console.log("DATA about to be save (pre-check)",self.data);
             if (self.data.timebudgetname == null) {
                 self.$('#time-budgetnamerequest').show();
             }
@@ -302,20 +302,27 @@ var TimeBudgetView = Backbone.View.extend({
             if (self.data.odecay == null) {
                 self.$('#time-odecayrequest').show();
             }
-            if (self.data.minDBConnections == null) {
-                self.$('#time-mindbconnectionsrequest').show();
+            if (self.data.minDB == null) {
+                self.$('#time-minDBrequest').show();
             }
-            if (self.data.maxDBConnections == null) {
-                self.$('#time-maxdbconnectionsrequest').show();
+            if (self.data.maxDB == null) {
+                self.$('#time-maxDBrequest').show();
+            }
+            if (self.data.timeout == null) {
+                self.$('#time-myonoffswitch').prop('checked');
+                this.data.timeout = $('#time-myonoffswitch').prop('checked');
             }
             $('#time-filter-details').addClass('hidden');
             var validForm = true;
+
             for (var i in self.isValid) {
                 if (!self.isValid[i]) {
                     validForm = false;
+                    console.log("invalid", i);
                 }
             }
             if (validForm) {
+                console.log("form is valid");
                 this.model.post_time_budget_result(this.data);
                 for (var i in self.isValid) {
                     self.isValid[i] = false;
