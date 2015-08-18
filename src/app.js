@@ -101,30 +101,29 @@ app.get('/api/notifications/seen', require(__dirname + '/server/route/notificati
 
 
 
-app.get('/getUsers'), jsonParser,
-    function(req, res) {
-        MongoClient.connect(databaseUrl, function(err, db) {
-            if (err) {
-                throw err
-            };
-            db.collection('ec2Instances').aggregate({
-                $project: {
-                    '_id': 0,
-                    'Name': 1
-                }
-            }, function(err) {
-                if (err) throw err;
-                res.send('db');
-            })
+app.get('/getUsers', jsonParser, function(req, res) {
+    MongoClient.connect(databaseUrl, function(err, db) {
+        if (err) {
+            throw err
+        };
+        db.collection('ec2Instances').aggregate({
+            $project: {
+                '_id': 0,
+                'Name': 1
+            }
+        }, function(err) {
+            if (err) throw err;
+            res.send('db');
         })
-    }
+    })
+});
 app.get('/time', function(req, res) {
-        mongoose.model('Billings').find().limit(1).sort({
-            $natural: -1
-        }).exec(function(e, d) {
-            // console.log(d[0].UsageStartDate);
-            res.send(d[0].UsageStartDate);
-        });
+    mongoose.model('Billings').find().limit(1).sort({
+        $natural: -1
+    }).exec(function(e, d) {
+        // console.log(d[0].UsageStartDate);
+        res.send(d[0].UsageStartDate);
+    });
 });
 
 app.post('/setBalance', jsonParser, function(req, res) {
@@ -142,7 +141,7 @@ var MongoClient = mongodb.MongoClient;
 
 app.post('/timebudget', jsonParser, function(req, res) {
     var r = req.body;
-    console.log("timebudget",r);
+    console.log("timebudget", r);
     var startDate = r.startDate.split('/');
     var endDate = r.endDate.split('/');
     MongoClient.connect(databaseUrl, function(err, db) {
@@ -161,9 +160,12 @@ app.post('/timebudget', jsonParser, function(req, res) {
             oDecayRate: r.odecay,
             minDB: r.minDB,
             maxDB: r.maxDB,
+            timeout: r.timeout,
             State: 'valid'
         };
+        console.log("formatted",doc);
         db.collection('timeBudgets').insert(doc, function(err) {
+
             if (err) throw err;
             //?
             require('./server/route/timeBudgetRoute').createGRLSInstances(doc, function(err) {
@@ -187,7 +189,7 @@ app.post('/removeCostBudget', jsonParser, function(req, res) {
 
 app.post('/editCostBudget', jsonParser, function(req, res) {
     var r = req.body;
-    console.log("editing Cost Budget");
+    console.log("editing Cost Budget", r);
     MongoClient.connect(databaseUrl, function(err, db) {
         db.collection('budgets').update({
             BudgetName: r.oldName
@@ -199,7 +201,7 @@ app.post('/editCostBudget', jsonParser, function(req, res) {
                 StartDate: r.startDate,
                 EndDate: r.endDate,
                 Amount: r.amount,
-                TimeOut: r.timeout,
+                timeout: r.timeout,
                 State: 'valid'
             }
         });
@@ -213,14 +215,14 @@ app.post('/removeTimeBudget', jsonParser, function(req, res) {
         db.collection('timeBudgets').remove({
             TimeBudgetName: r.budgetName
         });
-    res.send("success");
+        res.send("success");
     });
 });
 
-app.post('/editTimeBudget', jsonParser, function(req, res){
+app.post('/editTimeBudget', jsonParser, function(req, res) {
     var r = req.body;
     // console.log("editing Time Budget data:",r);
-    MongoClient.connect(databaseUrl, function(err, db){
+    MongoClient.connect(databaseUrl, function(err, db) {
         db.collection('timeBudgets').update({
             TimeBudgetName: r.oldName
         }, {
@@ -236,7 +238,6 @@ app.post('/editTimeBudget', jsonParser, function(req, res){
                 oDecayRate: r.oDecayRate,
                 minDB: r.minDB,
                 maxDB: r.maxDB,
-                stop: r.timeout,
                 State: 'valid'
             }
         });
@@ -259,7 +260,7 @@ app.post('/budget', jsonParser, function(req, res) {
             StartDate: startDate[2] + '-' + startDate[0] + '-' + startDate[1] + ' ' + '00:00:00',
             EndDate: endDate[2] + '-' + endDate[0] + '-' + endDate[1] + ' ' + '23:00:00',
             Amount: r.amount,
-            TimeOut: r.timeout,
+            timeout: r.timeout,
             State: 'valid'
         }, function(err) {
             if (err) throw err;

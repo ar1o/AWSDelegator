@@ -43,7 +43,6 @@ var UsageMonitorModel = Backbone.Model.extend({
 	},
 	list_users: function() {
 		var result;
-		console.log('listUsers');
 		var self = this;
 		return $.ajax({
 			type: 'GET',
@@ -85,7 +84,6 @@ var UsageMonitorModel = Backbone.Model.extend({
 		var self = this;
 		GroupCollection.reset();
 		this.groups_result().done(function(result) {
-			console.log("getGroups",result);
 			for (var r in result) {
 				var costBudgetNames = result[r].CostBudgetName[0];
 				for (var i = 1; i < result[r].CostBudgetName.length; ++i) {
@@ -113,7 +111,6 @@ var UsageMonitorModel = Backbone.Model.extend({
 		var self = this;
 		UserCollection.reset();
 		this.users_result().done(function(result) {
-			console.log("getUsers",result);
 			for (var r in result) {
 				var costBudgetNames = result[r].CostBudgetName[0];
 				for (var i = 1; i < result[r].CostBudgetName.length; ++i) {
@@ -133,14 +130,12 @@ var UsageMonitorModel = Backbone.Model.extend({
 			}
 			self.set('userDataReady', Date.now());
 		}).success(function() {
-			console.log("success");
 		}).fail(function() {
 			console.log('FAILED');
 		});
 	},
 
 	getBudgets: function() {
-		console.log("getBudgets");
 		var self = this;
 		this.budget_result().done(function(result) {
 			budgetCollection.reset();
@@ -164,7 +159,6 @@ var UsageMonitorModel = Backbone.Model.extend({
 
 	getTimeBudgets: function() {
 		var self = this;
-		console.log("getTimeBudgets");
 		this.time_budget_result().done(function(result) {
 			timeBudgetCollection.reset();
 			for (var r in result) {
@@ -244,7 +238,6 @@ var UsageMonitorModel = Backbone.Model.extend({
 			url: host + '/removeCostBudget',
 			success: function(data) {
 				self.getBudgets();
-				console.log("cBudget: " + name + " deleted!");
 				self.set('budgetDataReady', Date.now());
 			}
 		});
@@ -259,7 +252,6 @@ var UsageMonitorModel = Backbone.Model.extend({
 			url: host + '/editTimeBudget',
 			success: function(data) {
 				self.getTimeBudgets();
-				// console.log('successful edit of row');
 				self.set('timeBudgetDataReady', Date.now());
 			}
 		});
@@ -277,7 +269,6 @@ var UsageMonitorModel = Backbone.Model.extend({
 			url: host + '/removeTimeBudget',
 			success: function(data) {
 				self.getTimeBudgets();
-				console.log("tBudget: " + name + " deleted!");
 				self.set('timeBudgetDataReady', Date.now());
 			}
 		});
@@ -323,8 +314,6 @@ var UsageMonitorModel = Backbone.Model.extend({
 		};
 		(function(params) {
 			$.get(host + '/api/usage/timeBudgetCost', params, function(result) {
-				console.log(result)
-
 				for (var i in result) {
 					var data = new budgetCostModel({
 						date: result[i]._id,
@@ -332,7 +321,6 @@ var UsageMonitorModel = Backbone.Model.extend({
 					});
 					budgetCostCollection.add(data);
 				}
-				//add endDate into collection
 				var data = new budgetCostModel({
 					date: timeBudgetCollection.at(budgetIndex).get('endDate'),
 					cost: 0

@@ -10,7 +10,7 @@ timeBudgetSchema = new mongoose.Schema({
 	oDecayRate: Number,
 	minDB: Number,
 	maxDB: Number,
-	TimeOut: String,
+	timeout: String,
 	State: Boolean
 });
 
