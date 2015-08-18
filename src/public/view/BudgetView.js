@@ -198,18 +198,28 @@ var BudgetView = Backbone.View.extend({
                 self.$('#enddaterequest').show();
             }
             if (self.data.timeout == null) {
-                console.log($('#myonoffswitch').prop('checked'));
+                var checked = $('#myonoffswitch').prop('checked');
+                if(checked){
+                    this.data.timeout = true;
+                }
+                else{
+                    this.data.timeout = false;
+                }
+                this.isValid.timeout = true;
             }
             var validForm = true;
+
             for (var i in self.isValid) {
                 if (!self.isValid[i]) {
                     validForm = false;
                     console.log("invalid", i);
                 }
             }
+            
             $('#filter-details').addClass('hidden');
             if (validForm) {
                 console.log("form is valid");
+                console.log("About to pass to post budget result")
                 this.model.post_budget_result(this.data);
                 for (var i in self.isValid) {
                     self.isValid[i] = false;
@@ -225,6 +235,20 @@ var BudgetView = Backbone.View.extend({
         }.bind(this));
 
         this.$el.on('click', '#closebtn', function(e) {
+            for (var i in self.isValid) {
+                self.isValid[i] = false
+                self.data[i] = null;
+            }
+            $("#amount").val("");
+            $("#budgetname").val("");
+            $(".costfilter").val("");
+            $("#startdate").val("");
+            $("#enddate").val("");
+            $('#filter-details').addClass('hidden');
+            $('#myModal').modal('hide');
+        }.bind(this));
+
+        this.$el.on('click', '.close', function(e) {
             for (var i in self.isValid) {
                 self.isValid[i] = false
                 self.data[i] = null;

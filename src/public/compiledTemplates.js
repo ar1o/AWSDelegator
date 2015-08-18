@@ -47,7 +47,7 @@ templates['ConfigurationView'] = template({"1":function(depth0,helpers,partials,
 
   return "<!-- Modal -->\r\n<div id=\"myModal2\" class=\"modal fade\" role=\"dialog\">\r\n	<div class=\"modal-dialog\">\r\n		<!-- Modal content-->\r\n		<div class=\"modal-content\">\r\n			<div class=\"modal-header\">\r\n				<button type=\"button\" class=\"close\" data-dismiss=\"modal\">&times;</button>\r\n				<h4 class=\"modal-title\"> AWS Account Settings <i class=\"fa fa-question-circle\" id =\"AccountSettings\" data-toggle=\"tooltip\" title=\"General Info regarding account settings\"></i></h4>\r\n				<p>For best accuracy, please input credits and credits used information information soon after Amazon updates the invoice for your account. This is usually at the end of the first week of the month. Info found at <b>https://console.aws.amazon.com/billing/home</b> by clicking the \"Credits\" link on the left side of the page<p> \r\n			</div>\r\n			<div class=\"modal-body\">\r\n"
     + ((stack1 = helpers.each.call(depth0,(depth0 != null ? depth0.pages : depth0),{"name":"each","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
-    + "			</div>\r\n			<div class=\"modal-footer\">\r\n				<p>To modify account settings, go to \\AWSDelegator\\src\\server\\config.js</p>\r\n				<button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\" id=\"saveConfig\">Save</button>\r\n				<button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Close</button>\r\n			</div>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
+    + "			</div>\r\n			<div class=\"modal-footer\">\r\n				<p>To modify account settings, go to \\AWSDelegator\\src\\server\\config.js</p>\r\n				<button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\" id=\"saveConfig\">Save</button>\r\n				<button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\" id=\"closebtn\">Close</button>\r\n			</div>\r\n		</div>\r\n	</div>\r\n</div>\r\n";
 },"useData":true});
 templates['EC2BillingView'] = template({"1":function(depth0,helpers,partials,data) {
     var alias1=this.lambda, alias2=this.escapeExpression;
@@ -423,7 +423,7 @@ templates['UMCostBudgetsView'] = template({"1":function(depth0,helpers,partials,
 },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var stack1;
 
-  return "<table id=\"BudgetTable\" class=\"hover\">\r\n	<thead>\r\n		<tr class=\"dark-row\">\r\n			<th>BudgetName</th>\r\n			<th>BatchType</th>\r\n			<th>BatchName</th>\r\n			<th>StartDate</th>\r\n			<th>EndDate</th>\r\n			<th>Amount</th>\r\n			<th>Stop</th>\r\n		</tr>\r\n	</thead>\r\n	<tbody id=\"budgetData\">\r\n"
+  return "<table id=\"BudgetTable\" class=\"hover\">\r\n	<thead>\r\n		<tr class=\"dark-row\">\r\n			<th>BudgetName</th>\r\n			<th>BatchType</th>\r\n			<th>BatchName</th>\r\n			<th>StartDate</th>\r\n			<th>EndDate</th>\r\n			<th>Amount</th>\r\n			<th>Timeout</th>\r\n		</tr>\r\n	</thead>\r\n	<tbody id=\"budgetData\">\r\n"
     + ((stack1 = helpers.each.call(depth0,(depth0 != null ? depth0.budgets : depth0),{"name":"each","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
     + "	</tbody>	\r\n</table>\r\n";
 },"useData":true});
@@ -495,7 +495,7 @@ templates['UsageMonitorView'] = template({"1":function(depth0,helpers,partials,d
 },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var stack1;
 
-  return "<table id=\"BudgetTable\" class=\"display\">\r\n	<thead>\r\n		<tr class=\"dark-row\">\r\n			<th>BudgetName</th>\r\n			<th>BatchType</th>\r\n			<th>BatchName</th>\r\n			<th>StartDate</th>\r\n			<th>EndDate</th>\r\n			<th>Amount</th>\r\n			<th>Stop</th>\r\n		</tr>\r\n	</thead>\r\n	<tbody id=\"budgetData\">\r\n"
+  return "<table id=\"BudgetTable\" class=\"display\">\r\n	<thead>\r\n		<tr class=\"dark-row\">\r\n			<th>BudgetName</th>\r\n			<th>BatchType</th>\r\n			<th>BatchName</th>\r\n			<th>StartDate</th>\r\n			<th>EndDate</th>\r\n			<th>Amount</th>\r\n			<th>Timeout</th>\r\n		</tr>\r\n	</thead>\r\n	<tbody id=\"budgetData\">\r\n"
     + ((stack1 = helpers.each.call(depth0,(depth0 != null ? depth0.budgets : depth0),{"name":"each","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
     + "	</tbody>	\r\n</table>\r\n\r\n\r\n<ul class='custom-menu'>\r\n  <li data-action=\"Edit\"data-toggle=\"modal\" data-target=\"#base-modal\" data-backdrop=\"static\" data-keyboard=\"false\">Edit Instance</li>\r\n  <li data-action=\"Delete\" data-toggle=\"modal\" data-target=\"#base-modal\" data-backdrop=\"static\" data-keyboard=\"false\" >Delete Instance</li>\r\n</ul>\r\n\r\n";
 },"useData":true});

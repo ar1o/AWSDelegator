@@ -24,7 +24,7 @@ var UMTimeBudgetsView = Backbone.View.extend({
             oDecayRate: null,
             minDB: null,
             maxDB: null,
-            stop: true
+            timeout: true
         };
 
         this.isValid = {
@@ -38,7 +38,7 @@ var UMTimeBudgetsView = Backbone.View.extend({
             oDecayRate: false,
             minDB: false,
             maxDB: false,
-            stop: true
+            timeout: true
         };
 
         this.bindings();
@@ -73,15 +73,17 @@ var UMTimeBudgetsView = Backbone.View.extend({
         }.bind(this));
 
         this.$el.on('click', '#TimeBudgetTable tr', function() {
-            var rowIndex = this.rowIndex - 1;
-            self.model.setBudgetIndex(rowIndex);
-            if (timeBudgetCollection.at(rowIndex).get('batchType') == 'user') {
-                $("#serviceContainer").remove();
-                self.updateUserViews(rowIndex);
-            } else {
-                $("#groupUserServiceContainer").remove();
-                self.updateGroupViews(rowIndex);
-            }
+            if (($('#TimeBudgetTable').find("tbody > tr > td").length) > 6) {
+                var rowIndex = this.rowIndex - 1;
+                self.model.setBudgetIndex(rowIndex);
+                if (timeBudgetCollection.at(rowIndex).get('batchType') == 'user') {
+                    $("#serviceContainer").remove();
+                    self.updateUserViews(rowIndex);
+                } else {
+                    $("#groupUserServiceContainer").remove();
+                    self.updateGroupViews(rowIndex);
+                }
+            } 
         });
 
 
@@ -119,15 +121,18 @@ var UMTimeBudgetsView = Backbone.View.extend({
         // Trigger action when the contexmenu is about to be shown
         $(document).bind("contextmenu", function(event) {
             if (event.target.matches('#TimeBudgetTable *')) {
-                // Avoid the real one
+
                 event.preventDefault();
-                // Show contextmenu
-                $(".custom-menu").finish().toggle(100).
-                    // In the right position (the mouse)
-                css({
-                    top: event.pageY + "px",
-                    left: event.pageX + "px"
-                });
+                if (($('#TimeBudgetTable').find("tbody > tr > td").length) > 6) {
+                    // Avoid the real one
+                    // Show contextmenu
+                    $(".custom-menu").finish().toggle(100).
+                        // In the right position (the mouse)
+                    css({
+                        top: event.pageY + "px",
+                        left: event.pageX + "px"
+                    });
+                }
             }
         });
 
@@ -162,10 +167,10 @@ var UMTimeBudgetsView = Backbone.View.extend({
                     $('#time-minDB').prop('value', self.data.minDB);
                     $('#time-maxDB').prop('value', self.data.maxDB);
                     var state = self.data.timeout;
-                    if(self.data.timeout == 'true' ){
+                    if (self.data.timeout == 'true') {
                         $('#time-myonoffswitch').prop('checked', 'checked');
                     }
-                    if(self.data.timeout == 'false' ){
+                    if (self.data.timeout == 'false') {
                         $('#time-myonoffswitch').prop('checked', '');
                     }
                     $('#time-myonoffswitch').attr('checked', self.data.timeout);
@@ -221,6 +226,7 @@ var UMTimeBudgetsView = Backbone.View.extend({
 
                     //Set Field data ^^
                     $("#action").text("Save");
+                    $
                     $('#time-minDBwarning').hide();
                     $('#time-minDBrequest').hide();
                     $('#time-maxDBwarning').hide();
@@ -358,7 +364,7 @@ var UMTimeBudgetsView = Backbone.View.extend({
                     var smm = dtMin.getMonth() + 1;
                     var sy = dtMin.getFullYear();
                     var sdtFormatted = smm + '/' + sdd + '/' + sy;
-                        //logic
+                    //logic
                     if (edtFormatted == sdtFormatted || ey < sy || ey == sy && emm < smm || ey == sy && emm == smm && edd < sdd) {
                         var sdd = dtMax.getDate() - 1;
                         var smm = dtMax.getMonth() + 1;
@@ -376,11 +382,14 @@ var UMTimeBudgetsView = Backbone.View.extend({
         this.$el.on('focusout', '#time-minDB', function(e) {
             if (/\d/.test($('#time-minDB').val())) {
                 this.data.minDB = parseInt($('#time-minDB').val());
-                if(this.data.minDB < 1){
+                if (this.data.minDB == '') {
+                    this.data.minDB = null;
+                }
+                if (this.data.minDB < 1) {
                     this.data.minDB = 0;
                     $('#time-minDB').prop('value', this.data.minDB);
                 }
-                
+
                 if (this.data.minDB > this.data.maxDB) {
                     this.data.minDB = this.data.maxDB - 1;
                     $('#time-minDB').prop('value', this.data.minDB);
@@ -397,7 +406,7 @@ var UMTimeBudgetsView = Backbone.View.extend({
         this.$el.on('focusout', '#time-maxDB', function(e) {
             if (/\d/.test($('#time-maxDB').val())) {
                 this.data.maxDB = parseInt($('#time-maxDB').val());
-                if(this.data.maxDB < 1){
+                if (this.data.maxDB < 1) {
                     this.data.maxDB = 0;
                     $('#time-maxDB').prop('value', this.data.maxDB);
                 }

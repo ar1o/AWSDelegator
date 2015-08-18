@@ -18,7 +18,7 @@ var TimeBudgetView = Backbone.View.extend({
             odecay: null,
             minDB: null,
             maxDB: null,
-            stop: true
+            timeout: true
         };
         this.isValid = {
             timebudgetname: false,
@@ -31,7 +31,7 @@ var TimeBudgetView = Backbone.View.extend({
             odecay: false,
             minDB: false,
             maxDB: false,
-            stop: true
+            timeout: true
         };
         this.bindings();
         this.render();
@@ -62,7 +62,6 @@ var TimeBudgetView = Backbone.View.extend({
                 $('#time-budgetnamewarning').hide();
                 $('#time-budgetnamerequest').hide();
                 var newBudget = true;
-                console.log(timeBudgetCollection)
                 for (var i = 0; i < timeBudgetCollection.length; ++i) {
                     if (timeBudgetCollection.at(i).get('timeBudgetName') == $('#time-budgetname').val()) {
                         newBudget = false;
@@ -229,12 +228,16 @@ var TimeBudgetView = Backbone.View.extend({
             if (/\d/.test($('#time-minDB').val())) {
                 this.data.minDB = parseInt($('#time-minDB').val());
                 console.log(this.data.minDB, this.data.maxDB);
+                if(this.data.minDB == ''){
+                    console.log('no text');
+                    this.data.minDB = null;
+                }
                 if(this.data.minDB < 1){
                     this.data.minDB = 0;
                     $('#time-minDB').prop('value', this.data.minDB);
                 }
                 
-                if (this.data.minDB > this.data.maxDB) {
+                if (this.data.minDB > this.data.maxDB && this.data.maxDB != null) {
                     console.log("minDB > max");
                     this.data.minDB = this.data.maxDB - 1;
                     $('#time-minDB').prop('value', this.data.minDB);
@@ -256,7 +259,7 @@ var TimeBudgetView = Backbone.View.extend({
                     this.data.maxDB = 0;
                     $('#time-maxDB').prop('value', this.data.maxDB);
                 }
-                if (this.data.minDB > this.data.maxDB) {
+                if (this.data.minDB > this.data.maxDB && this.data.minDB != null) {
                     console.log("minDB > max");
                     this.data.maxDB = (this.data.minDB + 1);
                     $('#time-maxDB').prop('value', this.data.maxDB);
@@ -309,8 +312,14 @@ var TimeBudgetView = Backbone.View.extend({
                 self.$('#time-maxDBrequest').show();
             }
             if (self.data.timeout == null) {
-                self.$('#time-myonoffswitch').prop('checked');
-                this.data.timeout = $('#time-myonoffswitch').prop('checked');
+                var checked = $('#time-myonoffswitch').prop('checked');
+                if(checked){
+                    this.data.timeout = true;
+                }
+                else{
+                    this.data.timeout = false;
+                }
+                this.isValid.timeout = true;
             }
             $('#time-filter-details').addClass('hidden');
             var validForm = true;
@@ -321,9 +330,12 @@ var TimeBudgetView = Backbone.View.extend({
                     console.log("invalid", i);
                 }
             }
+
             if (validForm) {
                 console.log("form is valid");
+                console.log("About to pass to post time budget result")
                 this.model.post_time_budget_result(this.data);
+
                 for (var i in self.isValid) {
                     self.isValid[i] = false;
                     self.data[i] = null;
@@ -335,6 +347,9 @@ var TimeBudgetView = Backbone.View.extend({
                 $("#time-enddate").val("");
                 $("#time-udecay").val("");
                 $("#time-odecay").val("");
+                $("#minDB").val("");
+                $("#maxDB").val("");
+                $('#time-myonoffswitch').val("");
                 $('#timeBudgetModal').modal('hide');
             }
         }.bind(this));

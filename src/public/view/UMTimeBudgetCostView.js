@@ -1,3 +1,4 @@
+//For graphs displayed in Time Budget View
 var UMTimeBudgetCostView = Backbone.View.extend({
     className: 'UMTimeBudgetCostView',
 
