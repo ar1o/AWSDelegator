@@ -402,7 +402,6 @@ exports.userTimeCost = function(req, res) {
 	});
 }
 
-//Issue here due to productName. Not sure how to fix...
 exports.createGRLSInstances = function(timeBudget,callback) {
 	console.log("createGRLSInstances",timeBudget);
 	MongoClient.connect(databaseUrl, function(err, db) {
@@ -415,10 +414,10 @@ exports.createGRLSInstances = function(timeBudget,callback) {
 							'user:Name': {
 								$eq: timeBudget.BatchName
 							}
-						}, {
-							'user:Group': {
-								$eq: 'null'
-							}
+						// }, {
+						// 	'user:Group': {
+						// 		$eq: 'null'
+						// 	}
 						}, {
 							UsageStartDate: {
 								$gte: timeBudget.StartDate
@@ -449,11 +448,12 @@ exports.createGRLSInstances = function(timeBudget,callback) {
 	                }
 	            }
 	        ]).exec(function(e, resources) {
+	        	console.log("resources",resources);
+
 				var index1 = 0;
 				var controller1 = function() {
 					iterator1(function() {
 						index1++;
-						console.log("resources",resources);
 						if (index1 < resources.length) controller1();
 						else {
 							callback();
@@ -461,14 +461,14 @@ exports.createGRLSInstances = function(timeBudget,callback) {
 					});
 				};
 				var iterator1 = function(callback1) {
-					console.log('timeBudgetRoute', resources[index1]);
 					if(resources[index1].ProductName[0] == 'Amazon Elastic Compute Cloud'){
 						mongoose.model('ec2Instances').aggregate([{
 							$match: {
 								Id: resources[index1]._id,
-								State: 'running'
+								// State: 'running'
 							}
 						}]).exec(function(e, resourceData) {
+							console.log("resourceData", resourceData);
 							if(resourceData.length != 0){
 								var doc = {
 									timeBudgetName: timeBudget.TimeBudgetName,
@@ -479,7 +479,6 @@ exports.createGRLSInstances = function(timeBudget,callback) {
 									instanceRegion: resourceData[0].Zone,
 									serviceType: 'ec2',
 									instanceType: resourceData[0].Type,
-									//why 0 for lifetime??
 									lifetime: 0,
 									uDecay: timeBudget.uDecayRate,
 									oDecay: timeBudget.oDecayRate,

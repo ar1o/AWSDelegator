@@ -199,12 +199,9 @@ var getInstanceId = function(_batchtype, _batchname, callback) {
             }
         }, {
             $group: {
-                _id: null,
-                Instances: {
-                    $addToSet: "$ResourceId"
-                },
+                _id: "$ResourceId",
                 Zone: {
-                    $push: "$AvailabilityZone"
+                    $addToSet: "$AvailabilityZone"
                 }
             }
         }]).exec(function(e, d) {

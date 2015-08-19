@@ -11,7 +11,7 @@ timeBudgetSchema = new mongoose.Schema({
 	minDB: Number,
 	maxDB: Number,
 	TimeOut: String,
-	State: Boolean
+	State: String
 });
 
 mongoose.model('timeBudgets', timeBudgetSchema, 'timeBudgets');
