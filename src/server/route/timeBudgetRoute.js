@@ -260,7 +260,6 @@ exports.groupUserTimeService = function(req, res) {
 }
 
 exports.timeUserService = function(req, res) {
-	console.log("TimeUserService req", req);
 	var userName = req.query.userName;
 	var startDate = req.query.startDate;
 	var endDate = req.query.endDate;
@@ -406,7 +405,7 @@ exports.createGRLSInstances = function(timeBudget,callback) {
 	MongoClient.connect(databaseUrl, function(err, db) {
         if (err) throw err; 
 		if(timeBudget.BatchType == 'user'){
-			mongoose.model('Billings').aggregate([
+				mongoose.model('Billings').aggregate([
 				{
 					$match: {
 						$and: [{
@@ -427,15 +426,27 @@ exports.createGRLSInstances = function(timeBudget,callback) {
 							}
 						}],
 					}
-				// }
-			}, {
-				$project: {
-					_id: 1,
-					ProductName: 1
-				}
+				}, {
+	                $project: {
+	                    _id: 0,
+	                    ResourceId: 1,
+	                    ProductName: 1
+	                }
+	            },{
+	                $group: {
+	                    _id: "$ResourceId",
+	                    ProductName: {
+	                        $addToSet: "$ProductName"
+	                    }
+	                }
+	            },{
+	                $project: {
+	                    _id: 1,
+	                    ProductName: 1
+	                }
+	            // }
 			}]).exec(function(e, resources) {
 				if (err) throw err;
-				console.log("resources", resources);
 				var index1 = 0;
 				var controller1 = function() {
 					iterator1(function() {
@@ -607,7 +618,7 @@ exports.createGRLSInstances = function(timeBudget,callback) {
 								mongoose.model('ec2Instances').aggregate([{
 									$match: {
 										Id: resources[index2]._id,
-										State: 'running'
+										// State: 'running'
 									}
 								}]).exec(function(e, resourceData) {
 									if (resourceData.length != 0) {

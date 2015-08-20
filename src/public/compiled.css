@@ -743,15 +743,16 @@ div#serviceContainer {
   position: fixed;
   background: #f7f7f7;
   border: 1px solid #ccc;
-  top: 65px;
-  right: 150px;
-  width: 200px;
+  top: 50px;
+  right: 165px;
+  width: 500px;
   height: 500px;
+  overflow-y: scroll;
 }
 .NotificationView.visible .notification-content:after,
 .NotificationView.visible .notification-content:before {
   bottom: 100%;
-  left: 70%;
+  left: 90%;
   border: solid transparent;
   content: " ";
   height: 0;

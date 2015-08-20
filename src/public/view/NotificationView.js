@@ -27,10 +27,9 @@ var NotificationView = Backbone.View.extend({
                     this.model.setAsSeen(currentID);
                 }
                 //open usage monitor
-                window.location.hash = '#/UMCostBudgets';
+                window.location.hash = '#/UsageMonitor';
                 setTimeout(function() {
                     $('#BudgetTable tr').each(function() {
-
                         var str = ('#' + currentID);
                         var id = $(this).find(str).html();
                         if (typeof(id) != "undefined") {

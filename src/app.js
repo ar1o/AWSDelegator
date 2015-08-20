@@ -141,7 +141,6 @@ var MongoClient = mongodb.MongoClient;
 
 app.post('/timebudget', jsonParser, function(req, res) {
     var r = req.body;
-    console.log("timebudget", r);
     var startDate = r.startDate.split('/');
     var endDate = r.endDate.split('/');
     MongoClient.connect(databaseUrl, function(err, db) {
@@ -163,7 +162,7 @@ app.post('/timebudget', jsonParser, function(req, res) {
             timeout: r.timeout,
             State: 'valid'
         };
-        console.log("formatted",doc);
+        console.log("budget created",doc);
         db.collection('timeBudgets').insert(doc, function(err) {
 
             if (err) throw err;
