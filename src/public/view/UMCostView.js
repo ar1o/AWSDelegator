@@ -1,3 +1,4 @@
+//For tables displayed in the Cost View
 var UMCostView = Backbone.View.extend({
     className: 'UMCostView',
 

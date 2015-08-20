@@ -260,6 +260,7 @@ exports.groupUserTimeService = function(req, res) {
 }
 
 exports.timeUserService = function(req, res) {
+	console.log("TimeUserService req", req);
 	var userName = req.query.userName;
 	var startDate = req.query.startDate;
 	var endDate = req.query.endDate;
@@ -426,26 +427,15 @@ exports.createGRLSInstances = function(timeBudget,callback) {
 							}
 						}],
 					}
-				}, {
-	                $project: {
-	                    _id: 0,
-	                    ResourceId: 1,
-	                    ProductName: 1
-	                }
-	            },{
-	                $group: {
-	                    _id: "$ResourceId",
-	                    ProductName: {
-	                        $addToSet: "$ProductName"
-	                    }
-	                }
-	            },{
-	                $project: {
-	                    _id: 1,
-	                    ProductName: 1
-	                }
-	            }
-	        ]).exec(function(e, resources) {
+				// }
+			}, {
+				$project: {
+					_id: 1,
+					ProductName: 1
+				}
+			}]).exec(function(e, resources) {
+				if (err) throw err;
+				console.log("resources", resources);
 				var index1 = 0;
 				var controller1 = function() {
 					iterator1(function() {
@@ -464,7 +454,7 @@ exports.createGRLSInstances = function(timeBudget,callback) {
 								// State: 'running'
 							}
 						}]).exec(function(e, resourceData) {
-							if(resourceData.length != 0){
+							if (resourceData.length != 0) {
 								var doc = {
 									timeBudgetName: timeBudget.TimeBudgetName,
 									instanceId: resourceData[0].Id,
@@ -477,26 +467,26 @@ exports.createGRLSInstances = function(timeBudget,callback) {
 									lifetime: 0,
 									uDecay: timeBudget.uDecayRate,
 									oDecay: timeBudget.oDecayRate,
-									stop: timeBudget.timeout,
+									timeout: timeBudget.timeout,
 									state: 'valid'
 								};
 								db.collection('grlsInstances').insert(doc, function(err) {
 									if (err) throw err;
 									callback1();
 								});
-							}else{
+							} else {
 								callback1();
 							}
 						});
-					}else if(resources[index1].ProductName == 'Amazon RDS Service'){
+					} else if (resources[index1].ProductName == 'Amazon RDS Service') {
 						var arn = resources[index1]._id;
-						var dbName = arn.substring(arn.lastIndexOf(':')+1,arn.length);
+						var dbName = arn.substring(arn.lastIndexOf(':') + 1, arn.length);
 						mongoose.model('rdsInstances').aggregate([{
 							$match: {
 								DBName: dbName
 							}
 						}]).exec(function(e, resourceData) {
-							if(resourceData.length != 0){
+							if (resourceData.length != 0) {
 								var doc = {
 									timeBudgetName: timeBudget.TimeBudgetName,
 									instanceId: resourceData[0].DBName,
@@ -509,24 +499,24 @@ exports.createGRLSInstances = function(timeBudget,callback) {
 									lifetime: 0,
 									uDecay: timeBudget.uDecayRate,
 									oDecay: timeBudget.oDecayRate,
-									stop: timeBudget.timeout,
+									timeout: timeBudget.timeout,
 									state: 'valid'
 								};
 								db.collection('grlsInstances').insert(doc, function(err) {
 									if (err) throw err;
 									callback1();
 								});
-							}else{
+							} else {
 								callback1();
 							}
 						});
-					}else{
+					} else {
 						callback1();
 					}
 				};
 				controller1();
-	        });
-		}else{
+			});
+		} else {
 			mongoose.model('iamUsersGroups').aggregate([{
 				$match: {
 					GroupName: timeBudget.BatchName
@@ -601,7 +591,7 @@ exports.createGRLSInstances = function(timeBudget,callback) {
 							ProductName: 1
 						}
 					}]).exec(function(e, resources) {
-						if(e) throw e;
+						if (e) throw e;
 						var index2 = 0;
 						var controller2 = function() {
 							iterator2(function() {
@@ -633,7 +623,7 @@ exports.createGRLSInstances = function(timeBudget,callback) {
 												lifetime: 0,
 												uDecay: timeBudget.uDecayRate,
 												oDecay: timeBudget.oDecayRate,
-												stop: timeBudget.timeout,
+												timeout: timeBudget.timeout,
 												state: 'valid'
 											};
 											db.collection('grlsInstances').insert(doc, function(err) {
@@ -668,6 +658,7 @@ exports.createGRLSInstances = function(timeBudget,callback) {
 											lifetime: 0,
 											uDecay: timeBudget.uDecayRate,
 											oDecay: timeBudget.oDecayRate,
+											timeout: timeBudget.timeout,
 											state: 'valid'
 										};
 										db.collection('grlsInstances').insert(doc, function(err) {
@@ -682,11 +673,11 @@ exports.createGRLSInstances = function(timeBudget,callback) {
 								callback2();
 							}
 						};
-						if(resources.length!=0){
-							controller2();			
-						}else{
+						if (resources.length != 0) {
+							controller2();
+						} else {
 							callback1();
-						}			
+						}
 					});
 				};
 				if (query1.length != 0) {
