@@ -129,8 +129,7 @@ var UsageMonitorModel = Backbone.Model.extend({
 				UserCollection.add(data);
 			}
 			self.set('userDataReady', Date.now());
-		}).success(function() {
-		}).fail(function() {
+		}).success(function() {}).fail(function() {
 			console.log('FAILED');
 		});
 	},
@@ -199,7 +198,7 @@ var UsageMonitorModel = Backbone.Model.extend({
 		});
 	},
 
-	post_time_budget_result: function(data) {
+	post_time_budget_result: function(data, callback) {
 		var self = this;
 		return $.ajax({
 			type: 'POST',
@@ -207,9 +206,20 @@ var UsageMonitorModel = Backbone.Model.extend({
 			contentType: 'application/json',
 			url: host + '/timebudget',
 			success: function(data) {
+				//check
 				self.getTimeBudgets();
 				self.set('timeBudgetDataReady', Date.now());
-			}
+				console.log("UMM data", data);
+				if (data == 'error' || data == "error, TimeBudget for batchName already Exists") {
+					callback(data);
+				} 
+				else if (data == 'success'){
+					callback('success');
+				}
+				else{
+					callback(data);
+				}
+			},
 		});
 	},
 	edit_cost_budget: function(data) {

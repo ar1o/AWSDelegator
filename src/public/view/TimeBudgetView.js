@@ -35,6 +35,8 @@ var TimeBudgetView = Backbone.View.extend({
         };
         this.bindings();
         this.render();
+        this.$('#time-batchNameAndTypeWarning').hide();
+        this.$('#time-batchSelectionWarning').hide();
         this.$('#time-minDBwarning').hide();
         this.$('#time-minDBrequest').hide();
         this.$('#time-maxDBwarning').hide();
@@ -146,7 +148,7 @@ var TimeBudgetView = Backbone.View.extend({
 
                     var dtNow = new Date();
                     var ndd = dtNow.getDate();
-                    var nmm = dtNow.getMonth() +1;
+                    var nmm = dtNow.getMonth() + 1;
                     var ny = dtNow.getFullYear();
                     var ndtFormatted = nmm + '/' + ndd + '/' + ny;
                     $('#time-startdate').datepicker("option", "maxDate", dtFormatted)
@@ -155,7 +157,7 @@ var TimeBudgetView = Backbone.View.extend({
                 },
                 onClose: function(selected) {
                     //end
-                    
+
                     var dtMax = new Date(selected);
                     var edd = dtMax.getDate();
                     var emm = dtMax.getMonth() + 1;
@@ -168,21 +170,21 @@ var TimeBudgetView = Backbone.View.extend({
                     var sy = dtMin.getFullYear();
                     var sdtFormatted = smm + '/' + sdd + '/' + sy;
                     //logic
-                    if (edtFormatted == sdtFormatted ||  ey < sy || ey == sy && emm < smm ||ey == sy && emm == smm && edd < sdd) {
+                    if (edtFormatted == sdtFormatted || ey < sy || ey == sy && emm < smm || ey == sy && emm == smm && edd < sdd) {
                         var sdd = dtMin.getDate();
                         var smm = dtMin.getMonth() + 1;
                         var sy = dtMin.getFullYear();
                         var sdtFormatted = smm + '/' + sdd + '/' + sy;
                         self.data.startDate = sdtFormatted;
                     }
+                    self.data.endDate = selected;
+                    self.isValid.endDate = true;
                     //Prevent endDate from being less than now:
 
                     // if(ey < ny || ey == ny && emm < nmm ||ey == ny && emm == nmm && edd < ndd){
 
                     //     self.data.endDate = 
                     // }
-                    self.data.endDate = selected;
-                    self.isValid.endDate = true;
                 }
             });
 
@@ -228,15 +230,15 @@ var TimeBudgetView = Backbone.View.extend({
             if (/\d/.test($('#time-minDB').val())) {
                 this.data.minDB = parseInt($('#time-minDB').val());
                 console.log(this.data.minDB, this.data.maxDB);
-                if(this.data.minDB == ''){
+                if (this.data.minDB == '') {
                     console.log('no text');
                     this.data.minDB = null;
                 }
-                if(this.data.minDB < 1){
+                if (this.data.minDB < 1) {
                     this.data.minDB = 0;
                     $('#time-minDB').prop('value', this.data.minDB);
                 }
-                
+
                 if (this.data.minDB > this.data.maxDB && this.data.maxDB != null) {
                     console.log("minDB > max");
                     this.data.minDB = this.data.maxDB - 1;
@@ -255,7 +257,7 @@ var TimeBudgetView = Backbone.View.extend({
             if (/\d/.test($('#time-maxDB').val())) {
                 this.data.maxDB = parseInt($('#time-maxDB').val());
                 console.log(this.data.minDB, this.data.maxDB);
-                if(this.data.maxDB < 1){
+                if (this.data.maxDB < 1) {
                     this.data.maxDB = 0;
                     $('#time-maxDB').prop('value', this.data.maxDB);
                 }
@@ -280,7 +282,7 @@ var TimeBudgetView = Backbone.View.extend({
         }.bind(this));
 
         this.$el.on('click', '#time-savebtn', function(e) {
-            console.log("DATA about to be save (pre-check)",self.data);
+            console.log("DATA about to be save (pre-check)", self.data);
             if (self.data.timebudgetname == null) {
                 self.$('#time-budgetnamerequest').show();
             }
@@ -313,15 +315,14 @@ var TimeBudgetView = Backbone.View.extend({
             }
             if (self.data.timeout == null) {
                 var checked = $('#time-myonoffswitch').prop('checked');
-                if(checked){
+                if (checked) {
                     this.data.timeout = true;
-                }
-                else{
+                } else {
                     this.data.timeout = false;
                 }
                 this.isValid.timeout = true;
             }
-            $('#time-filter-details').addClass('hidden');
+            // $('#time-filter-details').addClass('hidden');
             var validForm = true;
 
             for (var i in self.isValid) {
@@ -333,24 +334,42 @@ var TimeBudgetView = Backbone.View.extend({
 
             if (validForm) {
                 console.log("form is valid");
-                console.log("About to pass to post time budget result")
-                this.model.post_time_budget_result(this.data);
-
-                for (var i in self.isValid) {
-                    self.isValid[i] = false;
-                    self.data[i] = null;
-                }
-                $("#time-amount").val("");
-                $("#time-budgetname").val("");
-                $(".time-costfilter").val("");
-                $("#time-startdate").val("");
-                $("#time-enddate").val("");
-                $("#time-udecay").val("");
-                $("#time-odecay").val("");
-                $("#minDB").val("");
-                $("#maxDB").val("");
-                $('#time-myonoffswitch').val("");
-                $('#timeBudgetModal').modal('hide');
+                this.model.post_time_budget_result(this.data, function(err) {
+                    if (err == 'success') {
+                        console.log("success");
+                        for (var i in self.isValid) {
+                            self.isValid[i] = false;
+                            self.data[i] = null;
+                            submitted = true;
+                        }
+                        //MAKE NEW WARNING TO PREVENT BUDGET OF SAME TYPE AND ASSOCIATED INSTANCE
+                        $('#time-batchSelectionWarning').hide();
+                        $("#time-amount").val("");
+                        $("#time-budgetname").val("");
+                        $(".time-costfilter").val("");
+                        $(".time-sub-costfilter").val("");
+                        $("#time-startdate").val("");
+                        $("#time-enddate").val("");
+                        $("#time-udecay").val("");
+                        $("#time-odecay").val("");
+                        $("#minDB").val("");
+                        $("#maxDB").val("");
+                        $('#time-myonoffswitch').val("");
+                        $('#timeBudgetModal').modal('hide');
+                    }
+                    else if (err == 'error, TimeBudget for batchName already Exists'){
+                        //WHY is this being shown 
+                        console.log("Please make a time budget for a user or group without one already");
+                        this.$('#time-batchNameAndTypeWarning').show();
+                    }
+                    else if (err == 'error: empty response'){
+                        console.log('empty response');
+                    }
+                    else if (err != 'success') {
+                        console.log('time budget insert error');
+                        this.$('#time-batchSelectionWarning').show();
+                    }
+                });
             }
         }.bind(this));
 
@@ -362,6 +381,7 @@ var TimeBudgetView = Backbone.View.extend({
             $("#time-amount").val("");
             $("#time-budgetname").val("");
             $(".time-costfilter").val("");
+            $(".time-sub-costfilter").val("");
             $("#time-startdate").val("");
             $("#time-enddate").val("");
             $("#time-udecay").val("");
