@@ -80,7 +80,6 @@ exports.timeBudgetCost = function(req, res) {
 				_id: 1
 			}
 		}]).exec(function(e, d) {
-			// console.log('d', d)
 			res.send(d);
 		});
 	}
@@ -403,7 +402,6 @@ exports.userTimeCost = function(req, res) {
 }
 
 exports.createGRLSInstances = function(timeBudget,callback) {
-	console.log("createGRLSInstances",timeBudget);
 	MongoClient.connect(databaseUrl, function(err, db) {
         if (err) throw err; 
 		if(timeBudget.BatchType == 'user'){
@@ -448,8 +446,6 @@ exports.createGRLSInstances = function(timeBudget,callback) {
 	                }
 	            }
 	        ]).exec(function(e, resources) {
-	        	console.log("resources",resources);
-
 				var index1 = 0;
 				var controller1 = function() {
 					iterator1(function() {
@@ -468,7 +464,6 @@ exports.createGRLSInstances = function(timeBudget,callback) {
 								// State: 'running'
 							}
 						}]).exec(function(e, resourceData) {
-							console.log("resourceData", resourceData);
 							if(resourceData.length != 0){
 								var doc = {
 									timeBudgetName: timeBudget.TimeBudgetName,

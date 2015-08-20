@@ -45,7 +45,6 @@ var getTimeAmount = function() {
 
 //update lifetime of instances based on their usage-profile
 var updateLifetime = function(maxBudgetLifetimes) {
-		console.log("maxBudgetLifetimes", maxBudgetLifetimes);
 		MongoClient.connect(databaseUrl, function(err, db) {
 			if (err) throw err;
 			var currentDate = new Date();
@@ -76,7 +75,6 @@ var updateLifetime = function(maxBudgetLifetimes) {
 					}
 				}
 			}]).exec(function(err, budgets) {
-				console.log("budgets", budgets);
 				var index1 = 0;
 
 				//controller function that calls the iterator to loop through something
@@ -98,12 +96,10 @@ var updateLifetime = function(maxBudgetLifetimes) {
 
 				var timeBudgetsIterator = function(callback1) {
 					var timeBudgetName = budgets[index1].TimeBudgetName;
-					// console.log("timeBudgetName", timeBudgetName);
 
 					mongoose.model('grlsInstances').find({
 						timeBudgetName: timeBudgetName
 					}).exec(function(e, grlsInstances) {
-						console.log("grlsInstances", grlsInstances);
 						var index2 = 0;
 						var grlsInstancesController = function() {
 							grlsInstancesIterator(function() {
@@ -361,18 +357,15 @@ var stopTimeBudget = function(timeBudget) {
 
 //get all instances associated with a timeBudget
 var getTimeBudgetInstances = function(timeBudget) {
-	console.log('TIMEBUDGETS', timeBudget);
 	mongoose.model('timeBudgets').find({
 		TimeBudgetName: timeBudget
 	}).exec(function(err, budget) {
-		console.log('budget==', budget);
 		if (err) throw err;
 		var batchType = budget[0].BatchType;
 		var batchName = budget[0].BatchName;
 		var startDate = budget[0].StartDate;
 		var endDate = budget[0].EndDate;
 		if (batchType == 'user') {
-			console.log('batchTYPE', batchType)
 			mongoose.model('grlsLineItems').aggregate([{
 				$match: {
 					$and: [{
@@ -407,12 +400,10 @@ var getTimeBudgetInstances = function(timeBudget) {
 					}
 				}
 			}]).exec(function(e, serviceResources) {
-				console.log('serviceResources==', serviceResources)
 
 				stopTimeBudgetInstances(serviceResources);
 			});
 		} else {
-			console.log('batchTYPE', batchType)
 
 			mongoose.model('grlsLineItems').aggregate([{
 				$match: {
@@ -442,8 +433,6 @@ var getTimeBudgetInstances = function(timeBudget) {
 					}
 				}
 			}]).exec(function(e, serviceResources) {
-				console.log('serviceResources===', serviceResources)
-
 				stopTimeBudgetInstances(serviceResources);
 			});
 		}
@@ -452,7 +441,6 @@ var getTimeBudgetInstances = function(timeBudget) {
 
 //stop all serviceResources of invalid budget
 var stopTimeBudgetInstances = function(serviceResources) {
-	console.log('serviceResources.length', serviceResources.length);
 	var index1 = 0;
 	var controller1 = function() {
 		iterator1(function() {
@@ -465,14 +453,12 @@ var stopTimeBudgetInstances = function(serviceResources) {
 		});
 	};
 	var iterator1 = function(callback1) {
-		console.log('serviceResources[index1]._id', serviceResources[index1])
 		switch (serviceResources[index1]._id) {
 			case 'ec2':
 				var resources = serviceResources[index1].instanceId;
 				var zone = serviceResources[index1].region;
 				var index2 = 0;
 				var controller2 = function() {
-					// console.log('resources[index2]',resources)
 					iterator2(function() {
 						index2++;
 						if (index2 < resources.length) {
@@ -486,9 +472,6 @@ var stopTimeBudgetInstances = function(serviceResources) {
 					if (/^i-/.test(resources[index2])) {
 						// the code to stop ec2 instances goes here
 						// instanceId is in resources[index2]
-						console.log("resources[index2]", resources[index2])
-						console.log("zone[index2]", zone[index2])
-
 						var instanceZone = zone[index2].substring(0, 9);
 						//     callback1();    
 						ec2 = new AWS.EC2({
