@@ -23,9 +23,11 @@ var AppView = Backbone.View.extend({
         this.bindings();
         this.render();
         this.setListeners();
+        $('.content-view').append(this.latestTime.el);
 
         $('.content-view').append(this.footer.el);
-        $('.content-view').append(this.latestTime.el);
+
+
         //Resize the content view
         window_size = $(window).height();
         // console.log(window_size);
@@ -226,8 +228,8 @@ var AppView = Backbone.View.extend({
             oldView.destroy(viewInstance);
         this.model.set('currentView', viewInstance);
         this.$el.find('.content-view').html(viewInstance.el);
-                        $('.content-view').append(this.footer.el);
-        $('.content-view').append(this.latestTime.el);
+        $('.content-view').append(this.footer.el);
+        // $('.content-view').append(this.latestTime.el);
     }
 
 

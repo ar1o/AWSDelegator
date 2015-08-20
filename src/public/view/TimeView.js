@@ -29,9 +29,9 @@ var TimeView = Backbone.View.extend({
         var html = Handlebars.templates.TimeView({
             time: this.time
         });        
-
         // var html = Handlebars.templates.HeaderView;        
         this.$el.html(html);
+
         // this.$el.append(this.meterActivity.el);       
         // // this.$el.append(this.budgetView.el);       
     }

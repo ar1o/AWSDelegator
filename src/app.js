@@ -141,7 +141,6 @@ var MongoClient = mongodb.MongoClient;
 
 app.post('/timebudget', jsonParser, function(req, res) {
     var r = req.body;
-    console.log("timebudget", r);
     var startDate = r.startDate.split('/');
     var endDate = r.endDate.split('/');
     MongoClient.connect(databaseUrl, function(err, db) {
@@ -169,6 +168,7 @@ app.post('/timebudget', jsonParser, function(req, res) {
             "BatchName": doc.BatchName,
             "BatchType": doc.BatchType
         }).toArray(function(err, resp) {
+
             if (err) throw err;
             console.log("Checking for timeBudget with matching batchName", resp, "length",resp.length);
             if (resp.length != 0) {

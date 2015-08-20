@@ -1,51 +1,52 @@
-@width-notify: 200px;
-
-
+@width-notify: 500px;
 
 .NotificationView {
   right: -9999px;
   position: fixed;
-
   &.visible {
 
-      .notify-data {
-        padding: 5px;
-        top: 0;
-        // border: 1px solid red;
-        font-family: 'Roboto', sans-serif;
-        font-size: 10px;
-        // vertical-align: right;
-        line-height: 13px;  
-        text-align: left;
-        // height: 70px;
-        width: 100%;
-        border-bottom: 1px solid black;
-        float:left;
-        &:hover {
-          color: orange;
-          cursor:pointer;
-          // background: white;
-        }
+    .notify-data {
+      padding: 5px;
+      top: 0;
+      // border: 1px solid red;
+      font-family: 'Roboto', sans-serif;
+      font-size: 10px;
+      // vertical-align: right;
+      line-height: 13px;  
+      text-align: left;
+      // height: 70px;
+      width: 100%;
+      border-bottom: 1px solid black;
+      float:left;
+      &:hover {
+        color: orange;
+        cursor:pointer;
+        // background: white;
       }
+    }
+
     .notification-content {
       position: fixed;
       background: #f7f7f7;
       border: 1px solid #ccc;
-      top:65px;
-      right: 150px;
+      top:50px;
+      right: 165px;
       width: @width-notify;
       height: 500px;
+                  overflow-y: scroll;
 
     }
+
     .notification-content:after, .notification-content:before {
       bottom: 100%;
-      left: 70%;
+      left: 90%;
       border: solid transparent;
       content: " ";
       height: 0;
       width: 0;
       position: absolute;
       pointer-events: none;
+
     }
 
     .notification-content:after {
@@ -53,15 +54,16 @@
       border-bottom-color: #f7f7f7;
       border-width: 15px;
       margin-left: -15px;
+
     }
+
     .notification-content:before {
       border-color: rgba(204, 204, 204, 0);
       border-bottom-color: #ccc;
       border-width: 16px;
       margin-left: -16px;
+
     }
-
-
 
   }
 }

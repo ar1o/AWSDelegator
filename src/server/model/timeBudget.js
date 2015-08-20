@@ -10,8 +10,8 @@ timeBudgetSchema = new mongoose.Schema({
 	oDecayRate: Number,
 	minDB: Number,
 	maxDB: Number,
-	timeout: String,
-	State: Boolean
+	TimeOut: String,
+	State: String
 });
 
 mongoose.model('timeBudgets', timeBudgetSchema, 'timeBudgets');

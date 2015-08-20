@@ -14,23 +14,25 @@ exports.checkBudgets = function() {
                 iterator1(function() {
                     index1++;
                     if (index1 < budgets.length) {
-                        console.log("INDEX==" +index1 + "\tBUDGETLENGTH=="+budgets.length);
                         controller1();
                     }
                 });
             };
             var iterator1 = function(callback1) {
                 var budget = budgets[index1];
+                //test
+                // stopInstances('group', 'testGroup1')
                 //checking for amount exceeded or time exceeded
                 getBudgetTotalCost(budgets[index1].BatchType, budgets[index1].BatchName, budgets[index1].StartDate, budgets[index1].EndDate,
                     function(result) {
+                        if (result[0].Total >= budget.Amount && budget.State == 'valid') { //Check if ammount exceeded
+
 
                         // console.log("BudgetTimoutHandler result", result);
                         // if (result[0].Cost  == undefined) {
                         //     console.log("Oh No, not this again!!");
                         // }
                         // if (result[0].Cost >= budget.Amount && budget.State == 'valid') {
-                        if (result[0].Total >= budget.Amount && budget.State == 'valid') {
 
                             db.collection('budgets').update({
                                 BudgetName: budget.BudgetName
@@ -48,11 +50,16 @@ exports.checkBudgets = function() {
                                     }, function(err) {
                                         if (err) throw err;
                                         console.log('Added a notification for ', budget.BudgetName);
+                                        //Check for stop the instance here
+                                        if (budget.TimeOut == "true") {
+                                            console.log('CHECKING');
+                                            stopInstances(budgets[index1].BatchType, budgets[index1].BatchName);
+                                        }
                                         callback1();
                                     });
                                 }, 0);
                             });
-                        } else if (time > budget.EndDate && budget.State == 'valid') {
+                        } else if (time > budget.EndDate && budget.State == 'valid') { //Check if date expired
                             db.collection('budgets').update({
                                 BudgetName: budget.BudgetName
                             }, {
@@ -69,6 +76,11 @@ exports.checkBudgets = function() {
                                     }, function(err) {
                                         if (err) throw err;
                                         console.log('Added a notification', budget.BudgetName)
+                                            //Also stop the instance here
+                                        if (budget.TimeOut == "true") {
+                                            console.log('CHECKING');
+                                            stopInstances(budgets[index1].BatchType, budgets[index1].BatchName);
+                                        }
                                         callback1();
                                     });
                                 }, 0);
@@ -84,6 +96,145 @@ exports.checkBudgets = function() {
         });
     });
 };
+
+var stopInstances = function(batchtype, batchname) {
+    getInstanceId(batchtype, batchname,
+        function(result) {
+            var index1 = 0;
+            var ec2;
+            var _zone;
+            var controller5 = function() {
+
+                var i = 0;
+                while (i < result[index1].Zone.length) {
+
+                    if (result[index1].Zone[i] == 'null') {
+                        i++;
+                    } else {
+                        _zone = result[i].Zone[i];
+                        break;
+                    }
+                    if (result[index1].Zone.length == 1 && result[index1].Zone[i] == 'null') {
+                        controller5();
+                    }
+                }
+                iterator5(function() {
+                    index1++;
+                    if (index1 < result.length) {
+                        controller5();
+                    }
+                });
+            };
+
+            var iterator5 = function(callback1) {
+                //check for rds or ec2 here
+                if (_zone != undefined && /^i-/.test(result[index1]._id)) {
+
+                    var instanceZone = _zone.substring(0, 9);
+                    //     callback1();    
+                    ec2 = new AWS.EC2({
+                        region: instanceZone
+                    });
+
+                    var params = {
+                        InstanceIds: [result[index1]._id]
+                            // DryRun: true
+                            // Force: true || false
+                    };
+
+                    ec2.stopInstances(params, function(err, data) {
+                        if (err) console.log(err, err.stack); // an error occurred
+                        else console.log(data); // successful response
+                    });
+                    callback1();
+                } else if (_zone != undefined && /^arn:aws:rds/.test(result[index1]._id)) {
+                    console.log('There is no "stop/start" actions for RDS databases,' +
+                        'currently you would have to terminate the database taking a final snapshot' +
+                        'and restore from that snapshot.');
+                    //add a notiication for this
+                    db.collection('notifications').insert({
+                        NotificationType: 'RDS-Stop',
+                        NotificationData: 'There is no "stop/start" actions for RDS databases,' +
+                        'currently you would have to terminate the database taking a final snapshot' +
+                        'and restore from that snapshot.',
+                        Seen: 'false',
+                        Time: time
+                    }, function(err) {
+                        if (err) throw err;
+                        callback1();
+                    });
+                    //rds-create-db-snapshot
+                    //rds-delete-db-instance
+                    //rds-restore-db-instance-from-db-snapshot
+                } else {
+                    console.log([result[index1]._id]);
+                    callback1();
+                }
+
+            };
+            controller5();
+        }); //end get instnaceid
+}
+
+
+//Get the instance id(s) of the budgets.
+var getInstanceId = function(_batchtype, _batchname, callback) {
+    var batchType = _batchtype;
+    var batchName = _batchname;
+
+    if (batchType == 'user') {
+        mongoose.model('Billings').aggregate([{
+            $match: {
+                $and: [{
+                    'user:Name': batchName
+                }, {
+                    'user:Group': 'null'
+                }]
+            }
+        }, {
+            $project: {
+                _id: 0,
+                ResourceId: 1,
+                AvailabilityZone: 1
+            }
+        }, {
+            $group: {
+                _id: "$ResourceId",
+                Zone: {
+                    $addToSet: "$AvailabilityZone"
+                }
+            }
+        }]).exec(function(e, d) {
+            callback(d);
+        });
+    } else {
+        mongoose.model('Billings').aggregate([{
+            $match: {
+                $and: [{
+                    'user:Group': batchName
+                }]
+            }
+        }, {
+            $project: {
+                _id: 1,
+                ResourceId: 1,
+                AvailabilityZone: 1
+            }
+        }, {
+            $group: {
+                _id: "$ResourceId",
+                Zone: {
+                    $addToSet: "$AvailabilityZone"
+                }
+                // Zone: {
+                //     $push: "$AvailabilityZone"
+            }
+        }]).exec(function(e, d) {
+            callback(d);
+            // console.log('d', d);
+        });
+    }
+}
 
 // Get the amount the budget has currently incurred.
 var getBudgetTotalCost = function(_batchtype, _batchname, _startdate, _enddate, callback) {
@@ -160,7 +311,9 @@ var getBudgetTotalCost = function(_batchtype, _batchname, _startdate, _enddate, 
                     Total: {
                         $sum: "$Cost"
                     },
-                    Group: {$addToSet: batchName}
+                    Group: {
+                        $addToSet: batchName
+                    }
                 }
             }, {
                 $project: {
