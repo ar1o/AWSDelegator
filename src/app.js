@@ -162,15 +162,40 @@ app.post('/timebudget', jsonParser, function(req, res) {
             timeout: r.timeout,
             State: 'valid'
         };
-        console.log("budget created",doc);
-        db.collection('timeBudgets').insert(doc, function(err) {
+        console.log("doc made", doc);
+        //Checking batchName and budgetName checking here before calling methods
+        db.collection('timeBudgets').find({
+            "BatchName": doc.BatchName,
+            "BatchType": doc.BatchType
+        }).toArray(function(err, resp) {
 
             if (err) throw err;
-            //?
-            require('./server/route/timeBudgetRoute').createGRLSInstances(doc, function(err) {
-                if (err) throw err;
-                res.send('grlsInstancesCreated');
-            });
+            console.log("Checking for timeBudget with matching batchName", resp, "length",resp.length);
+            if (resp.length != 0) {
+                res.send("error, TimeBudget for batchName already Exists");
+            } else {
+                console.log("No previous TimeBudget found for this document. Inserting doc");
+                require('./server/route/timeBudgetRoute').createGRLSInstances(doc, function(r) {
+                    console.log("return value:", r);
+                    if (r == 'error') {
+                        console.log("Error with query. Document not inserted");
+                        res.send("error, insert failed");
+                    } 
+                    else if (r == 'empty: no response to query'){
+                        console.log("empty response. add data to callbacks to prevent confusion");
+                        res.send('error: empty response');
+
+                    }
+                        else if (r != 'error') {
+                        console.log("OK");
+                        db.collection('timeBudgets').insert(doc, function(err) {
+                            if (err) throw err;
+                            console.log("inserted TimeBudget Doc");
+                            res.send("success");
+                        });
+                    }
+                });
+            }
         });
     });
 });
@@ -213,6 +238,9 @@ app.post('/removeTimeBudget', jsonParser, function(req, res) {
         if (err) throw err;
         db.collection('timeBudgets').remove({
             TimeBudgetName: r.budgetName
+        });
+        db.collection('grlsInstances').remove({
+            timeBudgetName: r.budgetName
         });
         res.send("success");
     });
@@ -269,15 +297,15 @@ app.post('/budget', jsonParser, function(req, res) {
     });
 });
 
-function errorHandler(err, req, res, next) {
-    console.error(err.message);
-    console.error(err.stack);
-    res.status(500);
-    res.render('error_template', {
-        error: err
-    });
-}
-module.exports = errorHandler;
+// function errorHandler(err, req, res, next) {
+//     console.error(err.message);
+//     console.error(err.stack);
+//     res.status(500);
+//     res.render('error_template', {
+//         error: err
+//     });
+// }
+// module.exports = errorHandler;
 app.listen(port);
 
 console.log('databaseUrl ', databaseUrl);

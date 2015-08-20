@@ -11,6 +11,7 @@ var getTimeAmount = function() {
 		mongoose.model('timeBudgets').find({
 			State: 'valid'
 		}).exec(function(err, timeBudgets) {
+			console.log("getTimeAmount response", timeBudgets);
 			if (err) throw err;
 
 			//keep an index of the timebudgets iterated through
