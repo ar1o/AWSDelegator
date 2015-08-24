@@ -33,7 +33,7 @@ var NotificationModel = Backbone.Model.extend({
 					seen: result[r].Seen,
 					time: result[r].Time
 				});
-				notificationCollection.add(data);
+				notificationCollection.add(data, {at: 0});
 			}
 			self.set('dataReady', Date.now());
 		}).fail(function() {
