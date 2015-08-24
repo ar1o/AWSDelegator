@@ -6,7 +6,7 @@ var NotificationModel = Backbone.Model.extend({
 	initialize: function() {
 		this.change('isOpen');
 		this.change('dataReady');
-		
+
 	},
 	notification_result: function() {
 		var self = this;
@@ -33,7 +33,14 @@ var NotificationModel = Backbone.Model.extend({
 					seen: result[r].Seen,
 					time: result[r].Time
 				});
-				notificationCollection.add(data, {at: 0});
+				notificationCollection.add(data, {
+					at: 0
+				});
+			}
+			// remove the last element if it's > 25 and already seen
+			if (notificationCollection.length > 25 &&
+				notificationCollection.at(notificationCollection.length - 1).get('seen') == 'true') {
+					notificationCollection.pop();
 			}
 			self.set('dataReady', Date.now());
 		}).fail(function() {
@@ -43,8 +50,8 @@ var NotificationModel = Backbone.Model.extend({
 	// Get the number of notifications that have no been seen yet. 
 	getSeenNumber: function() {
 		var numSeen = 0;
-		for (var i=0; i< notificationCollection.length; i++) {
-			if(notificationCollection.at(i).get('seen') == "false") {
+		for (var i = 0; i < notificationCollection.length; i++) {
+			if (notificationCollection.at(i).get('seen') == "false") {
 				numSeen++;
 			}
 		}
@@ -67,11 +74,11 @@ var NotificationModel = Backbone.Model.extend({
 	//Check by ID if a particular budget is seen. 
 	isSeen: function(Id) {
 		for (var i = 0; i < notificationCollection.length; i++) {
-			if(notificationCollection.at(i).get('notification') == Id) {
-				if(notificationCollection.at(i).get('seen') == 'false') {
+			if (notificationCollection.at(i).get('notification') == Id) {
+				if (notificationCollection.at(i).get('seen') == 'false') {
 					return false;
 				} else {
-					return true; 
+					return true;
 				}
 			}
 		}

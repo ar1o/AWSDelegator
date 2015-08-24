@@ -17,7 +17,8 @@ var pricingURLs = [
     'http://a0.awsstatic.com/pricing/1/ebs/pricing-ebs.min.js',
     'http://a0.awsstatic.com/pricing/1/s3/pricing-requests-s3.min.js',
     'http://a0.awsstatic.com/pricing/1/s3/pricing-requests-s3.min.js',
-    'http://a0.awsstatic.com/pricing/1/s3/pricing-storage-s3.min.js'  
+    'http://a0.awsstatic.com/pricing/1/s3/pricing-storage-s3.min.js',
+    'https://a0.awsstatic.com/pricing/1/rds/aurora/pricing-piops-deploy.min.js'  
 ];
 var usageTypes = ['DataTransfer-Out-Bytes',
                     'DataTransfer-Regional-Bytes',
@@ -27,7 +28,8 @@ var usageTypes = ['DataTransfer-Out-Bytes',
                     'EBS:VolumeUsage.gp2',
                     'Requests-Tier1',
                     'Requests-Tier2',
-                    'TimedStorage-ByteHrs'];
+                    'TimedStorage-ByteHrs',
+                    'RDS:StorageIOUsage'];
 //BoxUsage:t2.micro
 var osType = ['Linux','RHEL','SUSE','Windows'];
 var boxUsageURLs = [
@@ -74,8 +76,9 @@ exports.getPricing = function(callback) {
     var controller2 = function(){
         iterator2(function(){
             index2++;
-            if(index2 < pricingURLs.length) controller2();
-            else {
+            if(index2 < pricingURLs.length) {
+                controller2();
+            } else {
                 //needs to be dynamic(from json url)
                 pricing['CloudFront-Out-Bytes']={Price:0.085};
                 callback();
@@ -106,6 +109,7 @@ exports.getPricing = function(callback) {
                 item.TierName = (pricingJSON.config.regions[region].types[1].tiers[3].name);
                 item.Price = parseFloat(pricingJSON.config.regions[region].types[1].tiers[3].prices.USD);
                 pricing[usageTypes[index2]]=item;
+
                 _callback();
                 break;
             case 2://AWS-Out-Bytes
@@ -115,6 +119,7 @@ exports.getPricing = function(callback) {
                 item.TierName = (pricingJSON.config.regions[region].types[1].tiers[5].name);
                 item.Price = parseFloat(pricingJSON.config.regions[region].types[1].tiers[5].prices.USD);
                 pricing[usageTypes[index2]]=item;
+
                 _callback();
                 break;
             case 3://InstanceUsage:db.t2.micro
@@ -124,6 +129,7 @@ exports.getPricing = function(callback) {
                 item.TierName = (pricingJSON.config.regions[region].types[0].tiers[0].name);
                 item.Price = parseFloat(pricingJSON.config.regions[region].types[0].tiers[0].prices.USD);
                 pricing[usageTypes[index2]]=item;
+
                 _callback();
                 break;
             case 4://RDS:GP2-Storage
@@ -132,6 +138,7 @@ exports.getPricing = function(callback) {
                 item.TierName = pricingJSON.config.regions[region].types[0].tiers[1].name; 
                 item.Price = parseFloat(pricingJSON.config.regions[region].types[0].tiers[1].prices.USD);
                 pricing[usageTypes[index2]]=item;
+
                 _callback();
                 break;
             case 5://EBS:VolumeUsage.gp2
@@ -140,6 +147,7 @@ exports.getPricing = function(callback) {
                 item.TypeName = pricingJSON.config.regions[region].types[0].name;
                 item.Price = parseFloat(pricingJSON.config.regions[region].types[0].values[0].prices.USD);
                 pricing[usageTypes[index2]]=item;
+
                 _callback();
                 break;
             case 6://Requests-Tier1
@@ -168,7 +176,17 @@ exports.getPricing = function(callback) {
                 pricing[usageTypes[index2]]=item;
                 _callback();
                 break;
-            }             
+            case 9://USW2-RDS:StorageIOUsage
+                var item = {};
+                item.Price = pricingJSON.config.regions[region].rates[1].prices;
+                pricing[usageTypes[index2]]=item;
+                _callback();
+                break;
+            case 10://InstanceUsage:db.t2.micro
+
+                _callback();
+                break;
+            }                  
         });            
     };
 

@@ -39,7 +39,7 @@ var setupServer = function() {
                             console.log('Setup script completed, You may now start the server');
                             process.exit(0);
                         });
-                    })
+                    });
                 });
             });
         });
@@ -190,7 +190,7 @@ var parseBills = function(callback) {
                             });
 
                             // parseBillingCSVUsersGroups(function() {
-                                billingParser.parseBillingCSV(function() {
+                            billingParser.parseBillingCSV(function() {
                                 _callback();
                             });
                         });

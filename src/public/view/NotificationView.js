@@ -55,7 +55,7 @@ var NotificationView = Backbone.View.extend({
         $("body").mouseup(function(e) {
             if (e.target.className == 'fa fa-bell fa-1x') {
                 //do nothing
-            } else if (e.target.className == "notify") {
+            } else if (e.target.className == "notify" || e.target.className == "notify-data") {
                 //do nothing
             } else {
                 self.model.isOpen = false;

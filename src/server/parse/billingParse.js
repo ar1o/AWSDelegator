@@ -91,8 +91,17 @@ exports.parseBillingCSV = function(callback) {
                                     doc['NonFreeRate'] = pricing['Requests-Tier1'].Price;
                                 } else if (/Requests-Tier2/.test(doc['UsageType'])) {
                                     doc['NonFreeRate'] = pricing['Requests-Tier2'].Price;
+                                } else if (/RDS:StorageIOUsage/.test(doc['UsageType'])) {
+                                    doc['NonFreeRate'] = pricing['RDS:StorageIOUsage'].Price;
+                                } else if (/InstanceUsage:db.t2.micro/.test(doc['UsageType'])) {
+                                    doc['NonFreeRate'] = pricing['InstanceUsage:db.t2.micro'].Price;
                                 } else {
-                                    doc['NonFreeRate'] = pricing[doc['UsageType']].Price;
+                                    //error checking
+                                    if(pricing[doc['UsageType']] == undefined) {
+                                        console.log("doc['UsageType']==",doc['UsageType']);
+                                    } else {
+                                        doc['NonFreeRate'] = pricing[doc['UsageType']].Price;
+                                    }
                                 }
                                 doc['NonFreeCost'] = doc['UsageQuantity'] * doc['NonFreeRate'];
                             }
@@ -112,7 +121,11 @@ exports.parseBillingCSV = function(callback) {
                                 callback1();
                             }, 0);
                         }
-                    } else callback1();
+                    } else {
+                        setTimeout(function() {
+                                callback1();
+                            }, 0);
+                    }
                 };
                 controller1();
             });
