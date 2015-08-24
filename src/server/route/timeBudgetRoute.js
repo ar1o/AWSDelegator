@@ -444,12 +444,11 @@ exports.createGRLSInstances = function(timeBudget, callback) {
 			}]).exec(function(e, resources) {
 				// <<<<<<< HEAD
 				if (e) throw e;
-
 				console.log("resources", resources.length);
 				console.log("resources", resources);
 				if (resources.length == 0) {
 					console.log("empty response.")
-					callback("error");
+					callback("error: no associated resources");
 				}
 				//Not sure abouit this else, the block probably need to go farther down in lines
 				else {
@@ -460,81 +459,6 @@ exports.createGRLSInstances = function(timeBudget, callback) {
 							if (index1 < resources.length) controller1();
 							else {
 								callback('1');
-								// =======
-								// 				if (err) throw err;
-								// 				var index1 = 0;
-								// 				var controller1 = function() {
-								// 					iterator1(function() {
-								// 						index1++;
-								// 						if (index1 < resources.length) controller1();
-								// 						else {
-								// 							callback();
-								// 						}
-								// 					});
-								// 				};
-								// 				var iterator1 = function(callback1) {
-								// 					if(resources[index1].ProductName[0] == 'Amazon Elastic Compute Cloud'){
-								// 						mongoose.model('ec2Instances').aggregate([{
-								// 							$match: {
-								// 								Id: resources[index1]._id,
-								// 								// State: 'running'
-								// 							}
-								// 						}]).exec(function(e, resourceData) {
-								// 							if (resourceData.length != 0) {
-								// 								var doc = {
-								// 									timeBudgetName: timeBudget.TimeBudgetName,
-								// 									instanceId: resourceData[0].Id,
-								// 									instanceType: resourceData[0].Type,
-								// 									user: timeBudget.BatchName,
-								// 									group: 'null',
-								// 									instanceRegion: resourceData[0].Zone,
-								// 									serviceType: 'ec2',
-								// 									instanceType: resourceData[0].Type,
-								// 									lifetime: 0,
-								// 									uDecay: timeBudget.uDecayRate,
-								// 									oDecay: timeBudget.oDecayRate,
-								// 									timeout: timeBudget.timeout,
-								// 									state: 'valid'
-								// 								};
-								// 								db.collection('grlsInstances').insert(doc, function(err) {
-								// 									if (err) throw err;
-								// 									callback1();
-								// 								});
-								// 							} else {
-								// 								callback1();
-								// 							}
-								// 						});
-								// 					} else if (resources[index1].ProductName == 'Amazon RDS Service') {
-								// 						var arn = resources[index1]._id;
-								// 						var dbName = arn.substring(arn.lastIndexOf(':') + 1, arn.length);
-								// 						mongoose.model('rdsInstances').aggregate([{
-								// 							$match: {
-								// 								DBName: dbName
-								// 							}
-								// 						}]).exec(function(e, resourceData) {
-								// 							if (resourceData.length != 0) {
-								// 								var doc = {
-								// 									timeBudgetName: timeBudget.TimeBudgetName,
-								// 									instanceId: resourceData[0].DBName,
-								// 									user: timeBudget.BatchName,
-								// 									group: 'null',
-								// 									instanceRegion: resourceData[0].AvailabilityZone,
-								// 									serviceType: 'rds',
-								// 									minConnectionsLimit: resourceData[0].minDBConnections,
-								// 									maxConnectionsLimit: resourceData[0].maxDBConnections,
-								// 									lifetime: 0,
-								// 									uDecay: timeBudget.uDecayRate,
-								// 									oDecay: timeBudget.oDecayRate,
-								// 									timeout: timeBudget.timeout,
-								// 									state: 'valid'
-								// 								};
-								// 								db.collection('grlsInstances').insert(doc, function(err) {
-								// 									if (err) throw err;
-								// 									callback1();
-								// 								});
-								// 							} else {
-								// 								callback1();
-								// >>>>>>> 28d2b5c250e576ddeb2aa8addcd2915f057f1e02
 							}
 						});
 					};
@@ -695,10 +619,10 @@ exports.createGRLSInstances = function(timeBudget, callback) {
 					}]).exec(function(e, resources) {
 						if (e) throw e;
 						console.log("resources.length", resources.length);
-						// if(resources.length == 0){
-						// 	console.log("DEFINE THIS ERROR: NEEDS TEXT WARNING FOR USER!");
-						// 	callback('empty: no response to query');
-						// }
+						if(resources.length == 0){
+							console.log("error: no associated resources");
+							callback('error: no associated resources');
+						}
 						//if result is not empty, conduct second query
 						console.log("query2 result", resources);
 						var index2 = 0;

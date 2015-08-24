@@ -13,7 +13,6 @@ var getTimeAmount = function() {
 		}).exec(function(err, timeBudgets) {
 			console.log("getTimeAmount response", timeBudgets);
 			if (err) throw err;
-
 			//keep an index of the timebudgets iterated through
 			var index1 = 0;
 
@@ -77,6 +76,7 @@ var updateLifetime = function(maxBudgetLifetimes) {
 				}
 			}]).exec(function(err, budgets) {
 				var index1 = 0;
+				console.log("Budgets",budgets);
 
 				//controller function that calls the iterator to loop through something
 				var timeBudgetsController = function() {
@@ -152,6 +152,7 @@ var updateLifetime = function(maxBudgetLifetimes) {
 										};
 										cloudwatch.getMetricStatistics(params, function(err, cloudwatchData) {
 											if (err) throw err;
+											console.log('cloudData', cloudwatchData);
 											var decayRate = 1;
 											var slope = cloudwatchData.Datapoints[1].Average - cloudwatchData.Datapoints[0].Average;
 											var maxCredits = t2HourlyEarning[instanceType] * 24;

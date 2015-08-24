@@ -25,6 +25,7 @@ exports.checkBudgets = function() {
                 //checking for amount exceeded or time exceeded
                 getBudgetTotalCost(budgets[index1].BatchType, budgets[index1].BatchName, budgets[index1].StartDate, budgets[index1].EndDate,
                     function(result) {
+                        console.log("result", result);
                         if (result[0].Total >= budget.Amount && budget.State == 'valid') { //Check if ammount exceeded
 
 
@@ -90,7 +91,9 @@ exports.checkBudgets = function() {
                         }
                     });
             };
+
             if (budgets.length != 0) {
+                console.log('length', budget.length);
                 controller1();
             }
         });
