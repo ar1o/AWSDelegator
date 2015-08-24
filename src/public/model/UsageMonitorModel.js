@@ -182,7 +182,7 @@ var UsageMonitorModel = Backbone.Model.extend({
 		});
 	},
 
-	post_budget_result: function(data) {
+	post_budget_result: function(data, callback) {
 		var self = this;
 		//for comparison purposed. Remove when done. ^^
 		return $.ajax({
@@ -193,7 +193,15 @@ var UsageMonitorModel = Backbone.Model.extend({
 			success: function(data) {
 				self.getBudgets();
 				self.set('budgetDataReady', Date.now());
-
+				if (data == 'error' || data == 'error, budget for batchName already Exists') {
+					callback(data);
+				}
+				else if (data == 'success'){
+					callback('success');
+				}
+				else {
+					callback(data);
+				}
 			}
 		});
 	},
@@ -210,7 +218,7 @@ var UsageMonitorModel = Backbone.Model.extend({
 				self.getTimeBudgets();
 				self.set('timeBudgetDataReady', Date.now());
 				console.log("UMM data", data);
-				if (data == 'error' || data == "error, TimeBudget for batchName already Exists") {
+				if (data == 'error' || data == "error, TimeBudget for batchName already Exists" || data == 'error: no associated resources') {
 					callback(data);
 				} 
 				else if (data == 'success'){

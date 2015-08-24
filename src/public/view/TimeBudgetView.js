@@ -35,6 +35,7 @@ var TimeBudgetView = Backbone.View.extend({
         };
         this.bindings();
         this.render();
+        this.$('#time-associationWarning').hide()
         this.$('#time-batchNameAndTypeWarning').hide();
         this.$('#time-batchSelectionWarning').hide();
         this.$('#time-minDBwarning').hide();
@@ -361,12 +362,20 @@ var TimeBudgetView = Backbone.View.extend({
                         //WHY is this being shown 
                         console.log("Please make a time budget for a user or group without one already");
                         this.$('#time-batchNameAndTypeWarning').show();
+                        this.$('#time-associationWarning').hide()
+                        this.$('#time-batchSelectionWarning').hide();
+                    }
+                    else if ( err == 'error: no associated resources'){
+                        console.log('It seems like the selected user or group does not an associated instance')
+                        this.$('#time-associationWarning').show()
                     }
                     else if (err == 'error: empty response'){
                         console.log('empty response');
                     }
                     else if (err != 'success') {
                         console.log('time budget insert error');
+                        this.$('#time-associationWarning').hide()
+                        this.$('#time-batchNameAndTypeWarning').hide();
                         this.$('#time-batchSelectionWarning').show();
                     }
                 });
@@ -386,6 +395,8 @@ var TimeBudgetView = Backbone.View.extend({
             $("#time-enddate").val("");
             $("#time-udecay").val("");
             $("#time-odecay").val("");
+            $("#minDB").val("");
+            $("#maxDB").val("");
             $('#time-filter-details').addClass('hidden');
             $('#timeBudgetModal').modal('hide');
         }.bind(this));

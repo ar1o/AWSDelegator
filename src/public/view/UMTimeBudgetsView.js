@@ -259,12 +259,22 @@ var UMTimeBudgetsView = Backbone.View.extend({
         });
         this.$el.on('click', '.close', function() {
             // console.log("cancelled");
+            $('.time-costfilter').prop('disabled', '');
+            $('.time-sub-costfilter').prop('disabled', '');
+            $('.time-costfilter').val('');
+            $('time-minDB').val('');
+            $('time-maxDB').val('');
             $('.content-title').remove();
             $('.content-body').remove();
             $('.modal-backdrop').remove();
         });
         this.$el.on('click', '#cancel', function() {
             // console.log("cancelled");
+            $('.time-costfilter').prop('disabled', '');
+            $('.time-sub-costfilter').prop('disabled', '');
+            $('.time-costfilter').val('');
+            $('time-minDB').val('');
+            $('time-maxDB').val('');
             $('.content-title').remove();
             $('.content-body').remove();
             $('.modal-backdrop').remove();
@@ -283,6 +293,9 @@ var UMTimeBudgetsView = Backbone.View.extend({
             }
             if ($("#action").text() == "Save") {
                 self.model.edit_time_budget(self.data);
+                $('.time-costfilter').prop('disabled', '');
+                $('.time-sub-costfilter').prop('disabled', '');
+                $('.time-costfilter').val('');
                 $('#base-modal').hide();
             } else {
                 console.log("No Case Matched for button text");
