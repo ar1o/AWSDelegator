@@ -403,7 +403,6 @@ exports.userTimeCost = function(req, res) {
 
 exports.createGRLSInstances = function(timeBudget, callback) {
 	MongoClient.connect(databaseUrl, function(err, db) {
-		// <<<<<<< HEAD
 		if (err) throw err;
 		if (timeBudget.BatchType == 'user') {
 			mongoose.model('Billings').aggregate([{
@@ -440,18 +439,15 @@ exports.createGRLSInstances = function(timeBudget, callback) {
 					_id: 1,
 					ProductName: 1
 				}
-				// }
 			}]).exec(function(e, resources) {
-				// <<<<<<< HEAD
 				if (e) throw e;
 				console.log("resources", resources.length);
 				console.log("resources", resources);
 				if (resources.length == 0) {
 					console.log("empty response.")
 					callback("error: no associated resources");
-				}
 				//Not sure abouit this else, the block probably need to go farther down in lines
-				else {
+				} else {
 					var index1 = 0;
 					var controller1 = function() {
 						iterator1(function() {

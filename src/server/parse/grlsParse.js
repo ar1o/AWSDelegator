@@ -151,47 +151,50 @@ var updateLifetime = function(maxBudgetLifetimes) {
 											Unit: 'Count'
 										};
 										cloudwatch.getMetricStatistics(params, function(err, cloudwatchData) {
-											if (err) throw err;
-											console.log('cloudData', cloudwatchData);
-											var decayRate = 1;
-											var slope = cloudwatchData.Datapoints[1].Average - cloudwatchData.Datapoints[0].Average;
-											var maxCredits = t2HourlyEarning[instanceType] * 24;
-											if (slope < 1) {
-												if ((maxCredits - cloudwatchData.Datapoints[1].Average) < 0.1) {
-													decayRate = uDecayRate;
-												} else if (cloudwatchData.Datapoints[1].Average < (0.02 * maxCredits)) {
-													decayRate = oDecayRate;
-												}
-											} else if ((t2HourlyEarning[instanceType] - slope) < 0.1) {
-												decayRate = uDecayRate;
-											}
-											if (!(timeBudgetName in budgetLifetimes)) {
-												budgetLifetimes[timeBudgetName] = 0;
-											}
-											budgetLifetimes[timeBudgetName] += lifetime + decayRate;
-
-											mongoose.model('grlsInstances').update({
-												timeBudgetName: timeBudgetName,
-												instanceId: instanceId
-											}, {
-												$set: {
-													lifetime: lifetime + decayRate
-												}
-											}).exec(function(err) {
+											if (cloudwatchData.Datapoints[1] == undefined || cloudwatchData.Datapoints[0] == undefined) {
+												//do nothing
+											} else {
 												if (err) throw err;
-												db.collection('grlsLineItems').insert({
-													instanceId: instanceId,
-													user: user,
-													group: group,
-													serviceType: serviceType,
-													decayTime: decayRate,
-													time: currentTimeIso,
-													zone: instanceRegion
-												}, function(err) {
+												var decayRate = 1;
+												var slope = cloudwatchData.Datapoints[1].Average - cloudwatchData.Datapoints[0].Average;
+												var maxCredits = t2HourlyEarning[instanceType] * 24;
+												if (slope < 1) {
+													if ((maxCredits - cloudwatchData.Datapoints[1].Average) < 0.1) {
+														decayRate = uDecayRate;
+													} else if (cloudwatchData.Datapoints[1].Average < (0.02 * maxCredits)) {
+														decayRate = oDecayRate;
+													}
+												} else if ((t2HourlyEarning[instanceType] - slope) < 0.1) {
+													decayRate = uDecayRate;
+												}
+												if (!(timeBudgetName in budgetLifetimes)) {
+													budgetLifetimes[timeBudgetName] = 0;
+												}
+												budgetLifetimes[timeBudgetName] += lifetime + decayRate;
+
+												mongoose.model('grlsInstances').update({
+													timeBudgetName: timeBudgetName,
+													instanceId: instanceId
+												}, {
+													$set: {
+														lifetime: lifetime + decayRate
+													}
+												}).exec(function(err) {
 													if (err) throw err;
-													callback2();
+													db.collection('grlsLineItems').insert({
+														instanceId: instanceId,
+														user: user,
+														group: group,
+														serviceType: serviceType,
+														decayTime: decayRate,
+														time: currentTimeIso,
+														zone: instanceRegion
+													}, function(err) {
+														if (err) throw err;
+														callback2();
+													});
 												});
-											});
+											}
 										});
 									} else {
 										var params = {

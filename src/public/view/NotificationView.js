@@ -41,6 +41,7 @@ var NotificationView = Backbone.View.extend({
         }.bind(this));
 
 
+
         this.model.change('isOpen', function(model, val) {
             var toggle = val ? 'addClass' : 'removeClass';
             this.$el[toggle]('visible');
@@ -49,6 +50,18 @@ var NotificationView = Backbone.View.extend({
         this.model.change('dataReady', function(model, val) {
             this.render();
         }.bind(this));
+
+        var self = this;
+        $("body").mouseup(function(e) {
+            if (e.target.className == 'fa fa-bell fa-1x') {
+                //do nothing
+            } else if (e.target.className == "notify") {
+                //do nothing
+            } else {
+                self.model.isOpen = false;
+            }
+        });
+
     },
 
     render: function() {
