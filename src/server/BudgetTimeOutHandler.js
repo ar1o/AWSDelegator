@@ -10,30 +10,23 @@ exports.checkBudgets = function() {
         mongoose.model('Budgets').find({}, function(e, budgets) {
             if (e) throw e;
             var index1 = 0;
-            var controller1 = function() {
-                iterator1(function() {
-                    index1++;
-                    if (index1 < budgets.length) {
-                        controller1();
+            var budgetController = function() {
+                budgetIterator(function() {
+                    index++;
+                    if (index < budgets.length) {
+                        budgetController();
                     }
                 });
             };
-            var iterator1 = function(callback1) {
-                var budget = budgets[index1];
+            var budgetIterator = function(callback1) {
+                var budget = budgets[index];
                 //test
                 // stopInstances('group', 'testGroup1')
                 //checking for amount exceeded or time exceeded
-                getBudgetTotalCost(budgets[index1].BatchType, budgets[index1].BatchName, budgets[index1].StartDate, budgets[index1].EndDate,
+                getBudgetTotalCost(budgets[index].BatchType, budgets[index].BatchName, budgets[index].StartDate, budgets[index].EndDate,
                     function(result) {
+                        console.log("result", result);
                         if (result[0].Total >= budget.Amount && budget.State == 'valid') { //Check if ammount exceeded
-
-
-                        // console.log("BudgetTimoutHandler result", result);
-                        // if (result[0].Cost  == undefined) {
-                        //     console.log("Oh No, not this again!!");
-                        // }
-                        // if (result[0].Cost >= budget.Amount && budget.State == 'valid') {
-
                             db.collection('budgets').update({
                                 BudgetName: budget.BudgetName
                             }, {
@@ -53,7 +46,7 @@ exports.checkBudgets = function() {
                                         //Check for stop the instance here
                                         if (budget.TimeOut == "true") {
                                             console.log('CHECKING');
-                                            stopInstances(budgets[index1].BatchType, budgets[index1].BatchName);
+                                            stopInstances(budgets[index].BatchType, budgets[index].BatchName);
                                         }
                                         callback1();
                                     });
@@ -79,7 +72,7 @@ exports.checkBudgets = function() {
                                             //Also stop the instance here
                                         if (budget.TimeOut == "true") {
                                             console.log('CHECKING');
-                                            stopInstances(budgets[index1].BatchType, budgets[index1].BatchName);
+                                            stopInstances(budgets[index].BatchType, budgets[index].BatchName);
                                         }
                                         callback1();
                                     });
@@ -90,8 +83,9 @@ exports.checkBudgets = function() {
                         }
                     });
             };
-            if (budgets.length != 0) {
-                controller1();
+            if (budgets.length > 0) {
+                console.log('budgetController');
+                budgetController();
             }
         });
     });
@@ -155,8 +149,8 @@ var stopInstances = function(batchtype, batchname) {
                     db.collection('notifications').insert({
                         NotificationType: 'RDS-Stop',
                         NotificationData: 'There is no "stop/start" actions for RDS databases,' +
-                        'currently you would have to terminate the database taking a final snapshot' +
-                        'and restore from that snapshot.',
+                            'currently you would have to terminate the database taking a final snapshot' +
+                            'and restore from that snapshot.',
                         Seen: 'false',
                         Time: time
                     }, function(err) {

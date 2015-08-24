@@ -403,7 +403,6 @@ exports.userTimeCost = function(req, res) {
 
 exports.createGRLSInstances = function(timeBudget, callback) {
 	MongoClient.connect(databaseUrl, function(err, db) {
-		// <<<<<<< HEAD
 		if (err) throw err;
 		if (timeBudget.BatchType == 'user') {
 			mongoose.model('Billings').aggregate([{
@@ -440,9 +439,7 @@ exports.createGRLSInstances = function(timeBudget, callback) {
 					_id: 1,
 					ProductName: 1
 				}
-				// }
 			}]).exec(function(e, resources) {
-				// <<<<<<< HEAD
 				if (e) throw e;
 
 				console.log("resources", resources.length);
@@ -450,9 +447,7 @@ exports.createGRLSInstances = function(timeBudget, callback) {
 				if (resources.length == 0) {
 					console.log("empty response.")
 					callback("error");
-				}
-				//Not sure abouit this else, the block probably need to go farther down in lines
-				else {
+				} else {
 					var index1 = 0;
 					var controller1 = function() {
 						iterator1(function() {
@@ -460,81 +455,6 @@ exports.createGRLSInstances = function(timeBudget, callback) {
 							if (index1 < resources.length) controller1();
 							else {
 								callback('1');
-								// =======
-								// 				if (err) throw err;
-								// 				var index1 = 0;
-								// 				var controller1 = function() {
-								// 					iterator1(function() {
-								// 						index1++;
-								// 						if (index1 < resources.length) controller1();
-								// 						else {
-								// 							callback();
-								// 						}
-								// 					});
-								// 				};
-								// 				var iterator1 = function(callback1) {
-								// 					if(resources[index1].ProductName[0] == 'Amazon Elastic Compute Cloud'){
-								// 						mongoose.model('ec2Instances').aggregate([{
-								// 							$match: {
-								// 								Id: resources[index1]._id,
-								// 								// State: 'running'
-								// 							}
-								// 						}]).exec(function(e, resourceData) {
-								// 							if (resourceData.length != 0) {
-								// 								var doc = {
-								// 									timeBudgetName: timeBudget.TimeBudgetName,
-								// 									instanceId: resourceData[0].Id,
-								// 									instanceType: resourceData[0].Type,
-								// 									user: timeBudget.BatchName,
-								// 									group: 'null',
-								// 									instanceRegion: resourceData[0].Zone,
-								// 									serviceType: 'ec2',
-								// 									instanceType: resourceData[0].Type,
-								// 									lifetime: 0,
-								// 									uDecay: timeBudget.uDecayRate,
-								// 									oDecay: timeBudget.oDecayRate,
-								// 									timeout: timeBudget.timeout,
-								// 									state: 'valid'
-								// 								};
-								// 								db.collection('grlsInstances').insert(doc, function(err) {
-								// 									if (err) throw err;
-								// 									callback1();
-								// 								});
-								// 							} else {
-								// 								callback1();
-								// 							}
-								// 						});
-								// 					} else if (resources[index1].ProductName == 'Amazon RDS Service') {
-								// 						var arn = resources[index1]._id;
-								// 						var dbName = arn.substring(arn.lastIndexOf(':') + 1, arn.length);
-								// 						mongoose.model('rdsInstances').aggregate([{
-								// 							$match: {
-								// 								DBName: dbName
-								// 							}
-								// 						}]).exec(function(e, resourceData) {
-								// 							if (resourceData.length != 0) {
-								// 								var doc = {
-								// 									timeBudgetName: timeBudget.TimeBudgetName,
-								// 									instanceId: resourceData[0].DBName,
-								// 									user: timeBudget.BatchName,
-								// 									group: 'null',
-								// 									instanceRegion: resourceData[0].AvailabilityZone,
-								// 									serviceType: 'rds',
-								// 									minConnectionsLimit: resourceData[0].minDBConnections,
-								// 									maxConnectionsLimit: resourceData[0].maxDBConnections,
-								// 									lifetime: 0,
-								// 									uDecay: timeBudget.uDecayRate,
-								// 									oDecay: timeBudget.oDecayRate,
-								// 									timeout: timeBudget.timeout,
-								// 									state: 'valid'
-								// 								};
-								// 								db.collection('grlsInstances').insert(doc, function(err) {
-								// 									if (err) throw err;
-								// 									callback1();
-								// 								});
-								// 							} else {
-								// 								callback1();
-								// >>>>>>> 28d2b5c250e576ddeb2aa8addcd2915f057f1e02
 							}
 						});
 					};
