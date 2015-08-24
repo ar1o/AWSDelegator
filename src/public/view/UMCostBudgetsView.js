@@ -244,11 +244,17 @@ var UMCostBudgetsView = Backbone.View.extend({
             $(".custom-menu").hide(100);
         });
         this.$el.on('click', '.close', function() {
+            $('.costfilter').prop('disabled', '');
+            $('.sub-costfilter').prop('disabled', '');
+            $('.costfilter').val('');
             $('.content-title').remove();
             $('.content-body').remove();
             $('.modal-backdrop').remove();
         });
         this.$el.on('click', '#cancel', function() {
+            $('.costfilter').prop('disabled', '');
+            $('.sub-costfilter').prop('disabled', '');
+            $('.costfilter').val('');
             $('.content-title').remove();
             $('.content-body').remove();
             $('.modal-backdrop').remove();
@@ -267,6 +273,9 @@ var UMCostBudgetsView = Backbone.View.extend({
             }
             if ($("#action").text() == "Save") {
                 self.model.edit_cost_budget(self.data);
+                $('.costfilter').prop('disabled', '');
+                $('.sub-costfilter').prop('disabled', '');
+                $('.costfilter').val('');
                 $('#base-modal').hide();
             } else {
                 console.log("No Case Matched for button text");

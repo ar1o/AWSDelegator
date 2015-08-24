@@ -139,6 +139,41 @@ app.post('/setCreditsUsed', jsonParser, function(req, res) {
 var mongodb = require('mongodb');
 var MongoClient = mongodb.MongoClient;
 
+app.post('/budget', jsonParser, function(req, res) {
+    var r = req.body;
+    var startDate = r.startDate.split('/');
+    var endDate = r.endDate.split('/');
+    MongoClient.connect(databaseUrl, function(err, db) {
+        if (err) throw err;
+        var doc = {
+            BudgetName: r.budgetName,
+            BatchType: r.batchType,
+            BatchName: r.batchName,
+            StartDate: startDate[2] + '-' + startDate[0] + '-' + startDate[1] + ' ' + '00:00:00',
+            EndDate: endDate[2] + '-' + endDate[0] + '-' + endDate[1] + ' ' + '23:00:00',
+            Amount: r.amount,
+            timeout: r.timeout,
+            State: 'valid'
+        };
+        db.collection('budgets').find({
+            "BatchName": doc.BatchName,
+            "BatchType": doc.BatchType
+        }).toArray(function(err, resp) {
+            if (err) throw err;
+            console.log("Checking for timeBudget with matching batchName", resp, "length", resp.length);
+            if (resp.length != 0) {
+                res.send("error, budget for batchName already Exists");
+            } else {
+                db.collection('budgets').insert(doc, function(err) {
+                    if (err) throw err;
+                    console.log("inserted TimeBudget Doc");
+                    res.send("success");
+                });
+            }
+        });
+    });
+});
+
 app.post('/timebudget', jsonParser, function(req, res) {
     var r = req.body;
     var startDate = r.startDate.split('/');
@@ -168,25 +203,30 @@ app.post('/timebudget', jsonParser, function(req, res) {
             "BatchName": doc.BatchName,
             "BatchType": doc.BatchType
         }).toArray(function(err, resp) {
-
             if (err) throw err;
-            console.log("Checking for timeBudget with matching batchName", resp, "length",resp.length);
-            if (resp.length != 0) {
-                res.send("error, TimeBudget for batchName already Exists");
-            } else {
+            // console.log("Checking for timeBudget with matching batchName", resp, "length", resp.length);
+            // if (resp.length != 0) {
+            //     res.send("error, TimeBudget for batchName already Exists");
+            // } 
+            // if(doc.BatchType == 'user'){
+            //     db.collection('ec2Instances')
+                
+            // }
+            else {
                 console.log("No previous TimeBudget found for this document. Inserting doc");
                 require('./server/route/timeBudgetRoute').createGRLSInstances(doc, function(r) {
                     console.log("return value:", r);
                     if (r == 'error') {
                         console.log("Error with query. Document not inserted");
                         res.send("error, insert failed");
+                    } else if (r == 'error: no associated resources'){
+                        console.log("error: no associated resources for",doc.TimeBudgetName);
+                        res.send("error: no associated resources")
                     } 
-                    else if (r == 'empty: no response to query'){
+                    else if (r == 'empty: no response to query') {
                         console.log("empty response. add data to callbacks to prevent confusion");
                         res.send('error: empty response');
-
-                    }
-                        else if (r != 'error') {
+                    } else if (r != 'error') {
                         console.log("OK");
                         db.collection('timeBudgets').insert(doc, function(err) {
                             if (err) throw err;
@@ -273,29 +313,7 @@ app.post('/editTimeBudget', jsonParser, function(req, res) {
     });
 });
 
-app.post('/budget', jsonParser, function(req, res) {
-    var r = req.body;
-    var startDate = r.startDate.split('/');
-    var endDate = r.endDate.split('/');
-    MongoClient.connect(databaseUrl, function(err, db) {
-        if (err) throw err;
 
-        db.collection('budgets').insert({
-            BudgetName: r.budgetName,
-            BatchType: r.batchType,
-            BatchName: r.batchName,
-            StartDate: startDate[2] + '-' + startDate[0] + '-' + startDate[1] + ' ' + '00:00:00',
-            EndDate: endDate[2] + '-' + endDate[0] + '-' + endDate[1] + ' ' + '23:00:00',
-            Amount: r.amount,
-            timeout: r.timeout,
-            State: 'valid'
-        }, function(err) {
-            if (err) throw err;
-
-        });
-        res.send("success");
-    });
-});
 
 // function errorHandler(err, req, res, next) {
 //     console.error(err.message);

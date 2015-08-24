@@ -27,6 +27,7 @@ var BudgetView = Backbone.View.extend({
         };
         this.bindings();
         this.render();
+        this.$('#batchNameAndTypeWarning').hide();
         this.$('#budgetnamewarning').hide();
         this.$('#budgetnamerequest').hide();
         this.$('#oldbudgetnamewarning').hide();
@@ -145,7 +146,7 @@ var BudgetView = Backbone.View.extend({
                     var sy = dtMin.getFullYear();
                     var sdtFormatted = smm + '/' + sdd + '/' + sy;
                     //logic
-                    if (edtFormatted == sdtFormatted ||  ey < sy || ey == sy && emm < smm ||ey == sy && emm == smm && edd < sdd) {
+                    if (edtFormatted == sdtFormatted || ey < sy || ey == sy && emm < smm || ey == sy && emm == smm && edd < sdd) {
                         var sdd = dtMin.getDate();
                         var smm = dtMin.getMonth() + 1;
                         var sy = dtMin.getFullYear();
@@ -176,7 +177,7 @@ var BudgetView = Backbone.View.extend({
         }.bind(this));
 
         this.$el.on('click', '#savebtn', function(e) {
-            console.log("DATA about to be save (pre-check)",self.data);
+            console.log("DATA about to be save (pre-check)", self.data);
             if (self.data.batchType == null) {
                 self.$('#batchtyperequest').show();
             }
@@ -199,10 +200,9 @@ var BudgetView = Backbone.View.extend({
             }
             if (self.data.timeout == null) {
                 var checked = $('#myonoffswitch').prop('checked');
-                if(checked){
+                if (checked) {
                     this.data.timeout = true;
-                }
-                else{
+                } else {
                     this.data.timeout = false;
                 }
                 this.isValid.timeout = true;
@@ -215,22 +215,32 @@ var BudgetView = Backbone.View.extend({
                     console.log("invalid", i);
                 }
             }
-            
+
             $('#filter-details').addClass('hidden');
             if (validForm) {
                 console.log("form is valid");
                 console.log("About to pass to post budget result")
-                this.model.post_budget_result(this.data);
-                for (var i in self.isValid) {
-                    self.isValid[i] = false;
-                    self.data[i] = null;
-                }
-                $("#amount").val("");
-                $("#budgetname").val("");
-                $(".costfilter").val("");
-                $("#startdate").val("");
-                $("#enddate").val("");
-                $('#myModal').modal('hide');
+                this.model.post_budget_result(this.data, function(err) {
+                    if (err == 'success') {
+                        console.log("success");
+                        for (var i in self.isValid) {
+                            self.isValid[i] = false;
+                            self.data[i] = null;
+                            submitted = true;
+                        }
+                        $('#batchSelectionWarning').hide();
+                        $("#amount").val("");
+                        $("#budgetname").val("");
+                        $(".costfilter").val("");
+                        $("#startdate").val("");
+                        $("#enddate").val("");
+                        $('#myModal').modal('hide');
+                    } else if (err == 'error, TimeBudget for batchName already Exists') {
+                        //WHY is this being shown 
+                        console.log("Please make a time budget for a user or group without one already");
+                        this.$('#time-batchNameAndTypeWarning').show();
+                    }
+                });
             }
         }.bind(this));
 

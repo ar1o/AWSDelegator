@@ -441,12 +441,12 @@ exports.createGRLSInstances = function(timeBudget, callback) {
 				}
 			}]).exec(function(e, resources) {
 				if (e) throw e;
-
 				console.log("resources", resources.length);
 				console.log("resources", resources);
 				if (resources.length == 0) {
 					console.log("empty response.")
-					callback("error");
+					callback("error: no associated resources");
+				//Not sure abouit this else, the block probably need to go farther down in lines
 				} else {
 					var index1 = 0;
 					var controller1 = function() {
@@ -615,10 +615,10 @@ exports.createGRLSInstances = function(timeBudget, callback) {
 					}]).exec(function(e, resources) {
 						if (e) throw e;
 						console.log("resources.length", resources.length);
-						// if(resources.length == 0){
-						// 	console.log("DEFINE THIS ERROR: NEEDS TEXT WARNING FOR USER!");
-						// 	callback('empty: no response to query');
-						// }
+						if(resources.length == 0){
+							console.log("error: no associated resources");
+							callback('error: no associated resources');
+						}
 						//if result is not empty, conduct second query
 						console.log("query2 result", resources);
 						var index2 = 0;
