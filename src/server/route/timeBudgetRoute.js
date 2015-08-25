@@ -446,7 +446,7 @@ exports.createGRLSInstances = function(timeBudget, callback) {
 				if (resources.length == 0) {
 					console.log("empty response.")
 					callback("error: no associated resources");
-				//Not sure abouit this else, the block probably need to go farther down in lines
+					//Not sure abouit this else, the block probably need to go farther down in lines
 				} else {
 					var index1 = 0;
 					var controller1 = function() {
@@ -454,7 +454,7 @@ exports.createGRLSInstances = function(timeBudget, callback) {
 							index1++;
 							if (index1 < resources.length) controller1();
 							else {
-								callback('1');
+								return;
 							}
 						});
 					};
@@ -615,102 +615,103 @@ exports.createGRLSInstances = function(timeBudget, callback) {
 					}]).exec(function(e, resources) {
 						if (e) throw e;
 						console.log("resources.length", resources.length);
-						if(resources.length == 0){
+						if (resources.length == 0) {
 							console.log("error: no associated resources");
 							callback('error: no associated resources');
-						}
-						//if result is not empty, conduct second query
-						console.log("query2 result", resources);
-						var index2 = 0;
-						var controller2 = function() {
-							iterator2(function() {
-								index2++;
-								console.log("index2", index2);
-								if (index2 < resources.length) controller2();
-								else {
-									console.log('index 2 >= resources.length')
-									callback1('error: index 2 >= resources.length');
-								}
-							});
-						};
-						var iterator2 = function(callback2) {
-							if (resources[index2].ProductName[0] == 'Amazon Elastic Compute Cloud') {
-								mongoose.model('ec2Instances').aggregate([{
-									$match: {
-										Id: resources[index2]._id,
-										// State: 'running'
+							return;
+						} else {
+							//if result is not empty, conduct second query
+							console.log("query2 result", resources);
+							var index2 = 0;
+							var controller2 = function() {
+								iterator2(function() {
+									index2++;
+									console.log("index2", index2);
+									if (index2 < resources.length) controller2();
+									else {
+										console.log('index 2 >= resources.length')
+										callback1('error: index 2 >= resources.length');
 									}
-								}]).exec(function(e, resourceData) {
-									console.log("query3 result:", resourceData);
-									if (resourceData.length != 0) {
-										console.log("resourceData.length != 0");
-										if (/^t2/.test(resourceData[0].Type)) {
+								});
+							};
+							var iterator2 = function(callback2) {
+								if (resources[index2].ProductName[0] == 'Amazon Elastic Compute Cloud') {
+									mongoose.model('ec2Instances').aggregate([{
+										$match: {
+											Id: resources[index2]._id,
+											// State: 'running'
+										}
+									}]).exec(function(e, resourceData) {
+										console.log("query3 result:", resourceData);
+										if (resourceData.length != 0) {
+											if (/^t2/.test(resourceData[0].Type)) {
+												var doc = {
+													timeBudgetName: timeBudget.TimeBudgetName,
+													instanceId: resourceData[0].Id,
+													user: query1[0].UserNames[index1],
+													group: timeBudget.BatchName,
+													instanceRegion: resourceData[0].Zone,
+													serviceType: 'ec2',
+													instanceType: resourceData[0].Type,
+													lifetime: 0,
+													uDecay: timeBudget.uDecayRate,
+													oDecay: timeBudget.oDecayRate,
+													timeout: timeBudget.timeout,
+													state: 'valid'
+												};
+												console.log("doc being inserted");
+												db.collection('grlsInstances').insert(doc, function(err) {
+													if (err) throw err;
+													console.log("group ec2 grlsInstance inserted");
+													callback("success");
+												});
+											} else {
+												callback2('error: not t2');
+											}
+										} else {
+											callback2('error: resource data length == 0');
+										}
+									});
+								} else if (resources[index2].ProductName == 'Amazon RDS Service') {
+									var arn = resources[index2]._id;
+									var dbName = arn.substring(arn.lastIndexOf(':') + 1, arn.length);
+									mongoose.model('rdsInstances').aggregate([{
+										$match: {
+											DBName: dbName
+										}
+									}]).exec(function(e, resourceData) {
+										console.log("rds result", resourceData);
+										if (resourceData.length != 0) {
 											var doc = {
 												timeBudgetName: timeBudget.TimeBudgetName,
-												instanceId: resourceData[0].Id,
+												instanceId: resourceData[0].DBName,
 												user: query1[0].UserNames[index1],
 												group: timeBudget.BatchName,
-												instanceRegion: resourceData[0].Zone,
-												serviceType: 'ec2',
-												instanceType: resourceData[0].Type,
+												instanceRegion: resourceData[0].AvailabilityZone,
+												serviceType: 'rds',
+												minConnectionsLimit: resourceData[0].minDBConnections,
+												maxConnectionsLimit: resourceData[0].maxDBConnections,
 												lifetime: 0,
 												uDecay: timeBudget.uDecayRate,
 												oDecay: timeBudget.oDecayRate,
 												timeout: timeBudget.timeout,
 												state: 'valid'
 											};
-											console.log("doc being inserted");
+											console.log("inserting doucment into grlsInstances");
 											db.collection('grlsInstances').insert(doc, function(err) {
 												if (err) throw err;
-												console.log("group ec2 grlsInstance inserted");
-												callback("success");
+												console.log("group rds grlsInstance inserted");
+												callback2("inserted group rds doc ");
 											});
 										} else {
-											callback2('error: not t2');
+											callback2('resourceData.length == 0');
 										}
-									} else {
-										callback2('error: resource data length == 0');
-									}
-								});
-							} else if (resources[index2].ProductName == 'Amazon RDS Service') {
-								var arn = resources[index2]._id;
-								var dbName = arn.substring(arn.lastIndexOf(':') + 1, arn.length);
-								mongoose.model('rdsInstances').aggregate([{
-									$match: {
-										DBName: dbName
-									}
-								}]).exec(function(e, resourceData) {
-									console.log("rds result", resourceData);
-									if (resourceData.length != 0) {
-										var doc = {
-											timeBudgetName: timeBudget.TimeBudgetName,
-											instanceId: resourceData[0].DBName,
-											user: query1[0].UserNames[index1],
-											group: timeBudget.BatchName,
-											instanceRegion: resourceData[0].AvailabilityZone,
-											serviceType: 'rds',
-											minConnectionsLimit: resourceData[0].minDBConnections,
-											maxConnectionsLimit: resourceData[0].maxDBConnections,
-											lifetime: 0,
-											uDecay: timeBudget.uDecayRate,
-											oDecay: timeBudget.oDecayRate,
-											timeout: timeBudget.timeout,
-											state: 'valid'
-										};
-										console.log("inserting doucment into grlsInstances");
-										db.collection('grlsInstances').insert(doc, function(err) {
-											if (err) throw err;
-											console.log("group rds grlsInstance inserted");
-											callback2("inserted group rds doc ");
-										});
-									} else {
-										callback2('resourceData.length == 0');
-									}
-								});
-							} else {
-								callback2('neither ec2 or rds?');
-							}
-						};
+									});
+								} else {
+									callback2('neither ec2 or rds?');
+								}
+							};
+						}
 						if (resources.length != 0) {
 							controller2();
 						} else {
