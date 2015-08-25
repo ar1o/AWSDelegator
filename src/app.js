@@ -216,17 +216,7 @@ app.post('/timebudget', jsonParser, function(req, res) {
                 console.log("No previous TimeBudget found for this document. Inserting doc");
                 require('./server/route/timeBudgetRoute').createGRLSInstances(doc, function(r) {
                     console.log("return value:", r);
-                    if (r == 'error') {
-                        console.log("Error with query. Document not inserted");
-                        res.send("error, insert failed");
-                    } else if (r == 'error: no associated resources'){
-                        console.log("error: no associated resources for",doc.TimeBudgetName);
-                        res.send("error: no associated resources")
-                    } 
-                    else if (r == 'empty: no response to query') {
-                        console.log("empty response. add data to callbacks to prevent confusion");
-                        res.send('error: empty response');
-                    } else if (r != 'error') {
+                    if(r == 'success') {
                         console.log("OK");
                         db.collection('timeBudgets').insert(doc, function(err) {
                             if (err) throw err;
@@ -234,6 +224,19 @@ app.post('/timebudget', jsonParser, function(req, res) {
                             res.send("success");
                         });
                     }
+                    if (r == 'error: no associated resources'){
+                        console.log("error: no associated resources for",doc.TimeBudgetName);
+                        //stack error erer \/ \/
+                        res.send("error: no associated resources");
+                    }
+                    if (r == 'error') {
+                        console.log("Error with query. Document not inserted");
+                        res.send("error, insert failed");
+                    } 
+                    else if (r == 'empty: no response to query') {
+                        console.log("empty response. add data to callbacks to prevent confusion");
+                        res.send('error: empty response');
+                    } 
                 });
             }
         });

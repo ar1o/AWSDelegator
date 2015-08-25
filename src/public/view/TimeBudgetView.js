@@ -355,7 +355,6 @@ var TimeBudgetView = Backbone.View.extend({
                         $("#time-odecay").val("");
                         $("#minDB").val("");
                         $("#maxDB").val("");
-                        $('#time-myonoffswitch').val("");
                         $('#timeBudgetModal').modal('hide');
                     }
                     else if (err == 'error, TimeBudget for batchName already Exists'){
@@ -372,11 +371,12 @@ var TimeBudgetView = Backbone.View.extend({
                     else if (err == 'error: empty response'){
                         console.log('empty response');
                     }
-                    else if (err != 'success') {
-                        console.log('time budget insert error');
+                    else if (err == '') {
+                        // console.log('text is',err);
+                        // console.log('time budget insert error');
                         this.$('#time-associationWarning').hide()
                         this.$('#time-batchNameAndTypeWarning').hide();
-                        this.$('#time-batchSelectionWarning').show();
+                        this.$('#time-batchSelectionWarning').hide();
                     }
                 });
             }
