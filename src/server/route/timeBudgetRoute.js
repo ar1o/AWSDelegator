@@ -446,7 +446,6 @@ exports.createGRLSInstances = function(timeBudget, callback) {
 				if (resources.length == 0) {
 					console.log("empty response.")
 					callback("error: no associated resources");
-					//Not sure abouit this else, the block probably need to go farther down in lines
 				} else {
 					var index1 = 0;
 					var controller1 = function() {
@@ -564,34 +563,51 @@ exports.createGRLSInstances = function(timeBudget, callback) {
 				console.log("query1 result", query1);
 				var index1 = 0;
 				query1[0].UserNames.push('null');
+
+				console.log("query1 after push", query1);
 				var controller1 = function() {
 					iterator1(function() {
 						index1++;
 						if (index1 < query1[0].UserNames.length) controller1();
-						else {
 
-						}
 					});
 				};
 				var iterator1 = function(callback1) {
 					mongoose.model('Billings').aggregate([{
 						$match: {
-							$and: [{
-								'user:Name': {
-									$eq: query1[0].UserNames[index1]
-								}
-							}, {
-								'user:Group': {
-									$eq: timeBudget.BatchName
-								}
-							}, {
-								UsageStartDate: {
-									$gte: timeBudget.StartDate
-								}
-							}, {
-								UsageStartDate: {
-									$lte: timeBudget.EndDate
-								}
+							$or: [{
+								//class group
+								$and: [{
+									'user:Name': {
+										$eq: query1[0].UserNames[index1]
+									}
+								}, {
+									'user:Group': {
+										$eq: timeBudget.BatchName
+									}
+								}, {
+									UsageStartDate: {
+										$gte: timeBudget.StartDate
+									}
+								}, {
+									UsageStartDate: {
+										$lte: timeBudget.EndDate
+									}
+								}],
+								//collabrative group
+								$and: [{
+									'user:Group': {
+										$eq: timeBudget.BatchName
+									}
+								}, {
+									UsageStartDate: {
+										$gte: timeBudget.StartDate
+									}
+								}, {
+									UsageStartDate: {
+										$lte: timeBudget.EndDate
+									}
+								}]
 							}],
 						}
 					}, {
@@ -614,6 +630,7 @@ exports.createGRLSInstances = function(timeBudget, callback) {
 						}
 					}]).exec(function(e, resources) {
 						if (e) throw e;
+						console.log("resources", resources);
 						console.log("resources.length", resources.length);
 						if (resources.length == 0) {
 							console.log("error: no associated resources");
