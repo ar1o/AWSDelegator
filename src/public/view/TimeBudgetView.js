@@ -355,6 +355,8 @@ var TimeBudgetView = Backbone.View.extend({
                         $("#time-odecay").val("");
                         $("#minDB").val("");
                         $("#maxDB").val("");
+                        $(".time-costfilter").hide();
+                        $(".time-sub-costfilter").hide();
                         $('#timeBudgetModal').modal('hide');
                     }
                     else if (err == 'error, TimeBudget for batchName already Exists'){
