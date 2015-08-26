@@ -3,20 +3,16 @@ var app = express();
 port = process.env.PORT || 3000;
 app.use(require(__dirname + '/server/CORS'));
 var bodyParser = require('body-parser');
-// create application/x-www-form-urlencoded parser 
 var urlencodedParser = bodyParser.urlencoded({
     extended: true
 });
-// create application/json parser 
 var jsonParser = bodyParser.json();
 
 
 require(__dirname + '/server/config.js');
 
-// Front-end code
 app.use('/', express.static(__dirname + '/public'));
 
-// Start mongoose and mongo
 mongoose.connect(databaseUrl, function(error) {
     if (error) {
         console.log(error);
@@ -37,7 +33,6 @@ db.on("open", function() {
 app.get('/getAccount', require(__dirname + '/server/route/CredentialsRoute').getAccountNumber);
 app.get('/getConfiguration', require(__dirname + '/server/route/CredentialsRoute').getConfiguration);
 app.get('/getAccountBalance', require(__dirname + '/server/route/CredentialsRoute').getAccountBalance);
-// app.get('/getRDSRegion', require(__dirname + '/server/route/CredentialsRoute').getRDSRegion);
 app.get('/getS3Region', require(__dirname + '/server/route/CredentialsRoute').getS3Region);
 app.get('/getAWSRegion', require(__dirname + '/server/route/CredentialsRoute').getAWSRegion);
 
@@ -63,12 +58,10 @@ app.get('/api/billing/rds/hourlyCostProduct', require(__dirname + '/server/route
 
 app.get('/api/billing/ec2/operationCost', require(__dirname + '/server/route/billingRoute').operationCost);
 
-
 app.get('/api/NonFreeBilling/hourlyCostProduct', require(__dirname + '/server/route/NonFreeBillingRoute').hourlyCostProduct);
 app.get('/api/NonFreeBilling/instanceCostAll', require(__dirname + '/server/route/NonFreeBillingRoute').instanceCostAll);
 app.get('/api/NonFreeBilling/calcFreeTierCost', require(__dirname + '/server/route/NonFreeBillingRoute').calcFreeTierCost);
 app.get('/api/NonFreeBilling/totalCostProduct', require(__dirname + '/server/route/NonFreeBillingRoute').totalCostProduct);
-
 
 app.get('/api/statistics/operations', require(__dirname + '/server/route/OperationsRoute').operations);
 
@@ -98,8 +91,6 @@ app.get('/api/usage/timeUserService', require(__dirname + '/server/route/timeBud
 app.get('/api/notifications', require(__dirname + '/server/route/notificationsRoute').notifications);
 app.get('/api/notifications/seen', require(__dirname + '/server/route/notificationsRoute').updateNotifications);
 
-
-
 app.get('/getUsers', jsonParser, function(req, res) {
     MongoClient.connect(databaseUrl, function(err, db) {
         if (err) {
@@ -120,21 +111,17 @@ app.get('/time', function(req, res) {
     mongoose.model('Billings').find().limit(1).sort({
         $natural: -1
     }).exec(function(e, d) {
-        // console.log(d[0].UsageStartDate);
         res.send(d[0].UsageStartDate);
     });
 });
 
 app.post('/setBalance', jsonParser, function(req) {
-    console.log('setBalance',req.body['balance']);
     require('./server/route/CredentialsRoute').setBalance(req);
 });
 app.post('/setExpiration', jsonParser, function(req) {
-    console.log('setExp',req.body['expiration']);
     require('./server/route/CredentialsRoute').setExpiration(req);
 });
 app.post('/setCreditsUsed', jsonParser, function(req) {
-    console.log('setCreditsUsed',req.body['used']);
     require('./server/route/CredentialsRoute').setCreditsUsed(req);
 });
 
@@ -162,13 +149,11 @@ app.post('/budget', jsonParser, function(req, res) {
             "BatchType": doc.BatchType
         }).toArray(function(err, resp) {
             if (err) throw err;
-            console.log("Checking for timeBudget with matching batchName", resp, "length", resp.length);
             if (resp.length != 0) {
                 res.send("error, budget for batchName already Exists");
             } else {
                 db.collection('budgets').insert(doc, function(err) {
                     if (err) throw err;
-                    console.log("inserted TimeBudget Doc");
                     res.send("success");
                 });
             }
@@ -199,44 +184,26 @@ app.post('/timebudget', jsonParser, function(req, res) {
             timeout: r.timeout,
             State: 'valid'
         };
-        console.log("doc made", doc);
-        //Checking batchName and budgetName checking here before calling methods
         db.collection('timeBudgets').find({
             "BatchName": doc.BatchName,
             "BatchType": doc.BatchType
         }).toArray(function(err, resp) {
             if (err) throw err;
-            // console.log("Checking for timeBudget with matching batchName", resp, "length", resp.length);
-            // if (resp.length != 0) {
-            //     res.send("error, TimeBudget for batchName already Exists");
-            // } 
-            // if(doc.BatchType == 'user'){
-            //     db.collection('ec2Instances')
-                
-            // }
             else {
-                console.log("No previous TimeBudget found for this document. Inserting doc");
                 require('./server/route/timeBudgetRoute').createGRLSInstances(doc, function(r) {
-                    console.log("return value:", r);
                     if(r == 'success') {
-                        console.log("OK");
                         db.collection('timeBudgets').insert(doc, function(err) {
                             if (err) throw err;
-                            console.log("inserted TimeBudget Doc");
                             res.send("success");
                         });
                     }
                     if (r == 'error: no associated resources'){
-                        console.log("error: no associated resources for",doc.TimeBudgetName);
-                        //stack error erer \/ \/
                         res.send("error: no associated resources");
                     }
                     if (r == 'error') {
-                        console.log("Error with query. Document not inserted");
                         res.send("error, insert failed");
                     } 
                     else if (r == 'empty: no response to query') {
-                        console.log("empty response. add data to callbacks to prevent confusion");
                         res.send('error: empty response');
                     } 
                 });
@@ -257,20 +224,18 @@ app.post('/removeCostBudget', jsonParser, function(req, res) {
 });
 
 app.post('/editCostBudget', jsonParser, function(req, res) {
-    var r = req.body;
-    console.log("editing Cost Budget", r);
     MongoClient.connect(databaseUrl, function(err, db) {
         db.collection('budgets').update({
-            BudgetName: r.oldName
+            BudgetName: req.body.oldName
         }, {
             $set: {
-                BudgetName: r.budgetName,
-                BatchType: r.batchType,
-                BatchName: r.batchName,
-                StartDate: r.startDate,
-                EndDate: r.endDate,
-                Amount: r.amount,
-                timeout: r.timeout,
+                BudgetName: req.body.budgetName,
+                BatchType: req.body.batchType,
+                BatchName: req.body.batchName,
+                StartDate: req.body.startDate,
+                EndDate: req.body.endDate,
+                Amount: req.body.amount,
+                timeout: req.body.timeout,
                 State: 'valid'
             }
         });
@@ -278,57 +243,42 @@ app.post('/editCostBudget', jsonParser, function(req, res) {
     });
 });
 app.post('/removeTimeBudget', jsonParser, function(req, res) {
-    var r = req.body;
     MongoClient.connect(databaseUrl, function(err, db) {
         if (err) throw err;
         db.collection('timeBudgets').remove({
-            TimeBudgetName: r.budgetName
+            TimeBudgetName: req.body.budgetName
         });
         db.collection('grlsInstances').remove({
-            timeBudgetName: r.budgetName
+            timeBudgetName: req.body.budgetName
         });
         res.send("success");
     });
 });
 
 app.post('/editTimeBudget', jsonParser, function(req, res) {
-    var r = req.body;
-    // console.log("editing Time Budget data:",r);
     MongoClient.connect(databaseUrl, function(err, db) {
         db.collection('timeBudgets').update({
-            TimeBudgetName: r.oldName
+            TimeBudgetName: req.body.oldName
         }, {
             $set: {
-                TimeBudgetName: r.budgetName,
-                BatchType: r.batchType,
-                BatchName: r.batchName,
-                StartDate: r.startDate,
-                EndDate: r.endDate,
-                TimeAmount: r.amount,
-                TimeOut: r.timeout,
-                uDecayRate: r.uDecayRate,
-                oDecayRate: r.oDecayRate,
-                minDB: r.minDB,
-                maxDB: r.maxDB,
+                TimeBudgetName: req.body.budgetName,
+                BatchType: req.body.batchType,
+                BatchName: req.body.batchName,
+                StartDate: req.body.startDate,
+                EndDate: req.body.endDate,
+                TimeAmount: req.body.amount,
+                TimeOut: req.body.timeout,
+                uDecayRate: req.body.uDecayRate,
+                oDecayRate: req.body.oDecayRate,
+                minDB: req.body.minDB,
+                maxDB: req.body.maxDB,
                 State: 'valid'
             }
         });
-        console.log(db);
         res.send("success");
     });
 });
 
-
-
-// function errorHandler(err, req, res, next) {
-//     console.error(err.message);
-//     console.error(err.stack);
-//     res.status(500);
-//     res.render('error_template', {
-//         error: err
-//     });
-// }
-// module.exports = errorHandler;
 app.listen(port);
 
 console.log('databaseUrl ', databaseUrl);

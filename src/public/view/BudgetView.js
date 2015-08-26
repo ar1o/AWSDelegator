@@ -99,7 +99,6 @@ var BudgetView = Backbone.View.extend({
 
         this.$el.on('focusin', '#startdate', function(e) {
             var self = this;
-            // console.log("FOCUS IN startDate", self.data);
             $("#startdate").datepicker({
                 onSelect: function(selected) {
                     var dtMax = new Date(selected);
@@ -120,7 +119,6 @@ var BudgetView = Backbone.View.extend({
 
         this.$el.on('focusin', '#enddate', function(e) {
             var self = this;
-            // console.log("FOCUS on endDate", self.data);
             $("#enddate").datepicker({
                 onSelect: function(selected) {
                     var dtMax = new Date(selected);
@@ -133,19 +131,16 @@ var BudgetView = Backbone.View.extend({
                     $('#enddaterequest').hide();
                 },
                 onClose: function(selected) {
-                    //end
                     var dtMax = new Date(selected);
                     var edd = dtMax.getDate();
                     var emm = dtMax.getMonth() + 1;
                     var ey = dtMax.getFullYear();
                     var edtFormatted = emm + '/' + edd + '/' + ey;
-                    //start
                     var dtMin = new Date(self.data.startDate);
                     var sdd = dtMin.getDate();
                     var smm = dtMin.getMonth() + 1;
                     var sy = dtMin.getFullYear();
                     var sdtFormatted = smm + '/' + sdd + '/' + sy;
-                    //logic
                     if (edtFormatted == sdtFormatted || ey < sy || ey == sy && emm < smm || ey == sy && emm == smm && edd < sdd) {
                         var sdd = dtMin.getDate();
                         var smm = dtMin.getMonth() + 1;
@@ -236,7 +231,6 @@ var BudgetView = Backbone.View.extend({
                         $("#enddate").val("");
                         $('#myModal').modal('hide');
                     } else if (err == 'error, TimeBudget for batchName already Exists') {
-                        //WHY is this being shown 
                         console.log("Please make a time budget for a user or group without one already");
                         this.$('#time-batchNameAndTypeWarning').show();
                     }

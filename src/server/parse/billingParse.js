@@ -49,7 +49,6 @@ exports.parseBillingCSV = function(callback) {
                     bill[0] = bill[0].replace(/"/g, "");
                     //remove trailing '"'
                     bill[bill.length - 1] = bill[bill.length - 1].substring(0, bill[bill.length - 1].length - 1);
-                    // console.log(bill);
                     if (bill[propertiesIndex[billingAttributes.indexOf('UsageQuantity')]] != "null") {
                         if (bill[propertiesIndex[billingAttributes.indexOf('UsageStartDate')]] > latest.time) {
                             ++newDocCount;
@@ -96,12 +95,9 @@ exports.parseBillingCSV = function(callback) {
                                 } else if (/InstanceUsage:db.t2.micro/.test(doc['UsageType'])) {
                                     doc['NonFreeRate'] = pricing['InstanceUsage:db.t2.micro'].Price;
                                 } else {
-                                    //error checking
-                                    if(pricing[doc['UsageType']] == undefined) {
-                                        console.log("doc['UsageType']==",doc['UsageType']);
-                                    } else {
-                                        doc['NonFreeRate'] = pricing[doc['UsageType']].Price;
-                                    }
+                                    if(pricing[doc['UsageType']] != undefined) {
+                                        doc['NonFreeRate'] = pricing[doc['UsageType']].Price;  
+                                    } 
                                 }
                                 doc['NonFreeCost'] = doc['UsageQuantity'] * doc['NonFreeRate'];
                             }

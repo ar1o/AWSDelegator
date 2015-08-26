@@ -51,7 +51,6 @@ var BillingsModel = Backbone.Model.extend({
 
 	calcTotalCostForInstance: function(instanceid) {
 		TCost.reset();
-		//First check for the number of attached volumes
 		var volumeArray = volumeId.split(',');
 		var self = this;
 		var params = {
@@ -140,7 +139,6 @@ var RDSBillingModel = Backbone.Model.extend({
 var InstanceTotalCostCollection = Backbone.Collection.extend({
 	model: BillingModel,
 	initialize: function() {
-		// This will be called when an item is added. pushed or unshifted
 		this.on('add', function(model) {});
 
 	}

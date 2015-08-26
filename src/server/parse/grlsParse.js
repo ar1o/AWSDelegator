@@ -11,7 +11,6 @@ var getTimeAmount = function() {
 		mongoose.model('timeBudgets').find({
 			State: 'valid'
 		}).exec(function(err, timeBudgets) {
-			// console.log("getTimeAmount response", timeBudgets);
 			if (err) throw err;
 			//keep an index of the timebudgets iterated through
 			var index1 = 0;
@@ -66,7 +65,6 @@ var updateLifetime = function(maxBudgetLifetimes) {
 					State: {
 						$eq: 'valid'
 					},
-					// StartDate < currentDate < EndDate -- WHY?!
 					StartDate: {
 						$lte: date
 					},
@@ -76,7 +74,6 @@ var updateLifetime = function(maxBudgetLifetimes) {
 				}
 			}]).exec(function(err, budgets) {
 				var index1 = 0;
-				// console.log("Budgets",budgets);
 
 				//controller function that calls the iterator to loop through something
 				var timeBudgetsController = function() {
@@ -309,9 +306,6 @@ var updateLifetime = function(maxBudgetLifetimes) {
 						if (grlsInstances.length != 0) {
 							grlsInstancesController();
 						}
-						// else {
-						// console.log('grlsInstances is empty');
-						// }
 					}); //end of grlsLineItem find query
 				}; //end of iterator1
 				timeBudgetsController();
@@ -350,7 +344,6 @@ var stopTimeBudget = function(timeBudget) {
 					Time: currentTimeIso
 				}, function(err) {
 					if (err) throw err;
-					//get the resourceId's of invalid budget in-order to stop them
 					if (timeBudget.TimeOut == true) {
 						getTimeBudgetInstances(timeBudget);
 					}
@@ -405,7 +398,6 @@ var getTimeBudgetInstances = function(timeBudget) {
 					}
 				}
 			}]).exec(function(e, serviceResources) {
-
 				stopTimeBudgetInstances(serviceResources);
 			});
 		} else {

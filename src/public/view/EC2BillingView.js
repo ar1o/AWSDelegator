@@ -19,15 +19,10 @@ var EC2BillingView = Backbone.View.extend({
         this.model.change('operationDataReady', function(model, val) {
             self.render();
             var date = totalCostInstancesCollection.at(0).get('date').split(' ');
-            //date1=[year,month,date]
             var date1 = date[0].split(/-/);
-            //date2=[hour,minute,second]                
             var date2 = date[1].split(':');
-            //correction for JS viewing JAN as '00'
             var month = parseInt(date1[1]);
             date1[1] = month - 1;
-            
-            console.log(operationCostCollection)
             var opDate = operationCostCollection.at(0).get('date').split(' ');
             var opDate1 = opDate[0].split(/-/);
             var opDate2 = opDate[1].split(':');
@@ -119,11 +114,8 @@ var EC2BillingView = Backbone.View.extend({
             this.render();
             var date = totalCostInstancesCollection.at(0).get('date').split(' ');
             date1 = date[1].substring(0, date[1].length - 1);
-            //date1=[year,month,date]
             var date1 = date[0].split(/-/);
-            //date2=[hour,minute,second]                
             var date2 = date[1].split(':');
-            //correction for JS viewing JAN as '00'
             var month = parseInt(date1[1]);
             date1[1] = month - 1;
             $(function() {

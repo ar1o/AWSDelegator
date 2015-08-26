@@ -441,10 +441,7 @@ exports.createGRLSInstances = function(timeBudget, callback) {
 				}
 			}]).exec(function(e, resources) {
 				if (e) throw e;
-				console.log("resources", resources.length);
-				console.log("resources", resources);
 				if (resources.length == 0) {
-					console.log("empty response.")
 					callback("error: no associated resources");
 				} else {
 					var index1 = 0;
@@ -467,7 +464,6 @@ exports.createGRLSInstances = function(timeBudget, callback) {
 							}]).exec(function(e, resourceData) {
 								//if response is not empty, create document
 								if (resourceData.length != 0) {
-									console.log("iterator1 resourceData", resourceData);
 									var doc = {
 										timeBudgetName: timeBudget.TimeBudgetName,
 										instanceId: resourceData[0].Id,
@@ -485,7 +481,6 @@ exports.createGRLSInstances = function(timeBudget, callback) {
 										timeout: timeBudget.timeout,
 										state: 'valid'
 									};
-									console.log("doc", doc);
 									db.collection('grlsInstances').insert(doc, function(err) {
 										console.log("user grlsInstance inserted");
 										if (err) throw err;
@@ -536,7 +531,6 @@ exports.createGRLSInstances = function(timeBudget, callback) {
 				}
 			});
 		} else {
-			console.log("group Budget");
 			mongoose.model('iamUsersGroups').aggregate([{
 				$match: {
 					GroupName: timeBudget.BatchName
@@ -560,11 +554,8 @@ exports.createGRLSInstances = function(timeBudget, callback) {
 					UserNames: 1
 				}
 			}]).exec(function(e, query1) {
-				console.log("query1 result", query1);
 				var index1 = 0;
 				query1[0].UserNames.push('null');
-
-				console.log("query1 after push", query1);
 				var controller1 = function() {
 					iterator1(function() {
 						index1++;
@@ -630,23 +621,17 @@ exports.createGRLSInstances = function(timeBudget, callback) {
 						}
 					}]).exec(function(e, resources) {
 						if (e) throw e;
-						console.log("resources", resources);
-						console.log("resources.length", resources.length);
 						if (resources.length == 0) {
-							console.log("error: no associated resources");
 							callback('error: no associated resources');
 							return;
 						} else {
 							//if result is not empty, conduct second query
-							console.log("query2 result", resources);
 							var index2 = 0;
 							var controller2 = function() {
 								iterator2(function() {
 									index2++;
-									console.log("index2", index2);
 									if (index2 < resources.length) controller2();
 									else {
-										console.log('index 2 >= resources.length')
 										callback1('error: index 2 >= resources.length');
 									}
 								});
@@ -659,7 +644,6 @@ exports.createGRLSInstances = function(timeBudget, callback) {
 											// State: 'running'
 										}
 									}]).exec(function(e, resourceData) {
-										console.log("query3 result:", resourceData);
 										if (resourceData.length != 0) {
 											if (/^t2/.test(resourceData[0].Type)) {
 												var doc = {
@@ -676,7 +660,6 @@ exports.createGRLSInstances = function(timeBudget, callback) {
 													timeout: timeBudget.timeout,
 													state: 'valid'
 												};
-												console.log("doc being inserted");
 												db.collection('grlsInstances').insert(doc, function(err) {
 													if (err) throw err;
 													console.log("group ec2 grlsInstance inserted");
@@ -697,7 +680,6 @@ exports.createGRLSInstances = function(timeBudget, callback) {
 											DBName: dbName
 										}
 									}]).exec(function(e, resourceData) {
-										console.log("rds result", resourceData);
 										if (resourceData.length != 0) {
 											var doc = {
 												timeBudgetName: timeBudget.TimeBudgetName,
@@ -714,7 +696,6 @@ exports.createGRLSInstances = function(timeBudget, callback) {
 												timeout: timeBudget.timeout,
 												state: 'valid'
 											};
-											console.log("inserting doucment into grlsInstances");
 											db.collection('grlsInstances').insert(doc, function(err) {
 												if (err) throw err;
 												console.log("group rds grlsInstance inserted");

@@ -1,8 +1,6 @@
 var TimeModel = Backbone.Model.extend({
 	initialize: function() {
-		console.log("hello");
 		var self = this;
-		// this.change('metricsDataReady');
 	},
 
 	updatedTime: function() {
@@ -21,7 +19,6 @@ var TimeModel = Backbone.Model.extend({
 	getLatestTime: function(callback) {
 		var self = this;
 		this.updatedTime().done(function(result) {
-			
 			self.formatTime(result, function(value) {
 				if(callback)
 				callback(value);

@@ -42,12 +42,10 @@ exports.setConfiguration = function(req, res) {
     credits = credentials["Credits"];
     s3Region = credentials['S3_Region'];
     awsRegions = regions;
-    console.log("Credentials successfully updated");
   });
   req.on('end', function() {
     res.redirect(302, '../');
     res.end();
-    console.log("Returning to parent page.");
   });
 }
 exports.setBalance = function(req, res) {
@@ -59,43 +57,32 @@ exports.setBalance = function(req, res) {
       expM= expM -1;
       var expY = creditExp.substr(0, 4);
       var exp = new Date(expY, expM, expD).toUTCString();
-      console.log("exp", exp);
       var nowD = new Date().getDate();
       var nowM = new Date().getMonth();
       var nowY = new Date().getFullYear();
       var now = new Date(nowY, nowM, nowD).toUTCString();
-      console.log("now", now);
       if (nowY < expY || nowY <= expY && nowM < expM || nowY <= expY && nowM <= expM && nowD < expD) {
         credits = req.body["balance"];
-        console.log("Credits are still Good!");
       } else {
-        console.log("Credits Have Expired!");
         credits = "EXPIRED";
       }
     }
-    // res.send("Balance set to:", req.body["balance"]);
   }
-  //BAD rename to allow overloading...
 exports.setExpiration = function(req, res) {
   creditExp = req.body["expiration"];
-  // res.send("expiration set to:", req.body["expiration"]);
 }
 exports.setCreditsUsed = function(req) {
   creditsUsed = req.body["used"];
-  // res.send("CreditsUsed set to:", creditsUsed);
 }
 
 exports.setCredits = function(req, res) {
   credits = req.body;
-  // res.send("Credits set to:", req);
 }
 exports.getAccountBalance = function(req, res) {
   return credits;
-  // res.send(credits);
 }
 exports.getCreditsUsed = function(req, res) {
   return creditsUsed;
-  // res.send(creditsUsed);
 }
 exports.getExpiration = function(req, res) {
   var data = {
@@ -105,9 +92,7 @@ exports.getExpiration = function(req, res) {
         "year": creditExp.substr(0, 4),
       }]
     }
-    // console.log(data);
   return (data);
-  // res.send(creditExp);
 }
 exports.getConfiguration = function(req, res) {
   var data = {

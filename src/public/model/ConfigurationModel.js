@@ -27,7 +27,6 @@ var ConfigurationModel = Backbone.Model.extend({
 		var self = this;
 		ConfigurationCollection.reset();
 		this.configuration_result().done(function(result) {
-			// console.log('result',result)
 			for (var r in result) {
 				var data = new ConfigurationViewModel({
 					number: result["account"][0]["Number"],
@@ -86,11 +85,10 @@ var ConfigurationModel = Backbone.Model.extend({
 			contentType: 'application/json',
 			dataType : 'json',
 			success: function(data) {
-				console.log('success');
 				self.set('expirationDataReady', Date.now());
 			},
 			error: function(data){
-				// console.log(data);
+				console.log('setExpiration Error:'data);
 			}
 		});
 	}

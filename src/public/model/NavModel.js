@@ -16,7 +16,6 @@ var NavViewCollection = Backbone.Collection.extend({
 	model: NavViewModel,
 	initialize: function() {
 		this.on('add', function(model) {
-			// console.log('someting got added');
 		});
 	}
 });

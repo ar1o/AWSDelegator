@@ -7,8 +7,6 @@ var UMCostBudgetsView = Backbone.View.extend({
             this.model = new UsageMonitorModel();
         }
         this.editHTML = '<div class="insetting"> <div class="incontainer"><label class="budget-label">Name <i class="fa fa-question-circle" id="BudgetName" data-toggle="tooltip" title="Unique name assigned to this Cost Budget"></i></label><input type="text" id="budgetname" placeholder="e.g., "Monthly EC2 Budget"></div><div class="warning" id="budgetnamewarning">Invalid budget Name.</div><div class="warning" id="oldbudgetnamewarning">Budget Name already in use.</div><div class="warning" id="budgetnamerequest">Please enter a budget name.</div></div><div class="insetting"> <div class="incontainer"><label class="budget-label">Track costs associated to <i class="fa fa-question-circle" id="AssociatedTo" data-toggle="tooltip" title="User or group this budget applies to"></i></label><select class="costfilter"><option value="" disabled selected>Select</option><option value="user">User</option><option value="group">Groups</option></select></div></div><div class="sub-insetting"> <div class="sub-incontainer"><div class="" id="filter-details"><select class="sub-costfilter"><option value="" disabled selected>Select</option>{{#each col}}<option value={{this.name}}></option>{{/each}}</select></div></div><div class="warning" id="batchtyperequest">Please select a Batch Type.</div><div class="warning" id="batchnamerequest">Please select a Batch Name.</div></div><div class="insetting"> <div class="incontainer"><label class="budget-label">Start date <i class="fa fa-question-circle" id="StartDate" data-toggle="tooltip" title="Date when budget begins"></i></label><input type="text" id="startdate" placeholder="mm/dd/yyyy"><div class="warning" id="startdaterequest">Please select a start date.</div></div></div><div class="insetting"> <div class="incontainer"><label class="budget-label">End date <i class="fa fa-question-circle" id="EndDate" data-toggle="tooltip" title="Date of termination for budget"></i></label><input type="text" id="enddate" placeholder="mm/dd/yyyy"><div class="warning" id="enddatewarning">Invalid dates selected.</div><div class="warning" id="enddaterequest">Please select an end.</div></div></div><div class="insetting"> <div class="incontainer"><label class="budget-label">Cost Amount <i class="fa fa-question-circle" id="CostAmount" data-toggle="tooltip" title="Dollar amount the associated user/group is allocated between start and end dates"></i></label><input type="text" id="amount" placeholder="USD"><div class="warning" id="amountwarning">Invalid amount.</div><div class="warning" id="amountrequest">Please enter an amount.</div></div></div><div class="insetting"> <div class="incontainer"><label class="budget-label">Stop resource(s) when quota reached <i class="fa fa-question-circle" id="Stop" data-toggle="tooltip" title="Stop instance when budget is exceeded?"></i></label><div class="onoffswitch"><input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked><label class="onoffswitch-label" for="myonoffswitch"><span class="onoffswitch-inner"></span><span class="onoffswitch-switch"></span></label></div></div></div>';
-        // var users = this.model.users_result(function() {
-        // });
         this.model.getBudgets();
         this.operationsActivity = new UMOperationsView();
         this.usageActivity = new UMUsageView();
@@ -35,7 +33,6 @@ var UMCostBudgetsView = Backbone.View.extend({
             amount: false,
             timeout: true
         };
-
         this.bindings();
         this.render();
     },
@@ -113,13 +110,9 @@ var UMCostBudgetsView = Backbone.View.extend({
         // Trigger action when the contexmenu is about to be shown
         $(document).bind("contextmenu", function(event) {
             if (event.target.matches('#BudgetTable *')) {
-                // console.log(rowIndex);
-                // Avoid the real one
                 event.preventDefault();
                 if (($('#BudgetTable').find("tbody > tr > td").length) > 6) {
-                    // Show contextmenu
                     $(".custom-menu").finish().toggle(100).
-                        // In the right position (the mouse)
                     css({
                         top: event.pageY + "px",
                         left: event.pageX + "px"
@@ -127,11 +120,8 @@ var UMCostBudgetsView = Backbone.View.extend({
                 }            }
         });
 
-        // If the document is clicked somewhere
         $(document).bind("mousedown", function(e) {
-            // If the clicked element is not the menu
             if (!$(e.target).parents(".custom-menu").length > 0) {
-                // Hide it
                 $(".custom-menu").hide(100);
             }
         });
@@ -143,19 +133,15 @@ var UMCostBudgetsView = Backbone.View.extend({
                 // A case for each action. Your actions here
                 case "Edit":
                     var result;
-
                     var sDate = "" + self.data.startDate.substr(0, 4) + '/' + self.data.startDate.substr(5, 2) + '/' + self.data.startDate.substr(8, 2);
                     var eDate = "" + self.data.endDate.substr(0, 4) + '/' + self.data.endDate.substr(5, 2) + '/' + self.data.endDate.substr(8, 2);
-
                     self.data.oldName = self.data.budgetName;
-
                     $('.modal-title').append('<div class="content-title">Edit budget: ' + self.data.budgetName + '</div>');
                     $('.modal-body').append('<div class="content-body">' + self.editHTML + '</div>');
                     $('#budgetname').prop('value', self.data.budgetName);
                     $('.costfilter').val(self.data.batchType);
                     $('.costfilter').prop('disabled', 'disabled');
                     $('.sub-costfilter').prop('disabled', 'disabled');
-
                     if (self.data.timeout == 'true') {
                         $('#myonoffswitch').prop('checked', 'checked');
                     }
@@ -209,7 +195,6 @@ var UMCostBudgetsView = Backbone.View.extend({
                             GroupCollection.reset();
                         });
                     }
-                    // self.data.batchName
                     $('.sub-costfilter').prop('value', self.data.batchName);
 
                     $('oldbudgetnamewarning').hide();
@@ -262,7 +247,6 @@ var UMCostBudgetsView = Backbone.View.extend({
 
         this.$el.on('click', '#action', function() {
             //send request to model to remove budget with matching name from collection
-            //console.log("cancelled");
             $('.content-title').remove();
             $('.content-body').remove();
             $('.modal-backdrop').remove();
@@ -278,7 +262,6 @@ var UMCostBudgetsView = Backbone.View.extend({
                 $('.costfilter').val('');
                 $('#base-modal').hide();
             } else {
-                console.log("No Case Matched for button text");
             }
 
         });
@@ -314,7 +297,6 @@ var UMCostBudgetsView = Backbone.View.extend({
                 self.$('#amountwarning').show();
             }
         }.bind(this));
-        // start date
         this.$el.on('focusin', '#startdate', function(e) {
             var self = this;
             $("#startdate").datepicker({
@@ -329,7 +311,6 @@ var UMCostBudgetsView = Backbone.View.extend({
                     $('#startdaterequest').hide();
                 },
                 onClose: function(selected) {
-                    console.log("startdate", selected);
                     self.data.startDate = selected;
                     self.isValid.startDate = true;
                 }
@@ -350,19 +331,16 @@ var UMCostBudgetsView = Backbone.View.extend({
                     $('#enddaterequest').hide();
                 },
                 onClose: function(selected) {
-                    //end
                     var dtMax = new Date(selected);
                     var edd = dtMax.getDate();
                     var emm = dtMax.getMonth() + 1;
                     var ey = dtMax.getFullYear();
                     var edtFormatted = emm + '/' + edd + '/' + ey;
-                    //start
                     var dtMin = new Date(self.data.startDate);
                     var sdd = dtMin.getDate();
                     var smm = dtMin.getMonth() + 1;
                     var sy = dtMin.getFullYear();
                     var sdtFormatted = smm + '/' + sdd + '/' + sy;
-                    //logic
                     if (edtFormatted == sdtFormatted || ey < sy || ey == sy && emm < smm || ey == sy && emm == smm && edd < sdd) {
                         var sdd = dtMax.getDate() - 1;
                         var smm = dtMax.getMonth() + 1;
