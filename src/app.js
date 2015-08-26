@@ -34,7 +34,6 @@ db.on("open", function() {
     });
 });
 
-app.post('/setBalance', require(__dirname + '/server/route/CredentialsRoute').setBalance);
 app.get('/getAccount', require(__dirname + '/server/route/CredentialsRoute').getAccountNumber);
 app.get('/getConfiguration', require(__dirname + '/server/route/CredentialsRoute').getConfiguration);
 app.get('/getAccountBalance', require(__dirname + '/server/route/CredentialsRoute').getAccountBalance);
@@ -126,13 +125,16 @@ app.get('/time', function(req, res) {
     });
 });
 
-app.post('/setBalance', jsonParser, function(req, res) {
+app.post('/setBalance', jsonParser, function(req) {
+    console.log('setBalance',req.body['balance']);
     require('./server/route/CredentialsRoute').setBalance(req);
 });
-app.post('/setExpiration', jsonParser, function(req, res) {
+app.post('/setExpiration', jsonParser, function(req) {
+    console.log('setExp',req.body['expiration']);
     require('./server/route/CredentialsRoute').setExpiration(req);
 });
-app.post('/setCreditsUsed', jsonParser, function(req, res) {
+app.post('/setCreditsUsed', jsonParser, function(req) {
+    console.log('setCreditsUsed',req.body['used']);
     require('./server/route/CredentialsRoute').setCreditsUsed(req);
 });
 

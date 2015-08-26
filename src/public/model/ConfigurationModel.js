@@ -1,5 +1,3 @@
-
-
 var ConfigurationModel = Backbone.Model.extend({
 	defaults: {
 		openConfig: false
@@ -10,8 +8,6 @@ var ConfigurationModel = Backbone.Model.extend({
 		var result;
 		this.change('openConfig');
 		this.getConfiguration();
-		this.change('balanceDataReady');
-		this.change('UsedCreditsDataReady');
 	},
 	configuration_result: function() {
 		result = '';
@@ -51,43 +47,46 @@ var ConfigurationModel = Backbone.Model.extend({
 		});
 	},
 	setBalance: function(data) {
-		// console.log('ConfigurationView/setBalance',data);
 		var self = this;
 		return $.ajax({
 			type: 'POST',
-			url: 'http://localhost:3000/setBalance',
-			data: {"balance" : data},
+			data: JSON.stringify({"balance" : data}),
+			url: '/setBalance',
+			dataType : 'json',
+			contentType: 'application/json',
 			success: function(data) {
 				self.set('balanceDataReady', Date.now());
 			},
 			error: function(data){
-				// console.log(data);
 			}
 		});
 	},
 	setCreditsUsed: function(data) {
-		// console.log('ConfigurationView/setCreditsUsed',data); //not added to app.js
 		var self = this;
 		return $.ajax({
 			type: 'POST',
-			url: 'http://localhost:3000/setCreditsUsed',
-			data: {"used" : data},
+			data: JSON.stringify({"used" : data}),
+			url: '/setCreditsUsed',
+			contentType: 'application/json',
+			dataType : 'json',
 			success: function(data) {
 				self.set('UsedCreditsDataReady', Date.now());
 			},
 			error: function(data){
-				// console.log(data);
+				console.log(data);
 			}
 		});
 	},
 	setExpiration: function(data) {
-		// console.log('ConfigurationView /setExpiration',data);
 		var self = this;
-		$.ajax({
+		return $.ajax({
 			type: 'POST',
-			url: 'http://localhost:3000/setExpiration',
-			data: {"expiration" : data},
+			url: '/setExpiration',
+			data: JSON.stringify({'expiration' : data}),
+			contentType: 'application/json',
+			dataType : 'json',
 			success: function(data) {
+				console.log('success');
 				self.set('expirationDataReady', Date.now());
 			},
 			error: function(data){
