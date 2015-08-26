@@ -79,7 +79,6 @@ exports.getPricing = function(callback) {
             if(index2 < pricingURLs.length) {
                 controller2();
             } else {
-                //needs to be dynamic(from json url)
                 pricing['CloudFront-Out-Bytes']={Price:0.085};
                 callback();
             }
@@ -189,7 +188,6 @@ exports.getPricing = function(callback) {
             }                  
         });            
     };
-
     controller();
 }
 

@@ -26,10 +26,7 @@ var AppView = Backbone.View.extend({
 
         $('.content-view').append(this.footer.el);
 
-
-        //Resize the content view
         window_size = $(window).height();
-        // console.log(window_size);
         var length_calc = (window_size - 50);
         var length = length_calc + 'px';
         this.$('.content-view').css({
@@ -38,37 +35,16 @@ var AppView = Backbone.View.extend({
 
 
         $(window).resize(function() {
-            //resize just happened, pixels changed
             window_size = $(window).height();
-            // console.log(window_size);
             var length_calc = (window_size - 50);
             var length = length_calc + 'px';
             this.$('.content-view').css({
                 'height': length
             });
-
-
         });
-
-
-// var docHeight = $(".content-view").height();
-// var footerHeight = $('.FooterView').height();
-// console.log(docHeight);
-// console.log(footerHeight);
-// var footerTop = $('.FooterView').position().top + footerHeight;
-
- // if (footerTop < docHeight) {
- //    $('.FooterView').css('margin-top', 10+ (docHeight - footerTop) + 'px');
- //   }
-        // var footerResize = function() {
-        //     $('.FooterView').css('position', $(".content-view").height() + $(".FooterView").innerHeight() > $(window).height() ? "inherit" : "fixed");
-        // };
-        // $(window).resize(footerResize).ready(footerResize);
-        // console.log(footerResize());
     },
 
     setListeners: function() {
-        // url changes drive location within the app
         var self = this;
         this.router.on("change:view", function(a, view) {
             self.setView(view);
@@ -101,7 +77,6 @@ var AppView = Backbone.View.extend({
             } else {
                 this.navView.model.isOpen = true;
                 window_size = $(window).height();
-                // console.log(window_size);
                 var length_calc = (window_size);
                 var length = length_calc + 'px';
                 this.$('.NavView').css({
@@ -180,10 +155,8 @@ var AppView = Backbone.View.extend({
         }.bind(this));
 
         this.$el.on("click", '.notify', function(e) {
-            // console.log('notification clicked')
             if (this.notificationView.model.isOpen == false) {
                 this.notificationView.model.isOpen = true;
-                // this.$( ".mdl-badge" ).removeAttr( "data-badge");
             } else {
                 this.notificationView.model.isOpen = false;
             }
@@ -210,7 +183,6 @@ var AppView = Backbone.View.extend({
         this.$el.append(this.budgetView.el);
         this.$el.append(this.timeBudgetView.el);
         this.$el.append(this.notificationView.el);
-
         this.setView(this.router.get('view'));
     },
 
@@ -226,6 +198,4 @@ var AppView = Backbone.View.extend({
         $('.content-view').append(this.footer.el);
         $('.content-view').append(this.latestTime.el);
     }
-
-
 });

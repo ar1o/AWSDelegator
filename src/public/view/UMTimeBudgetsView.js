@@ -222,10 +222,7 @@ var UMTimeBudgetsView = Backbone.View.extend({
                             GroupCollection.reset();
                         });
                     }
-                    // self.data.batchName
                     $('.time-sub-costfilter').prop('value', self.data.batchName);
-
-                    //Set Field data ^^
                     $("#action").text("Save");
                     $('#time-minDBwarning').hide();
                     $('#time-minDBrequest').hide();
@@ -248,7 +245,6 @@ var UMTimeBudgetsView = Backbone.View.extend({
                     break;
 
                 case "Delete":
-                    // $('.modal-title').append('<div class="content-title">Delete budget: ' + self.data.budgetName + '</div>');
                     $('.modal-body').append('<div class="content-body">Are you sure you want to delete this?</div>');
                     $("#action").text("Delete");
                     break;
@@ -257,7 +253,6 @@ var UMTimeBudgetsView = Backbone.View.extend({
             $(".custom-menu").hide(100);
         });
         this.$el.on('click', '.close', function() {
-            // console.log("cancelled");
             $('.time-costfilter').prop('disabled', '');
             $('.time-sub-costfilter').prop('disabled', '');
             $('.time-costfilter').val('');
@@ -268,7 +263,6 @@ var UMTimeBudgetsView = Backbone.View.extend({
             $('.modal-backdrop').remove();
         });
         this.$el.on('click', '#cancel', function() {
-            // console.log("cancelled");
             $('.time-costfilter').prop('disabled', '');
             $('.time-sub-costfilter').prop('disabled', '');
             $('.time-costfilter').val('');
@@ -281,11 +275,9 @@ var UMTimeBudgetsView = Backbone.View.extend({
 
         this.$el.on('click', '#action', function() {
             //send request to model to remove budget with matching name from collection
-            //console.log("cancelled");
             $('.content-title').remove();
             $('.content-body').remove();
             $('.modal-backdrop').remove();
-            // Check for save or delete button clickedif (!this.model) {
             if ($("#action").text() == "Delete") {
                 self.model.remove_time_budget(self.data);
                 $('#base-modal').hide();
@@ -297,7 +289,6 @@ var UMTimeBudgetsView = Backbone.View.extend({
                 $('.time-costfilter').val('');
                 $('#base-modal').hide();
             } else {
-                console.log("No Case Matched for button text");
             }
 
         });
@@ -407,7 +398,6 @@ var UMTimeBudgetsView = Backbone.View.extend({
                 if (this.data.minDB > this.data.maxDB) {
                     this.data.minDB = this.data.maxDB - 1;
                     $('#time-minDB').prop('value', this.data.minDB);
-                    // $('#time-minDB').val(this.data.minDB);
                 }
                 self.isValid.minDB = true;
                 self.$('#time-minDBwarning').hide();
@@ -427,7 +417,6 @@ var UMTimeBudgetsView = Backbone.View.extend({
                 if (this.data.minDB > this.data.maxDB) {
                     this.data.maxDB = (this.data.minDB + 1);
                     $('#time-maxDB').prop('value', this.data.maxDB);
-                    // $('#time-maxDB').val(this.data.maxDB);
                 }
                 self.isValid.maxDB = true;
                 self.$('#time-maxDBwarning').hide();

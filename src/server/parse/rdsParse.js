@@ -19,7 +19,6 @@ exports.parseInstances = function(callback) {
                     });
                 }
                 var iterator1 = function(callback) {
-                    // console.log('ParseAlert(rds): parsing instances in ', awsRegions[regionIteratorIndex]);
                     var rds = new AWS.RDS({
                         region: awsRegions[regionIteratorIndex]
                     });
@@ -91,7 +90,6 @@ exports.parseMetrics = function(caller,masterCallback) {
                 });
             }
             var iterator1 = function(instance, callback) {
-                // console.log('ParseAlert(rds): parsing metrics of',availableInstances[index1].DBInstanceIdentifier);
                 var instanceRegion = availableInstances[index1].AvailabilityZone;
                 AWS.config.region = instanceRegion.substring(0,instanceRegion.length-1);
                 var cloudwatch = new AWS.CloudWatch();

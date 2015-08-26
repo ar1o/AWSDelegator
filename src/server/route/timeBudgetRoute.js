@@ -442,7 +442,6 @@ exports.createGRLSInstances = function(timeBudget, callback) {
 			}]).exec(function(e, resources) {
 				if (e) throw e;
 				if (resources.length == 0) {
-					console.log("empty response.")
 					callback("error: no associated resources");
 				} else {
 					var index1 = 0;
@@ -531,7 +530,6 @@ exports.createGRLSInstances = function(timeBudget, callback) {
 				}
 			});
 		} else {
-			console.log("group Budget");
 			mongoose.model('iamUsersGroups').aggregate([{
 				$match: {
 					GroupName: timeBudget.BatchName
@@ -555,11 +553,8 @@ exports.createGRLSInstances = function(timeBudget, callback) {
 					UserNames: 1
 				}
 			}]).exec(function(e, query1) {
-				console.log("query1 result", query1);
 				var index1 = 0;
 				query1[0].UserNames.push('null');
-
-				console.log("query1 after push", query1);
 				var controller1 = function() {
 					iterator1(function() {
 						index1++;
@@ -626,12 +621,10 @@ exports.createGRLSInstances = function(timeBudget, callback) {
 					}]).exec(function(e, resources) {
 						if (e) throw e;
 						if (resources.length == 0) {
-							console.log("error: no associated resources");
 							callback('error: no associated resources');
 							return;
 						} else {
 							//if result is not empty, conduct second query
-							console.log("query2 result", resources);
 							var index2 = 0;
 							var controller2 = function() {
 								iterator2(function() {
@@ -668,7 +661,6 @@ exports.createGRLSInstances = function(timeBudget, callback) {
 													timeout: timeBudget.timeout,
 													state: 'valid'
 												};
-												console.log("doc being inserted");
 												db.collection('grlsInstances').insert(doc, function(err) {
 													if (err) throw err;
 													callback();
@@ -704,7 +696,6 @@ exports.createGRLSInstances = function(timeBudget, callback) {
 												timeout: timeBudget.timeout,
 												state: 'valid'
 											};
-											console.log("inserting doucment into grlsInstances");
 											db.collection('grlsInstances').insert(doc, function(err) {
 												if (err) throw err;
 												callback2();

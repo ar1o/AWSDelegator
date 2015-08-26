@@ -11,7 +11,6 @@ var getTimeAmount = function() {
 		mongoose.model('timeBudgets').find({
 			State: 'valid'
 		}).exec(function(err, timeBudgets) {
-			// console.log("getTimeAmount response", timeBudgets);
 			if (err) throw err;
 			//keep an index of the timebudgets iterated through
 			var index1 = 0;
@@ -66,7 +65,6 @@ var updateLifetime = function(maxBudgetLifetimes) {
 					State: {
 						$eq: 'valid'
 					},
-					// StartDate < currentDate < EndDate -- WHY?!
 					StartDate: {
 						$lte: date
 					},
@@ -307,9 +305,6 @@ var updateLifetime = function(maxBudgetLifetimes) {
 						if (grlsInstances.length != 0) {
 							grlsInstancesController();
 						}
-						// else {
-						// console.log('grlsInstances is empty');
-						// }
 					}); //end of grlsLineItem find query
 				}; //end of iterator1
 				if (budgets.length != 0) {
@@ -358,7 +353,6 @@ var stopTimeBudget = function(timeBudget) {
 							getTimeBudgetInstances(timeBudget);
 						}
 					});
-
 				});
 			});
 		});
