@@ -26,8 +26,6 @@ var AppView = Backbone.View.extend({
 
         $('.content-view').append(this.footer.el);
 
-
-        //Resize the content view
         window_size = $(window).height();
         var length_calc = (window_size - 50);
         var length = length_calc + 'px';
@@ -37,7 +35,6 @@ var AppView = Backbone.View.extend({
 
 
         $(window).resize(function() {
-            //resize just happened, pixels changed
             window_size = $(window).height();
             var length_calc = (window_size - 50);
             var length = length_calc + 'px';
@@ -48,7 +45,6 @@ var AppView = Backbone.View.extend({
     },
 
     setListeners: function() {
-        // url changes drive location within the app
         var self = this;
         this.router.on("change:view", function(a, view) {
             self.setView(view);
@@ -200,7 +196,6 @@ var AppView = Backbone.View.extend({
         this.model.set('currentView', viewInstance);
         this.$el.find('.content-view').html(viewInstance.el);
         $('.content-view').append(this.footer.el);
+        $('.content-view').append(this.latestTime.el);
     }
-
-
 });

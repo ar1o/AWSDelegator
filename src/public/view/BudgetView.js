@@ -172,7 +172,7 @@ var BudgetView = Backbone.View.extend({
         }.bind(this));
 
         this.$el.on('click', '#savebtn', function(e) {
-            console.log("DATA about to be save (pre-check)", self.data);
+            // console.log("DATA about to be save (pre-check)", self.data);
             if (self.data.batchType == null) {
                 self.$('#batchtyperequest').show();
             }
@@ -186,11 +186,11 @@ var BudgetView = Backbone.View.extend({
                 self.$('#amountrequest').show();
             }
             if (self.data.startDate == null) {
-                console.log($('#startdate').val())
+                // console.log($('#startdate').val())
                 self.$('#startdaterequest').show();
             }
             if (self.data.endDate == null) {
-                console.log($('#enddate').val())
+                // console.log($('#enddate').val())
                 self.$('#enddaterequest').show();
             }
             if (self.data.timeout == null) {
@@ -207,14 +207,14 @@ var BudgetView = Backbone.View.extend({
             for (var i in self.isValid) {
                 if (!self.isValid[i]) {
                     validForm = false;
-                    console.log("invalid", i);
+                    // console.log("invalid", i);
                 }
             }
 
             $('#filter-details').addClass('hidden');
             if (validForm) {
                 console.log("form is valid");
-                console.log("About to pass to post budget result")
+                // console.log("About to pass to post budget result")
                 this.model.post_budget_result(this.data, function(err) {
                     if (err == 'success') {
                         console.log("success");

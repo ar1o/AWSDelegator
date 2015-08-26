@@ -167,8 +167,8 @@ app.post('/timebudget', jsonParser, function(req, res) {
     var endDate = r.endDate.split('/');
     MongoClient.connect(databaseUrl, function(err, db) {
         if (err) {
-            throw err
-        };
+            throw err;
+        }
         var doc = {
             TimeBudgetName: r.timebudgetname,
             BatchType: r.batchType,
@@ -184,31 +184,22 @@ app.post('/timebudget', jsonParser, function(req, res) {
             timeout: r.timeout,
             State: 'valid'
         };
-        db.collection('timeBudgets').find({
-            "BatchName": doc.BatchName,
-            "BatchType": doc.BatchType
-        }).toArray(function(err, resp) {
-            if (err) throw err;
-            else {
-                require('./server/route/timeBudgetRoute').createGRLSInstances(doc, function(r) {
-                    if(r == 'success') {
-                        db.collection('timeBudgets').insert(doc, function(err) {
-                            if (err) throw err;
-                            res.send("success");
-                        });
-                    }
-                    if (r == 'error: no associated resources'){
-                        res.send("error: no associated resources");
-                    }
-                    if (r == 'error') {
-                        res.send("error, insert failed");
-                    } 
-                    else if (r == 'empty: no response to query') {
-                        res.send('error: empty response');
-                    } 
-                });
-            }
-        });
+        if (err) {
+            throw err;
+        } else {
+            require('./server/route/timeBudgetRoute').createGRLSInstances(doc, function(r) {
+                if (r == 'error: no associated resources') {
+                    console.log("error: no associated resources for", doc.TimeBudgetName);
+                    res.send("error: no associated resources");
+                } else {
+                    db.collection('timeBudgets').insert(doc, function(err) {
+                        if (err) throw err;
+                        console.log("inserted TimeBudget Doc");
+                        res.send("success");
+                    });
+                }
+            });
+        }
     });
 });
 

@@ -448,9 +448,10 @@ exports.createGRLSInstances = function(timeBudget, callback) {
 					var controller1 = function() {
 						iterator1(function() {
 							index1++;
-							if (index1 < resources.length) controller1();
-							else {
-								return;
+							if (index1 < resources.length) {
+								controller1();
+							} else {
+								callback('success');
 							}
 						});
 					};
@@ -473,8 +474,6 @@ exports.createGRLSInstances = function(timeBudget, callback) {
 										instanceRegion: resourceData[0].Zone,
 										serviceType: 'ec2',
 										instanceType: resourceData[0].Type,
-										//why 0 for lifetime??
-										//timeamount should be here
 										lifetime: 0,
 										uDecay: timeBudget.uDecayRate,
 										oDecay: timeBudget.oDecayRate,
@@ -484,10 +483,10 @@ exports.createGRLSInstances = function(timeBudget, callback) {
 									db.collection('grlsInstances').insert(doc, function(err) {
 										console.log("user grlsInstance inserted");
 										if (err) throw err;
-										callback1('2');
+										callback1();
 									});
 								} else {
-									callback1('3');
+									callback1();
 								}
 							});
 						} else if (resources[index1].ProductName == 'Amazon RDS Service') {
@@ -517,14 +516,14 @@ exports.createGRLSInstances = function(timeBudget, callback) {
 									db.collection('grlsInstances').insert(doc, function(err) {
 										console.log("user rds grlsInstance inserted");
 										if (err) throw err;
-										callback1('4');
+										callback1();
 									});
 								} else {
-									callback1('5');
+									callback1();
 								}
 							});
 						} else {
-							callback1('6');
+							callback1();
 						}
 					};
 					controller1();
@@ -630,9 +629,11 @@ exports.createGRLSInstances = function(timeBudget, callback) {
 							var controller2 = function() {
 								iterator2(function() {
 									index2++;
-									if (index2 < resources.length) controller2();
-									else {
-										callback1('error: index 2 >= resources.length');
+									console.log("index2", index2);
+									if (index2 < resources.length) {
+										controller2();
+									} else {
+										callback1();
 									}
 								});
 							};
@@ -662,14 +663,13 @@ exports.createGRLSInstances = function(timeBudget, callback) {
 												};
 												db.collection('grlsInstances').insert(doc, function(err) {
 													if (err) throw err;
-													console.log("group ec2 grlsInstance inserted");
-													callback("success");
+													callback();
 												});
 											} else {
-												callback2('error: not t2');
+												callback2();
 											}
 										} else {
-											callback2('error: resource data length == 0');
+											callback2();
 										}
 									});
 								} else if (resources[index2].ProductName == 'Amazon RDS Service') {
@@ -698,15 +698,14 @@ exports.createGRLSInstances = function(timeBudget, callback) {
 											};
 											db.collection('grlsInstances').insert(doc, function(err) {
 												if (err) throw err;
-												console.log("group rds grlsInstance inserted");
-												callback2("inserted group rds doc ");
+												callback2();
 											});
 										} else {
-											callback2('resourceData.length == 0');
+											callback2();
 										}
 									});
 								} else {
-									callback2('neither ec2 or rds?');
+									callback2();
 								}
 							};
 						}

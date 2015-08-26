@@ -8,6 +8,7 @@ var RDSInstancesView = Backbone.View.extend({
         this.rdsBillingActivity = new RDSBillingView();
         this.rdsMetricsActivity = new RDSMetricsView();
         this.rdsOperationsActivity = new RDSOperationsView();
+        this.instance;
         this.bindings();
         this.render();
     },
@@ -19,32 +20,34 @@ var RDSInstancesView = Backbone.View.extend({
     },
 
     bindings: function() {
-    var self = this;
-    var table;
+        var self = this;
+        var table;
         this.model.change('instancesDataReady', function(model, val) {
             this.render();
             table = $('#RDSInstanceTable').DataTable({
                 "iDisplayLength": 15,
                 "bSort": false
-                // "paging":   false,
-                // "info":     false,
-                // "bFilter": false
+                    // "paging":   false,
+                    // "info":     false,
+                    // "bFilter": false
             });
         }.bind(this));
 
 
         this.$el.on('click', '#RDSInstanceTable tr', function() {
             var rowIndex = this.rowIndex - 1;
-            var name = rdsInstancesCollection.at(rowIndex).get('dbName');
-            var state = rdsInstancesCollection.at(rowIndex).get('dbStatus');
-            if (state == 'available') {
-                self.model.setRDSSelectedInstance(this.rowIndex - 1);
-                self.updateViews(name);
-            }
+            setTimeout(function() {
+                if (self.instance != rdsInstancesCollection.at(rowIndex).get('dbName')) {
+                    self.instance = rdsInstancesCollection.at(rowIndex).get('dbName');
+                    var state = rdsInstancesCollection.at(rowIndex).get('dbStatus');
+                    if (state == 'available') {
+                        self.model.setRDSSelectedInstance(this.rowIndex - 1);
+                        self.updateViews(self.instance);
+                    }
+                }
+            }, 3000);
         });
 
-
-        // var table = $('#RDSInstanceTable').DataTable();
 
         this.$el.on('click', '#RDSInstanceTable tbody tr', function() {
             if ($(this).hasClass('selected')) {
@@ -64,7 +67,7 @@ var RDSInstancesView = Backbone.View.extend({
         this.$el.html(html);
         this.$el.append(this.rdsOperationsActivity.el);
         this.$el.append(this.rdsBillingActivity.el);
-        this.$el.append(this.rdsMetricsActivity.el);   
+        this.$el.append(this.rdsMetricsActivity.el);
 
     }
 });

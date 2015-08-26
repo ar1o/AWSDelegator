@@ -184,7 +184,6 @@ var UsageMonitorModel = Backbone.Model.extend({
 
 	post_budget_result: function(data, callback) {
 		var self = this;
-		//for comparison purposed. Remove when done. ^^
 		return $.ajax({
 			type: 'POST',
 			data: JSON.stringify(data),
@@ -214,16 +213,15 @@ var UsageMonitorModel = Backbone.Model.extend({
 			contentType: 'application/json',
 			url: host + '/timebudget',
 			success: function(data) {
-				//check
 				self.getTimeBudgets();
 				self.set('timeBudgetDataReady', Date.now());
 				if (data == 'error' || data == "error, TimeBudget for batchName already Exists" || data == 'error: no associated resources') {
 					callback(data);
 				} 
-				else if (data == 'success'){
+				else if (data == 'success') {
 					callback('success');
 				}
-				else{
+				else {
 					callback(data);
 				}
 			},
