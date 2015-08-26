@@ -180,8 +180,8 @@ app.post('/timebudget', jsonParser, function(req, res) {
     var endDate = r.endDate.split('/');
     MongoClient.connect(databaseUrl, function(err, db) {
         if (err) {
-            throw err
-        };
+            throw err;
+        }
         var doc = {
             TimeBudgetName: r.timebudgetname,
             BatchType: r.batchType,
@@ -197,49 +197,22 @@ app.post('/timebudget', jsonParser, function(req, res) {
             timeout: r.timeout,
             State: 'valid'
         };
-        console.log("doc made", doc);
-        //Checking batchName and budgetName checking here before calling methods
-        db.collection('timeBudgets').find({
-            "BatchName": doc.BatchName,
-            "BatchType": doc.BatchType
-        }).toArray(function(err, resp) {
-            if (err) throw err;
-            // console.log("Checking for timeBudget with matching batchName", resp, "length", resp.length);
-            // if (resp.length != 0) {
-            //     res.send("error, TimeBudget for batchName already Exists");
-            // } 
-            // if(doc.BatchType == 'user'){
-            //     db.collection('ec2Instances')
-                
-            // }
-            else {
-                console.log("No previous TimeBudget found for this document. Inserting doc");
-                require('./server/route/timeBudgetRoute').createGRLSInstances(doc, function(r) {
-                    console.log("return value:", r);
-                    if(r == 'success') {
-                        console.log("OK");
-                        db.collection('timeBudgets').insert(doc, function(err) {
-                            if (err) throw err;
-                            console.log("inserted TimeBudget Doc");
-                            res.send("success");
-                        });
-                    }
-                    if (r == 'error: no associated resources'){
-                        console.log("error: no associated resources for",doc.TimeBudgetName);
-                        //stack error erer \/ \/
-                        res.send("error: no associated resources");
-                    }
-                    if (r == 'error') {
-                        console.log("Error with query. Document not inserted");
-                        res.send("error, insert failed");
-                    } 
-                    else if (r == 'empty: no response to query') {
-                        console.log("empty response. add data to callbacks to prevent confusion");
-                        res.send('error: empty response');
-                    } 
-                });
-            }
-        });
+        if (err) {
+            throw err;
+        } else {
+            require('./server/route/timeBudgetRoute').createGRLSInstances(doc, function(r) {
+                if (r == 'error: no associated resources') {
+                    console.log("error: no associated resources for", doc.TimeBudgetName);
+                    res.send("error: no associated resources");
+                } else {
+                    db.collection('timeBudgets').insert(doc, function(err) {
+                        if (err) throw err;
+                        console.log("inserted TimeBudget Doc");
+                        res.send("success");
+                    });
+                }
+            });
+        }
     });
 });
 

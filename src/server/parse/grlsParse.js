@@ -76,8 +76,6 @@ var updateLifetime = function(maxBudgetLifetimes) {
 				}
 			}]).exec(function(err, budgets) {
 				var index1 = 0;
-				// console.log("Budgets",budgets);
-
 				//controller function that calls the iterator to loop through something
 				var timeBudgetsController = function() {
 					timeBudgetsIterator(function() {
@@ -314,7 +312,9 @@ var updateLifetime = function(maxBudgetLifetimes) {
 						// }
 					}); //end of grlsLineItem find query
 				}; //end of iterator1
-				timeBudgetsController();
+				if (budgets.length != 0) {
+					timeBudgetsController();
+				}
 			}); //end of timeBudgets query
 		}); //end of mongoDB connection call
 	} //end of updateLifetime function
@@ -351,9 +351,14 @@ var stopTimeBudget = function(timeBudget) {
 				}, function(err) {
 					if (err) throw err;
 					//get the resourceId's of invalid budget in-order to stop them
-					if (timeBudget.TimeOut == true) {
-						getTimeBudgetInstances(timeBudget);
-					}
+					mongoose.model('timeBudgets').find({
+						TimeBudgetName: timeBudget
+					}).exec(function(err, budget) {
+						if (budget[0].TimeOut == 'true') {
+							getTimeBudgetInstances(timeBudget);
+						}
+					});
+
 				});
 			});
 		});
@@ -405,7 +410,6 @@ var getTimeBudgetInstances = function(timeBudget) {
 					}
 				}
 			}]).exec(function(e, serviceResources) {
-
 				stopTimeBudgetInstances(serviceResources);
 			});
 		} else {
@@ -491,7 +495,7 @@ var stopTimeBudgetInstances = function(serviceResources) {
 
 						ec2.stopInstances(params, function(err, data) {
 							if (err) console.log(err, err.stack); // an error occurred
-							else console.log(data); // successful response
+							else console.log("Stopping timeBudget!!", data); // successful response
 						});
 
 						callback2();

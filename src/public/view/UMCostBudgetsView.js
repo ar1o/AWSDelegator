@@ -232,13 +232,13 @@ var UMCostBudgetsView = Backbone.View.extend({
                     $('#amount').attr('value', self.data.amount);
 
                     $("#action").text("Save");
-
                     break;
 
                 case "Delete":
                     $('.modal-title').append('<div class="content-title">Delete budget: ' + self.data.budgetName + '</div>');
                     $('.modal-body').append('<div class="content-body">Are you sure you want to delete this?</div>');
                     $("#action").text("Delete");
+                    break;
             }
             // Hide it AFTER the action was triggered
             $(".custom-menu").hide(100);

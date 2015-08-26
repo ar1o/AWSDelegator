@@ -83,7 +83,7 @@ var UMTimeBudgetsView = Backbone.View.extend({
                     $("#groupUserServiceContainer").remove();
                     self.updateGroupViews(rowIndex);
                 }
-            } 
+            }
         });
 
 
@@ -119,9 +119,9 @@ var UMTimeBudgetsView = Backbone.View.extend({
             }
         });
         // Trigger action when the contexmenu is about to be shown
-        $(document).bind("contextmenu", function(event) {
+        // $(document).bind("contextmenu", function(event) {
+        this.$el.on('contextmenu', '#TimeBudgetTable tbody tr', function(e) {
             if (event.target.matches('#TimeBudgetTable *')) {
-
                 event.preventDefault();
                 if (($('#TimeBudgetTable').find("tbody > tr > td").length) > 6) {
                     // Avoid the real one
@@ -204,7 +204,7 @@ var UMTimeBudgetsView = Backbone.View.extend({
                             result = (GroupCollection.pluck('name'));
                             for (var i in result) {
                                 if (result[i] == self.data.batchName) {
-                                    console.log("Matched with",result[i]);
+                                    console.log("Matched with", result[i]);
                                     $('.time-sub-costfilter').append($('<option>', {
                                         value: result[i],
                                         text: result[i],
@@ -227,7 +227,6 @@ var UMTimeBudgetsView = Backbone.View.extend({
 
                     //Set Field data ^^
                     $("#action").text("Save");
-                    $
                     $('#time-minDBwarning').hide();
                     $('#time-minDBrequest').hide();
                     $('#time-maxDBwarning').hide();
@@ -326,6 +325,7 @@ var UMTimeBudgetsView = Backbone.View.extend({
                 $('#time-budgetnamewarning').show();
             }
         }.bind(this));
+
         this.$el.on('focusin', '#time-startdate', function(e) {
             var self = this;
             $("#time-startdate").datepicker({

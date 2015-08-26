@@ -343,7 +343,6 @@ var TimeBudgetView = Backbone.View.extend({
                             self.data[i] = null;
                             submitted = true;
                         }
-                        //MAKE NEW WARNING TO PREVENT BUDGET OF SAME TYPE AND ASSOCIATED INSTANCE
                         $('#time-batchSelectionWarning').hide();
                         $("#time-amount").val("");
                         $("#time-budgetname").val("");
@@ -358,9 +357,9 @@ var TimeBudgetView = Backbone.View.extend({
                         $(".time-costfilter").hide();
                         $(".time-sub-costfilter").hide();
                         $('#timeBudgetModal').modal('hide');
+
                     }
                     else if (err == 'error, TimeBudget for batchName already Exists'){
-                        //WHY is this being shown 
                         console.log("Please make a time budget for a user or group without one already");
                         this.$('#time-batchNameAndTypeWarning').show();
                         this.$('#time-associationWarning').hide()

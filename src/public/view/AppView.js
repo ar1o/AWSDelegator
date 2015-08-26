@@ -6,7 +6,6 @@ var AppView = Backbone.View.extend({
 
         this.header = new HeaderView();
         this.navView = new NavView();
-        // this.meterActivity = new MeterView();
         this.latestTime = new TimeView();
         this.budgetView = new BudgetView();
         this.timeBudgetView = new TimeBudgetView();
@@ -208,14 +207,10 @@ var AppView = Backbone.View.extend({
         this.$el.append(this.header.el);
         this.$el.append(this.navView.el);
         this.$el.append(this.configurationView.el);
-        // this.$el.append(this.footer.el);
         this.$el.append(this.budgetView.el);
         this.$el.append(this.timeBudgetView.el);
         this.$el.append(this.notificationView.el);
 
-        // this.$el.append(this.meterActivity.el);       
-        // this.$el.append(this.latestTime.el);
-        // this.$('.content-view').append(this.footer.el);
         this.setView(this.router.get('view'));
     },
 
@@ -229,7 +224,7 @@ var AppView = Backbone.View.extend({
         this.model.set('currentView', viewInstance);
         this.$el.find('.content-view').html(viewInstance.el);
         $('.content-view').append(this.footer.el);
-        // $('.content-view').append(this.latestTime.el);
+        $('.content-view').append(this.latestTime.el);
     }
 
 
