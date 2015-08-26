@@ -51,26 +51,28 @@ exports.setConfiguration = function(req, res) {
   });
 }
 exports.setBalance = function(req, res) {
-    var expD = creditExp.substr(8, 2);
-    var expM = creditExp.substr(5, 2);
-    var expY = creditExp.substr(0, 4);
-    console.log(expD, expM, expY);
-    var exp = new Date(expY, expM, expD).toUTCString();
-    console.log("exp", exp);
-    var nowD = new Date().getDate();
-    var nowM = new Date().getMonth() + 1;
-    var nowY = new Date().getFullYear();
-    var now = new Date(nowY, nowM, nowD).toUTCString();
-    console.log("now", now);
-    if (now < exp) {
+    if (creditExp == undefined) {
       credits = req.body["balance"];
-      console.log("Credits are still Good!");
     } else {
-      console.log("Credits Have Expired!");
-      credits = "EXPIRED";
+      var expD = creditExp.substr(8, 2);
+      var expM = creditExp.substr(5, 2);
+      expM= expM -1;
+      var expY = creditExp.substr(0, 4);
+      var exp = new Date(expY, expM, expD).toUTCString();
+      console.log("exp", exp);
+      var nowD = new Date().getDate();
+      var nowM = new Date().getMonth();
+      var nowY = new Date().getFullYear();
+      var now = new Date(nowY, nowM, nowD).toUTCString();
+      console.log("now", now);
+      if (nowY < expY || nowY <= expY && nowM < expM || nowY <= expY && nowM <= expM && nowD < expD) {
+        credits = req.body["balance"];
+        console.log("Credits are still Good!");
+      } else {
+        console.log("Credits Have Expired!");
+        credits = "EXPIRED";
+      }
     }
-
-
     // res.send("Balance set to:", req.body["balance"]);
   }
   //BAD rename to allow overloading...
@@ -78,17 +80,13 @@ exports.setExpiration = function(req, res) {
   creditExp = req.body["expiration"];
   // res.send("expiration set to:", req.body["expiration"]);
 }
-exports.setCreditsUsed = function(req, res) {
-    creditsUsed = req.body["used"];
-    // res.send("CreditsUsed set to:", creditsUsed);
-  }
-  //ANOTHER BAD Name scheme to essentially overload
-exports.setUsed = function(req, res) {
-  creditsUsed = req;
-  // res.send("used set to:",req);
+exports.setCreditsUsed = function(req) {
+  creditsUsed = req.body["used"];
+  // res.send("CreditsUsed set to:", creditsUsed);
 }
+
 exports.setCredits = function(req, res) {
-  credits = req;
+  credits = req.body;
   // res.send("Credits set to:", req);
 }
 exports.getAccountBalance = function(req, res) {
