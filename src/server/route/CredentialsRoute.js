@@ -1,7 +1,5 @@
-//Should add some sort of verification to make sure that account number and credentials are known to be good
 exports.setConfiguration = function(req, res) {
   req.on('data', function(chunk) {
-    console.log("Received body data:");
     var value,
       key,
       oldIndex;
@@ -32,71 +30,64 @@ exports.setConfiguration = function(req, res) {
     }
     while (input.indexOf('=', index) != -1 && index != 0);
     if (credentials["S3_Region"] == undefined || credentials["S3_Region"] == []) {
-      console.log("Please input a S3 Region.\nFailed to update values.");
       return;
     }
     if (isNaN(credentials["Credits"])) {
-      console.log("Credits entered is not a number.\nFailed to update values.");
       return;
     }
     credits = credentials["Credits"];
     s3Region = credentials['S3_Region'];
     awsRegions = regions;
-    console.log("Credentials successfully updated");
   });
   req.on('end', function() {
     res.redirect(302, '../');
     res.end();
-    console.log("Returning to parent page.");
   });
 }
+
 exports.setBalance = function(req, res) {
     if (creditExp == undefined) {
       credits = req.body["balance"];
     } else {
       var expD = creditExp.substr(8, 2);
       var expM = creditExp.substr(5, 2);
-      expM= expM -1;
+      expM = expM - 1;
       var expY = creditExp.substr(0, 4);
       var exp = new Date(expY, expM, expD).toUTCString();
-      console.log("exp", exp);
       var nowD = new Date().getDate();
       var nowM = new Date().getMonth();
       var nowY = new Date().getFullYear();
       var now = new Date(nowY, nowM, nowD).toUTCString();
-      console.log("now", now);
       if (nowY < expY || nowY <= expY && nowM < expM || nowY <= expY && nowM <= expM && nowD < expD) {
         credits = req.body["balance"];
-        console.log("Credits are still Good!");
+        console.log("Credits Good!");
       } else {
         console.log("Credits Have Expired!");
         credits = "EXPIRED";
       }
     }
-    // res.send("Balance set to:", req.body["balance"]);
   }
-  //BAD rename to allow overloading...
+
 exports.setExpiration = function(req, res) {
   creditExp = req.body["expiration"];
-  // res.send("expiration set to:", req.body["expiration"]);
 }
+
 exports.setCreditsUsed = function(req) {
   creditsUsed = req.body["used"];
-  // res.send("CreditsUsed set to:", creditsUsed);
 }
 
 exports.setCredits = function(req, res) {
   credits = req.body;
-  // res.send("Credits set to:", req);
 }
+
 exports.getAccountBalance = function(req, res) {
   return credits;
-  // res.send(credits);
 }
+
 exports.getCreditsUsed = function(req, res) {
   return creditsUsed;
-  // res.send(creditsUsed);
 }
+
 exports.getExpiration = function(req, res) {
   var data = {
       date: [{
@@ -105,10 +96,9 @@ exports.getExpiration = function(req, res) {
         "year": creditExp.substr(0, 4),
       }]
     }
-    // console.log(data);
   return (data);
-  // res.send(creditExp);
 }
+
 exports.getConfiguration = function(req, res) {
   var data = {
     account: [{
@@ -123,6 +113,7 @@ exports.getConfiguration = function(req, res) {
   };
   res.send(data);
 }
+
 exports.getAccountNumber = function(req, res) {
   res.sendStatus(awsAccountNumber);
 }
@@ -130,6 +121,7 @@ exports.getAccountNumber = function(req, res) {
 exports.getS3Region = function(req, res) {
   res.sendStatus(s3Region);
 }
+
 exports.getAWSRegion = function(req, res) {
   res.sendStatus(awsRegions);
 }

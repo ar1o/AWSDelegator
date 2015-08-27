@@ -1,3 +1,11 @@
+/*
+	This file determines which users belong to which groups inorder
+	to aid with setting up cost(quota) and time(GRLS) budgets
+ */
+
+/*
+	Parse groups from AWS API and add to database
+ */
 exports.parseGroups = function(callback){
 	MongoClient.connect(databaseUrl, function(err, db) {
 		if (err) throw err;
@@ -46,6 +54,9 @@ exports.parseGroups = function(callback){
 	});
 }
 
+/*
+	Parse IAM users from AWS API and add to database
+ */
 exports.parseUsers = function(callback){
 	MongoClient.connect(databaseUrl, function(err, db) {
 		if (err) throw err;
@@ -94,6 +105,9 @@ exports.parseUsers = function(callback){
 	});
 }
 
+/*
+	Find associated users that belong to certain IAM groups and add to database
+ */
 exports.parseUserGroups = function(callback){
 	mongoose.model('iamUsersGroups').aggregate([{
 		$project: {
@@ -183,6 +197,9 @@ exports.parseUserGroups = function(callback){
 	});
 }
 
+/*
+	Helper function to add new users to groups
+ */
 var addNewUserGroups = function(active_user_group,callback){	
 	var index1 = 0;
 	var controller1 = function() {
@@ -214,7 +231,9 @@ var addNewUserGroups = function(active_user_group,callback){
 	controller1();
 }
 
-//remove groups that are deleted at aws console from db
+/*
+	remove groups that are deleted at aws console from db
+ */
 var checkGroupConsistency = function(iamGroups,dbGroups,callback){
     var activeGroups = [];    
     for(var i in iamGroups.Groups)
@@ -256,7 +275,9 @@ var checkGroupConsistency = function(iamGroups,dbGroups,callback){
 	}
 }
 
-//remove users that are removed at aws console from db
+/*
+	remove users that are removed at aws console from db
+ */
 var checkUserConsistency = function(iamUsers,dbUsers,callback){
     var activeUsers = [];
     for(var i in iamUsers.Users)

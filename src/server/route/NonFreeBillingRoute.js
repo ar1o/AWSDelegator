@@ -1,3 +1,6 @@
+/*
+    Get the total cost of free tier resources
+ */
 exports.calcFreeTierCost = function(req, res) {
     mongoose.model('Billings').aggregate([{
         $match: {
@@ -14,7 +17,6 @@ exports.calcFreeTierCost = function(req, res) {
         }
     }]).exec(function(e, d) {
         for (var i in d) {
-            // console.log(d[i]._id + "\t" + d[i].Cost + "\t" + d[i].Rate);
             var conditions = {
                 _id: {
                     $eq: d[i]._id
@@ -33,6 +35,10 @@ exports.calcFreeTierCost = function(req, res) {
         res.send(d);
     });
 };
+
+/*
+    Get the total cost of all AWS filtered by product name
+ */
 exports.totalCostProduct = function(req, res) {
     var totalCostProduct = {};
     mongoose.model('Billings').aggregate([{
@@ -68,10 +74,12 @@ exports.totalCostProduct = function(req, res) {
     });
 };
 
-
+/*
+    Get the hourly cost of EC2 resources filtered by product name.
+ */
 exports.hourlyCostProduct = function(req, res) {
     var productName = req.query.productName;
-    var productName = 'Amazon Elastic Compute Cloud' //Is this variable override intended??
+    var productName = 'Amazon Elastic Compute Cloud'
     mongoose.model('Billings').aggregate([{
         $match: {
             NonFreeCost: {
@@ -93,8 +101,10 @@ exports.hourlyCostProduct = function(req, res) {
     });
 };
 
+/*
+    Get the total cost of a given running instance
+ */
 exports.instanceCostAll = function(req, res) {
-        // console.log("Cost request",req.query.instance);
         var instanceId = req.query.instance;
         var volumeId;
         //instances hashmap
@@ -196,7 +206,6 @@ exports.instanceCostAll = function(req, res) {
                         }
                     }
                     // Send to endpoint.
-                    // console.log(instances);
                     res.send(instances);
                 });
             });

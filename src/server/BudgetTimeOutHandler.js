@@ -1,4 +1,6 @@
-// checks COST budgets for time duration exceed
+/*
+    Checks COST budgets for time duration exceed
+ */
 exports.checkBudgets = function() {
     var currentTime = new Date();
     //time format: '2015-07-22 23:50:20'
@@ -20,12 +22,9 @@ exports.checkBudgets = function() {
             };
             var budgetIterator = function(callback1) {
                 var budget = budgets[index];
-                //test
-                // stopInstances('group', 'testGroup1')
                 //checking for amount exceeded or time exceeded
                 getBudgetTotalCost(budgets[index].BatchType, budgets[index].BatchName, budgets[index].StartDate, budgets[index].EndDate,
                     function(result) {
-                        console.log("result", result);
                         if (result[0].Total >= budget.Amount && budget.State == 'valid') { //Check if ammount exceeded
                             db.collection('budgets').update({
                                 BudgetName: budget.BudgetName
@@ -71,7 +70,6 @@ exports.checkBudgets = function() {
                                         console.log('Added a notification', budget.BudgetName)
                                             //Also stop the instance here
                                         if (budget.TimeOut == "true") {
-                                            console.log('CHECKING');
                                             stopInstances(budgets[index].BatchType, budgets[index].BatchName);
                                         }
                                         callback1();
@@ -84,13 +82,15 @@ exports.checkBudgets = function() {
                     });
             };
             if (budgets.length > 0) {
-                console.log('budgetController');
                 budgetController();
             }
         });
     });
 };
 
+/*
+    Stop an instance given the batch type and batch name
+ */
 var stopInstances = function(batchtype, batchname) {
     getInstanceId(batchtype, batchname,
         function(result) {
@@ -161,7 +161,6 @@ var stopInstances = function(batchtype, batchname) {
                     //rds-delete-db-instance
                     //rds-restore-db-instance-from-db-snapshot
                 } else {
-                    console.log([result[index1]._id]);
                     callback1();
                 }
 
@@ -171,7 +170,9 @@ var stopInstances = function(batchtype, batchname) {
 }
 
 
-//Get the instance id(s) of the budgets.
+/*
+    Query the instance id(s) of the budgets.
+ */
 var getInstanceId = function(_batchtype, _batchname, callback) {
     var batchType = _batchtype;
     var batchName = _batchname;
@@ -199,7 +200,9 @@ var getInstanceId = function(_batchtype, _batchname, callback) {
                 }
             }
         }]).exec(function(e, d) {
-            callback(d);
+            if(d.length > 0) {
+                callback(d);
+            }
         });
     } else {
         mongoose.model('Billings').aggregate([{
@@ -224,22 +227,21 @@ var getInstanceId = function(_batchtype, _batchname, callback) {
                 //     $push: "$AvailabilityZone"
             }
         }]).exec(function(e, d) {
-            callback(d);
-            // console.log('d', d);
+             if(d.length > 0) {
+                callback(d);
+            }
         });
     }
 }
 
-// Get the amount the budget has currently incurred.
+/*
+    Query the amount the budget has currently incurred.
+ */
 var getBudgetTotalCost = function(_batchtype, _batchname, _startdate, _enddate, callback) {
     var batchType = _batchtype;
     var batchName = _batchname;
     var startDate = _startdate;
     var endDate = _enddate;
-    // console.log(batchType);
-    // console.log(batchName);
-    // console.log(startDate);
-    // console.log(endDate);
 
     if (batchType == 'user') {
         mongoose.model('Billings').aggregate([{

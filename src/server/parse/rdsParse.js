@@ -1,3 +1,6 @@
+/*
+    update rds instances - add/remove instances & instance state changes
+ */
 exports.parseInstances = function(callback) {
     MongoClient.connect(databaseUrl, function(err, db) {
         if (err) throw err;
@@ -56,6 +59,9 @@ exports.parseInstances = function(callback) {
     });
 }
 
+/*
+    Parse rds metrics and add to collection
+ */
 exports.parseMetrics = function(caller,masterCallback) {
     MongoClient.connect(databaseUrl, function(err, db) {
         if (err) throw err;

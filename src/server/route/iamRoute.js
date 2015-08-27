@@ -1,3 +1,6 @@
+/*
+    Get the corresponding budgets for a IAM Group
+ */
 exports.groups = function(req, res) {
     mongoose.model('iamGroups').aggregate([{
         $project: {
@@ -17,7 +20,7 @@ exports.groups = function(req, res) {
                 }
             });
         };
-        var iterator1 = function(callback1) {    
+        var iterator1 = function(callback1) {
             mongoose.model('Budgets').aggregate([{
                 $match: {
                     $and: [{
@@ -40,7 +43,7 @@ exports.groups = function(req, res) {
                     d[index1]['CostBudgetName'] = ['null'];
                 } else {
                     d[index1]['CostBudgetName'] = [];
-                    for(var i in d2){
+                    for (var i in d2) {
                         d[index1]['CostBudgetName'].push(d2[i].BudgetName);
                     }
                 }
@@ -78,6 +81,9 @@ exports.groups = function(req, res) {
     });
 }
 
+/*
+    Get the corresponding budgets for a IAM User
+ */
 exports.users = function(req, res) {
     mongoose.model('iamUsers').aggregate([{
         $project: {
@@ -97,7 +103,7 @@ exports.users = function(req, res) {
                 }
             });
         };
-        var iterator1 = function(callback1) {    
+        var iterator1 = function(callback1) {
             mongoose.model('Budgets').aggregate([{
                 $match: {
                     $and: [{
@@ -120,7 +126,7 @@ exports.users = function(req, res) {
                     d[index1]['CostBudgetName'] = ['null'];
                 } else {
                     d[index1]['CostBudgetName'] = [];
-                    for(var i in d2){
+                    for (var i in d2) {
                         d[index1]['CostBudgetName'].push(d2[i].BudgetName);
                     }
                 }

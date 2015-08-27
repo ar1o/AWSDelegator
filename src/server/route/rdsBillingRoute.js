@@ -35,6 +35,9 @@ exports.instanceCostAll = function(req, res) {
     });
 };
 
+/*
+    Get the hourly cost filtered for RDS product only
+ */
 exports.hourlyCostProduct = function(req, res) {
     var productName = 'Amazon RDS Service'
     mongoose.model('Billings').aggregate([{

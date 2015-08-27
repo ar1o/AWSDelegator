@@ -1,8 +1,15 @@
+/*
+    This file derived information from the designated S3 bucket which holds
+    hourly billing information in a .csv file. 
+    The csv file is parsed and inserted into a database collection hourly.
+ */
 var fs = require("fs");
 var mongodb = require('mongodb');
 var MongoClient = mongodb.MongoClient;
 
-// parses latestBills.csv and updates the 'awsdb' database with new bills.
+/*
+    parses latestBills.csv and updates the 'awsdb' database with new bills.
+ */
 exports.parseBillingCSV = function(callback) {
     MongoClient.connect(databaseUrl, function(err, db) {
         if (err) throw err;

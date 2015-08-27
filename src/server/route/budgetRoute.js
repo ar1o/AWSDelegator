@@ -1,19 +1,21 @@
+/*
+	Get all the cost budgets
+ */
 exports.budgets = function(req, res) {
 	mongoose.model('Budgets').find().exec(function(e, d) {
 		res.send(d);
 	});
 }
-//Cost Budget Query
+
+/*
+	Cost Budget Query
+ */
 exports.cost = function(req, res) {
 	var batchType = req.query.batchType;
 	var batchName = req.query.batchName;
 	var startDate = req.query.startDate;
 	var endDate = req.query.endDate;
 
-	   //  console.log(batchType);
-    //     console.log(batchName);
-    // console.log(startDate);
-    // console.log(endDate);
 	//If the budget is for a single user instance
 	if (batchType == 'user') {
 		mongoose.model('Billings').aggregate([{
@@ -90,6 +92,9 @@ exports.cost = function(req, res) {
 	}
 }
 
+/*
+	Given user/group/start and end date get the total cost
+ */
 exports.userCost = function(req, res) {
 	var userName = req.query.userName;
 	var batchName = req.query.batchName;
@@ -132,27 +137,26 @@ exports.userCost = function(req, res) {
 		res.send(d);
 	});
 }
+
 exports.getUsers = function (req, res) {
 	var result;
-    console.log("1");
     mongoose.model('ec2Instances').aggregate({
         $project : {'_id': 0, 'Name' : 1 } 
     }).exec(function(e, d) {
-        console.log("2");
-        console.log(d);
         result.append(d);
         mongoose.model('rdsInstance').aggregate({
             $project : {'_id': 0, 'Name' : 1 }
         }).exec(function(e, d) {
-            console.log("3");
-            console.log(d);
             result.append(d);
         })
     }).exec(function(e, d) {
-    	console.log(d);
     	res.send(d);
     });
 }
+
+/*
+	Query cost of user or groups
+ */
 exports.usage = function(req, res) {
 	var batchType = req.query.batchType;
 	var batchName = req.query.batchName;
@@ -225,7 +229,9 @@ exports.usage = function(req, res) {
 		});
 	}
 }
-
+/*
+	Cost based on AWS products for users
+ */
 exports.groupServiceUsage = function(req, res) {
 	var batchName = req.query.batchName;
 	var startDate = req.query.startDate;
@@ -325,6 +331,9 @@ exports.groupServiceUsage = function(req, res) {
 	});
 }
 
+/*
+	Cost based on AWS products for groups
+ */
 exports.userServiceUsage = function(req, res) {
 	var batchName = req.query.batchName;
 	var startDate = req.query.startDate;
@@ -371,7 +380,6 @@ exports.userServiceUsage = function(req, res) {
 				if (index1 < d.length) {
 					controller1();
 				} else {
-					console.log('RESULT', result);
 					res.send(result);
 				}
 			});
