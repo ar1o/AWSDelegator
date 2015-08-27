@@ -1,5 +1,3 @@
-AWSDelegator
-=============
 
 ## Introduction
 AWSDelegator provides real-time automated management capabilities to Amazon Web Services,
