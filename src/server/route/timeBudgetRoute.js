@@ -643,17 +643,11 @@ exports.createGRLSInstances = function(timeBudget, callback) {
 								iterator2(function() {
 									index2++;
 									console.log("index2", index2);
-<<<<<<< HEAD
 									if (index2 < resources.length) {
 										controller2();
 									} else {
 										callback1();
-=======
-									if (index2 < resources.length) controller2();
-									else {
-										console.log('index 2 >= resources.length')
-										callback1('error: index 2 >= resources.length');
->>>>>>> parent of e74266f... Clean up of undesirable console.log() and comment lines
+
 									}
 								});
 							};
