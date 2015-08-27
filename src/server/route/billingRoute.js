@@ -1,7 +1,9 @@
-//function/query to take a instance RID value, and sum both nonfree cost, and cost for per hour, then add theses values per hour
+/**
+    Function/query to take a instance RID value, and sum both nonfree cost, 
+    and cost for per hour, then add theses values per hour
+ */
 exports.calcTotalCost = function(req, res) {
     var rid = req.query.instance;
-
     mongoose.model('ec2Instances').findOne({
         Id: rid
     }).exec(function(e,d1){
@@ -51,7 +53,6 @@ exports.calcTotalCost = function(req, res) {
                 $sort: {
                     _id: 1
                 }
-            
             }
         ]).exec(function(e, d) {
             res.send(d);
@@ -96,6 +97,10 @@ exports.operationCost = function(req, res) {
     });
 }
 
+/*
+    Query to determine the amount each AWS product is costing
+    over the full year. 
+ */
 exports.totalCostProduct = function(req, res) {
     mongoose.model('Billings').aggregate([{
         $match: {
@@ -130,7 +135,9 @@ exports.totalCostProduct = function(req, res) {
     });
 };
 
-
+/*
+    Output the hourly cost of entire EC2 product.
+ */
 exports.hourlyCostProduct = function(req, res) {
     var productName = req.query.productName;
     var productName = 'Amazon Elastic Compute Cloud'
@@ -158,6 +165,10 @@ exports.hourlyCostProduct = function(req, res) {
         res.send(d);
     });
 };
+
+/*
+    Get month cost or each AWS product - FREE TIER INCLUDED
+ */
 exports.groupByMonth = function(req, res) {
     mongoose.model('Billings').aggregate([{
         $match: {
@@ -195,6 +206,9 @@ exports.groupByMonth = function(req, res) {
     });
 };
 
+/*
+    Get monthly cost of each AWS product - NON FREE TIER INCLUDED
+ */
 exports.groupByMonthNF = function(req, res) {
     mongoose.model('Billings').aggregate([{
         $match: {
@@ -282,7 +296,6 @@ exports.instanceCostAll = function(req, res) {
             $sort: {
                 _id: 1
             }
-        
         }
         ]).exec(function(e, d) {
             res.send(d);

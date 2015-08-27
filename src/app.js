@@ -10,7 +10,6 @@ var urlencodedParser = bodyParser.urlencoded({
 // create application/json parser 
 var jsonParser = bodyParser.json();
 
-
 require(__dirname + '/server/config.js');
 
 // Front-end code
@@ -37,7 +36,6 @@ db.on("open", function() {
 app.get('/getAccount', require(__dirname + '/server/route/CredentialsRoute').getAccountNumber);
 app.get('/getConfiguration', require(__dirname + '/server/route/CredentialsRoute').getConfiguration);
 app.get('/getAccountBalance', require(__dirname + '/server/route/CredentialsRoute').getAccountBalance);
-// app.get('/getRDSRegion', require(__dirname + '/server/route/CredentialsRoute').getRDSRegion);
 app.get('/getS3Region', require(__dirname + '/server/route/CredentialsRoute').getS3Region);
 app.get('/getAWSRegion', require(__dirname + '/server/route/CredentialsRoute').getAWSRegion);
 
@@ -68,7 +66,6 @@ app.get('/api/NonFreeBilling/hourlyCostProduct', require(__dirname + '/server/ro
 app.get('/api/NonFreeBilling/instanceCostAll', require(__dirname + '/server/route/NonFreeBillingRoute').instanceCostAll);
 app.get('/api/NonFreeBilling/calcFreeTierCost', require(__dirname + '/server/route/NonFreeBillingRoute').calcFreeTierCost);
 app.get('/api/NonFreeBilling/totalCostProduct', require(__dirname + '/server/route/NonFreeBillingRoute').totalCostProduct);
-
 
 app.get('/api/statistics/operations', require(__dirname + '/server/route/OperationsRoute').operations);
 
@@ -116,31 +113,35 @@ app.get('/getUsers', jsonParser, function(req, res) {
         })
     })
 });
+
+/* Get the last updated lineitems time for display */
 app.get('/time', function(req, res) {
     mongoose.model('Billings').find().limit(1).sort({
         $natural: -1
     }).exec(function(e, d) {
-        // console.log(d[0].UsageStartDate);
         res.send(d[0].UsageStartDate);
     });
 });
 
+/* Set the current balance for credits */
 app.post('/setBalance', jsonParser, function(req) {
-    console.log('setBalance',req.body['balance']);
     require('./server/route/CredentialsRoute').setBalance(req);
 });
+
+/* Set when the credits will expire */
 app.post('/setExpiration', jsonParser, function(req) {
-    console.log('setExp',req.body['expiration']);
     require('./server/route/CredentialsRoute').setExpiration(req);
 });
+
+/* Set the amount of credits used */
 app.post('/setCreditsUsed', jsonParser, function(req) {
-    console.log('setCreditsUsed',req.body['used']);
     require('./server/route/CredentialsRoute').setCreditsUsed(req);
 });
 
 var mongodb = require('mongodb');
 var MongoClient = mongodb.MongoClient;
 
+/* POST cost budgets to the database */
 app.post('/budget', jsonParser, function(req, res) {
     var r = req.body;
     var startDate = r.startDate.split('/');
@@ -162,13 +163,12 @@ app.post('/budget', jsonParser, function(req, res) {
             "BatchType": doc.BatchType
         }).toArray(function(err, resp) {
             if (err) throw err;
-            console.log("Checking for timeBudget with matching batchName", resp, "length", resp.length);
             if (resp.length != 0) {
                 res.send("error, budget for batchName already Exists");
             } else {
                 db.collection('budgets').insert(doc, function(err) {
                     if (err) throw err;
-                    console.log("inserted TimeBudget Doc");
+                    console.log("Cost budget inserted: ", doc);
                     res.send("success");
                 });
             }
@@ -176,6 +176,7 @@ app.post('/budget', jsonParser, function(req, res) {
     });
 });
 
+/* POST time budgets to the database */
 app.post('/timebudget', jsonParser, function(req, res) {
     var r = req.body;
     var startDate = r.startDate.split('/');
@@ -204,21 +205,20 @@ app.post('/timebudget', jsonParser, function(req, res) {
         } else {
             require('./server/route/timeBudgetRoute').createGRLSInstances(doc, function(r) {
                 if (r == 'error: no associated resources') {
-                    console.log("error: no associated resources for", doc.TimeBudgetName);
                     res.send("error: no associated resources");
                 } else {
                     db.collection('timeBudgets').insert(doc, function(err) {
                         if (err) throw err;
-                        console.log("inserted TimeBudget Doc");
+                        console.log("TimeBudget inserted ", doc);
                         res.send("success");
                     });
                 }
             });
         }
-
     });
 });
 
+/* POST to remove cost budgets from the database */
 app.post('/removeCostBudget', jsonParser, function(req, res) {
     var r = req.body;
     MongoClient.connect(databaseUrl, function(err, db) {
@@ -230,6 +230,7 @@ app.post('/removeCostBudget', jsonParser, function(req, res) {
     });
 });
 
+/* POST to edit cost budgets in the database */
 app.post('/editCostBudget', jsonParser, function(req, res) {
     var r = req.body;
     console.log("editing Cost Budget", r);
@@ -251,6 +252,8 @@ app.post('/editCostBudget', jsonParser, function(req, res) {
         res.send("success");
     });
 });
+
+/* POST to remove time budgets from the database */
 app.post('/removeTimeBudget', jsonParser, function(req, res) {
     var r = req.body;
     MongoClient.connect(databaseUrl, function(err, db) {
@@ -265,9 +268,9 @@ app.post('/removeTimeBudget', jsonParser, function(req, res) {
     });
 });
 
+/* POST to edit time budget in the database */
 app.post('/editTimeBudget', jsonParser, function(req, res) {
     var r = req.body;
-    // console.log("editing Time Budget data:",r);
     MongoClient.connect(databaseUrl, function(err, db) {
         db.collection('timeBudgets').update({
             TimeBudgetName: r.oldName
@@ -287,12 +290,11 @@ app.post('/editTimeBudget', jsonParser, function(req, res) {
                 State: 'valid'
             }
         });
-        console.log(db);
         res.send("success");
     });
 });
 
 app.listen(port);
 
-console.log('databaseUrl ', databaseUrl);
+console.log('databaseUrl: ', databaseUrl);
 console.log('Server Alert: server started on port %s', port);

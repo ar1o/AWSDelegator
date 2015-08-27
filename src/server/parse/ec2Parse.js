@@ -1,4 +1,6 @@
-//update ec2Instances - add/remove instances & instance state changes
+/*
+    update ec2Instances - add/remove instances & instance state changes
+ */
 exports.parseInstances = function(callback) {
     MongoClient.connect(databaseUrl, function(err, db) {
         if (err) throw err;

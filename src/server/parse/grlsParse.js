@@ -1,9 +1,20 @@
+/**
+	This file contains most of the algorithm and logic for determining under budget/over budget profiles.
+	GRLS = Graduated Resource Limitation System.
+	GRLS is only implemented for RDS and EC2 product. 
+ **/
+
+/*
+	Update GRLS code starts here.
+ */
 exports.updateTimeBudgets = function() {
 	getTimeAmount();
 }
 
-//get max TimeAmount for each instance, this result is used later 
-//to identify budget timeout
+/*
+	Query max TimeAmount for each instance, this result is used later 
+	to identify budget timeout
+ */
 var getTimeAmount = function() {
 	MongoClient.connect(databaseUrl, function(err, db) {
 		if (err) throw err;
@@ -43,7 +54,9 @@ var getTimeAmount = function() {
 	});
 }
 
-//update lifetime of instances based on their usage-profile
+/*
+	update lifetime of instances based on their usage-profile
+ */
 var updateLifetime = function(maxBudgetLifetimes) {
 		MongoClient.connect(databaseUrl, function(err, db) {
 			if (err) throw err;
@@ -319,7 +332,10 @@ var updateLifetime = function(maxBudgetLifetimes) {
 		}); //end of mongoDB connection call
 	} //end of updateLifetime function
 
-//mark timed-out budgets and grlsInstances as invalid
+
+/*
+	mark timed-out budgets and grlsInstances as invalid
+ */
 var stopTimeBudget = function(timeBudget) {
 	MongoClient.connect(databaseUrl, function(err, db) {
 
@@ -364,7 +380,9 @@ var stopTimeBudget = function(timeBudget) {
 	});
 }
 
-//get all instances associated with a timeBudget
+/*
+	Query all instances associated with a timeBudget
+ */
 var getTimeBudgetInstances = function(timeBudget) {
 	mongoose.model('timeBudgets').find({
 		TimeBudgetName: timeBudget
@@ -448,7 +466,9 @@ var getTimeBudgetInstances = function(timeBudget) {
 	});
 }
 
-//stop all serviceResources of invalid budget
+/*
+	Stop all serviceResources of invalid budget
+ */
 var stopTimeBudgetInstances = function(serviceResources) {
 	var index1 = 0;
 	var controller1 = function() {

@@ -1,3 +1,6 @@
+/*
+    Get the hourly rate of spending
+ */
 exports.rate = function(req, res) {
     mongoose.model('latest').find().exec(function(e, d) {
         if (e) throw e;
@@ -31,6 +34,7 @@ exports.rate = function(req, res) {
         });
     });
 }
+
 exports.returnRate = function(req, res) {
     mongoose.model('latest').find().exec(function(e, d) {
         if (e) throw e;
@@ -64,9 +68,11 @@ exports.returnRate = function(req, res) {
         })
     });
 }
+
 exports.usageTotal = function(req, res) {
     res.send(creditsUsed);
 }
+
 exports.usage = function(req, res) {
     mongoose.model('latest').find().exec(function(e, d1) {
         if (e) throw e;

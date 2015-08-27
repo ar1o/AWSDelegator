@@ -1,5 +1,7 @@
-//scheduler is timed hourly to parse metrics, bills from aws and check for budget timeouts
-
+/*
+    Scheduler is timed hourly to parse metrics, bills from aws and check for budget timeouts.
+    This is the main file for delegating server activities. 
+ */
 var fs = require("fs");
 var adm = require('adm-zip');
 var billingParser = require('./billingParse');
@@ -15,17 +17,29 @@ var _params = {
     Bucket: s3Bucket
 };
 
+/*
+    Main processing function that calls various actions.
+ */
 exports.s3Connect = function(_callback) {
+    // Yep.
     printBanner();
+    // Calls S3Connect every hour
     s3.s3Watch();
+    // Connect to S3 bucket and grab latest hourly billing information.
     parseBills();
+    // Security credentials by AWS
     AWS.config.credentials = awsCredentials.default;
-    parseAWSServices(function() {
-    });
+    // EC2, RDS and IAM stuff
+    parseAWSServices();
+    // Check if quota for budgets costs has been reached.
     timeOutHandler.checkBudgets();
+    // Check for quota on GRLS budgets has been reached.
     grlsParser.updateTimeBudgets();
 };
 
+/*
+    Calls S3Connect every hour
+ */
 s3.s3Watch = function() {
     console.log("Watching s3 bucket on timer of 60 minutes");
     setTimeout(self.s3Connect.bind(self), 1000 * 60 * 60);
@@ -34,6 +48,9 @@ s3.s3Watch = function() {
     }
 };
 
+/*
+    Connect to S3 bucket and grab latest hourly billing information.
+ */
 var parseBills = function() {
     console.log('ParseAlert(bills): billing parse initiated');
     deleteLatestBills(function() {
@@ -49,6 +66,9 @@ var parseBills = function() {
     });
 }
 
+/*
+    Heh.
+ */
 var printBanner = function() {
     var currentTimeMilliseconds = (new Date).getTime();
     var currentTimeIso = new Date(currentTimeMilliseconds).toISOString();
@@ -59,7 +79,10 @@ var printBanner = function() {
     console.log("       " + currentTimeIso + "   |___/                  \n");
 }
 
-var parseAWSServices = function(callback) {
+/*
+    EC2, RDS and IAM stuff
+ */
+var parseAWSServices = function() {
     console.log('ParseAlert(ec2): parsing initiated');
     parseEC2(function() {
         console.log('ParseAlert(ec2): parsing completed');
@@ -74,6 +97,9 @@ var parseAWSServices = function(callback) {
     });
 }
 
+/*
+    Delete the .csv file once parsed.
+ */
 var deleteLatestBills = function(callback) {
     fs.readdir(process.cwd() + '/data/', function(err, files) {
         if (err) throw err;
@@ -92,38 +118,43 @@ var deleteLatestBills = function(callback) {
     });
 }
 
+/*
+   Look up object key of the .csv file in the designated S3 bucket
+ */
 var getOkey = function(callback) {
-    mongoose.model('latest').find({}, function(e, d) {
-        //get currentBillingCollection from 'latest' collection
-        if (e) throw e;
-        //time: yyyy-mm-dd hh:mm:ss
-        var latestTime = d[0].time;
-        latestTime.substring(0, latestTime.indexOf(' '));
-        var time = latestTime.split('-');
-        currentBillingCollection = 'bills' + time[0] + time[1];
-        var year, nextYear, month, nextMonth;
-        year = parseInt(time[0]);
-        month = parseInt(time[1]);
-        if (month == 12) {
-            nextYear = year + 1;
-            nextMonth = 1;
-        } else {
-            nextYear = year;
-            nextMonth = month + 1;
-        }
-        if (nextMonth < 10) {
-            nextMonth = '0' + String(nextMonth);
-            nextYear = String(nextYear);
-        } else {
-            nextMonth = String(nextMonth);
-            nextYear = String(nextYear);
-        }
-        okey = awsAccountNumber + '-aws-billing-detailed-line-items-with-resources-and-tags-' + time[0] + '-' + time[1] + '.csv.zip';
-        next_okey = awsAccountNumber + '-aws-billing-detailed-line-items-with-resources-and-tags-' + nextYear + '-' + nextMonth + '.csv.zip';
-        callback();
-    });
-}
-
+        mongoose.model('latest').find({}, function(e, d) {
+            //get currentBillingCollection from 'latest' collection
+            if (e) throw e;
+            //time: yyyy-mm-dd hh:mm:ss
+            var latestTime = d[0].time;
+            latestTime.substring(0, latestTime.indexOf(' '));
+            var time = latestTime.split('-');
+            currentBillingCollection = 'bills' + time[0] + time[1];
+            var year, nextYear, month, nextMonth;
+            year = parseInt(time[0]);
+            month = parseInt(time[1]);
+            if (month == 12) {
+                nextYear = year + 1;
+                nextMonth = 1;
+            } else {
+                nextYear = year;
+                nextMonth = month + 1;
+            }
+            if (nextMonth < 10) {
+                nextMonth = '0' + String(nextMonth);
+                nextYear = String(nextYear);
+            } else {
+                nextMonth = String(nextMonth);
+                nextYear = String(nextYear);
+            }
+            okey = awsAccountNumber + '-aws-billing-detailed-line-items-with-resources-and-tags-' + time[0] + '-' + time[1] + '.csv.zip';
+            next_okey = awsAccountNumber + '-aws-billing-detailed-line-items-with-resources-and-tags-' + nextYear + '-' + nextMonth + '.csv.zip';
+            callback();
+        });
+    }
+    /*
+        Download the CSV .zip file and unzip it in the designated folder
+     */
 var getBillingCSV = function(callback) {
     AWS.config.region = s3Region;
     s3.listObjects(_params, function(err, data) {
@@ -151,6 +182,9 @@ var getBillingCSV = function(callback) {
     });
 }
 
+/*
+    Call it latestbills.csv
+ */
 var renameCSV = function(callback) {
     fs.readdir(process.cwd() + '/data/', function(err, files) {
         if (err) throw err;
@@ -162,12 +196,18 @@ var renameCSV = function(callback) {
     });
 }
 
+/*
+    Start parsing the .csv file
+ */
 var parseBillings = function(callback) {
     billingParser.parseBillingCSV(function() {
         callback();
     });
 }
 
+/*
+    Parse EC2 instances and get their accosicated metrics
+ */
 var parseEC2 = function(callback) {
     //Parse 'metrics' before 'instances' as new instances 
     ec2Parser.parseMetrics('scheduler', function() {
@@ -177,6 +217,10 @@ var parseEC2 = function(callback) {
     });
 }
 
+/*
+    Parse RDS instances and get their accosicated metrics
+
+ */
 var parseRDS = function(callback) {
     //Parse 'metrics' before 'instances' as new instances    
     rdsParser.parseMetrics('scheduler', function() {
@@ -186,6 +230,9 @@ var parseRDS = function(callback) {
     });
 }
 
+/*
+    Parse IAM instances and get their accosicated metrics
+ */
 var parseIAM = function(callback) {
     iamParser.parseGroups(function() {
         iamParser.parseUsers(function() {
@@ -195,8 +242,6 @@ var parseIAM = function(callback) {
         });
     });
 }
-
-
 
 exports.updateAWSRegion = function(newRegion) {
     AWS.config.update({
@@ -244,33 +289,33 @@ var updateUsageBalance = function() {
             balance = Number(balance);
             used = Number(used);
             if ((balance - rate) <= 0) {
-                console.log("balance dropped below zero");
+                //console.log("balance dropped below zero");
                 config.setCredits(0);
             } else {
                 var nowD = new Date().getDate();
                 var nowM = new Date().getMonth() + 1;
                 var nowY = new Date().getFullYear();
                 var now = new Date(nowY, nowM, nowD).toUTCString();
-                console.log("now", now);
+                //console.log("now", now);
                 expData = config.getExpiration();
                 var exp = new Date(expData.date[0].year, expData.date[0].month, expData.date[0].day).toUTCString();
-                console.log("exp", exp);
+                //console.log("exp", exp);
                 if (nowY > expData.date[0].year || nowY == expData.date[0].year && nowM > expData.date[0].month || nowY == expData.date[0].year && nowM == expData.date[0].month && nowD > expData.date[0].day) {
-                    console.log("Credits have expired!");
+                    //console.log("Credits have expired!");
                     config.setCredits("EXPIRED");
                 } else if (now <= exp) {
-                    console.log("credits still good");
-                    console.log("Subtracting rate");
+                    //console.log("credits still good");
+                    //console.log("Subtracting rate");
                     config.setCredits(balance - rate);
                     config.setUsed(used + rate);
                     config.setCredits(String(config.getAccountBalance().toFixed(2)));
                     config.setUsed(String(config.getCreditsUsed().toFixed(2)));
                 } else {
-                    console.log("Not a good comparison between dates, or equal")
+                    //console.log("Not a good comparison between dates, or equal")
                 }
                 balance = config.getAccountBalance();
                 used = config.getCreditsUsed();
-                console.log("NEW VALUES: \n\tbalance:", balance, "\n\tused:", used);
+                //console.log("NEW VALUES: \n\tbalance:", balance, "\n\tused:", used);
             }
         })
     });
