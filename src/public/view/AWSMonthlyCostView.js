@@ -1,3 +1,4 @@
+
 var AWSMonthlyCostView = Backbone.View.extend({
     className: 'AWSMonthlyCostView',
 
