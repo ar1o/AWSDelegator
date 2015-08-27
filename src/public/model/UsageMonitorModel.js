@@ -215,6 +215,7 @@ var UsageMonitorModel = Backbone.Model.extend({
 			success: function(data) {
 				self.getTimeBudgets();
 				self.set('timeBudgetDataReady', Date.now());
+				console.log("UMM data", data);
 				if (data == 'error' || data == "error, TimeBudget for batchName already Exists" || data == 'error: no associated resources') {
 					callback(data);
 				} 
@@ -258,6 +259,7 @@ var UsageMonitorModel = Backbone.Model.extend({
 		});
 	},
 	edit_time_budget: function(data) {
+		// console.log("in UsageMonitorModel", data);
 		var self = this;
 		return $.ajax({
 			type: 'POST',
@@ -272,6 +274,8 @@ var UsageMonitorModel = Backbone.Model.extend({
 	},
 
 	remove_time_budget: function(data) {
+		//data == budget name
+		// var name = JSON.stringify(data);
 		var name = data.budgetName;
 		var self = this;
 		return $.ajax({

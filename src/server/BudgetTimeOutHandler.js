@@ -25,6 +25,7 @@ exports.checkBudgets = function() {
                 //checking for amount exceeded or time exceeded
                 getBudgetTotalCost(budgets[index].BatchType, budgets[index].BatchName, budgets[index].StartDate, budgets[index].EndDate,
                     function(result) {
+                        console.log("result", result);
                         if (result[0].Total >= budget.Amount && budget.State == 'valid') { //Check if ammount exceeded
                             db.collection('budgets').update({
                                 BudgetName: budget.BudgetName
@@ -41,8 +42,10 @@ exports.checkBudgets = function() {
                                         Time: time
                                     }, function(err) {
                                         if (err) throw err;
+                                        console.log('Added a notification for ', budget.BudgetName);
                                         //Check for stop the instance here
                                         if (budget.TimeOut == "true") {
+                                            console.log('CHECKING');
                                             stopInstances(budgets[index].BatchType, budgets[index].BatchName);
                                         }
                                         callback1();
@@ -65,8 +68,10 @@ exports.checkBudgets = function() {
                                         Time: time
                                     }, function(err) {
                                         if (err) throw err;
+                                        console.log('Added a notification', budget.BudgetName)
                                             //Also stop the instance here
                                         if (budget.TimeOut == "true") {
+                                            console.log('CHECKING');
                                             stopInstances(budgets[index].BatchType, budgets[index].BatchName);
                                         }
                                         callback1();
@@ -79,6 +84,7 @@ exports.checkBudgets = function() {
                     });
             };
             if (budgets.length > 0) {
+                console.log('budgetController');
                 budgetController();
             }
         });
@@ -155,6 +161,7 @@ var stopInstances = function(batchtype, batchname) {
                     //rds-delete-db-instance
                     //rds-restore-db-instance-from-db-snapshot
                 } else {
+                    console.log([result[index1]._id]);
                     callback1();
                 }
 
@@ -218,6 +225,7 @@ var getInstanceId = function(_batchtype, _batchname, callback) {
             }
         }]).exec(function(e, d) {
             callback(d);
+            // console.log('d', d);
         });
     }
 }
@@ -228,6 +236,10 @@ var getBudgetTotalCost = function(_batchtype, _batchname, _startdate, _enddate, 
     var batchName = _batchname;
     var startDate = _startdate;
     var endDate = _enddate;
+    // console.log(batchType);
+    // console.log(batchName);
+    // console.log(startDate);
+    // console.log(endDate);
 
     if (batchType == 'user') {
         mongoose.model('Billings').aggregate([{
@@ -323,6 +335,10 @@ var checkDate = function(val) {
     return val;
 };
 
+// get all {services: {instances}} associated to an 'invalid' budget
+// result format: 
+// [ { _id: 'Amazon RDS Service', ResourceId: [ 'arn:aws:rds:us-east-1:092841396837:db:msmit' ] },
+// { _id: 'Amazon Elastic Compute Cloud', ResourceId: [ 'vol-f377d3bd', 'i-a717b04e'] } ]
 var getBatchInstances = function(budget, callback) {
     if (budget.BatchType == 'user') {
         mongoose.model('Billings').aggregate([{
@@ -420,6 +436,9 @@ var stopBatchInstances = function(serviceResources) {
                 };
                 var iterator2 = function(callback2) {
                     if (/^i-/.test(resources[index2])) {
+                        // the code to stop ec2 instances goes here
+                        // instanceId is in resources[index2]
+                        // console.log(resources[index2])
                         callback2();
                     } else {
                         callback2();
@@ -440,6 +459,9 @@ var stopBatchInstances = function(serviceResources) {
                     });
                 };
                 var iterator2 = function(callback2) {
+                    // the code to stop rds instances goes here
+                    // rds resource arn is in resources[index2]
+                    // console.log(resources[index2])
                     callback2();
                 };
                 controller2();
@@ -451,3 +473,17 @@ var stopBatchInstances = function(serviceResources) {
     };
     controller1();
 }
+
+// sample call for testing purpose
+// getBatchInstances({
+//     "BudgetName" : "budget1",
+//     "BatchType" : "group",
+//     "BatchName" : "awsDelegator",
+//     "StartDate" : "2015-06-01 00:00:00",
+//     "EndDate" : "2015-08-01 00:00:00",
+//     "Amount" : 100,
+//     "State" : "valid",
+//     "TimeOut" : "true"
+// },function(){
+//     process.exit(0);
+// });

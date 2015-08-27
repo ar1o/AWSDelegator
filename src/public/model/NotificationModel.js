@@ -25,6 +25,7 @@ var NotificationModel = Backbone.Model.extend({
 		var self = this;
 		this.notification_result().done(function(result) {
 			notificationCollection.reset();
+			// console.log(result);
 			for (var r in result) {
 				var data = new NotificationViewModel({
 					notification: result[r].NotificationData,
@@ -64,7 +65,9 @@ var NotificationModel = Backbone.Model.extend({
 		};
 		(function(params) {
 			$.get(host + '/api/notifications/seen', params, function(result) {
+				// console.log('resut', result);
 				self.getNotification();
+				// self.set('dataReady', Date.now());
 			});
 		})(params);
 	},
@@ -90,6 +93,7 @@ var NotificationViewCollection = Backbone.Collection.extend({
 	model: NavViewModel,
 	initialize: function() {
 		this.on('add', function(model) {
+			// console.log('someting got added');
 		});
 	}
 });

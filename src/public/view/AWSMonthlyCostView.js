@@ -11,6 +11,7 @@ var AWSMonthlyCostView = Backbone.View.extend({
 
     bindings: function() {
         this.model.change('dataReady', function(model, val) {
+            //Find out the month
             var month = [];
             for (var i = 0; i < AWSMonthlyCost.length; i++) {
                 var date = AWSMonthlyCost.at(i).get('date');
@@ -19,6 +20,7 @@ var AWSMonthlyCostView = Backbone.View.extend({
                 } else {
                     month.push(this.model.getMonth(date.substring(5, 7)));
                 }
+
             }
             //Organize the free-tier and non-free-tier data for display in stacked bar chart
             var nfdata = this.model.OrganizeData(AWSMonthlyCostNF, 'non-free-tier');
@@ -66,6 +68,7 @@ var AWSMonthlyCostView = Backbone.View.extend({
             });
         }.bind(this));
     },
+
     render: function() {
         var html = Handlebars.templates.AWSMonthlyCostView;
         this.$el.html(html);

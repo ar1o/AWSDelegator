@@ -62,6 +62,7 @@ var MetricsCollection = Backbone.Collection.extend({
 	initialize: function() {
 		// This will be called when an item is added. pushed or unshifted
 		this.on('add', function(model) {
+			// console.log('something got added');
 		});
 	}
 });
@@ -82,6 +83,7 @@ var EC2MetricsCollection = Backbone.Collection.extend({
 	initialize: function() {
 		// This will be called when an item is added. pushed or unshifted
 		this.on('add', function(model) {
+			// console.log('something got added');
 		});
 	}
 });
@@ -104,6 +106,7 @@ var RDSMetricsCollection = Backbone.Collection.extend({
 	initialize: function() {
 		// This will be called when an item is added. pushed or unshifted
 		this.on('add', function(model) {
+			// console.log('something got added');
 		});
 	}
 });
