@@ -31,11 +31,13 @@ exports.parseInstances = function(callback) {
                             }
                         }
                         if(terminatedInstancesCount!=0)
+                            console.log("ParseAlert(ec2): found ",terminatedInstancesCount," terminated instance/s");
                         callback();
                     }
                 });
             }
             var iterator1 = function(callback) {
+                // console.log('ParseAlert(ec2): parsing instances in ', awsRegions[regionIteratorIndex]);
                 var ec2 = new AWS.EC2({
                     region: awsRegions[regionIteratorIndex]
                 });
@@ -43,12 +45,14 @@ exports.parseInstances = function(callback) {
                     if (err) throw err;
                     for (var r in data.Reservations) {
                         
+                        //get volumeId's
                         var volumeId = [];
                         activeInstances.push(data.Reservations[r].Instances[0].InstanceId);
                         for(var i=0 in data.Reservations[r].Instances[0].BlockDeviceMappings){
                             volumeId.push(data.Reservations[r].Instances[0].BlockDeviceMappings[i].Ebs['VolumeId'])
                         }
                         instanceVolumes[data.Reservations[r].Instances[0].InstanceId]=volumeId;
+                        //get emailId from tag
                         var userName = 'null';
                         for (var t in data.Reservations[r].Instances[0].Tags) {
                             if (data.Reservations[r].Instances[0].Tags[t].Key == 'Name') {
@@ -90,6 +94,7 @@ exports.parseInstances = function(callback) {
                             newInstanceCount += 1;
                             db.collection('ec2Instances').insert(doc);
                         }else{
+                            // console.log(data.Reservations[r].Instances[0].State);
                             var objectId,j;
                             for(var i=0 in userInstances){
                                 if(userInstances[i].Id == data.Reservations[r].Instances[0].InstanceId){
@@ -192,6 +197,7 @@ exports.parseMetrics = function(caller,masterCallback) {
                 });
             };
             var iterator1 = function(instance, callback) {    
+                // console.log('ParseAlert(ec2): parsing metrics of',runningInstances[index1].Id);            
                 var instanceRegion = runningInstances[index1].Zone;
                 AWS.config.region = instanceRegion.substring(0,instanceRegion.length-1);
                 var cloudwatch = new AWS.CloudWatch();

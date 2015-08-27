@@ -3,11 +3,18 @@ exports.budgets = function(req, res) {
 		res.send(d);
 	});
 }
+//Cost Budget Query
 exports.cost = function(req, res) {
 	var batchType = req.query.batchType;
 	var batchName = req.query.batchName;
 	var startDate = req.query.startDate;
 	var endDate = req.query.endDate;
+
+	   //  console.log(batchType);
+    //     console.log(batchName);
+    // console.log(startDate);
+    // console.log(endDate);
+	//If the budget is for a single user instance
 	if (batchType == 'user') {
 		mongoose.model('Billings').aggregate([{
 			$match: {
@@ -127,18 +134,23 @@ exports.userCost = function(req, res) {
 }
 exports.getUsers = function (req, res) {
 	var result;
+    console.log("1");
     mongoose.model('ec2Instances').aggregate({
         $project : {'_id': 0, 'Name' : 1 } 
     }).exec(function(e, d) {
-
+        console.log("2");
+        console.log(d);
         result.append(d);
         mongoose.model('rdsInstance').aggregate({
             $project : {'_id': 0, 'Name' : 1 }
         }).exec(function(e, d) {
+            console.log("3");
+            console.log(d);
             result.append(d);
         })
     }).exec(function(e, d) {
-    	res.send(result);
+    	console.log(d);
+    	res.send(d);
     });
 }
 exports.usage = function(req, res) {
@@ -293,7 +305,7 @@ exports.groupServiceUsage = function(req, res) {
 					}
 				}
 			}]).exec(function(e, d2) {
-				if (e) console.log(e);
+				if (e) console.log("ERROR LOL");
 				var _res = {}
 				for (var i = 0 in d2) {
 					_res[d2[i]._id] = {};
@@ -359,6 +371,7 @@ exports.userServiceUsage = function(req, res) {
 				if (index1 < d.length) {
 					controller1();
 				} else {
+					console.log('RESULT', result);
 					res.send(result);
 				}
 			});

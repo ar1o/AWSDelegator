@@ -8,17 +8,22 @@ exports.notifications = function(req, res) {
             Time: 1
         }
     }]).exec(function(e, d) {
+        // console.log('notifications', d);
         res.send(d);
     });
 }
 
 exports.updateNotifications = function(req, res) {
     var notificationName = req.query.notificationName;
+    // console.log('notificationName', notificationName);
+
     var conditions = {
         NotificationData: notificationName
     };
     var update = {
+        // $set: {
             Seen: 'true'
+        // }
     };
     var options = {
         multi: true

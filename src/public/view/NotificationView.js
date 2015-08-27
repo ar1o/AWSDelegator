@@ -11,6 +11,7 @@ var NotificationView = Backbone.View.extend({
         setInterval(function() {
             self.model.getNotification();
         }, 1000 * 60 * 60);
+        // }, 1000 * 6);
 
         this.bindings();
     },
@@ -20,6 +21,7 @@ var NotificationView = Backbone.View.extend({
             if (this.model.isOpen == true) {
                 var clicked = e.target
                 var currentID = clicked.id
+                console.log('currentID clicked', currentID);
                 //Set notification as seen 
                 if (this.model.isSeen(currentID) == false) {
                     this.model.setAsSeen(currentID);

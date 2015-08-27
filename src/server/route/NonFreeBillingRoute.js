@@ -14,6 +14,7 @@ exports.calcFreeTierCost = function(req, res) {
         }
     }]).exec(function(e, d) {
         for (var i in d) {
+            // console.log(d[i]._id + "\t" + d[i].Cost + "\t" + d[i].Rate);
             var conditions = {
                 _id: {
                     $eq: d[i]._id
@@ -62,13 +63,15 @@ exports.totalCostProduct = function(req, res) {
             month: "05",
             year: "2015" 
         }
+        // console.log(totalCostProduct);
         res.send(totalCostProduct);
     });
 };
 
 
 exports.hourlyCostProduct = function(req, res) {
-    var productName = 'Amazon Elastic Compute Cloud';
+    var productName = req.query.productName;
+    var productName = 'Amazon Elastic Compute Cloud' //Is this variable override intended??
     mongoose.model('Billings').aggregate([{
         $match: {
             NonFreeCost: {
@@ -91,9 +94,13 @@ exports.hourlyCostProduct = function(req, res) {
 };
 
 exports.instanceCostAll = function(req, res) {
+        // console.log("Cost request",req.query.instance);
         var instanceId = req.query.instance;
         var volumeId;
+        //instances hashmap
         var instances = {};
+
+        // Query instances collection to associate volumeIds to instanceIds. 
         mongoose.model('ec2Instances').aggregate([{
             $match: {
                 Id: {
@@ -107,7 +114,12 @@ exports.instanceCostAll = function(req, res) {
             }
         }]).exec(function(err, result) {
             console.log("result",result);
+            // console.log(result[0].VolumeId[0]);
+            // console.log(instanceId);
+
             volumeId = result[0].VolumeId[0]
+
+            //query billing collection for cost on EC2 resourceId's
             mongoose.model('Billings').aggregate([{
                 $match: {
                     ResourceId: {
@@ -184,6 +196,7 @@ exports.instanceCostAll = function(req, res) {
                         }
                     }
                     // Send to endpoint.
+                    // console.log(instances);
                     res.send(instances);
                 });
             });

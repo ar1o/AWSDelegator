@@ -116,6 +116,7 @@ var TimeBudgetView = Backbone.View.extend({
 
         this.$el.on('focusin', '#time-startdate', function(e) {
             var self = this;
+            // console.log("FOCUS IN startDate", self.data);
             $("#time-startdate").datepicker({
                 onSelect: function(selected) {
                     var dtMax = new Date(selected);
@@ -136,6 +137,7 @@ var TimeBudgetView = Backbone.View.extend({
 
         this.$el.on('focusin', '#time-enddate', function(e) {
             var self = this;
+            // console.log("FOCUS on endDate", self.data);
             $("#time-enddate").datepicker({
                 onSelect: function(selected) {
                     var dtMax = new Date(selected);
@@ -155,17 +157,20 @@ var TimeBudgetView = Backbone.View.extend({
                     $('#time-enddate').datepicker("option", "minDate", ndtFormatted);
                 },
                 onClose: function(selected) {
+                    //end
 
                     var dtMax = new Date(selected);
                     var edd = dtMax.getDate();
                     var emm = dtMax.getMonth() + 1;
                     var ey = dtMax.getFullYear();
                     var edtFormatted = emm + '/' + edd + '/' + ey;
+                    //start
                     var dtMin = new Date(self.data.startDate);
                     var sdd = dtMin.getDate();
                     var smm = dtMin.getMonth() + 1;
                     var sy = dtMin.getFullYear();
                     var sdtFormatted = smm + '/' + sdd + '/' + sy;
+                    //logic
                     if (edtFormatted == sdtFormatted || ey < sy || ey == sy && emm < smm || ey == sy && emm == smm && edd < sdd) {
                         var sdd = dtMin.getDate();
                         var smm = dtMin.getMonth() + 1;
@@ -175,6 +180,12 @@ var TimeBudgetView = Backbone.View.extend({
                     }
                     self.data.endDate = selected;
                     self.isValid.endDate = true;
+                    //Prevent endDate from being less than now:
+
+                    // if(ey < ny || ey == ny && emm < nmm ||ey == ny && emm == nmm && edd < ndd){
+
+                    //     self.data.endDate = 
+                    // }
                 }
             });
 
@@ -219,7 +230,9 @@ var TimeBudgetView = Backbone.View.extend({
         this.$el.on('focusout', '#time-minDB', function(e) {
             if (/\d/.test($('#time-minDB').val())) {
                 this.data.minDB = parseInt($('#time-minDB').val());
+                console.log(this.data.minDB, this.data.maxDB);
                 if (this.data.minDB == '') {
+                    console.log('no text');
                     this.data.minDB = null;
                 }
                 if (this.data.minDB < 1) {
@@ -228,8 +241,10 @@ var TimeBudgetView = Backbone.View.extend({
                 }
 
                 if (this.data.minDB > this.data.maxDB && this.data.maxDB != null) {
+                    console.log("minDB > max");
                     this.data.minDB = this.data.maxDB - 1;
                     $('#time-minDB').prop('value', this.data.minDB);
+                    // $('#time-minDB').val(this.data.minDB);
                 }
                 self.isValid.minDB = true;
                 self.$('#time-minDBwarning').hide();
@@ -242,13 +257,16 @@ var TimeBudgetView = Backbone.View.extend({
         this.$el.on('focusout', '#time-maxDB', function(e) {
             if (/\d/.test($('#time-maxDB').val())) {
                 this.data.maxDB = parseInt($('#time-maxDB').val());
+                console.log(this.data.minDB, this.data.maxDB);
                 if (this.data.maxDB < 1) {
                     this.data.maxDB = 0;
                     $('#time-maxDB').prop('value', this.data.maxDB);
                 }
                 if (this.data.minDB > this.data.maxDB && this.data.minDB != null) {
+                    console.log("minDB > max");
                     this.data.maxDB = (this.data.minDB + 1);
                     $('#time-maxDB').prop('value', this.data.maxDB);
+                    // $('#time-maxDB').val(this.data.maxDB);
                 }
                 self.isValid.maxDB = true;
                 self.$('#time-maxDBwarning').hide();
@@ -265,6 +283,7 @@ var TimeBudgetView = Backbone.View.extend({
         }.bind(this));
 
         this.$el.on('click', '#time-savebtn', function(e) {
+            console.log("DATA about to be save (pre-check)", self.data);
             if (self.data.timebudgetname == null) {
                 self.$('#time-budgetnamerequest').show();
             }
@@ -310,12 +329,15 @@ var TimeBudgetView = Backbone.View.extend({
             for (var i in self.isValid) {
                 if (!self.isValid[i]) {
                     validForm = false;
+                    console.log("invalid", i);
                 }
             }
 
             if (validForm) {
+                console.log("form is valid");
                 this.model.post_time_budget_result(this.data, function(err) {
                     if (err == 'success') {
+                        console.log("success");
                         for (var i in self.isValid) {
                             self.isValid[i] = false;
                             self.data[i] = null;
@@ -344,11 +366,15 @@ var TimeBudgetView = Backbone.View.extend({
                         this.$('#time-batchSelectionWarning').hide();
                     }
                     else if ( err == 'error: no associated resources'){
+                        console.log('It seems like the selected user or group does not an associated instance')
                         this.$('#time-associationWarning').show()
                     }
                     else if (err == 'error: empty response'){
+                        console.log('empty response');
                     }
                     else if (err == '') {
+                        // console.log('text is',err);
+                        // console.log('time budget insert error');
                         this.$('#time-associationWarning').hide()
                         this.$('#time-batchNameAndTypeWarning').hide();
                         this.$('#time-batchSelectionWarning').hide();

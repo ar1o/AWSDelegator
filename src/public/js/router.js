@@ -16,6 +16,7 @@ var AppRouter = Backbone.Model.extend({
     },
 
     switchToView: function(view, args) {
+        console.log("args",args);
         args = args || {};
         this.set('args', args);
         this.set('view', window[view]);

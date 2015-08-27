@@ -58,6 +58,8 @@ var CostModel = Backbone.Model.extend({
 					AWSMonthlyCost.add(data);
 				}
 				self.getAWSMonthlyCostNonFree();
+				// self.set('dataReady', Date.now());
+				// console.log(AWSMonthlyCost);
 			});
 		})();
 	},

@@ -251,8 +251,10 @@ var updateUsageBalance = function() {
                 var nowM = new Date().getMonth() + 1;
                 var nowY = new Date().getFullYear();
                 var now = new Date(nowY, nowM, nowD).toUTCString();
+                console.log("now", now);
                 expData = config.getExpiration();
                 var exp = new Date(expData.date[0].year, expData.date[0].month, expData.date[0].day).toUTCString();
+                console.log("exp", exp);
                 if (nowY > expData.date[0].year || nowY == expData.date[0].year && nowM > expData.date[0].month || nowY == expData.date[0].year && nowM == expData.date[0].month && nowD > expData.date[0].day) {
                     console.log("Credits have expired!");
                     config.setCredits("EXPIRED");
@@ -264,10 +266,11 @@ var updateUsageBalance = function() {
                     config.setCredits(String(config.getAccountBalance().toFixed(2)));
                     config.setUsed(String(config.getCreditsUsed().toFixed(2)));
                 } else {
-                    console.log("Error: Failed comparison between dates, or equal")
+                    console.log("Not a good comparison between dates, or equal")
                 }
                 balance = config.getAccountBalance();
                 used = config.getCreditsUsed();
+                console.log("NEW VALUES: \n\tbalance:", balance, "\n\tused:", used);
             }
         })
     });
