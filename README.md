@@ -15,12 +15,13 @@ consumption are based upon usage of associated resources to the user/group.
 [Toward a Solution for the Cloud Account Delegation Problem](http://www.mikesmit.com/wp-content/papercite-data/pdf/casconett2014.pdf)
 
 ## Capabilities
-     •    Over and Under profile budgeting (See graduated resource limitation system, GRLS)
-     •    AWS credit accounting and estimates
-     •    Amazon Free Tier cost accounting
-     •    Automatic shutdown of instances that exceed their budget
-     •    Cost quota system budgeting (See quota system)
-     •    Real time RDS and EC2 metrics
+
+*    Over and Under profile budgeting (See graduated resource limitation system, GRLS)
+*    AWS credit accounting and estimates
+*    Amazon Free Tier cost accounting
+*    Automatic shutdown of instances that exceed their budget
+*    Cost quota system budgeting (See quota system)
+*    Real time RDS and EC2 metrics
 
 ## AWS Amazon Console Configuration
 ####   S3 Bucket
@@ -59,11 +60,10 @@ Within this folder, create a file named credentials with the following saved to 
 #### Config.js
 Open AWSDelegator/src/server/config.js and set the following four values:
      
-
-     •    awsAccountNumber
-     •    databaseUrl
-     •    s3Bucket
-     •    s3Region
+*    awsAccountNumber
+*    databaseUrl
+*    s3Bucket
+*    s3Region
      
 Optionally, credits, creditExp, and creditsUsed can be configured if you are using AWS credits.
 
