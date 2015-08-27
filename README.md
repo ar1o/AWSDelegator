@@ -2,14 +2,14 @@ AWSDelegator
 =============
 
 ## Introduction
-     AWSDelegator provides real-time automated management capabilities to Amazon Web Services,
-     as well as monitoring capabilities for AWS credits.  AWS Delegator allows account administrators
-     to assign individual users, collaborative groups, and students in a class, budgeted cloud resources.
+AWSDelegator provides real-time automated management capabilities to Amazon Web Services,
+as well as monitoring capabilities for AWS credits.  AWS Delegator allows account administrators
+to assign individual users, collaborative groups, and students in a class, budgeted cloud resources.
      
-     AWSDelegator uses AWS Programmatic Billing Access to maintain knowledge of user and groups and
-     their usage of EC2 and RDS instances, as well as their cost. Budgets can either be cost budgets
-     with a dollar value for a user/group and an expiration, or time budgets, where rates of
-     consumption are based upon usage of associated resources to the user/group.
+AWSDelegator uses AWS Programmatic Billing Access to maintain knowledge of user and groups and
+their usage of EC2 and RDS instances, as well as their cost. Budgets can either be cost budgets
+with a dollar value for a user/group and an expiration, or time budgets, where rates of
+consumption are based upon usage of associated resources to the user/group.
 
 
 [Toward a Solution for the Cloud Account Delegation Problem](http://www.mikesmit.com/wp-content/papercite-data/pdf/casconett2014.pdf)
@@ -47,22 +47,25 @@ AWSDelegator
 
 ## Server Setup
 ####Credentials
-          In Unix/OSX create folder named .aws in your root folder
-          For windows, create a folder named .aws in your default user folder
-               For example:  ‘C:\Users\username\.aws’
-          Within this folder, create a file named credentials with the following saved to it:
-               [default]
-               aws_access_key_id = “access key id here”
-               aws_secret_access_key = “secret access key here”
+In Unix/OSX create folder named .aws in your root folder
+For windows, create a folder named .aws in your default user folder
+     For example:  ‘C:\Users\username\.aws’
+Within this folder, create a file named credentials with the following saved to it:
+
+     [default]
+     aws_access_key_id = “access key id here”
+     aws_secret_access_key = “secret access key here”
 
 #### Config.js
-          Open AWSDelegator/src/server/config.js and set the following four values:
-          •    awsAccountNumber
-          •    databaseUrl
-          •    s3Bucket
-          •    s3Region
-     Optionally, credits, creditExp, and creditsUsed can be configured if you are using AWS credits.
+Open AWSDelegator/src/server/config.js and set the following four values:
+     
 
+     •    awsAccountNumber
+     •    databaseUrl
+     •    s3Bucket
+     •    s3Region
+     
+Optionally, credits, creditExp, and creditsUsed can be configured if you are using AWS credits.
 
 ## Code Layout
      src/
