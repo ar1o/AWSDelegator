@@ -49,8 +49,11 @@ consumption are based upon usage of associated resources to the user/group.
 ## Server Setup
 ####Credentials
 In Unix/OSX create folder named .aws in your root folder
-For windows, create a folder named .aws in your default user folder
-     For example:  ‘C:\Users\username\.aws’
+
+For windows, create a folder named .aws in your default user folder. For example:  
+
+     C:\Users\username\.aws
+
 Within this folder, create a file named credentials with the following saved to it:
 
      [default]
