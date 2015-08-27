@@ -11,7 +11,7 @@ exports.checkBudgets = function() {
         if (err) throw err;
         mongoose.model('Budgets').find({}, function(e, budgets) {
             if (e) throw e;
-            var index1 = 0;
+            var index = 0;
             var budgetController = function() {
                 budgetIterator(function() {
                     index++;
@@ -44,7 +44,6 @@ exports.checkBudgets = function() {
                                         console.log('Added a notification for ', budget.BudgetName);
                                         //Check for stop the instance here
                                         if (budget.TimeOut == "true") {
-                                            console.log('CHECKING');
                                             stopInstances(budgets[index].BatchType, budgets[index].BatchName);
                                         }
                                         callback1();

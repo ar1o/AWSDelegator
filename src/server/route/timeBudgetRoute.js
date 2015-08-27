@@ -51,6 +51,7 @@ exports.timeBudgetCost = function(req, res) {
 				_id: 1
 			}
 		}]).exec(function(e, d) {
+			console.log('TIMEBUDGETCOST', d)
 			res.send(d);
 		});
 	} else {
@@ -407,6 +408,7 @@ exports.userTimeCost = function(req, res) {
 			_id: 1
 		}
 	}]).exec(function(e, d) {
+		console.log('userTimeCost',d)
 		res.send(d);
 	});
 }

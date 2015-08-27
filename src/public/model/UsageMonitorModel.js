@@ -1,3 +1,6 @@
+/*
+	This handle most of the budget monitor data
+ */
 var UsageMonitorModel = Backbone.Model.extend({
 	initialize: function() {
 		var data = {};
@@ -194,11 +197,9 @@ var UsageMonitorModel = Backbone.Model.extend({
 				self.set('budgetDataReady', Date.now());
 				if (data == 'error' || data == 'error, budget for batchName already Exists') {
 					callback(data);
-				}
-				else if (data == 'success'){
+				} else if (data == 'success') {
 					callback('success');
-				}
-				else {
+				} else {
 					callback(data);
 				}
 			}
@@ -218,11 +219,9 @@ var UsageMonitorModel = Backbone.Model.extend({
 				console.log("UMM data", data);
 				if (data == 'error' || data == "error, TimeBudget for batchName already Exists" || data == 'error: no associated resources') {
 					callback(data);
-				} 
-				else if (data == 'success') {
+				} else if (data == 'success') {
 					callback('success');
-				}
-				else {
+				} else {
 					callback(data);
 				}
 			},
@@ -330,6 +329,7 @@ var UsageMonitorModel = Backbone.Model.extend({
 		};
 		(function(params) {
 			$.get(host + '/api/usage/timeBudgetCost', params, function(result) {
+				console.log(result)
 				for (var i in result) {
 					var data = new budgetCostModel({
 						date: result[i]._id,
@@ -337,12 +337,13 @@ var UsageMonitorModel = Backbone.Model.extend({
 					});
 					budgetCostCollection.add(data);
 				}
+				//add endDate into collection
 				var data = new budgetCostModel({
 					date: timeBudgetCollection.at(budgetIndex).get('endDate'),
 					cost: 0
 				});
 				budgetCostCollection.add(data);
-				self.set('timeBudgetDataReady', Date.now());
+				self.set('budgetCostDataReady', Date.now());
 			});
 		})(params);
 	},

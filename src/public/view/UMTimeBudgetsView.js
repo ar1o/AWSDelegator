@@ -50,6 +50,9 @@ var UMTimeBudgetsView = Backbone.View.extend({
         this.groupUserServiceView.setUser(timeBudgetCollection.at(rowIndex).get('batchName'));
         this.groupUserServiceView.model.getTimeUserServiceUsageChart(rowIndex);
         this.costActivity.model.getTimeBudgetCostChart(rowIndex);
+        
+        // this.costActivity.model.getUserTimeCostBudget(rowIndex);
+
     },
 
     updateGroupViews: function(rowIndex) {
@@ -79,6 +82,7 @@ var UMTimeBudgetsView = Backbone.View.extend({
                 if (timeBudgetCollection.at(rowIndex).get('batchType') == 'user') {
                     $("#serviceContainer").remove();
                     self.updateUserViews(rowIndex);
+                    console.log("UPDATE");
                 } else {
                     $("#groupUserServiceContainer").remove();
                     self.updateGroupViews(rowIndex);
