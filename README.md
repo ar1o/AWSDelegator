@@ -23,7 +23,7 @@ consumption are based upon usage of associated resources to the user/group.
 *    Cost quota system budgeting (See quota system)
 *    Real time RDS and EC2 metrics
 
-## AWS Amazon Console Configuration
+## AWS Console Configuration
 ####   S3 Bucket
           1.   Log into AWS console with full privileges.
           2.   Under ‘Storage & Content Deliver’, select S3.
