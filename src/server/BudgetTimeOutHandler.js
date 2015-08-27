@@ -9,7 +9,7 @@ exports.checkBudgets = function() {
         if (err) throw err;
         mongoose.model('Budgets').find({}, function(e, budgets) {
             if (e) throw e;
-            var index1 = 0;
+            var index = 0;
             var budgetController = function() {
                 budgetIterator(function() {
                     index++;
@@ -236,10 +236,10 @@ var getBudgetTotalCost = function(_batchtype, _batchname, _startdate, _enddate, 
     var batchName = _batchname;
     var startDate = _startdate;
     var endDate = _enddate;
-    // console.log(batchType);
-    // console.log(batchName);
-    // console.log(startDate);
-    // console.log(endDate);
+    console.log(batchType);
+    console.log(batchName);
+    console.log(startDate);
+    console.log(endDate);
 
     if (batchType == 'user') {
         mongoose.model('Billings').aggregate([{
@@ -276,6 +276,7 @@ var getBudgetTotalCost = function(_batchtype, _batchname, _startdate, _enddate, 
                 _id: 1
             }
         }]).exec(function(e, d) {
+            console.log('getBudgetTotalCost User',d);
             callback(d);
         });
     } else { // If group instead
