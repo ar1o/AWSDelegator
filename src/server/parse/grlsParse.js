@@ -76,11 +76,6 @@ var updateLifetime = function(maxBudgetLifetimes) {
 				}
 			}]).exec(function(err, budgets) {
 				var index1 = 0;
-<<<<<<< HEAD
-=======
-				// console.log("Budgets",budgets);
-
->>>>>>> parent of e74266f... Clean up of undesirable console.log() and comment lines
 				//controller function that calls the iterator to loop through something
 				var timeBudgetsController = function() {
 					timeBudgetsIterator(function() {
