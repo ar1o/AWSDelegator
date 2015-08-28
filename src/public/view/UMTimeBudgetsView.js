@@ -7,7 +7,7 @@ var UMTimeBudgetsView = Backbone.View.extend({
             this.model = new UsageMonitorModel();
         }
 
-        this.editHTML = '<div class="insetting"><div class="incontainer"><label class="budget-label">Name <i class="fa fa-question-circle" id="TimeBudgetName" data-toggle="tooltip" title="Unique name assigned to this Time Budget"></i></label><input type="text" id="time-budgetname" placeholder="e.g., "Monthly EC2 Budget""></div><div class="warning" id="time-budgetnamewarning">Invalid budget Name.</div><div class="warning" id="time-oldbudgetnamewarning">Budget Name already in use.</div><div class="warning" id="time-budgetnamerequest">Please enter a budget name.</div></div><div class="insetting"><div class="incontainer"><label class="budget-label">Time budget related to <i class="fa fa-question-circle" id="TimeBudgetAssociatedTo" data-toggle="tooltip" title="User or group this budget applies to"></i></label><select class="time-costfilter"><option value="" disabled selected>Select</option><option value="user">User</option><option value="group">Groups</option></select></div></div><div class="sub-insetting"><div class="sub-incontainer"><div class="" id="time-filter-details"><select class="time-sub-costfilter"><option value="" disabled selected>Select</option>{{#each col}}<option value={{this.name}}></option>{{/each}}</select></div></div><div class="warning" id="time-batchtyperequest">Please select a Batch Type.</div><div class="warning" id="time-batchnamerequest">Please select a Batch Name.</div></div><div class="insetting"><div class="incontainer"><label class="budget-label">Start date <i class="fa fa-question-circle" id="StartDate" data-toggle="tooltip" title="Date when budget begins"></i></label><input type="text" id="time-startdate" placeholder="mm/dd/yyyy"><div class="warning" id="time-startdaterequest">Please select a start date.</div></div></div><div class="insetting"><div class="incontainer"><label class="budget-label">End date <i class="fa fa-question-circle" id="EndDate" data-toggle="tooltip" title="Date of termination for budget"></i></label><input type="text" id="time-enddate" placeholder="mm/dd/yyyy"><div class="warning" id="time-enddatewarning">Invalid dates selected.</div><div class="warning" id="time-enddaterequest">Please select an end.</div></div></div><div class="insetting"><div class="incontainer"><label class="budget-label">Time Amount <i class="fa fa-question-circle" id="TimeAmount" data-toggle="tooltip" title="Number of hours of time in use for instance during budget duration"></i></label><input type="text" id="time-amount" placeholder="Hours"><div class="warning" id="time-amountwarning">Invalid time amount.</div><div class="warning" id="time-amountrequest">Please enter a time amount.</div></div></div><div class="insetting"><div class="incontainer"><label class="budget-label">Under-profile Decay Rate <i class="fa fa-question-circle" id="UnderProfile" data-toggle="tooltip" title="Rate at which hours of usage are consumed when the instance is being used less than what is optimal"></i></label><input type="text" id="time-udecay" placeholder="e.g., 3"><div class="warning" id="time-udecaywarning">Invalid decay rate.</div><div class="warning" id="time-udecayrequest">Please enter a decay rate.</div></div></div><div class="insetting"><div class="incontainer"><label class="budget-label">Over-profile Decay Rate <i class="fa fa-question-circle" id="OverProfile" data-toggle="tooltip" title="Rate at which hours of usage are consumed when the instance is being used more than what is optimal"></i></label><input type="text" id="time-odecay" placeholder="e.g., 2"><div class="warning" id="time-odecaywarning">Invalid decay rate.</div><div class="warning" id="time-odecayrequest">Please enter a decay rate.</div></div></div><div class="insetting"><div class="incontainer"><label class="budget-label">Min Database Connections <i class="fa fa-question-circle" id="minDatabase" data-toggle="tooltip" title="Minimum number of acceptable database connections at a given time"></i></label><input type="text" id="time-minDB" placeholder="e.g., 5"><div class="warning" id="time-minDBwarning">Invalid number.</div><div class="warning" id="time-minDBrequest">Please enter a number.</div></div></div><div class="insetting"><div class="incontainer"><label class="budget-label">Max Database Connections <i class="fa fa-question-circle" id="maxDatabase" data-toggle="tooltip" title="Maximum number of acceptable database connections at a given time"></i></label><input type="text" id="time-maxDB" placeholder="e.g., 50"><div class="warning" id="time-maxDBwarning">Invalid number.</div><div class="warning" id="time-maxDBrequest">Please enter a number.</div></div></div><div class="insetting"><div class="incontainer"><label class="budget-label">Stop resource(s) when quota reached <i class="fa fa-question-circle" id="TimeBudgetStop" data-toggle="tooltip" title="Stop instance when provided time is exceeded?"></i></label><div class="onoffswitch"><input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="time-myonoffswitch" checked><label class="onoffswitch-label" for="time-myonoffswitch"><span class="onoffswitch-inner"></span><span class="onoffswitch-switch"></span></label></div></div></div>';
+        this.editHTML = '<div class="insetting"><div class="incontainer"><label class="budget-label">Name <i class="fa fa-question-circle" id="TimeBudgetName" data-toggle="tooltip" title="Unique name assigned to this Time Budget"></i></label><input type="text" id="time-budgetname" placeholder="e.g., "Monthly EC2 Budget""></div><div class="warning" id="time-budgetnamewarning">Invalid budget Name.</div><div class="warning" id="time-oldbudgetnamewarning">Budget Name already in use.</div><div class="warning" id="time-budgetnamerequest">Please enter a budget name.</div></div><div class="insetting"><div class="incontainer"><label class="budget-label">Time budget related to <i class="fa fa-question-circle" id="TimeBudgetAssociatedTo" data-toggle="tooltip" title="User or group this budget applies to. Once these values are set, they cannot be edited."></i></label><select class="time-costfilter"><option value="" disabled selected>Select</option><option value="user">User</option><option value="group">Groups</option></select></div></div><div class="sub-insetting"><div class="sub-incontainer"><div class="" id="time-filter-details"><select class="time-sub-costfilter"><option value="" disabled selected>Select</option>{{#each col}}<option value={{this.name}}></option>{{/each}}</select></div></div><div class="warning" id="time-batchtyperequest">Please select a Batch Type.</div><div class="warning" id="time-batchnamerequest">Please select a Batch Name.</div></div><div class="insetting"><div class="incontainer"><label class="budget-label">Start date <i class="fa fa-question-circle" id="StartDate" data-toggle="tooltip" title="Date when budget begins"></i></label><input type="text" id="time-startdate" placeholder="mm/dd/yyyy"><div class="warning" id="time-startdaterequest">Please select a start date.</div></div></div><div class="insetting"><div class="incontainer"><label class="budget-label">End date <i class="fa fa-question-circle" id="EndDate" data-toggle="tooltip" title="Date of termination for budget"></i></label><input type="text" id="time-enddate" placeholder="mm/dd/yyyy"><div class="warning" id="time-enddatewarning">Invalid dates selected.</div><div class="warning" id="time-enddaterequest">Please select an end.</div></div></div><div class="insetting"><div class="incontainer"><label class="budget-label">Time Amount <i class="fa fa-question-circle" id="TimeAmount" data-toggle="tooltip" title="Number of hours of time in use for instance during budget duration"></i></label><input type="text" id="time-amount" placeholder="Hours"><div class="warning" id="time-amountwarning">Invalid time amount.</div><div class="warning" id="time-amountrequest">Please enter a time amount.</div></div></div><div class="insetting"><div class="incontainer"><label class="budget-label">Under-profile Decay Rate <i class="fa fa-question-circle" id="UnderProfile" data-toggle="tooltip" title="Rate at which hours of usage are consumed when the instance is being used less than what is optimal"></i></label><input type="text" id="time-udecay" placeholder="e.g., 3"><div class="warning" id="time-udecaywarning">Invalid decay rate.</div><div class="warning" id="time-udecayrequest">Please enter a decay rate.</div></div></div><div class="insetting"><div class="incontainer"><label class="budget-label">Over-profile Decay Rate <i class="fa fa-question-circle" id="OverProfile" data-toggle="tooltip" title="Rate at which hours of usage are consumed when the instance is being used more than what is optimal"></i></label><input type="text" id="time-odecay" placeholder="e.g., 2"><div class="warning" id="time-odecaywarning">Invalid decay rate.</div><div class="warning" id="time-odecayrequest">Please enter a decay rate.</div></div></div><div class="insetting"><div class="incontainer"><label class="budget-label">Min Database Connections <i class="fa fa-question-circle" id="minDatabase" data-toggle="tooltip" title="Minimum number of acceptable database connections at a given time"></i></label><input type="text" id="time-minDB" placeholder="e.g., 5"><div class="warning" id="time-minDBwarning">Invalid number.</div><div class="warning" id="time-minDBrequest">Please enter a number.</div></div></div><div class="insetting"><div class="incontainer"><label class="budget-label">Max Database Connections <i class="fa fa-question-circle" id="maxDatabase" data-toggle="tooltip" title="Maximum number of acceptable database connections at a given time"></i></label><input type="text" id="time-maxDB" placeholder="e.g., 50"><div class="warning" id="time-maxDBwarning">Invalid number.</div><div class="warning" id="time-maxDBrequest">Please enter a number.</div></div></div><div class="insetting"><div class="incontainer"><label class="budget-label">Stop resource(s) when quota reached <i class="fa fa-question-circle" id="TimeBudgetStop" data-toggle="tooltip" title="Stop instance when provided time is exceeded?"></i></label><div class="onoffswitch"><input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="time-myonoffswitch" checked><label class="onoffswitch-label" for="time-myonoffswitch"><span class="onoffswitch-inner"></span><span class="onoffswitch-switch"></span></label></div></div></div>';
         this.model.getTimeBudgets();
         this.usageActivity = new UMTimeBudgetUsageView();
         this.costActivity = new UMTimeBudgetCostView();
@@ -114,9 +114,9 @@ var UMTimeBudgetsView = Backbone.View.extend({
                 self.data.batchName = $('td', this).eq(2).text();
                 self.data.startDate = $('td', this).eq(3).text();
                 self.data.endDate = $('td', this).eq(4).text();
-                self.data.amount = $('td', this).eq(5).text();
-                self.data.uDecayRate = $('td', this).eq(6).text();
-                self.data.oDecayRate = $('td', this).eq(7).text();
+                self.data.timeamount = $('td', this).eq(5).text();
+                self.data.uDecay = $('td', this).eq(6).text();
+                self.data.oDecay = $('td', this).eq(7).text();
                 self.data.minDB = $('td', this).eq(8).text();
                 self.data.maxDB = $('td', this).eq(9).text();
                 self.data.timeout = $('td', this).eq(10).text();
@@ -160,14 +160,14 @@ var UMTimeBudgetsView = Backbone.View.extend({
                     $('.modal-title').append('<div class="content-title">Edit budget: ' + self.data.budgetName + '</div>');
                     $('.modal-body').append('<div class="content-body">' + self.editHTML + '</div>');
                     $('#time-budgetname').prop('value', self.data.budgetName);
-                    $('.time-costfilter').val(self.data.batchType);
+                    $('.time-costfilter').prop('value', self.data.batchType);
                     $('.time-costfilter').prop('disabled', 'disabled');
                     $('.time-sub-costfilter').prop('disabled', 'disabled');
                     $('#time-startdate').prop('value', self.data.startDate);
                     $('#time-enddate').prop('value', self.data.endDate);
-                    $('#time-amount').prop('value', self.data.amount);
-                    $('#time-udecay').prop('value', self.data.uDecayRate);
-                    $('#time-odecay').prop('value', self.data.oDecayRate);
+                    $('#time-amount').prop('value', self.data.timeamount);
+                    $('#time-udecay').prop('value', self.data.uDecay);
+                    $('#time-odecay').prop('value', self.data.oDecay);
                     $('#time-minDB').prop('value', self.data.minDB);
                     $('#time-maxDB').prop('value', self.data.maxDB);
                     var state = self.data.timeout;
@@ -393,9 +393,44 @@ var UMTimeBudgetsView = Backbone.View.extend({
                 }
             });
         }.bind(this));
+        
 
+        this.$el.on('focusout', '#time-udecay', function(e) {
+            if (/\d/.test($('#time-udecay').val()) && ($('#time-udecay').val())>0) {
+                self.data.uDecay = parseInt($('#time-udecay').val());
+                self.isValid.udecay = true;
+                self.$('#time-udecaywarning').hide();
+                self.$('#time-udecayrequest').hide();
+            } else {
+                self.$('#time-udecaywarning').show();
+            }
+        }.bind(this));
+
+        this.$el.on('focusout', '#time-odecay', function(e) {
+            if (/\d/.test($('#time-odecay').val()) && ($('#time-odecay').val())>0) {
+                this.data.oDecay = parseInt($('#time-odecay').val());
+                self.isValid.odecay = true;
+                self.$('#time-odecaywarning').hide();
+                self.$('#time-odecayrequest').hide();
+            } else {
+                self.$('#time-odecaywarning').show();
+            }
+        }.bind(this));
+
+        this.$el.on('focusout', '#time-amount', function(e) {
+            if (/^\d+(\.\d{1,2})?$/.test($('#time-amount').val())&& ($('#time-amount').val()>0) ) {
+                this.data.timeamount = $('#time-amount').val();
+                self.isValid.timeamount = true;
+                self.$('#time-amountwarning').hide();
+                self.$('#time-amountrequest').hide();
+            } else {
+                self.$('#time-amountwarning').show();
+            }
+        }.bind(this));
+
+        
         this.$el.on('focusout', '#time-minDB', function(e) {
-            if (/\d/.test($('#time-minDB').val())) {
+            if (/\d/.test($('#time-minDB').val()) && ($('#time-minDB').val())>=0) {
                 this.data.minDB = parseInt($('#time-minDB').val());
                 if (this.data.minDB == '') {
                     this.data.minDB = null;
@@ -419,7 +454,7 @@ var UMTimeBudgetsView = Backbone.View.extend({
         }.bind(this));
 
         this.$el.on('focusout', '#time-maxDB', function(e) {
-            if (/\d/.test($('#time-maxDB').val())) {
+            if (/\d/.test($('#time-maxDB').val()) && ($('#time-maxDB').val())>=0) {
                 this.data.maxDB = parseInt($('#time-maxDB').val());
                 if (this.data.maxDB < 1) {
                     this.data.maxDB = 0;

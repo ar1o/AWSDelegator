@@ -298,10 +298,10 @@ app.post('/editTimeBudget', jsonParser, function(req, res) {
                 BatchName: r.batchName,
                 StartDate: r.startDate,
                 EndDate: r.endDate,
-                TimeAmount: r.amount,
+                TimeAmount: r.timeamount,
                 TimeOut: r.timeout,
-                uDecayRate: r.uDecayRate,
-                oDecayRate: r.oDecayRate,
+                uDecayRate: r.uDecay,
+                oDecayRate: r.oDecay,
                 minDB: r.minDB,
                 maxDB: r.maxDB,
                 State: 'valid'
