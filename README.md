@@ -92,6 +92,7 @@ Optionally, credits, creditExp, and creditsUsed can be configured if you are usi
      1. install nodejs
      2. npm install
      3. npm install grunt-cli -g
+     4. node setup.js
 
  Every time you dev run these:
  
