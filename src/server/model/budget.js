@@ -6,7 +6,7 @@ budgetSchema = new mongoose.Schema({
 	StartDate: String,
 	EndDate: String,
 	Amount: Number,
-	TimeOut: String,
+	timeout: String,
 	State: String
 });
 

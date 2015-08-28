@@ -154,8 +154,78 @@ exports.getUsers = function (req, res) {
     });
 }
 
+exports.query_users = function(req, res) {
+	var queried_users = [];
+    mongoose.model('iamUsers').aggregate([{
+        $project: {
+            _id: 0,
+            UserName: 1,
+            CreateDate: 1
+        }
+    }]).exec(function(e, d) {
+    	console.log('query_users',d);
+    	// res.send(d[0].UserName);
+
+    	var index = 0;
+    	var date = new Date();
+    	date.setDate(date.getDate() - 7)
+    	        	console.log(date.toISOString());
+
+        var budgetController = function() {
+            budgetIterator(function() {
+                index++;
+                if (index < d.length) {
+                    budgetController();
+                } else {
+                	console.log(queried_users);
+                	res.send(queried_users);
+                }
+            });
+        };
+        var budgetIterator = function(callback1) {
+        	var batchName = d[index].UserName
+        	
+        	mongoose.model('Billings').aggregate([{
+			$match: {
+				$and: [{
+					UsageStartDate: {
+						$gte: date.toISOString()
+					}
+				}, {
+				// 	UsageStartDate: {
+				// 		$lte: endDate
+				// 	}
+				// }, {
+					'user:Name': batchName
+				}, {
+					'user:Group': 'null'
+				}]
+			}
+		}, {
+			$project: {
+				_id: 0,
+				'user:Name': 1
+			}
+		}, {
+			$group: {
+				_id: '$user:Name'
+			}
+		}]).exec(function(e, d) {
+			if(d.length != 0) {
+				//add this to an array or something
+				console.log('USAGE', d);
+				queried_users.push(d[0]);
+			}
+        	callback1();
+		});
+        };
+        if(d.length != 0) {
+            budgetController();
+        }
+    });;
+}
 /*
-	Query cost of user or groups
+	Query cost of user or groups (progress bar chart)
  */
 exports.usage = function(req, res) {
 	var batchType = req.query.batchType;
@@ -193,6 +263,7 @@ exports.usage = function(req, res) {
 				}
 			}
 		}]).exec(function(e, d) {
+			console.log('USAGE', d);
 			res.send(d);
 		});
 	} else {
@@ -225,6 +296,7 @@ exports.usage = function(req, res) {
 				}
 			}
 		}]).exec(function(e, d) {
+			console.log("GROU SHIT", d);
 			res.send(d);
 		});
 	}

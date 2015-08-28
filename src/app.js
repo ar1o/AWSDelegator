@@ -95,6 +95,7 @@ app.get('/api/usage/timeUserService', require(__dirname + '/server/route/timeBud
 app.get('/api/notifications', require(__dirname + '/server/route/notificationsRoute').notifications);
 app.get('/api/notifications/seen', require(__dirname + '/server/route/notificationsRoute').updateNotifications);
 
+app.get('/api/usage/qusers', require(__dirname + '/server/route/budgetRoute').query_users);
 
 
 app.get('/getUsers', jsonParser, function(req, res) {
@@ -158,13 +159,12 @@ app.post('/budget', jsonParser, function(req, res) {
             timeout: r.timeout,
             State: 'valid'
         };
-        db.collection('budgets').find({
-            "BatchName": doc.BatchName,
-            "BatchType": doc.BatchType
-        }).toArray(function(err, resp) {
+       mongoose.model('Budgets').find({
+            BudgetName: doc.BudgetName
+        }).exec(function(err, budget) {
             if (err) throw err;
-            if (resp.length != 0) {
-                res.send("error, budget for batchName already Exists");
+            if(budget != 0) {
+                res.send("error, budget for batchName already Exists")
             } else {
                 db.collection('budgets').insert(doc, function(err) {
                     if (err) throw err;
@@ -173,6 +173,23 @@ app.post('/budget', jsonParser, function(req, res) {
                 });
             }
         });
+
+        // db.collection('budgets').find({
+        //     "BatchName": doc.BatchName,
+        //     "BatchType": doc.BatchType
+        // }).toArray(function(err, resp) {
+        //     if (err) throw err;
+        //     if (resp.length != 0) {
+        //         console.log("wtf1!!");
+        //         res.send("error, budget for batchName already Exists");
+        //     } else {
+        //         db.collection('budgets').insert(doc, function(err) {
+        //             if (err) throw err;
+        //             console.log("Cost budget inserted: ", doc);
+        //             res.send("success");
+        //         });
+        //     }
+        // });
     });
 });
 

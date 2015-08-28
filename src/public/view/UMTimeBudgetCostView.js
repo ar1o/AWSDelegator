@@ -12,14 +12,10 @@ var UMTimeBudgetCostView = Backbone.View.extend({
         this.render();
     },
 
-    updateViews: function(budgetIndex){
-        this.model.getBudgetCostChart(budgetIndex);
-    },
-
-    updateUserAttributes: function(_name, _color){
-        this.userName = _name;
-        this.userColor = _color;
-    },
+    // updateUserAttributes: function(_name, _color){
+    //     this.userName = _name;
+    //     this.userColor = _color;
+    // },
 
     bindings: function() {
         var self = this;

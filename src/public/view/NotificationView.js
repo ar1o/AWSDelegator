@@ -48,7 +48,9 @@ var NotificationView = Backbone.View.extend({
         }.bind(this));
 
         this.model.change('dataReady', function(model, val) {
-            this.render();
+            this.render(function() {
+                self.changeBackground();
+            });
         }.bind(this));
 
         var self = this;
@@ -64,26 +66,41 @@ var NotificationView = Backbone.View.extend({
 
     },
 
-    render: function() {
+    render: function(callback) {
         var html = Handlebars.templates.NotificationView({
             notifications: notificationCollection.toJSON()
         });
         this.$el.html(html);
-        this.changeBackground();
+        callback();
     },
 
     changeBackground: function() {
-        for (var i = 0; i < notificationCollection.length; i++) {
-            var id = '#' + notificationCollection.at(i).get('notification');
-            if (notificationCollection.at(i).get('seen') == 'false') {
+        var index = 0;
+        var budgetController = function() {
+            budgetIterator(function() {
+                index++;
+                if (index < notificationCollection.length) {
+                    budgetController();
+                }
+            });
+        };
+        var budgetIterator = function(callback1) {
+            var id = '#' + notificationCollection.at(index).get('notification');
+
+            if (notificationCollection.at(index).get('seen') == 'false') {
                 this.$(id).css({
                     'background': 'white'
                 });
+                callback1();
             } else {
                 this.$(id).css({
                     'background': '#f7f7f7'
                 });
+                callback1();
             }
+        };
+        if(notificationCollection.length != 0) {
+            budgetController();
         }
     }
 

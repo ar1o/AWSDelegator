@@ -1,5 +1,5 @@
 /*
-	This handle most of the budget monitor data
+	This handle most of the budget monitoring data
  */
 var UsageMonitorModel = Backbone.Model.extend({
 	initialize: function() {
@@ -20,69 +20,10 @@ var UsageMonitorModel = Backbone.Model.extend({
 		this.change('serviceDataReady');
 		this.change('groupUserServiceDataReady');
 	},
-	groups_result: function() {
-		var self = this;
-		return $.ajax({
-			type: 'GET',
-			data: self.data,
-			contentType: 'plain/text',
-			url: host + '/api/usage/groups',
-			success: function(data) {
-				result = data;
-			}
-		});
-	},
-	users_result: function() {
-		var self = this;
-		return $.ajax({
-			type: 'GET',
-			data: self.data,
-			contentType: 'application/json',
-			url: host + '/api/usage/users',
-			success: function(data) {
-				result = data;
-			}
-		});
-	},
-	list_users: function() {
-		var result;
-		var self = this;
-		return $.ajax({
-			type: 'GET',
-			data: self.data,
-			contentType: 'application/json',
-			url: host + '/getUsers',
-			success: function(data) {
-				result = data;
-			}
-		})
-	},
-	budget_result: function() {
-		var self = this;
-		return $.ajax({
-			type: 'GET',
-			data: self.data,
-			contentType: 'plain/text',
-			url: host + '/api/usage/budget',
-			success: function(data) {
-				result = data;
-			}
-		});
-	},
 
-	time_budget_result: function() {
-		var self = this;
-		return $.ajax({
-			type: 'GET',
-			data: self.data,
-			contentType: 'plain/text',
-			url: host + '/api/usage/timeBudget',
-			success: function(data) {
-				result = data;
-			}
-		});
-	},
-
+	/*
+		Gets the IAM groups collection from database
+	 */
 	getGroups: function() {
 		var self = this;
 		GroupCollection.reset();
@@ -110,6 +51,9 @@ var UsageMonitorModel = Backbone.Model.extend({
 		});
 	},
 
+	/*
+		Get the IAM user collection from database
+	 */
 	getUsers: function() {
 		var self = this;
 		UserCollection.reset();
@@ -137,6 +81,40 @@ var UsageMonitorModel = Backbone.Model.extend({
 		});
 	},
 
+	users_queried: function() {
+		var self = this;
+		return $.ajax({
+			type: 'GET',
+			data: self.data,
+			contentType: 'application/json',
+			url: host + '/api/usage/qusers',
+			success: function(data) {
+				result = data;
+			}
+		});
+	},
+	getActiveUsers: function() {
+		var self = this;
+		// UserCollection.reset();
+		this.users_queried().done(function(result) {
+			
+					UserCollection.reset();
+			for (var r in result) {
+				console.log(result[r]._id);
+				var data = new iamGroupsModel({
+					name: result[r]._id,
+				});
+				UserCollection.add(data);
+
+			}
+			self.set('userDataReady', Date.now());
+		}).success(function() {}).fail(function() {
+			console.log('FAILED');
+		});
+	},
+	/*
+		Gets the cost budget collection from database
+	 */
 	getBudgets: function() {
 		var self = this;
 		this.budget_result().done(function(result) {
@@ -159,6 +137,9 @@ var UsageMonitorModel = Backbone.Model.extend({
 		});
 	},
 
+	/*
+		Gets the time budget collection from database
+	 */
 	getTimeBudgets: function() {
 		var self = this;
 		this.time_budget_result().done(function(result) {
@@ -182,6 +163,484 @@ var UsageMonitorModel = Backbone.Model.extend({
 			self.set('timeBudgetDataReady', Date.now());
 		}).fail(function() {
 			console.log('FAILED');
+		});
+	},
+
+	/*
+		save hourly cost (quota system) of a specific budget 
+	 */
+	getBudgetCostChart: function(budgetIndex) {
+		var self = this;
+		budgetCostCollection.reset();
+		var params = {
+			batchType: budgetCollection.at(budgetIndex).get('batchType'),
+			batchName: budgetCollection.at(budgetIndex).get('batchName'),
+			startDate: budgetCollection.at(budgetIndex).get('startDate'),
+			endDate: budgetCollection.at(budgetIndex).get('endDate')
+		};
+		(function(params) {
+			$.get(host + '/api/usage/budgetCost', params, function(result) {
+				for (var i in result) {
+					var data = new budgetCostModel({
+						date: result[i]._id,
+						cost: Math.round(result[i].Cost * 10000) / 10000
+					});
+					budgetCostCollection.add(data);
+				}
+				//add endDate into collection
+				var data = new budgetCostModel({
+					date: budgetCollection.at(budgetIndex).get('endDate'),
+					cost: 0
+				});
+				budgetCostCollection.add(data);
+				self.set('budgetCostDataReady', Date.now());
+			});
+		})(params);
+	},
+
+	/*
+		save hourly "time" cost (grls system) of a specific budget
+	 */
+	getTimeBudgetCostChart: function(budgetIndex) {
+		var self = this;
+		budgetCostCollection.reset();
+		var params = {
+			batchType: timeBudgetCollection.at(budgetIndex).get('batchType'),
+			batchName: timeBudgetCollection.at(budgetIndex).get('batchName'),
+			startDate: timeBudgetCollection.at(budgetIndex).get('startDate'),
+			endDate: timeBudgetCollection.at(budgetIndex).get('endDate')
+		};
+		(function(params) {
+			$.get(host + '/api/usage/timeBudgetCost', params, function(result) {
+				console.log(result)
+				for (var i in result) {
+					var data = new budgetCostModel({
+						date: result[i]._id,
+						cost: Math.round(result[i].Cost * 10000) / 10000
+					});
+					budgetCostCollection.add(data);
+				}
+				//add endDate into collection
+				var data = new budgetCostModel({
+					date: timeBudgetCollection.at(budgetIndex).get('endDate'),
+					cost: 0
+				});
+				budgetCostCollection.add(data);
+				self.set('budgetCostDataReady', Date.now());
+			});
+		})(params);
+	},
+
+	/*
+		This save the cost budget "progress bar" data into a collection. 
+		Contains the usage of the budget up-to-date. 
+	 */
+	getBudgetUsageChart: function(budgetIndex) {
+		var self = this;
+		budgetUsageCollection.reset();
+		totalBudgetCollection.reset();
+		var params = {
+			batchType: budgetCollection.at(budgetIndex).get('batchType'),
+			batchName: budgetCollection.at(budgetIndex).get('batchName'),
+			startDate: budgetCollection.at(budgetIndex).get('startDate'),
+			endDate: budgetCollection.at(budgetIndex).get('endDate')
+		};
+		var budgetAmount = budgetCollection.at(budgetIndex).get('amount');
+		(function(params) {
+			$.get(host + '/api/usage/budgetUsage', params, function(result) {
+				var total = 0;
+				for (var i in result) {
+					total += result[i].Total;
+				}
+				for (var i in result) {
+					var data = new budgetUsageModel({
+						batchName: result[i]._id,
+						usage: (result[i].Total * 100) / budgetAmount,
+						total: total
+					});
+					budgetUsageCollection.add(data);
+				}
+				var data = new totalBudgetModel({
+					usage: total / budgetAmount,
+					total: total
+				});
+				totalBudgetCollection.add(data);
+				self.set('budgetUsageDataReady', Date.now());
+			});
+		})(params);
+	},
+
+	/*
+		This save the time budget "progress bar" data into a collection. 
+		Contains the usage of the budget up-to-date. 
+	 */
+	getTimeBudgetUsageChart: function(budgetIndex) {
+		var self = this;
+		budgetUsageCollection.reset();
+		totalBudgetCollection.reset();
+		var params = {
+			batchType: timeBudgetCollection.at(budgetIndex).get('batchType'),
+			batchName: timeBudgetCollection.at(budgetIndex).get('batchName'),
+			startDate: timeBudgetCollection.at(budgetIndex).get('startDate'),
+			endDate: timeBudgetCollection.at(budgetIndex).get('endDate')
+		};
+		var budgetAmount = timeBudgetCollection.at(budgetIndex).get('timeAmount');
+		(function(params) {
+			$.get(host + '/api/usage/timeBudgetUsage', params, function(result) {
+				var total = 0;
+				for (var i in result) {
+					total += result[i].Total;
+				}
+				for (var i in result) {
+					var data = new budgetUsageModel({
+						batchName: result[i]._id,
+						usage: (result[i].Total * 100) / budgetAmount,
+						total: total
+					});
+					budgetUsageCollection.add(data);
+				}
+				var data = new totalBudgetModel({
+					usage: total / budgetAmount,
+					total: total
+				});
+				totalBudgetCollection.add(data);
+				self.set('budgetUsageDataReady', Date.now());
+			});
+		})(params);
+	},
+
+	/*
+		
+	 */
+	getUserCostBudget: function(budgetIndex, user) {
+		var self = this;
+		userBudgetCostCollection.reset();
+		var params = {
+			userName: user,
+			batchName: budgetCollection.at(budgetIndex).get('batchName'),
+			startDate: budgetCollection.at(budgetIndex).get('startDate'),
+			endDate: budgetCollection.at(budgetIndex).get('endDate')
+		};
+		//add endDate into collection
+		(function(params) {
+			$.get(host + '/api/usage/userBudgetCost', params, function(result) {
+				for (var i in result) {
+
+					var data = new budgetCostModel({
+						date: result[i]._id,
+						cost: Math.round(result[i].Cost * 10000) / 10000
+					});
+					userBudgetCostCollection.add(data);
+				}
+				var data = new budgetCostModel({
+					date: budgetCollection.at(budgetIndex).get('endDate'),
+					cost: 0
+				});
+				userBudgetCostCollection.add(data);
+				self.set('userBudgetCostDataReady', Date.now());
+			});
+		})(params);
+	},
+
+	/*
+		Service chart function for user TIME budgets
+	 */
+	getUserTimeCostBudget: function(budgetIndex, user) {
+		var self = this;
+		userBudgetCostCollection.reset();
+		var params = {
+			userName: user,
+			batchName: timeBudgetCollection.at(budgetIndex).get('batchName'),
+			startDate: timeBudgetCollection.at(budgetIndex).get('startDate'),
+			endDate: timeBudgetCollection.at(budgetIndex).get('endDate')
+		};
+		//add endDate into collection
+		(function(params) {
+			$.get(host + '/api/usage/userTimeBudgetCost', params, function(result) {
+				for (var i in result) {
+
+					var data = new budgetCostModel({
+						date: result[i]._id,
+						cost: Math.round(result[i].Cost * 10000) / 10000
+					});
+					userBudgetCostCollection.add(data);
+				}
+				var data = new budgetCostModel({
+					date: timeBudgetCollection.at(budgetIndex).get('endDate'),
+					cost: 0
+				});
+				userBudgetCostCollection.add(data);
+				self.set('userBudgetCostDataReady', Date.now());
+			});
+		})(params);
+	},
+	
+	/*
+		Service chart function for group COST budgets
+	 */
+	getGroupServiceUsageChart: function(budgetIndex) {
+		var self = this;
+		serviceCollection.reset();
+		var params = {
+			batchName: budgetCollection.at(budgetIndex).get('batchName'),
+			startDate: budgetCollection.at(budgetIndex).get('startDate'),
+			endDate: budgetCollection.at(budgetIndex).get('endDate')
+		};
+		(function(params) {
+			$.get(host + '/api/usage/groupServiceUsage', params, function(result) {
+				var total = 0;
+				for (var i in result) {
+					total += result[i].total;
+				}
+				for (var i in result) {
+					result[i]['percentage'] = (result[i].total / total) * 100;
+					for (var j in result[i].operation) {
+						result[i].operation[j]['percentage'] = (result[i].operation[j].total / total) * 100;
+					}
+				}
+				var data = new serviceModel({
+					batchName: params.batchName,
+					services: result
+				});
+				serviceCollection.add(data);
+				self.set('serviceDataReady', Date.now());
+			});
+		})(params);
+	},
+
+	/*
+		Service chart function for user COST budgets 
+	 */
+	getUserServiceUsageChart: function(budgetIndex) {
+		var self = this;
+		serviceCollection.reset();
+		var params = {
+			batchName: budgetCollection.at(budgetIndex).get('batchName'),
+			startDate: budgetCollection.at(budgetIndex).get('startDate'),
+			endDate: budgetCollection.at(budgetIndex).get('endDate')
+		};
+		(function(params) {
+			$.get(host + '/api/usage/userServiceUsage', params, function(result) {
+				var total = 0;
+				for (var i in result) {
+					total += result[i].total;
+				}
+				for (var i in result) {
+					result[i]['percentage'] = (result[i].total / total) * 100;
+					for (var j in result[i].operation) {
+						result[i].operation[j]['percentage'] = (result[i].operation[j].total / total) * 100;
+					}
+				}
+				var data = new serviceModel({
+					batchName: params.batchName,
+					services: result
+				});
+				serviceCollection.add(data);
+				self.set('serviceDataReady', Date.now());
+			});
+		})(params);
+	},
+
+	
+	//	Service chart function for user COST budgets
+	 
+	getUserServiceUsageChart: function(budgetIndex) {
+		var self = this;
+		groupUserServiceCollection.reset();
+		var params = {
+			userName: budgetCollection.at(budgetIndex).get('batchName'),
+			startDate: budgetCollection.at(budgetIndex).get('startDate'),
+			endDate: budgetCollection.at(budgetIndex).get('endDate'),
+		};
+
+		(function(params) {
+			$.get(host + '/api/usage/userService', params, function(result) {
+				var total = 0;
+				for (var i in result) {
+					total += result[i].total;
+				}
+				for (var i in result) {
+					result[i]['percentage'] = (result[i].total / total) * 100;
+					for (var j in result[i].resourceId) {
+						result[i].resourceId[j]['percentage'] = (result[i].resourceId[j].total / total) * 100;
+					}
+				}
+				var data = new serviceModel({
+					batchName: params.userName,
+					services: result
+				});
+				groupUserServiceCollection.add(data);
+				self.set('groupUserServiceDataReady', Date.now());
+			});
+		})(params);
+	},
+
+	getGroupUserServiceUsageChart: function(user, budgetIndex) {
+		var self = this;
+		groupUserServiceCollection.reset();
+		var params = {
+			userName: user,
+			groupName: budgetCollection.at(budgetIndex).get('batchName'),
+			startDate: budgetCollection.at(budgetIndex).get('startDate'),
+			endDate: budgetCollection.at(budgetIndex).get('endDate'),
+		};
+
+		(function(params) {
+			$.get(host + '/api/usage/groupUserService', params, function(result) {
+				var total = 0;
+				for (var i in result) {
+					total += result[i].total;
+				}
+				for (var i in result) {
+					result[i]['percentage'] = (result[i].total / total) * 100;
+					for (var j in result[i].resourceId) {
+						result[i].resourceId[j]['percentage'] = (result[i].resourceId[j].total / total) * 100;
+					}
+				}
+				var data = new serviceModel({
+					batchName: params.userName,
+					services: result
+				});
+				groupUserServiceCollection.add(data);
+				self.set('groupUserServiceDataReady', Date.now());
+			});
+		})(params);
+	},
+
+	/*
+		Service chart function for group TIME budgets
+	 */
+	getTimeGroupUserServiceUsageChart: function(user, budgetIndex) {
+		var self = this;
+		groupUserServiceCollection.reset();
+		var params = {
+			userName: user,
+			groupName: timeBudgetCollection.at(budgetIndex).get('batchName'),
+			startDate: timeBudgetCollection.at(budgetIndex).get('startDate'),
+			endDate: timeBudgetCollection.at(budgetIndex).get('endDate'),
+		};
+		(function(params) {
+			$.get(host + '/api/usage/groupUserTimeService', params, function(result) {
+				var total = 0;
+				for (var i in result) {
+					total += result[i].total;
+				}
+				for (var i in result) {
+					result[i]['percentage'] = (result[i].total / total) * 100;
+					for (var j in result[i].resourceId) {
+						result[i].resourceId[j]['percentage'] = (result[i].resourceId[j].total / total) * 100;
+					}
+				}
+				var data = new serviceModel({
+					batchName: params.userName,
+					services: result
+				});
+				groupUserServiceCollection.add(data);
+				self.set('groupUserServiceDataReady', Date.now());
+			});
+		})(params);
+	},
+
+
+	/*
+		Service chart function for user TIME budgets
+	 */
+	getTimeUserServiceUsageChart: function(budgetIndex) {
+		var self = this;
+		groupUserServiceCollection.reset();
+		var params = {
+			userName: timeBudgetCollection.at(budgetIndex).get('batchName'),
+			startDate: timeBudgetCollection.at(budgetIndex).get('startDate'),
+			endDate: timeBudgetCollection.at(budgetIndex).get('endDate'),
+		};
+
+		(function(params) {
+			$.get(host + '/api/usage/timeUserService', params, function(result) {
+				var total = 0;
+				for (var i in result) {
+					total += result[i].total;
+				}
+				for (var i in result) {
+					result[i]['percentage'] = (result[i].total / total) * 100;
+					for (var j in result[i].resourceId) {
+						result[i].resourceId[j]['percentage'] = (result[i].resourceId[j].total / total) * 100;
+					}
+				}
+				var data = new serviceModel({
+					batchName: params.userName,
+					services: result
+				});
+				groupUserServiceCollection.add(data);
+				self.set('groupUserServiceDataReady', Date.now());
+			});
+		})(params);
+	},
+
+/*
+	Ajax requestor functions below
+ */
+	groups_result: function() {
+		var self = this;
+		return $.ajax({
+			type: 'GET',
+			data: self.data,
+			contentType: 'plain/text',
+			url: host + '/api/usage/groups',
+			success: function(data) {
+				result = data;
+			}
+		});
+	},
+
+	users_result: function() {
+		var self = this;
+		return $.ajax({
+			type: 'GET',
+			data: self.data,
+			contentType: 'application/json',
+			url: host + '/api/usage/users',
+			success: function(data) {
+				result = data;
+			}
+		});
+	},
+	list_users: function() {
+		var result;
+		var self = this;
+		return $.ajax({
+			type: 'GET',
+			data: self.data,
+			contentType: 'application/json',
+			url: host + '/getUsers',
+			success: function(data) {
+				result = data;
+			}
+		})
+	},
+
+	budget_result: function() {
+		var self = this;
+		return $.ajax({
+			type: 'GET',
+			data: self.data,
+			contentType: 'plain/text',
+			url: host + '/api/usage/budget',
+			success: function(data) {
+				result = data;
+			}
+		});
+	},
+
+	time_budget_result: function() {
+		var self = this;
+		return $.ajax({
+			type: 'GET',
+			data: self.data,
+			contentType: 'plain/text',
+			url: host + '/api/usage/timeBudget',
+			success: function(data) {
+				result = data;
+			}
 		});
 	},
 
@@ -289,380 +748,6 @@ var UsageMonitorModel = Backbone.Model.extend({
 		});
 	},
 
-	getBudgetCostChart: function(budgetIndex) {
-		var self = this;
-		budgetCostCollection.reset();
-		var params = {
-			batchType: budgetCollection.at(budgetIndex).get('batchType'),
-			batchName: budgetCollection.at(budgetIndex).get('batchName'),
-			startDate: budgetCollection.at(budgetIndex).get('startDate'),
-			endDate: budgetCollection.at(budgetIndex).get('endDate')
-		};
-		(function(params) {
-			$.get(host + '/api/usage/budgetCost', params, function(result) {
-				for (var i in result) {
-					var data = new budgetCostModel({
-						date: result[i]._id,
-						cost: Math.round(result[i].Cost * 10000) / 10000
-					});
-					budgetCostCollection.add(data);
-				}
-				//add endDate into collection
-				var data = new budgetCostModel({
-					date: budgetCollection.at(budgetIndex).get('endDate'),
-					cost: 0
-				});
-				budgetCostCollection.add(data);
-				self.set('budgetCostDataReady', Date.now());
-			});
-		})(params);
-	},
-
-	getTimeBudgetCostChart: function(budgetIndex) {
-		var self = this;
-		budgetCostCollection.reset();
-		var params = {
-			batchType: timeBudgetCollection.at(budgetIndex).get('batchType'),
-			batchName: timeBudgetCollection.at(budgetIndex).get('batchName'),
-			startDate: timeBudgetCollection.at(budgetIndex).get('startDate'),
-			endDate: timeBudgetCollection.at(budgetIndex).get('endDate')
-		};
-		(function(params) {
-			$.get(host + '/api/usage/timeBudgetCost', params, function(result) {
-				console.log(result)
-				for (var i in result) {
-					var data = new budgetCostModel({
-						date: result[i]._id,
-						cost: Math.round(result[i].Cost * 10000) / 10000
-					});
-					budgetCostCollection.add(data);
-				}
-				//add endDate into collection
-				var data = new budgetCostModel({
-					date: timeBudgetCollection.at(budgetIndex).get('endDate'),
-					cost: 0
-				});
-				budgetCostCollection.add(data);
-				self.set('budgetCostDataReady', Date.now());
-			});
-		})(params);
-	},
-
-	getBudgetUsageChart: function(budgetIndex) {
-		var self = this;
-		budgetUsageCollection.reset();
-		totalBudgetCollection.reset();
-		var params = {
-			batchType: budgetCollection.at(budgetIndex).get('batchType'),
-			batchName: budgetCollection.at(budgetIndex).get('batchName'),
-			startDate: budgetCollection.at(budgetIndex).get('startDate'),
-			endDate: budgetCollection.at(budgetIndex).get('endDate')
-		};
-		var budgetAmount = budgetCollection.at(budgetIndex).get('amount');
-		(function(params) {
-			$.get(host + '/api/usage/budgetUsage', params, function(result) {
-				var total = 0;
-				for (var i in result) {
-					total += result[i].Total;
-				}
-				for (var i in result) {
-					var data = new budgetUsageModel({
-						batchName: result[i]._id,
-						usage: (result[i].Total * 100) / budgetAmount,
-						total: total
-					});
-					budgetUsageCollection.add(data);
-				}
-				var data = new totalBudgetModel({
-					usage: total / budgetAmount,
-					total: total
-				});
-				totalBudgetCollection.add(data);
-				self.set('budgetUsageDataReady', Date.now());
-			});
-		})(params);
-	},
-
-	getTimeBudgetUsageChart: function(budgetIndex) {
-		var self = this;
-		budgetUsageCollection.reset();
-		totalBudgetCollection.reset();
-		var params = {
-			batchType: timeBudgetCollection.at(budgetIndex).get('batchType'),
-			batchName: timeBudgetCollection.at(budgetIndex).get('batchName'),
-			startDate: timeBudgetCollection.at(budgetIndex).get('startDate'),
-			endDate: timeBudgetCollection.at(budgetIndex).get('endDate')
-		};
-		var budgetAmount = timeBudgetCollection.at(budgetIndex).get('timeAmount');
-		(function(params) {
-			$.get(host + '/api/usage/timeBudgetUsage', params, function(result) {
-				var total = 0;
-				for (var i in result) {
-					total += result[i].Total;
-				}
-				for (var i in result) {
-					var data = new budgetUsageModel({
-						batchName: result[i]._id,
-						usage: (result[i].Total * 100) / budgetAmount,
-						total: total
-					});
-					budgetUsageCollection.add(data);
-				}
-				var data = new totalBudgetModel({
-					usage: total / budgetAmount,
-					total: total
-				});
-				totalBudgetCollection.add(data);
-				self.set('budgetUsageDataReady', Date.now());
-			});
-		})(params);
-	},
-
-	getUserCostBudget: function(budgetIndex, user) {
-		var self = this;
-		userBudgetCostCollection.reset();
-		var params = {
-			userName: user,
-			batchName: budgetCollection.at(budgetIndex).get('batchName'),
-			startDate: budgetCollection.at(budgetIndex).get('startDate'),
-			endDate: budgetCollection.at(budgetIndex).get('endDate')
-		};
-		//add endDate into collection
-		(function(params) {
-			$.get(host + '/api/usage/userBudgetCost', params, function(result) {
-				for (var i in result) {
-
-					var data = new budgetCostModel({
-						date: result[i]._id,
-						cost: Math.round(result[i].Cost * 10000) / 10000
-					});
-					userBudgetCostCollection.add(data);
-				}
-				var data = new budgetCostModel({
-					date: budgetCollection.at(budgetIndex).get('endDate'),
-					cost: 0
-				});
-				userBudgetCostCollection.add(data);
-				self.set('userBudgetCostDataReady', Date.now());
-			});
-		})(params);
-	},
-
-	getUserTimeCostBudget: function(budgetIndex, user) {
-		var self = this;
-		userBudgetCostCollection.reset();
-		var params = {
-			userName: user,
-			batchName: timeBudgetCollection.at(budgetIndex).get('batchName'),
-			startDate: timeBudgetCollection.at(budgetIndex).get('startDate'),
-			endDate: timeBudgetCollection.at(budgetIndex).get('endDate')
-		};
-		//add endDate into collection
-		(function(params) {
-			$.get(host + '/api/usage/userTimeBudgetCost', params, function(result) {
-				for (var i in result) {
-
-					var data = new budgetCostModel({
-						date: result[i]._id,
-						cost: Math.round(result[i].Cost * 10000) / 10000
-					});
-					userBudgetCostCollection.add(data);
-				}
-				var data = new budgetCostModel({
-					date: timeBudgetCollection.at(budgetIndex).get('endDate'),
-					cost: 0
-				});
-				userBudgetCostCollection.add(data);
-				self.set('userBudgetCostDataReady', Date.now());
-			});
-		})(params);
-	},
-
-	getGroupServiceUsageChart: function(budgetIndex) {
-		var self = this;
-		serviceCollection.reset();
-		var params = {
-			batchName: budgetCollection.at(budgetIndex).get('batchName'),
-			startDate: budgetCollection.at(budgetIndex).get('startDate'),
-			endDate: budgetCollection.at(budgetIndex).get('endDate')
-		};
-		(function(params) {
-			$.get(host + '/api/usage/groupServiceUsage', params, function(result) {
-				var total = 0;
-				for (var i in result) {
-					total += result[i].total;
-				}
-				for (var i in result) {
-					result[i]['percentage'] = (result[i].total / total) * 100;
-					for (var j in result[i].operation) {
-						result[i].operation[j]['percentage'] = (result[i].operation[j].total / total) * 100;
-					}
-				}
-				var data = new serviceModel({
-					batchName: params.batchName,
-					services: result
-				});
-				serviceCollection.add(data);
-				self.set('serviceDataReady', Date.now());
-			});
-		})(params);
-	},
-
-	getUserServiceUsageChart: function(budgetIndex) {
-		var self = this;
-		serviceCollection.reset();
-		var params = {
-			batchName: budgetCollection.at(budgetIndex).get('batchName'),
-			startDate: budgetCollection.at(budgetIndex).get('startDate'),
-			endDate: budgetCollection.at(budgetIndex).get('endDate')
-		};
-		(function(params) {
-			$.get(host + '/api/usage/userServiceUsage', params, function(result) {
-				var total = 0;
-				for (var i in result) {
-					total += result[i].total;
-				}
-				for (var i in result) {
-					result[i]['percentage'] = (result[i].total / total) * 100;
-					for (var j in result[i].operation) {
-						result[i].operation[j]['percentage'] = (result[i].operation[j].total / total) * 100;
-					}
-				}
-				var data = new serviceModel({
-					batchName: params.batchName,
-					services: result
-				});
-				serviceCollection.add(data);
-				self.set('serviceDataReady', Date.now());
-			});
-		})(params);
-	},
-
-	getGroupUserServiceUsageChart: function(user, budgetIndex) {
-		var self = this;
-		groupUserServiceCollection.reset();
-		var params = {
-			userName: user,
-			groupName: budgetCollection.at(budgetIndex).get('batchName'),
-			startDate: budgetCollection.at(budgetIndex).get('startDate'),
-			endDate: budgetCollection.at(budgetIndex).get('endDate'),
-		};
-
-		(function(params) {
-			$.get(host + '/api/usage/groupUserService', params, function(result) {
-				var total = 0;
-				for (var i in result) {
-					total += result[i].total;
-				}
-				for (var i in result) {
-					result[i]['percentage'] = (result[i].total / total) * 100;
-					for (var j in result[i].resourceId) {
-						result[i].resourceId[j]['percentage'] = (result[i].resourceId[j].total / total) * 100;
-					}
-				}
-				var data = new serviceModel({
-					batchName: params.userName,
-					services: result
-				});
-				groupUserServiceCollection.add(data);
-				self.set('groupUserServiceDataReady', Date.now());
-			});
-		})(params);
-	},
-
-	getTimeGroupUserServiceUsageChart: function(user, budgetIndex) {
-		var self = this;
-		groupUserServiceCollection.reset();
-		var params = {
-			userName: user,
-			groupName: timeBudgetCollection.at(budgetIndex).get('batchName'),
-			startDate: timeBudgetCollection.at(budgetIndex).get('startDate'),
-			endDate: timeBudgetCollection.at(budgetIndex).get('endDate'),
-		};
-		(function(params) {
-			$.get(host + '/api/usage/groupUserTimeService', params, function(result) {
-				var total = 0;
-				for (var i in result) {
-					total += result[i].total;
-				}
-				for (var i in result) {
-					result[i]['percentage'] = (result[i].total / total) * 100;
-					for (var j in result[i].resourceId) {
-						result[i].resourceId[j]['percentage'] = (result[i].resourceId[j].total / total) * 100;
-					}
-				}
-				var data = new serviceModel({
-					batchName: params.userName,
-					services: result
-				});
-				groupUserServiceCollection.add(data);
-				self.set('groupUserServiceDataReady', Date.now());
-			});
-		})(params);
-	},
-
-	getUserServiceUsageChart: function(budgetIndex) {
-		var self = this;
-		groupUserServiceCollection.reset();
-		var params = {
-			userName: budgetCollection.at(budgetIndex).get('batchName'),
-			startDate: budgetCollection.at(budgetIndex).get('startDate'),
-			endDate: budgetCollection.at(budgetIndex).get('endDate'),
-		};
-
-		(function(params) {
-			$.get(host + '/api/usage/userService', params, function(result) {
-				var total = 0;
-				for (var i in result) {
-					total += result[i].total;
-				}
-				for (var i in result) {
-					result[i]['percentage'] = (result[i].total / total) * 100;
-					for (var j in result[i].resourceId) {
-						result[i].resourceId[j]['percentage'] = (result[i].resourceId[j].total / total) * 100;
-					}
-				}
-				var data = new serviceModel({
-					batchName: params.userName,
-					services: result
-				});
-				groupUserServiceCollection.add(data);
-				self.set('groupUserServiceDataReady', Date.now());
-			});
-		})(params);
-	},
-
-	getTimeUserServiceUsageChart: function(budgetIndex) {
-		var self = this;
-		groupUserServiceCollection.reset();
-		var params = {
-			userName: timeBudgetCollection.at(budgetIndex).get('batchName'),
-			startDate: timeBudgetCollection.at(budgetIndex).get('startDate'),
-			endDate: timeBudgetCollection.at(budgetIndex).get('endDate'),
-		};
-
-		(function(params) {
-			$.get(host + '/api/usage/timeUserService', params, function(result) {
-				var total = 0;
-				for (var i in result) {
-					total += result[i].total;
-				}
-				for (var i in result) {
-					result[i]['percentage'] = (result[i].total / total) * 100;
-					for (var j in result[i].resourceId) {
-						result[i].resourceId[j]['percentage'] = (result[i].resourceId[j].total / total) * 100;
-					}
-				}
-				var data = new serviceModel({
-					batchName: params.userName,
-					services: result
-				});
-				groupUserServiceCollection.add(data);
-				self.set('groupUserServiceDataReady', Date.now());
-			});
-		})(params);
-	},
-
 	setBudgetIndex: function(budgetIndex) {
 		budgetIndexCollection.reset();
 		var data = new budgetIndexModel({
@@ -671,7 +756,12 @@ var UsageMonitorModel = Backbone.Model.extend({
 		budgetIndexCollection.add(data);
 	}
 });
+/* End of AJAX functions */
 
+
+/*
+	Collection models to keep order are below
+ */
 var iamGroupsModel = Backbone.Model.extend({
 	defaults: {
 		GroupName: null,
@@ -819,7 +909,12 @@ var TotalBudgetCollection = Backbone.Collection.extend({
 		this.on('add', function(model) {});
 	}
 })
+/* End of collection models */ 
 
+
+/*
+ 	Collection initializations
+ */
 var totalBudgetCollection = new TotalBudgetCollection();
 var budgetIndexCollection = new BudgetIndexCollection();
 var serviceCollection = new ServiceCollection();

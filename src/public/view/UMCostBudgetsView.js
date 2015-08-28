@@ -7,13 +7,17 @@ var UMCostBudgetsView = Backbone.View.extend({
             this.model = new UsageMonitorModel();
         }
         this.editHTML = '<div class="insetting"> <div class="incontainer"><label class="budget-label">Name <i class="fa fa-question-circle" id="BudgetName" data-toggle="tooltip" title="Unique name assigned to this Cost Budget"></i></label><input type="text" id="budgetname" placeholder="e.g., "Monthly EC2 Budget"></div><div class="warning" id="budgetnamewarning">Invalid budget Name.</div><div class="warning" id="oldbudgetnamewarning">Budget Name already in use.</div><div class="warning" id="budgetnamerequest">Please enter a budget name.</div></div><div class="insetting"> <div class="incontainer"><label class="budget-label">Track costs associated to <i class="fa fa-question-circle" id="AssociatedTo" data-toggle="tooltip" title="User or group this budget applies to"></i></label><select class="costfilter"><option value="" disabled selected>Select</option><option value="user">User</option><option value="group">Groups</option></select></div></div><div class="sub-insetting"> <div class="sub-incontainer"><div class="" id="filter-details"><select class="sub-costfilter"><option value="" disabled selected>Select</option>{{#each col}}<option value={{this.name}}></option>{{/each}}</select></div></div><div class="warning" id="batchtyperequest">Please select a Batch Type.</div><div class="warning" id="batchnamerequest">Please select a Batch Name.</div></div><div class="insetting"> <div class="incontainer"><label class="budget-label">Start date <i class="fa fa-question-circle" id="StartDate" data-toggle="tooltip" title="Date when budget begins"></i></label><input type="text" id="startdate" placeholder="mm/dd/yyyy"><div class="warning" id="startdaterequest">Please select a start date.</div></div></div><div class="insetting"> <div class="incontainer"><label class="budget-label">End date <i class="fa fa-question-circle" id="EndDate" data-toggle="tooltip" title="Date of termination for budget"></i></label><input type="text" id="enddate" placeholder="mm/dd/yyyy"><div class="warning" id="enddatewarning">Invalid dates selected.</div><div class="warning" id="enddaterequest">Please select an end.</div></div></div><div class="insetting"> <div class="incontainer"><label class="budget-label">Cost Amount <i class="fa fa-question-circle" id="CostAmount" data-toggle="tooltip" title="Dollar amount the associated user/group is allocated between start and end dates"></i></label><input type="text" id="amount" placeholder="USD"><div class="warning" id="amountwarning">Invalid amount.</div><div class="warning" id="amountrequest">Please enter an amount.</div></div></div><div class="insetting"> <div class="incontainer"><label class="budget-label">Stop resource(s) when quota reached <i class="fa fa-question-circle" id="Stop" data-toggle="tooltip" title="Stop instance when budget is exceeded?"></i></label><div class="onoffswitch"><input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked><label class="onoffswitch-label" for="myonoffswitch"><span class="onoffswitch-inner"></span><span class="onoffswitch-switch"></span></label></div></div></div>';
-        // var users = this.model.users_result(function() {
-        // });
+        //get data to populate the table
         this.model.getBudgets();
+        //?
         this.operationsActivity = new UMOperationsView();
+        //progress bar
         this.usageActivity = new UMUsageView();
+        //line chart
         this.costActivity = new UMCostView();
+        //donut chart
         this.groupUserServiceView = new UMGroupUserServiceView();
+        //edit view
         this.modal = new BaseModalView();
 
         this.data = {
@@ -41,7 +45,7 @@ var UMCostBudgetsView = Backbone.View.extend({
     },
 
     updateUserViews: function(rowIndex) {
-        this.operationsActivity.model.getUserServiceUsageChart(rowIndex);
+        // this.operationsActivity.model.getUserServiceUsageChart(rowIndex);
         this.usageActivity.model.getBudgetUsageChart(rowIndex);
         this.groupUserServiceView.setUser(budgetCollection.at(rowIndex).get('batchName'));
         this.groupUserServiceView.model.getUserServiceUsageChart(rowIndex);
@@ -49,8 +53,8 @@ var UMCostBudgetsView = Backbone.View.extend({
     },
 
     updateGroupViews: function(rowIndex) {
-        this.operationsActivity.model.getGroupServiceUsageChart(rowIndex);
         this.usageActivity.model.getBudgetUsageChart(rowIndex);
+        // this.operationsActivity.model.getGroupServiceUsageChart(rowIndex);
         this.costActivity.model.getBudgetCostChart(rowIndex);
     },
 
