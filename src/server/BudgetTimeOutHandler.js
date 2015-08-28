@@ -241,7 +241,6 @@ var getBudgetTotalCost = function(_batchtype, _batchname, _startdate, _enddate, 
     var batchName = _batchname;
     var startDate = _startdate;
     var endDate = _enddate;
-
     if (batchType == 'user') {
         mongoose.model('Billings').aggregate([{
             $match: {
@@ -277,6 +276,7 @@ var getBudgetTotalCost = function(_batchtype, _batchname, _startdate, _enddate, 
                 _id: 1
             }
         }]).exec(function(e, d) {
+            console.log('getBudgetTotalCost User',d);
             callback(d);
         });
     } else { // If group instead
