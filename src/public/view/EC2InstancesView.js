@@ -17,6 +17,11 @@ var EC2InstancesView = Backbone.View.extend({
     },
 
     updateViews: function(selected) {
+        this.$('#billingcontainer').empty();
+        this.$('#ec2operationscontainer').empty();
+        this.$('#ec2operationscontainer').empty();
+        this.$('#networkContainer').empty();
+        this.$('#cpuContainer').empty();
         this.billingActivity.model.calcTotalCost(selected);
         this.metricsActivity.model.getEC2Metrics(selected);
         this.operationsActivity.model.getEC2Operations(selected);
@@ -45,6 +50,12 @@ var EC2InstancesView = Backbone.View.extend({
                 if (state == 'running') {
                     self.model.setEC2SelectedInstance(rowIndex);
                     self.updateViews(self.instance);
+                } else {
+                    self.$('#billingcontainer').empty();
+                    self.$('#ec2operationscontainer').empty();
+                    self.$('#ec2operationscontainer').empty();
+                    self.$('#networkContainer').empty();
+                    self.$('#cpuContainer').empty();
                 }
             }
         });

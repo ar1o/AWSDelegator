@@ -234,6 +234,10 @@ th {
 .dataTables_paginate {
   font-size: 11px;
 }
+.title {
+  margin-right: 20px;
+  margin-left: 20px;
+}
 th,
 td {
   overflow: hidden;

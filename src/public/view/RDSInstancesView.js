@@ -14,6 +14,11 @@ var RDSInstancesView = Backbone.View.extend({
     },
 
     updateViews: function(selected) {
+        this.$('#dbConnectionsContainer').empty();
+        this.$('#queueDepthContainer').empty();
+        this.$('#rdsCpuContainer').empty();
+        this.$('#readWriteIopsContainer').empty();
+        this.$('.RDSBillingView').empty();
         this.rdsBillingActivity.model.getRDSBilling(selected);
         this.rdsMetricsActivity.model.getRDSMetrics(selected);
         this.rdsOperationsActivity.model.getRDSOperations(selected);
@@ -36,14 +41,20 @@ var RDSInstancesView = Backbone.View.extend({
 
         this.$el.on('click', '#RDSInstanceTable tr', function() {
             var rowIndex = this.rowIndex - 1;
-                if (self.instance != rdsInstancesCollection.at(rowIndex).get('dbName')) {
-                    self.instance = rdsInstancesCollection.at(rowIndex).get('dbName');
-                    var state = rdsInstancesCollection.at(rowIndex).get('dbStatus');
-                    if (state == 'available') {
-                        self.model.setRDSSelectedInstance(this.rowIndex - 1);
-                        self.updateViews(self.instance);
-                    }
+            if (self.instance != rdsInstancesCollection.at(rowIndex).get('dbName')) {
+                self.instance = rdsInstancesCollection.at(rowIndex).get('dbName');
+                var state = rdsInstancesCollection.at(rowIndex).get('dbStatus');
+                if (state == 'available') {
+                    self.model.setRDSSelectedInstance(this.rowIndex - 1);
+                    self.updateViews(self.instance);
+                } else {
+                    this.$('#dbConnectionsContainer').empty();
+                    this.$('#queueDepthContainer').empty();
+                    this.$('#rdsCpuContainer').empty();
+                    this.$('#readWriteIopsContainer').empty();
+                    this.$('.RDSBillingView').empty();
                 }
+            }
         });
 
 
