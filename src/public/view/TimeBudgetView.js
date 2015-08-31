@@ -205,8 +205,8 @@ var TimeBudgetView = Backbone.View.extend({
 
         this.$el.on('focusout', '#time-udecay', function(e) {
             if (/\d/.test($('#time-udecay').val()) && ($('#time-udecay').val())>0) {
-                this.data.uDecay = parseInt($('#time-udecay').val());
-                self.isValid.uDecay = true;
+                this.data.udecay = parseInt($('#time-udecay').val());
+                self.isValid.udecay = true;
                 self.$('#time-udecaywarning').hide();
                 self.$('#time-udecayrequest').hide();
             } else {
@@ -216,8 +216,8 @@ var TimeBudgetView = Backbone.View.extend({
 
         this.$el.on('focusout', '#time-odecay', function(e) {
             if (/\d/.test($('#time-odecay').val()) && ($('#time-odecay').val())>0) {
-                this.data.oDecay = parseInt($('#time-odecay').val());
-                self.isValid.oDecay = true;
+                this.data.odecay = parseInt($('#time-odecay').val());
+                self.isValid.odecay = true;
                 self.$('#time-odecaywarning').hide();
                 self.$('#time-odecayrequest').hide();
             } else {

@@ -36,7 +36,6 @@ var RDSInstancesView = Backbone.View.extend({
 
         this.$el.on('click', '#RDSInstanceTable tr', function() {
             var rowIndex = this.rowIndex - 1;
-            setTimeout(function() {
                 if (self.instance != rdsInstancesCollection.at(rowIndex).get('dbName')) {
                     self.instance = rdsInstancesCollection.at(rowIndex).get('dbName');
                     var state = rdsInstancesCollection.at(rowIndex).get('dbStatus');
@@ -45,7 +44,6 @@ var RDSInstancesView = Backbone.View.extend({
                         self.updateViews(self.instance);
                     }
                 }
-            }, 3000);
         });
 
 

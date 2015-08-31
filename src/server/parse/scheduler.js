@@ -26,11 +26,11 @@ exports.s3Connect = function(_callback) {
     // Calls S3Connect every hour
     s3.s3Watch();
     // Connect to S3 bucket and grab latest hourly billing information.
-    // parseBills();
+    parseBills();
     // Security credentials by AWS
     AWS.config.credentials = awsCredentials.default;
     // EC2, RDS and IAM stuff
-    // parseAWSServices();
+    parseAWSServices();
     // Check if quota for budgets costs has been reached.
     timeOutHandler.checkBudgets();
     // Check for quota on GRLS budgets has been reached.
