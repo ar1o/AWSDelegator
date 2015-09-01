@@ -38,8 +38,8 @@ exports.updateNotifications = function(req, res) {
     mongoose.model('Notifications').update(conditions, update, options,callback);
 
     function callback(err, numAffected) {
-        console.log(err);
-        console.log(numAffected)
+        if(err) console.log(err);
+        console.log("updateNotifications",numAffected)
     };
      res.send('Notification changed');
 }

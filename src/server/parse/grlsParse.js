@@ -22,7 +22,7 @@ var getTimeAmount = function() {
 		mongoose.model('timeBudgets').find({
 			State: 'valid'
 		}).exec(function(err, timeBudgets) {
-			console.log("getTimeAmount response", timeBudgets);
+			// console.log("getTimeAmount response", timeBudgets);
 			if (err) throw err;
 			//keep an index of the timebudgets iterated through
 			var index1 = 0;
@@ -88,14 +88,14 @@ var updateLifetime = function(maxBudgetLifetimes) {
 					}
 				}
 			}]).exec(function(err, budgets) {
-				console.log('budgets', budgets)
+				// console.log('budgets', budgets)
 				var index1 = 0;
 				//controller function that calls the iterator to loop through something
 				var timeBudgetsController = function() {
 					timeBudgetsIterator(function() {
 						index1++;
 						//Check if the index is still smaller than the number of timeBudgets
-						console.log('index1', index1);
+						// console.log('index1', index1);
 						if (index1 < budgets.length) {
 							timeBudgetsController();
 						} else {
@@ -110,11 +110,11 @@ var updateLifetime = function(maxBudgetLifetimes) {
 
 				var timeBudgetsIterator = function(callback1) {
 					var timeBudgetName = budgets[index1].TimeBudgetName;
-					console.log("timeBudgetName",timeBudgetName)
+					// console.log("timeBudgetName",timeBudgetName)
 					mongoose.model('grlsInstances').find({
 						timeBudgetName: timeBudgetName
 					}).exec(function(e, grlsInstances) {
-						console.log('grlsInstances', grlsInstances);
+						// console.log('grlsInstances', grlsInstances);
 						var index2 = 0;
 						var grlsInstancesController = function() {
 							grlsInstancesIterator(function() {
@@ -165,7 +165,7 @@ var updateLifetime = function(maxBudgetLifetimes) {
 											Unit: 'Count'
 										};
 										cloudwatch.getMetricStatistics(params, function(err, cloudwatchData) {
-											console.log('cloudwatchdata', cloudwatchData);
+											// console.log('cloudwatchdata', cloudwatchData);
 											if (cloudwatchData.Datapoints[1] == undefined || cloudwatchData.Datapoints[0] == undefined) {
 												//do nothing
 												console.log("do nothing");

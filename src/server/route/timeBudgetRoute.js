@@ -50,7 +50,7 @@ exports.timeBudgetCost = function(req, res) {
 				_id: 1
 			}
 		}]).exec(function(e, d) {
-			console.log('TIMEBUDGETCOST', d)
+			// console.log('TIMEBUDGETCOST', d)
 			res.send(d);
 		});
 	} else {
@@ -130,7 +130,7 @@ exports.timeBudgetUsage = function(req, res) {
 				}
 			}
 		}]).exec(function(e, sum) {
-			console.log('USAGE CHART LOL', sum);
+			// console.log('USAGE CHART LOL', sum);
 			res.send(sum);
 		});
 	} else {
@@ -408,7 +408,7 @@ exports.userTimeCost = function(req, res) {
 			_id: 1
 		}
 	}]).exec(function(e, d) {
-		console.log('userTimeCost',d)
+		// console.log('userTimeCost',d)
 		res.send(d);
 	});
 }

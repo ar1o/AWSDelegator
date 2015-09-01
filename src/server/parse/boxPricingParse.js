@@ -182,7 +182,7 @@ exports.getPricing = function(callback) {
                 pricing[usageTypes[index2]]=item;
                 _callback();
                 break;
-            case 10://InstanceUsage:db.t2.micro
+            case 10://RDS:StorageUsage
 
                 _callback();
                 break;

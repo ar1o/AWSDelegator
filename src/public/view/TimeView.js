@@ -3,14 +3,13 @@ var TimeView = Backbone.View.extend({
     className: 'TimeView',
 
     initialize: function(options) {
-        console.log("hellooo");
         if (!this.model) {
             this.model = new TimeModel();
         }
         var self = this;
         var time;
         this.model.getLatestTime(function(value){
-            console.log(value);
+            // console.log(value);
             self.time = value;
             self.render();
         });

@@ -29,7 +29,7 @@ exports.calcFreeTierCost = function(req, res) {
             mongoose.model('Billings').update(conditions, update, options, callback);
 
             function callback(err, numAffected) {
-                console.log(numAffected)
+                console.log("calcFreeTierCost",numAffected)
             };
         }
         res.send(d);
@@ -123,7 +123,7 @@ exports.instanceCostAll = function(req, res) {
                 VolumeId: 1
             }
         }]).exec(function(err, result) {
-            console.log("result",result);
+            // console.log("result",result);
             // console.log(result[0].VolumeId[0]);
             // console.log(instanceId);
 

@@ -1,6 +1,5 @@
 var TimeModel = Backbone.Model.extend({
 	initialize: function() {
-		console.log("hello");
 		var self = this;
 		// this.change('metricsDataReady');
 	},
