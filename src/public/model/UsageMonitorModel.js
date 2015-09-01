@@ -112,6 +112,37 @@ var UsageMonitorModel = Backbone.Model.extend({
 			console.log('FAILED');
 		});
 	},
+	groups_queried: function() {
+		var self = this;
+		return $.ajax({
+			type: 'GET',
+			data: self.data,
+			contentType: 'application/json',
+			url: host + '/api/usage/qgroups',
+			success: function(data) {
+				result = data;
+			}
+		});
+	},
+	getActiveGroups: function() {
+		var self = this;
+		// UserCollection.reset();
+		this.groups_queried().done(function(result) {
+			console.log(result);
+			GroupCollection.reset();
+			for (var r in result) {
+				console.log(result[r]._id);
+				var data = new iamGroupsModel({
+					name: result[r]._id,
+				});
+				GroupCollection.add(data);
+
+			}
+			self.set('groupDataReady', Date.now());
+		}).success(function() {}).fail(function() {
+			console.log('FAILED');
+		});
+	},
 	/*
 		Gets the cost budget collection from database
 	 */

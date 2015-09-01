@@ -15,7 +15,6 @@ exports.timeBudgetCost = function(req, res) {
 	var batchName = req.query.batchName;
 	var startDate = req.query.startDate;
 	var endDate = req.query.endDate;
-
 	if (batchType == 'user') {
 		mongoose.model('grlsLineItems').aggregate([{
 			$match: {
@@ -93,7 +92,7 @@ exports.timeBudgetCost = function(req, res) {
 }
 
 /*
-	?????
+	USAGE CHART LOL	
  */
 exports.timeBudgetUsage = function(req, res) {
 	var batchType = req.query.batchType;
@@ -131,6 +130,7 @@ exports.timeBudgetUsage = function(req, res) {
 				}
 			}
 		}]).exec(function(e, sum) {
+			console.log('USAGE CHART LOL', sum);
 			res.send(sum);
 		});
 	} else {

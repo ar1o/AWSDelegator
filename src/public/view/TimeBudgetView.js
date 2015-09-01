@@ -87,9 +87,9 @@ var TimeBudgetView = Backbone.View.extend({
             var selected = $('.time-costfilter').val();
             $('#time-filter-details').removeClass('hidden');
             if (selected == 'group') {
-                self.model.getGroups();
+                self.model.getActiveGroups();
             } else if( selected =='user') {
-                self.model.getUsers();
+                self.model.getActiveUsers();
             }
         }.bind(this));
 

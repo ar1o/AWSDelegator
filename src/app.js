@@ -95,8 +95,9 @@ app.get('/api/usage/timeUserService', require(__dirname + '/server/route/timeBud
 app.get('/api/notifications', require(__dirname + '/server/route/notificationsRoute').notifications);
 app.get('/api/notifications/seen', require(__dirname + '/server/route/notificationsRoute').updateNotifications);
 
+//
 app.get('/api/usage/qusers', require(__dirname + '/server/route/budgetRoute').query_users);
-
+app.get('/api/usage/qgroups', require(__dirname + '/server/route/budgetRoute').query_groups);
 
 app.get('/getUsers', jsonParser, function(req, res) {
     MongoClient.connect(databaseUrl, function(err, db) {

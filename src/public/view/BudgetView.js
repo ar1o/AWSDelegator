@@ -69,7 +69,7 @@ var BudgetView = Backbone.View.extend({
             this.$('.sub-costfilter').show();
             $('#filter-details').removeClass('hidden');
             if (selected == 'group') {
-                self.model.getGroups();
+                self.model.getActiveGroups();
             } else {
                 // self.model.getUsers();
                 self.model.getActiveUsers();

@@ -138,172 +138,266 @@ exports.userCost = function(req, res) {
 	});
 }
 
-exports.getUsers = function (req, res) {
-	var result;
-    mongoose.model('ec2Instances').aggregate({
-        $project : {'_id': 0, 'Name' : 1 } 
-    }).exec(function(e, d) {
-        result.append(d);
-        mongoose.model('rdsInstance').aggregate({
-            $project : {'_id': 0, 'Name' : 1 }
-        }).exec(function(e, d) {
-            result.append(d);
-        })
-    }).exec(function(e, d) {
-    	res.send(d);
-    });
-}
+exports.getUsers = function(req, res) {
+		var result;
+		mongoose.model('ec2Instances').aggregate({
+			$project: {
+				'_id': 0,
+				'Name': 1
+			}
+		}).exec(function(e, d) {
+			result.append(d);
+			mongoose.model('rdsInstance').aggregate({
+				$project: {
+					'_id': 0,
+					'Name': 1
+				}
+			}).exec(function(e, d) {
+				result.append(d);
+			})
+		}).exec(function(e, d) {
+			res.send(d);
+		});
+	}
 
+/*
+	This query is used to find active users with instances.
+	This is for creation of cost budget drop down. 
+
+	This is such that it enables the client to only create
+	quote budget profiles on most up-to-date group/resource changes. 
+ */
 exports.query_users = function(req, res) {
 	var queried_users = [];
-    mongoose.model('iamUsers').aggregate([{
-        $project: {
-            _id: 0,
-            UserName: 1,
-            CreateDate: 1
-        }
-    }]).exec(function(e, d) {
-    	console.log('query_users',d);
-    	// res.send(d[0].UserName);
+	mongoose.model('iamUsers').aggregate([{
+		$project: {
+			_id: 0,
+			UserName: 1
+		}
+	}]).exec(function(e, d) {
+		// console.log('query_users', d);
+		// res.send(d[0].UserName);
 
-    	var index = 0;
-    	var date = new Date();
-    	date.setDate(date.getDate() - 7)
-    	        	console.log(date.toISOString());
+		var index = 0;
+		var date = new Date();
+		date.setDate(date.getDate() - 7)
+		// console.log(date.toISOString());
 
-        var budgetController = function() {
-            budgetIterator(function() {
-                index++;
-                if (index < d.length) {
-                    budgetController();
-                } else {
-                	console.log(queried_users);
-                	res.send(queried_users);
-                }
-            });
-        };
-        var budgetIterator = function(callback1) {
-        	var batchName = d[index].UserName
-        	
-        	mongoose.model('Billings').aggregate([{
-			$match: {
-				$and: [{
-					UsageStartDate: {
-						$gte: date.toISOString()
-					}
-				}, {
-				// 	UsageStartDate: {
-				// 		$lte: endDate
-				// 	}
-				// }, {
-					'user:Name': batchName
-				}, {
-					'user:Group': 'null'
-				}]
-			}
-		}, {
-			$project: {
-				_id: 0,
-				'user:Name': 1
-			}
-		}, {
-			$group: {
-				_id: '$user:Name'
-			}
-		}]).exec(function(e, d) {
-			if(d.length != 0) {
-				//add this to an array or something
-				console.log('USAGE', d);
-				queried_users.push(d[0]);
-			}
-        	callback1();
-		});
-        };
-        if(d.length != 0) {
-            budgetController();
-        }
-    });;
+		var budgetController = function() {
+			budgetIterator(function() {
+				index++;
+				if (index < d.length) {
+					budgetController();
+				} else {
+					// console.log(queried_users);
+					res.send(queried_users);
+				}
+			});
+		};
+		var budgetIterator = function(callback1) {
+			var batchName = d[index].UserName
+
+			mongoose.model('Billings').aggregate([{
+				$match: {
+					$and: [{
+						UsageStartDate: {
+							$gte: date.toISOString()
+						}
+					}, {
+						// 	UsageStartDate: {
+						// 		$lte: endDate
+						// 	}
+						// }, {
+						'user:Name': batchName
+					}, {
+						'user:Group': 'null'
+					}]
+				}
+			}, {
+				$project: {
+					_id: 0,
+					'user:Name': 1
+				}
+			}, {
+				$group: {
+					_id: '$user:Name'
+				}
+			}]).exec(function(e, d) {
+				if (d.length != 0) {
+					//add this to an array or something
+					// console.log('USAGE', d);
+					queried_users.push(d[0]);
+				}
+				callback1();
+			});
+		};
+		if (d.length != 0) {
+			budgetController();
+		}
+	});;
 }
+/*
+	This query aims to get the latest group that
+	are linked to a resource id for the past week.
+
+	This is such that it enables the client to only create
+	quote budget profiles on most up-to-date group/resource changes. 
+ */
+exports.query_groups = function(req, res) {
+	var queried_groups = [];
+	mongoose.model('iamGroups').aggregate([{
+		$project: {
+			_id: 0,
+			GroupName: 1
+		}
+
+	}]).exec(function(e, d) {
+		// console.log('query_groups', d);
+		// res.send(d[0].UserName);
+
+		var index = 0;
+		//Only query for the past 7 days. 
+		var date = new Date();
+		date.setDate(date.getDate() - 7)
+		// console.log(date.toISOString());
+
+		var budgetController = function() {
+			budgetIterator(function() {
+				index++;
+				if (index < d.length) {
+					budgetController();
+				} else {
+					// console.log(queried_groups);
+					res.send(queried_groups);
+				}
+			});
+		};
+		var budgetIterator = function(callback1) {
+			var batchName = d[index].GroupName
+
+			mongoose.model('Billings').aggregate([{
+				$match: {
+					$and: [{
+						UsageStartDate: {
+							$gte: date.toISOString()
+						}
+					}, {
+						// 	UsageStartDate: {
+						// 		$lte: endDate
+						// 	}
+						// }, {
+					// 	'user:Name': batchName
+					// }, {
+						'user:Group': batchName
+					}]
+				}
+			}, {
+				$project: {
+					_id: 0,
+					'user:Group': 1
+					// 'user:Name': 1,
+					// Cost: 1
+				}
+			}, {
+				$group: {
+					_id: '$user:Group',
+				}
+			}]).exec(function(e, d) {
+				if (d.length != 0) {
+					//add this to an array or something
+					// console.log('USAGE GROUp', d);
+					queried_groups.push(d[0]);
+				}
+				callback1();
+			});
+		};
+		if (d.length != 0) {
+			budgetController();
+		}
+	});;
+}
+
 /*
 	Query cost of user or groups (progress bar chart)
  */
 exports.usage = function(req, res) {
-	var batchType = req.query.batchType;
-	var batchName = req.query.batchName;
-	var startDate = req.query.startDate;
-	var endDate = req.query.endDate;
-	if (batchType == 'user') {
-		mongoose.model('Billings').aggregate([{
-			$match: {
-				$and: [{
-					UsageStartDate: {
-						$gte: startDate
-					}
-				}, {
-					UsageStartDate: {
-						$lte: endDate
-					}
-				}, {
-					'user:Name': batchName
-				}, {
-					'user:Group': 'null'
-				}]
-			}
-		}, {
-			$project: {
-				_id: 0,
-				'user:Name': 1,
-				Cost: 1
-			}
-		}, {
-			$group: {
-				_id: '$user:Name',
-				Total: {
-					$sum: "$Cost"
+		var batchType = req.query.batchType;
+		var batchName = req.query.batchName;
+		var startDate = req.query.startDate;
+		var endDate = req.query.endDate;
+		if (batchType == 'user') {
+			mongoose.model('Billings').aggregate([{
+				$match: {
+					$and: [{
+						UsageStartDate: {
+							$gte: startDate
+						}
+					}, {
+						UsageStartDate: {
+							$lte: endDate
+						}
+					}, {
+						'user:Name': batchName
+					}, {
+						'user:Group': 'null'
+					}]
 				}
-			}
-		}]).exec(function(e, d) {
-			console.log('USAGE', d);
-			res.send(d);
-		});
-	} else {
-		mongoose.model('Billings').aggregate([{
-			$match: {
-				$and: [{
-					UsageStartDate: {
-						$gte: startDate
-					}
-				}, {
-					UsageStartDate: {
-						$lte: endDate
-					}
-				}, {
-					'user:Group': batchName
-				}]
-			}
-		}, {
-			$project: {
-				_id: 0,
-				'user:Group': 1,
-				'user:Name': 1,
-				Cost: 1
-			}
-		}, {
-			$group: {
-				_id: '$user:Name',
-				Total: {
-					$sum: "$Cost"
+			}, {
+				$project: {
+					_id: 0,
+					'user:Name': 1,
+					Cost: 1
 				}
-			}
-		}]).exec(function(e, d) {
-			console.log("GROU SHIT", d);
-			res.send(d);
-		});
+			}, {
+				$group: {
+					_id: '$user:Name',
+					Total: {
+						$sum: "$Cost"
+					}
+				}
+			}]).exec(function(e, d) {
+				// console.log('USAGE', d);
+				res.send(d);
+			});
+		} else {
+			mongoose.model('Billings').aggregate([{
+				$match: {
+					$and: [{
+						UsageStartDate: {
+							$gte: startDate
+						}
+					}, {
+						UsageStartDate: {
+							$lte: endDate
+						}
+					}, {
+						'user:Group': batchName
+					}]
+				}
+			}, {
+				$project: {
+					_id: 0,
+					'user:Group': 1,
+					'user:Name': 1,
+					Cost: 1
+				}
+			}, {
+				$group: {
+					_id: '$user:Name',
+					Total: {
+						$sum: "$Cost"
+					}
+				}
+			}]).exec(function(e, d) {
+				// console.log("GROU SHIT", d);
+				res.send(d);
+			});
+		}
 	}
-}
-/*
-	Cost based on AWS products for users
- */
+
+	/*
+		Cost based on AWS products for users
+	 */
 exports.groupServiceUsage = function(req, res) {
 	var batchName = req.query.batchName;
 	var startDate = req.query.startDate;
@@ -456,7 +550,7 @@ exports.userServiceUsage = function(req, res) {
 				}
 			});
 		};
-		
+
 		var iterator1 = function(callback1) {
 			mongoose.model('Billings').aggregate([{
 				$match: {
