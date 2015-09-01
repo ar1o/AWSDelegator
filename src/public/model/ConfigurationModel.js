@@ -86,7 +86,7 @@ var ConfigurationModel = Backbone.Model.extend({
 			contentType: 'application/json',
 			dataType : 'json',
 			success: function(data) {
-				console.log('success');
+				// console.log('success');
 				self.set('expirationDataReady', Date.now());
 			},
 			error: function(data){

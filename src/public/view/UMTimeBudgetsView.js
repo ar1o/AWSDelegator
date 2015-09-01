@@ -82,7 +82,7 @@ var UMTimeBudgetsView = Backbone.View.extend({
                 if (timeBudgetCollection.at(rowIndex).get('batchType') == 'user') {
                     $("#serviceContainer").remove();
                     self.updateUserViews(rowIndex);
-                    console.log("UPDATE");
+                    // console.log("UPDATE");
                 } else {
                     $("#groupUserServiceContainer").remove();
                     self.updateGroupViews(rowIndex);
@@ -208,7 +208,7 @@ var UMTimeBudgetsView = Backbone.View.extend({
                             result = (GroupCollection.pluck('name'));
                             for (var i in result) {
                                 if (result[i] == self.data.batchName) {
-                                    console.log("Matched with", result[i]);
+                                    // console.log("Matched with", result[i]);
                                     $('.time-sub-costfilter').append($('<option>', {
                                         value: result[i],
                                         text: result[i],

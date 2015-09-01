@@ -100,7 +100,7 @@ var UsageMonitorModel = Backbone.Model.extend({
 			
 					UserCollection.reset();
 			for (var r in result) {
-				console.log(result[r]._id);
+				// console.log(result[r]._id);
 				var data = new iamGroupsModel({
 					name: result[r]._id,
 				});
@@ -128,10 +128,10 @@ var UsageMonitorModel = Backbone.Model.extend({
 		var self = this;
 		// UserCollection.reset();
 		this.groups_queried().done(function(result) {
-			console.log(result);
+			// console.log(result);
 			GroupCollection.reset();
 			for (var r in result) {
-				console.log(result[r]._id);
+				// console.log(result[r]._id);
 				var data = new iamGroupsModel({
 					name: result[r]._id,
 				});
@@ -243,7 +243,6 @@ var UsageMonitorModel = Backbone.Model.extend({
 		};
 		(function(params) {
 			$.get(host + '/api/usage/timeBudgetCost', params, function(result) {
-				console.log(result)
 				for (var i in result) {
 					var data = new budgetCostModel({
 						date: result[i]._id,
@@ -706,7 +705,7 @@ var UsageMonitorModel = Backbone.Model.extend({
 			success: function(data) {
 				self.getTimeBudgets();
 				self.set('timeBudgetDataReady', Date.now());
-				console.log("UMM data", data);
+				// console.log("UMM data", data);
 				if (data == 'error' || data == "error, TimeBudget for batchName already Exists" || data == 'error: no associated resources') {
 					callback(data);
 				} else if (data == 'success') {

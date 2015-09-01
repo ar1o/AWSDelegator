@@ -1,5 +1,9 @@
+/**
+ * This file contains all the queries for the quota system budgets.
+ */
+
 /*
-	Get all the cost budgets
+	Get all the quota system budgets
  */
 exports.budgets = function(req, res) {
 	mongoose.model('Budgets').find().exec(function(e, d) {
@@ -8,7 +12,8 @@ exports.budgets = function(req, res) {
 }
 
 /*
-	Cost Budget Query
+	Cost Budget Query. 
+	This query is used in the quota budget line graph
  */
 exports.cost = function(req, res) {
 	var batchType = req.query.batchType;
@@ -137,28 +142,30 @@ exports.userCost = function(req, res) {
 		res.send(d);
 	});
 }
-
-exports.getUsers = function(req, res) {
-		var result;
-		mongoose.model('ec2Instances').aggregate({
-			$project: {
-				'_id': 0,
-				'Name': 1
-			}
-		}).exec(function(e, d) {
-			result.append(d);
-			mongoose.model('rdsInstance').aggregate({
-				$project: {
-					'_id': 0,
-					'Name': 1
-				}
-			}).exec(function(e, d) {
-				result.append(d);
-			})
-		}).exec(function(e, d) {
-			res.send(d);
-		});
-	}
+/*
+	Possible unused query.
+ */
+// exports.getUsers = function(req, res) {
+// 		var result;
+// 		mongoose.model('ec2Instances').aggregate({
+// 			$project: {
+// 				'_id': 0,
+// 				'Name': 1
+// 			}
+// 		}).exec(function(e, d) {
+// 			result.append(d);
+// 			mongoose.model('rdsInstance').aggregate({
+// 				$project: {
+// 					'_id': 0,
+// 					'Name': 1
+// 				}
+// 			}).exec(function(e, d) {
+// 				result.append(d);
+// 			})
+// 		}).exec(function(e, d) {
+// 			res.send(d);
+// 		});
+// 	}
 
 /*
 	This query is used to find active users with instances.
@@ -395,9 +402,9 @@ exports.usage = function(req, res) {
 		}
 	}
 
-	/*
-		Cost based on AWS products for users
-	 */
+/*
+	Cost based on AWS products for users
+*/
 exports.groupServiceUsage = function(req, res) {
 	var batchName = req.query.batchName;
 	var startDate = req.query.startDate;

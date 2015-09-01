@@ -1,6 +1,6 @@
 var EC2CostModel = Backbone.Model.extend({
 	initialize: function() {
-		console.log("Initialized the EC2CostModel")
+		// console.log("Initialized the EC2CostModel")
 		var self = this;
 		this.change('dataReady');
 	},
@@ -13,7 +13,7 @@ var EC2CostModel = Backbone.Model.extend({
 		};
 		(function(params) {
 			$.get(host+'/api/billing/hourlyCostProduct', params, function(result) {
-				console.log("Ec2Cost",result);
+				// console.log("Ec2Cost",result);
 				for (var i in result) {
 					var data = new EC2Model({
 						date: result[i]._id,
