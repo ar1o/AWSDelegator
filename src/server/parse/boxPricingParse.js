@@ -1,3 +1,7 @@
+/*
+    This file gets the actual prices of various AWS operations cost.
+    It enables us to project actual cost of free-tier specifications. 
+ */
 var request = require("request");
 var mongodb = require('mongodb');
 var MongoClient = mongodb.MongoClient;
@@ -18,6 +22,7 @@ var pricingURLs = [
     'http://a0.awsstatic.com/pricing/1/s3/pricing-requests-s3.min.js',
     'http://a0.awsstatic.com/pricing/1/s3/pricing-requests-s3.min.js',
     'http://a0.awsstatic.com/pricing/1/s3/pricing-storage-s3.min.js',
+    'https://a0.awsstatic.com/pricing/1/rds/aurora/pricing-piops-deploy.min.js',
     'https://a0.awsstatic.com/pricing/1/rds/aurora/pricing-piops-deploy.min.js'  
 ];
 var usageTypes = ['DataTransfer-Out-Bytes',
@@ -29,7 +34,8 @@ var usageTypes = ['DataTransfer-Out-Bytes',
                     'Requests-Tier1',
                     'Requests-Tier2',
                     'TimedStorage-ByteHrs',
-                    'RDS:StorageIOUsage'];
+                    'RDS:StorageIOUsage',
+                    'RDS:StorageUsage'];
 //BoxUsage:t2.micro
 var osType = ['Linux','RHEL','SUSE','Windows'];
 var boxUsageURLs = [
@@ -183,7 +189,9 @@ exports.getPricing = function(callback) {
                 _callback();
                 break;
             case 10://RDS:StorageUsage
-
+                var item = {};
+                item.Price = pricingJSON.config.regions[region].rates[0].prices;
+                pricing[usageTypes[index2]]=item;
                 _callback();
                 break;
             }                  

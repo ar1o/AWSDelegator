@@ -102,6 +102,8 @@ exports.parseBillingCSV = function(callback) {
                                     doc['NonFreeRate'] = pricing['RDS:StorageIOUsage'].Price;
                                 } else if (/InstanceUsage:db.t2.micro/.test(doc['UsageType'])) {
                                     doc['NonFreeRate'] = pricing['InstanceUsage:db.t2.micro'].Price;
+                                } else if (/RDS:StorageUsage/.test(doc['UsageType'])) {
+                                    doc['NonFreeRate'] = pricing['RDS:StorageUsage'].Price;
                                 } else {
                                     //error checking
                                     if(pricing[doc['UsageType']] == undefined) {
