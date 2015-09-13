@@ -14,7 +14,6 @@
     "test": "null"
   },
   "devDependencies": {
-    "body-parser": "^1.13.1",
     "grunt": "^0.4.4",
     "grunt-contrib-connect": "^0.7.1",
     "grunt-contrib-less": "^0.11.0",
@@ -28,9 +27,11 @@
     "uglify-js": "^2.4.15"
   },
   "dependencies": {
+    "request": "^2.58.0",
+    "body-parser": "^1.13.1",
+    "connect": "^3.4.0",
     "adm-zip": "~0.4.7",
     "aws-sdk": "~2.1.26",
-    "body-parser": "^1.13.2",
     "express": "~4.12.3",
     "jslint": "^0.9.3",
     "mongodb": "~2.0.33",
